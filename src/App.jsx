@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import classNames from 'classnames';
+import { GoodList } from './components/GoodList';
+import { Buttons } from './components/Buttons';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -55,60 +56,20 @@ export const App = () => {
     isReversed,
   });
 
-  const resetGoodsHandler = () => {
-    setSortField('');
-    setIsReversed(false);
+  const sortOptions = {
+    sortField,
+    setSortField,
+    isReversed,
+    setIsReversed,
+    SORT_FIELD_ALPHABET,
+    SORT_FIELD_LENGTH,
   };
 
   return (
     <div className="section content">
-      <div className="buttons">
-        <button
-          type="button"
-          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
-          className={classNames('button', 'is-info', {
-            'is-light': sortField !== SORT_FIELD_ALPHABET,
-          })}
-        >
-          Sort alphabetically
-        </button>
+      <Buttons sortOptions={sortOptions} />
 
-        <button
-          type="button"
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
-          className={classNames('button', 'is-success', {
-            'is-light': sortField !== SORT_FIELD_LENGTH,
-          })}
-        >
-          Sort by length
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setIsReversed(prev => !prev)}
-          className={classNames('button', 'is-warning', {
-            'is-light': !isReversed,
-          })}
-        >
-          Reverse
-        </button>
-
-        {(sortField || isReversed) && (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={resetGoodsHandler}
-          >
-            Reset
-          </button>
-        )}
-      </div>
-
-      <ul>
-        {preparedGoods.map(good => (
-          <li data-cy="Good" key={good}>{good}</li>
-        ))}
-      </ul>
+      <GoodList goods={preparedGoods} />
     </div>
   );
 };
