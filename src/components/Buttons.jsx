@@ -1,27 +1,26 @@
 import classNames from 'classnames';
+import { SORT_FIELD } from '../constants';
 
-export const Buttons = ({ sortOptions }) => {
+export const Buttons = (props) => {
   const {
     sortField,
-    setSortField,
+    sortBy,
     isReversed,
-    setIsReversed,
-    SORT_FIELD_ALPHABET,
-    SORT_FIELD_LENGTH,
-  } = sortOptions;
+    changeOrder,
+  } = props;
 
   const resetGoodsHandler = () => {
-    setSortField('');
-    setIsReversed(false);
+    sortBy('');
+    changeOrder(false);
   };
 
   return (
     <div className="buttons">
       <button
         type="button"
-        onClick={() => setSortField(SORT_FIELD_ALPHABET)}
+        onClick={() => sortBy(SORT_FIELD.ALPHABET)}
         className={classNames('button', 'is-info', {
-          'is-light': sortField !== SORT_FIELD_ALPHABET,
+          'is-light': sortField !== SORT_FIELD.ALPHABET,
         })}
       >
         Sort alphabetically
@@ -29,9 +28,9 @@ export const Buttons = ({ sortOptions }) => {
 
       <button
         type="button"
-        onClick={() => setSortField(SORT_FIELD_LENGTH)}
+        onClick={() => sortBy(SORT_FIELD.LENGTH)}
         className={classNames('button', 'is-success', {
-          'is-light': sortField !== SORT_FIELD_LENGTH,
+          'is-light': sortField !== SORT_FIELD.LENGTH,
         })}
       >
         Sort by length
@@ -39,7 +38,7 @@ export const Buttons = ({ sortOptions }) => {
 
       <button
         type="button"
-        onClick={() => setIsReversed(prev => !prev)}
+        onClick={() => changeOrder(prev => !prev)}
         className={classNames('button', 'is-warning', {
           'is-light': !isReversed,
         })}

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { GoodList } from './components/GoodList';
-import { Buttons } from './components/Buttons';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import { SORT_FIELD } from './constants';
+import { GoodList } from './components/GoodList';
+import { Buttons } from './components/Buttons';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -17,9 +18,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_ALPHABET = 'alphabet';
-const SORT_FIELD_LENGTH = 'length';
-
 function getPreparedGood(goods, options) {
   const { sortField, isReversed } = options;
 
@@ -28,10 +26,10 @@ function getPreparedGood(goods, options) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_FIELD_ALPHABET:
+        case SORT_FIELD.ALPHABET:
           return good1.localeCompare(good2);
 
-        case SORT_FIELD_LENGTH:
+        case SORT_FIELD.LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -56,18 +54,14 @@ export const App = () => {
     isReversed,
   });
 
-  const sortOptions = {
-    sortField,
-    setSortField,
-    isReversed,
-    setIsReversed,
-    SORT_FIELD_ALPHABET,
-    SORT_FIELD_LENGTH,
-  };
-
   return (
     <div className="section content">
-      <Buttons sortOptions={sortOptions} />
+      <Buttons
+        sortField={sortField}
+        sortBy={setSortField}
+        isReversed={isReversed}
+        changeOrder={setIsReversed}
+      />
 
       <GoodList goods={preparedGoods} />
     </div>
