@@ -14,7 +14,6 @@ Implement the ability to reorder the goods with the given buttons.
     - the second click should show goods in the direct order;
 1. `Reset` button should show the goods in the initial order.
     - it should be visible only if goods are not already in the original order;
-
 ## Instructions
 
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
