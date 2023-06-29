@@ -25,14 +25,14 @@ function sortGoods(goods, { sortField, isSorted }) {
   if (sortField) {
     localGoods.sort((good1, good2) => {
       switch (sortField) {
-        default:
-          return 0;
-
         case SORT_FIELD_NAME:
           return good1.localeCompare(good2);
 
         case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
+
+        default:
+          return 0;
       }
     });
   }
@@ -47,6 +47,9 @@ function sortGoods(goods, { sortField, isSorted }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isSorted, setSorted] = useState(false);
+
+  const makeSetSortField = field => () => setSortField(field);
+  const makeSetSorted = sorted => () => setSorted(sorted);
 
   const showGoods = sortGoods(
     goodsFromServer,
@@ -67,7 +70,7 @@ export const App = () => {
             ['button', 'is-info'],
             { 'is-light': sortField !== SORT_FIELD_NAME },
           )}
-          onClick={() => setSortField(SORT_FIELD_NAME)}
+          onClick={makeSetSortField(SORT_FIELD_NAME)}
         >
           Sort alphabetically
         </button>
@@ -78,7 +81,7 @@ export const App = () => {
             ['button', 'is-success'],
             { 'is-light': sortField !== SORT_FIELD_LENGTH },
           )}
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          onClick={makeSetSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -91,7 +94,7 @@ export const App = () => {
               'is-light': !isSorted,
             },
           )}
-          onClick={() => setSorted(!isSorted)}
+          onClick={makeSetSorted(!isSorted)}
         >
           Reverse
         </button>
