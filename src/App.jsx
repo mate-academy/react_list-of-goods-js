@@ -59,6 +59,14 @@ export const App = () => {
     setSortField('');
   };
 
+  const setSort = field => () => {
+    setSortField(field);
+  };
+
+  const onReverse = () => {
+    setReversed(!reverse);
+  };
+
   return (
     <>
       <div className="section content">
@@ -70,7 +78,7 @@ export const App = () => {
                 ? 'button is-info'
                 : 'button is-info is-light'
             }
-            onClick={() => setSortField(SORT_FIELD_NAME)}
+            onClick={setSort(SORT_FIELD_NAME)}
           >
             Sort alphabetically
           </button>
@@ -82,7 +90,7 @@ export const App = () => {
                 ? 'button is-info'
                 : 'button is-info is-light'
             }
-            onClick={() => setSortField(SORT_FIELD_LENGTH)}
+            onClick={setSort(SORT_FIELD_LENGTH)}
           >
             Sort by length
           </button>
@@ -90,7 +98,7 @@ export const App = () => {
           <button
             type="button"
             className={reverse ? 'button is-info' : 'button is-info is-light'}
-            onClick={() => setReversed(!reverse)}
+            onClick={onReverse}
           >
             Reverse
           </button>
