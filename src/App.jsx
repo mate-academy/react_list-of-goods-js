@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -19,37 +20,49 @@ export const goodsFromServer = [
 const SORT_BY_ABC = 'alphabetically';
 const SORT_BY_LENGTH = 'length';
 
-function changeActualGoods(actualGoods, { sortGoods, reverse }) {
-  const preparedGoods = [...actualGoods];
-
-  if (sortGoods) {
-    preparedGoods.sort((good1, good2) => {
-      switch (sortGoods) {
-        case SORT_BY_ABC:
-          return good1.localeCompare(good2);
-
-        case SORT_BY_LENGTH:
-          return good1.length - good2.length;
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (reverse) {
-    preparedGoods.reverse();
-  }
-
-  return preparedGoods;
-}
-
 export const App = () => {
   const [sortGoods, setSortGoods] = useState('');
   const [reverse, setReverse] = useState(false);
-  const actualGoods = changeActualGoods(
-    goodsFromServer, { sortGoods, reverse },
-  );
+  const [actualGoods, setActualGoods] = useState(goodsFromServer);
+
+  function changeActualGoods(actual, { sort, isReverse, reset }) {
+    const preparedGoods = [...actual];
+
+    if (reset === true) {
+      setActualGoods(actual);
+      setSortGoods('');
+      setReverse(false);
+
+      return actual;
+    }
+
+    if (sort) {
+      preparedGoods.sort((good1, good2) => {
+        switch (sort) {
+          case SORT_BY_ABC:
+            setSortGoods(SORT_BY_ABC);
+
+            return good1.localeCompare(good2);
+
+          case SORT_BY_LENGTH:
+            setSortGoods(SORT_BY_LENGTH);
+
+            return good1.length - good2.length;
+
+          default:
+            return 0;
+        }
+      });
+    }
+
+    if (isReverse) {
+      preparedGoods.reverse();
+    }
+
+    setActualGoods(preparedGoods);
+
+    return preparedGoods;
+  }
 
   return (
     <div className="section content">
@@ -59,7 +72,10 @@ export const App = () => {
           className={
             cn('button is-info', { 'is-light': sortGoods !== SORT_BY_ABC })
           }
-          onClick={() => setSortGoods(SORT_BY_ABC)}
+          onClick={() => changeActualGoods(
+            goodsFromServer,
+            { sort: SORT_BY_ABC, isReverse: reverse },
+          )}
         >
           Sort alphabetically
         </button>
@@ -71,7 +87,10 @@ export const App = () => {
               'is-light': sortGoods !== SORT_BY_LENGTH,
             })
           }
-          onClick={() => setSortGoods(SORT_BY_LENGTH)}
+          onClick={() => changeActualGoods(
+            goodsFromServer,
+            { sort: SORT_BY_LENGTH, isReverse: reverse },
+          )}
         >
           Sort by length
         </button>
@@ -79,12 +98,20 @@ export const App = () => {
         <button
           type="button"
           className={
-            cn('button is-warning', { 'is-light': reverse !== true })
+            cn('button is-warning', { 'is-light': reverse === false })
           }
-          onClick={() => (reverse === false
-            ? setReverse(true)
-            : setReverse(false))
-          }
+          onClick={() => {
+            if (reverse === false) {
+              setReverse(true);
+            } else {
+              setReverse(false);
+            }
+
+            changeActualGoods(
+              goodsFromServer,
+              { sort: sortGoods, isReverse: !reverse },
+            );
+          }}
         >
           Reverse
         </button>
@@ -94,8 +121,9 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortGoods('');
-              setReverse(false);
+              setActualGoods(
+                changeActualGoods(goodsFromServer, { reset: true }),
+              );
             }}
           >
             Reset
