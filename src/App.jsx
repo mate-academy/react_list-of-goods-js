@@ -18,45 +18,44 @@ export const goodsFromServer = [
 
 const SORT_FIELD_NAME = 'name';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_DIRECTION_ASC = 'asc';
-const SORT_DIRECTION_DESC = 'desc';
 
-function sortGoods(goods, { sortField, sortDirection }) {
+function sortGoods(goods, { sortField, isSorted }) {
   const localGoods = [...goods];
 
-  if (!sortField && sortDirection) {
-    return localGoods.reverse();
+  if (sortField) {
+    localGoods.sort((good1, good2) => {
+      switch (sortField) {
+        default:
+          return 0;
+
+        case SORT_FIELD_NAME:
+          return good1.localeCompare(good2);
+
+        case SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
+      }
+    });
   }
 
-  localGoods.sort((good1, good2) => {
-    switch (sortField) {
-      default:
-        return 0;
-
-      case SORT_FIELD_NAME:
-        return sortDirection === SORT_DIRECTION_ASC
-          ? good2.localeCompare(good1)
-          : good1.localeCompare(good2);
-
-      case SORT_FIELD_LENGTH:
-        return sortDirection === SORT_DIRECTION_ASC
-          ? good2.length - good1.length
-          : good1.length - good2.length;
-    }
-  });
+  if (isSorted) {
+    localGoods.reverse();
+  }
 
   return localGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [sortDirection, setSortDirection] = useState('');
+  const [isSorted, setSorted] = useState(false);
 
-  const showGoods = sortGoods(goodsFromServer, { sortField, sortDirection });
+  const showGoods = sortGoods(
+    goodsFromServer,
+    { sortField, isSorted },
+  );
 
   const reset = () => {
     setSortField('');
-    setSortDirection('');
+    setSorted(false);
   };
 
   return (
@@ -88,20 +87,16 @@ export const App = () => {
           type="button"
           className={cn(
             ['button', 'is-warning'],
-            { 'is-light': sortDirection === SORT_DIRECTION_DESC },
+            {
+              'is-light': !isSorted,
+            },
           )}
-          onClick={() => {
-            const direction = sortDirection === SORT_DIRECTION_DESC
-              ? SORT_DIRECTION_ASC
-              : SORT_DIRECTION_DESC;
-
-            setSortDirection(direction);
-          }}
+          onClick={() => setSorted(!isSorted)}
         >
           Reverse
         </button>
 
-        {(sortField || sortDirection) && (
+        {(sortField || isSorted) && (
           <button
             type="button"
             className="button is-danger is-light"
