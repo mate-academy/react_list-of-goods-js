@@ -64,7 +64,7 @@ export const App = () => {
           type="button"
           className={cn(
             'button',
-            'is-info',
+            'is-success',
             { 'is-light': sortType !== SORT_LEN },
           )}
           onClick={() => setSortType(SORT_LEN)}
@@ -76,7 +76,7 @@ export const App = () => {
           type="button"
           className={cn(
             'button',
-            'is-info',
+            'is-warning',
             { 'is-light': !isReversed },
           )}
           onClick={() => setReversed(!isReversed)}
