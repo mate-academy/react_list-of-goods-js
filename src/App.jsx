@@ -58,7 +58,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-success',
+            'button is-info',
             { 'is-light': sort !== sortGoodsAlphabeticaly },
           )}
           onClick={() => {
@@ -84,7 +84,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-success', { 'is-light': !reverse },
+            'button is-warning', { 'is-light': !reverse },
           )}
           onClick={() => {
             setRevers(!reverse);
