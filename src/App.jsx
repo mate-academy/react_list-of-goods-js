@@ -16,30 +16,30 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_GOODS_LENGTH = 'length';
-const SORT_GOODS_ALPHABETICALLY = 'alphabetically';
+const sortGoodsLength = 'length';
+const sortGoodsAlphabeticaly = 'alphabetically';
 
 function sortGoods(goods, { sort }) {
-  const goodS = [...goods];
+  const copyGoods = [...goods];
 
   if (sort) {
     switch (sort) {
       case 'length':
-        goodS.sort((a, b) => a.length - b.length);
+        copyGoods.sort((a, b) => a.length - b.length);
 
-        return goodS;
+        return copyGoods;
 
       case 'alphabetically':
-        goodS.sort((a, b) => a.localeCompare(b));
+        copyGoods.sort((a, b) => a.localeCompare(b));
 
-        return goodS;
+        return copyGoods;
 
       default:
         break;
     }
   }
 
-  return goodS;
+  return copyGoods;
 }
 
 export const App = () => {
@@ -59,10 +59,10 @@ export const App = () => {
           type="button"
           className={cn(
             'button is-success',
-            { 'is-light': sort !== SORT_GOODS_ALPHABETICALLY },
+            { 'is-light': sort !== sortGoodsAlphabeticaly },
           )}
           onClick={() => {
-            setSort(SORT_GOODS_ALPHABETICALLY);
+            setSort(sortGoodsAlphabeticaly);
           }}
         >
           Sort alphabetically
@@ -71,10 +71,10 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-success', { 'is-light': sort !== SORT_GOODS_LENGTH },
+            'button is-success', { 'is-light': sort !== sortGoodsLength },
           )}
           onClick={() => {
-            setSort(SORT_GOODS_LENGTH);
+            setSort(sortGoodsLength);
           }}
 
         >
@@ -84,7 +84,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-success', { 'is-light': reverse === false },
+            'button is-success', { 'is-light': !reverse },
           )}
           onClick={() => {
             setRevers(!reverse);
