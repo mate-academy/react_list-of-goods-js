@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { GoodList } from './GoodList';
@@ -16,9 +17,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const NONE = 'none';
-const ALPHABET = 'alphabet';
-const LENGTH = 'length';
+const ORDER_TYPE = {
+  NONE: 'none',
+  ALPHABET: 'alphabet',
+  LENGTH: 'length',
+};
 
 export function getReorderedGoods(goods, { sortType, isReversed }) {
   const visibleGoods = [...goods];
@@ -26,10 +29,10 @@ export function getReorderedGoods(goods, { sortType, isReversed }) {
   if (sortType) {
     visibleGoods.sort((good1, good2) => {
       switch (sortType) {
-        case ALPHABET:
+        case ORDER_TYPE.ALPHABET:
           return good1.localeCompare(good2);
 
-        case LENGTH:
+        case ORDER_TYPE.LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -46,14 +49,17 @@ export function getReorderedGoods(goods, { sortType, isReversed }) {
 }
 
 export const App = () => {
+  const { NONE, ALPHABET, LENGTH } = ORDER_TYPE;
   const [sortType, setSortType] = useState(NONE);
   const [isReversed, setIsReversed] = useState(false);
-  const realGoods
-  = getReorderedGoods(goodsFromServer, { sortType, isReversed });
+  const realGoods = getReorderedGoods(goodsFromServer, {
+    sortType,
+    isReversed,
+  });
 
   const isSorted = sortType === ALPHABET || sortType === LENGTH || isReversed;
 
-  const reset = () => {
+  const handleReset = () => {
     setSortType(NONE);
     setIsReversed(false);
   };
@@ -63,7 +69,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortType !== ALPHABET ? 'is-light' : ''}`}
+          className={cn('button is-info', {
+            'is-light': sortType !== ALPHABET,
+          })}
           onClick={() => setSortType(ALPHABET)}
         >
           Sort alphabetically
@@ -71,7 +79,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortType !== LENGTH ? 'is-light' : ''}`}
+          className={cn('button is-success', {
+            'is-light': sortType !== LENGTH,
+          })}
           onClick={() => setSortType(LENGTH)}
         >
           Sort by length
@@ -79,7 +89,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${!isReversed ? 'is-light' : ''}`}
+          className={cn('button is-warning', {
+            'is-light': !isReversed,
+          })}
           onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
@@ -88,7 +100,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={reset}
+            onClick={handleReset}
           >
             Reset
           </button>
