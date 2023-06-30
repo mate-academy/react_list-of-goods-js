@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -45,15 +46,13 @@ export const App = () => {
   const [reverseGoods, setReverseGoods] = useState(false);
   const [sortBy, setSortBy] = useState('');
 
+  const buttonClasses = (field, type) => cn(`button ${type}`, { 'is-light': sortBy !== field });
+
   const goods = preparedGoods(goodsFromServer,
     {
       sortBy,
       reverseGoods,
     });
-
-  const handleSortBy = (field) => {
-    setSortBy(field);
-  };
 
   const reset = () => {
     setSortBy('');
@@ -65,23 +64,23 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortBy !== SORT_BY_NAME && 'is-light'}`}
-          onClick={() => handleSortBy(SORT_BY_NAME)}
+          className={buttonClasses(SORT_BY_NAME, 'is-info')}
+          onClick={() => setSortBy(SORT_BY_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortBy !== SORT_BY_LENGTH && 'is-light'}`}
-          onClick={() => handleSortBy(SORT_BY_LENGTH)}
+          className={buttonClasses(SORT_BY_LENGTH, 'is-success')}
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${!reverseGoods && 'is-light'}`}
+          className={cn('button is-warning', { 'is-light': !reverseGoods })}
           onClick={() => setReverseGoods(!reverseGoods)}
         >
           Reverse
@@ -89,15 +88,14 @@ export const App = () => {
 
         {(sortBy || reverseGoods)
         && (
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={reset}
-        >
-          Reset
-        </button>
-        )
-        }
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
 
       </div>
 
