@@ -30,7 +30,7 @@ export const App = () => {
     setIsAlphabeticaly(false);
     setIsLength(true);
     setReverse(true);
-  }
+  };
 
   const sortByLength = () => {
     const newGoods = [...goods]
@@ -40,22 +40,21 @@ export const App = () => {
     setIsLength(false);
     setIsAlphabeticaly(true);
     setReverse(true);
-  }
+  };
 
   const reverseGoods = () => {
     const newGoods = [...goods].reverse();
 
     setGoods(newGoods);
     setReverse(!isReverse);
-  }
+  };
 
   const reset = () => {
     setGoods(goodsFromServer);
     setIsAlphabeticaly(true);
     setIsLength(true);
     setReverse(true);
-  }
-
+  };
 
   return (
     <div className="section content">
@@ -63,33 +62,33 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': isAlphabeticaly
+            'is-light': isAlphabeticaly,
           })}
           onClick={() => sortByAlphabetically()}
         >
           Sort alphabetically
         </button>
-  
+
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': isLength
+            'is-light': isLength,
           })}
           onClick={() => sortByLength()}
         >
           Sort by length
         </button>
-  
+
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReverse
+            'is-light': isReverse,
           })}
           onClick={() => reverseGoods()}
         >
           Reverse
         </button>
-  
+
         {!(isAlphabeticaly && isLength && isReverse) && (
           <button
             type="button"
@@ -100,12 +99,12 @@ export const App = () => {
           </button>
         )}
       </div>
-  
+
       <ul>
         {goods.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
-  )
+  );
 };
