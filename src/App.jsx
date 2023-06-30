@@ -38,7 +38,7 @@ const sortGoods = (sortBy) => {
 };
 
 export const App = () => {
-  const [isReversed, setIsReversed] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const [sortBy, setSortBy] = useState('');
   const [goods, setGoods] = useState([...goodsFromServer]);
 
