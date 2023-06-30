@@ -44,6 +44,13 @@ export const App = () => {
   const [sortType, setSortType] = useState(['', '']);
   const sortedGoods = getSortedGoods(goodsFromServer, sortType);
 
+  const isReset = sortType[0] !== SORT_FIELD_RESET
+    || sortType[1] !== SORT_FIELD_RESET;
+
+  const isReverse = sortType[1] === SORT_FIELD_REVERSE
+    ? [sortType[0], SORT_FIELD_RESET]
+    : [sortType[0], SORT_FIELD_REVERSE];
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -74,17 +81,12 @@ export const App = () => {
             cn('button is-warning',
               { 'is-light': sortType[1] !== SORT_FIELD_REVERSE })
           }
-          onClick={() => setSortType(
-            sortType[1] === SORT_FIELD_REVERSE
-              ? [sortType[0], SORT_FIELD_RESET]
-              : [sortType[0], SORT_FIELD_REVERSE],
-          )}
+          onClick={() => setSortType(isReverse)}
         >
           Reverse
         </button>
 
-        {(sortType[0] !== SORT_FIELD_RESET || sortType[1] !== SORT_FIELD_RESET)
-        && (
+        {isReset && (
           <button
             type="button"
             className="button is-danger is-light"
