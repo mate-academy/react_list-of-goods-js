@@ -18,7 +18,7 @@ export const goodsFromServer = [
 
 const SORT_ALPHABETICALLY = 'alp';
 const SORT_BY_LENGTH = 'lng';
-const REVERSE = 'rev';
+const REVERSE = true;
 
 function sortGoods(goods, { sortCondition, reverseGoods }) {
   const sortedGoods = [...goods];
@@ -47,7 +47,7 @@ function sortGoods(goods, { sortCondition, reverseGoods }) {
 
 export const App = () => {
   const [sortCondition, setSortCondition] = useState('');
-  const [reverseGoods, setReverseGoods] = useState('');
+  const [reverseGoods, setReverseGoods] = useState(false);
   const visibleGoods = sortGoods(goodsFromServer, {
     sortCondition,
     reverseGoods,
@@ -56,7 +56,7 @@ export const App = () => {
   const resetButtonIsVisible = sortCondition || reverseGoods;
 
   function handleReverse(reverse) {
-    setReverseGoods(prev => (prev === reverse ? '' : reverse));
+    setReverseGoods(prev => (prev === reverse ? false : reverse));
   }
 
   return (
@@ -98,7 +98,7 @@ export const App = () => {
             className="button is-danger is-light"
             onClick={() => {
               setSortCondition('');
-              setReverseGoods('');
+              setReverseGoods(false);
             }}
           >
             Reset
