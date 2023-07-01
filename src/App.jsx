@@ -17,7 +17,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_ALPHABET = 'aplhabet';
+const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_REVERSE = 'reverse';
 
@@ -98,7 +98,12 @@ export const App = () => {
         >
           Reverse
         </button>
-
+        {/*
+        Button reset shouldnt be visible if sorting and reversing aren't used.
+        So we should check, if fields have default value '' (empty string).
+        If its true, Reset button is useless, so it should be invisible.
+        In the other way, when at least one field have new value, we should render "Reset"
+        */}
         {(sortField || reverseField) && (
           <button
             onClick={() => {
