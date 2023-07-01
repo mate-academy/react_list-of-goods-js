@@ -21,10 +21,10 @@ function getPreparedGoods(goodsFrom, sortField, reverse) {
   if (sortField) {
     goods.sort((a, b) => {
       switch (sortField) {
-        case SORT_FIELD_NAME:
+        case SORT_FIELD.NAME:
           return a.localeCompare(b);
 
-        case SORT_FIELD_LENGTH:
+        case SORT_FIELD.LENGTH:
           return a.length - b.length;
 
         default:
@@ -44,8 +44,10 @@ function getReset(sortField, reverse) {
   return sortField !== '' || reverse;
 }
 
-const SORT_FIELD_NAME = 'name';
-const SORT_FIELD_LENGTH = 'length';
+const SORT_FIELD = {
+  NAME: 'name',
+  LENGTH: 'length',
+};
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
@@ -74,11 +76,11 @@ export const App = () => {
           <button
             type="button"
             className={
-              sortField === SORT_FIELD_NAME
+              sortField === SORT_FIELD.NAME
                 ? 'button is-info'
                 : 'button is-info is-light'
             }
-            onClick={setSort(SORT_FIELD_NAME)}
+            onClick={setSort(SORT_FIELD.NAME)}
           >
             Sort alphabetically
           </button>
@@ -86,11 +88,11 @@ export const App = () => {
           <button
             type="button"
             className={
-              sortField === SORT_FIELD_LENGTH
+              sortField === SORT_FIELD.LENGTH
                 ? 'button is-info'
                 : 'button is-info is-light'
             }
-            onClick={setSort(SORT_FIELD_LENGTH)}
+            onClick={setSort(SORT_FIELD.LENGTH)}
           >
             Sort by length
           </button>
