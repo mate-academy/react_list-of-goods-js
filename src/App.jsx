@@ -21,7 +21,7 @@ const SORT_BY_LENGTH = 'Length';
 const SORT_REVERSE = false;
 
 function getPreparedGoods(goods, { sortType, reverse }) {
-  const preparedGoods = [...goodsFromServer];
+  const preparedGoods = [...goods];
 
   if (sortType) {
     preparedGoods.sort((good1, good2) => {
@@ -47,7 +47,6 @@ export const App = () => {
   const visibleGoods = useMemo(() => getPreparedGoods(
     goodsFromServer, { sortType, reverse },
   ), [
-    goodsFromServer,
     sortType,
     reverse,
   ]);
