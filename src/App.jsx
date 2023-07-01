@@ -1,6 +1,8 @@
+import cn from 'classnames';
+import { useState } from 'react';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -51,17 +53,14 @@ export const App = () => {
     reversed,
   });
 
-  const alphBtn = SORT_ALPH === sortField ? 'is-info' : ' is-info is-light';
-  const lengthBtn
-    = SORT_LENGTH === sortField ? 'is-success ' : ' is-success is-light';
-  const reverseBtn = reversed ? 'is-warning' : 'is-warning is-light';
-
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button ${alphBtn}`}
+          className={cn('button is-info', {
+            ' is-light': sortField !== SORT_ALPH,
+          })}
           onClick={() => setSortField(SORT_ALPH)}
         >
           Sort alphabetically
@@ -69,7 +68,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${lengthBtn}`}
+          className={cn('button is-success', {
+            ' is-light': sortField !== SORT_LENGTH,
+          })}
           onClick={() => setSortField(SORT_LENGTH)}
         >
           Sort by length
@@ -77,7 +78,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${reverseBtn}`}
+          className={cn('button is-warning', {
+            ' is-light': !reversed,
+          })}
           onClick={() => setReversed(revers => !revers)}
         >
           Reverse
