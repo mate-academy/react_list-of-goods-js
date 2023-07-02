@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,120 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_FIELD_DEFAULT = 'default';
+const SORT_FIELD_LENGTH = 'length';
+const SORT_FIELD_ABC = 'alphabetically';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getPreparedGoods(goods, sortType, reverse) {
+  let result = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  result.sort((good1, good2) => {
+    switch (true) {
+      case sortType === SORT_FIELD_ABC:
+        return good1.localeCompare(good2);
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+      case sortType === SORT_FIELD_LENGTH:
+        return good1.length - good2.length;
+
+      default:
+        return 0;
+    }
+  });
+
+  if (reverse) {
+    result = result.reverse();
+  }
+
+  return result;
+}
+
+export const App = () => {
+  const [listObserver, setListObserver] = useState({
+    sortType: SORT_FIELD_DEFAULT,
+    reverse: false,
+  });
+
+  const preparedGoods = getPreparedGoods(
+    goodsFromServer,
+    listObserver.sortType,
+    listObserver.reverse,
+  );
+
+  const handleSort = (sortType) => {
+    setListObserver(prevState => ({
+      ...prevState,
+      sortType,
+    }));
+  };
+
+  const handleReverse = () => {
+    setListObserver(prevState => (
+      { ...prevState, reverse: !prevState.reverse }
+    ));
+  };
+
+  const handleReset = () => {
+    setListObserver({
+      sortType: SORT_FIELD_DEFAULT,
+      reverse: false,
+    });
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={classNames(
+            'button is-info',
+            { 'is-light': listObserver.sortType !== SORT_FIELD_ABC },
+          )}
+          onClick={() => handleSort(SORT_FIELD_ABC)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={classNames(
+            'button is-success',
+            { 'is-light': listObserver.sortType !== SORT_FIELD_LENGTH },
+          )}
+          onClick={() => handleSort(SORT_FIELD_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={classNames(
+            'button is-warning',
+            { 'is-light': !listObserver.reverse },
+          )}
+          onClick={handleReverse}
+        >
+          Reverse
+        </button>
+
+        {(listObserver.sortType !== SORT_FIELD_DEFAULT
+          || listObserver.reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {preparedGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
