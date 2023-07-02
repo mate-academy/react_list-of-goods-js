@@ -16,25 +16,26 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_DEFAULT = 'default';
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_ABC = 'alphabetically';
 
 function getPreparedGoods(goods, sortType, reverse) {
   let result = [...goods];
 
-  result.sort((good1, good2) => {
-    switch (true) {
-      case sortType === SORT_FIELD_ABC:
-        return good1.localeCompare(good2);
+  if (sortType) {
+    result.sort((good1, good2) => {
+      switch (true) {
+        case sortType === SORT_FIELD_ABC:
+          return good1.localeCompare(good2);
 
-      case sortType === SORT_FIELD_LENGTH:
-        return good1.length - good2.length;
+        case sortType === SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
 
-      default:
-        return 0;
-    }
-  });
+        default:
+          return 0;
+      }
+    });
+  }
 
   if (reverse) {
     result = result.reverse();
@@ -45,7 +46,7 @@ function getPreparedGoods(goods, sortType, reverse) {
 
 export const App = () => {
   const [listObserver, setListObserver] = useState({
-    sortType: SORT_FIELD_DEFAULT,
+    sortType: '',
     reverse: false,
   });
 
@@ -70,7 +71,7 @@ export const App = () => {
 
   const handleReset = () => {
     setListObserver({
-      sortType: SORT_FIELD_DEFAULT,
+      sortType: '',
       reverse: false,
     });
   };
@@ -111,7 +112,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(listObserver.sortType !== SORT_FIELD_DEFAULT
+        {(listObserver.sortType !== ''
           || listObserver.reverse) && (
           <button
             type="button"
