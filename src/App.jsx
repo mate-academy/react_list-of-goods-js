@@ -1,10 +1,12 @@
 import 'bulma/css/bulma.css';
-import './App.scss';
 import { useState } from 'react';
 import cn from 'classnames';
+import './App.scss';
 
-const SORT_FIELD_NAME = 'name';
-const SORT_FIELD_LENGTH = 'length';
+export const SORT_FIELD = {
+  NAME: 'name',
+  LENGTH: 'length',
+};
 
 export const goodsFromServer = [
   'Dumplings',
@@ -25,9 +27,9 @@ const getSortedGoods = (goods, { sortField, isReversed }) => {
   if (sortField) {
     visibleGoods.sort((item1, item2) => {
       switch (sortField) {
-        case SORT_FIELD_NAME:
+        case SORT_FIELD.NAME:
           return item1.localeCompare(item2);
-        case SORT_FIELD_LENGTH:
+        case SORT_FIELD.LENGTH:
           return item1.length - item2.length;
         default:
           return 0;
@@ -50,14 +52,16 @@ export const App = () => {
     setIsReversed(false);
   };
 
+  const showResetButton = sortField || isReversed;
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
           className={cn('button is-info',
-            { 'is-light': sortField !== SORT_FIELD_NAME })}
-          onClick={() => setSortField(SORT_FIELD_NAME)}
+            { 'is-light': sortField !== SORT_FIELD.NAME })}
+          onClick={() => setSortField(SORT_FIELD.NAME)}
         >
           Sort alphabetically
         </button>
@@ -65,8 +69,8 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success',
-            { 'is-light': sortField !== SORT_FIELD_LENGTH })}
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+            { 'is-light': sortField !== SORT_FIELD.LENGTH })}
+          onClick={() => setSortField(SORT_FIELD.LENGTH)}
         >
           Sort by length
         </button>
@@ -80,7 +84,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || isReversed) && (
+        { showResetButton && (
           <button
             type="button"
             className="button is-danger is-light"
