@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPH = 'Sort alphabetically';
 const SORT_FIELD_LNGTH = 'Sort by length';
 
-function getPreparedList(goods, { sortField, direction }) {
+function getPreparedList(goods, { sortField, isReversed }) {
   let prepareGoods = [...goods];
 
   if (sortField) {
@@ -37,7 +37,7 @@ function getPreparedList(goods, { sortField, direction }) {
     });
   }
 
-  if (direction) {
+  if (isReversed) {
     prepareGoods = prepareGoods.reverse();
   }
 
@@ -46,10 +46,9 @@ function getPreparedList(goods, { sortField, direction }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [direction, setDirection] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const listOfGoods
-    = getPreparedList(goodsFromServer, { sortField, direction });
-  const isReversedList = direction.length > 0;
+    = getPreparedList(goodsFromServer, { sortField, isReversed });
 
   return (
     <div className="section content">
@@ -76,14 +75,14 @@ export const App = () => {
 
         <button
           onClick={() => (
-            isReversedList
-              ? setDirection('')
-              : setDirection('Reverse')
+            isReversed
+              ? setIsReversed(false)
+              : setIsReversed(true)
           )}
           type="button"
           className={
             classNames('button is-info',
-              { 'is-light': !isReversedList })}
+              { 'is-light': !isReversed })}
         >
           Reverse
         </button>
@@ -91,7 +90,7 @@ export const App = () => {
         {JSON.stringify(goodsFromServer) !== JSON.stringify(listOfGoods) && (
           <button
             onClick={() => {
-              setDirection('');
+              setIsReversed(false);
               setSortField('');
             }}
             type="button"
