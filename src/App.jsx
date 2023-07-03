@@ -95,7 +95,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => clearSortField('')}
+            onClick={() => clearSortField()}
           >
             Reset
           </button>
