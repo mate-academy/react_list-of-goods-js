@@ -40,12 +40,12 @@ export const App = () => {
         break;
       default:
         setGoods(goodsFromServer);
-        setSelect(RESET);
+        setSelect('');
     }
   };
 
   const Reset = () => {
-    if (select !== RESET) {
+    if (select !== '') {
       return (
         <button
           type="button"
