@@ -24,11 +24,11 @@ function getPreparedGoods(goods, sortType, reverse) {
 
   if (sortType) {
     result.sort((good1, good2) => {
-      switch (true) {
-        case sortType === SORT_FIELD_ABC:
+      switch (sortType) {
+        case SORT_FIELD_ABC:
           return good1.localeCompare(good2);
 
-        case sortType === SORT_FIELD_LENGTH:
+        case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
 
         default:
