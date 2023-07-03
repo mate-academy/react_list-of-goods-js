@@ -1,10 +1,12 @@
 import 'bulma/css/bulma.css';
-import './App.scss';
 import { useState } from 'react';
 import cn from 'classnames';
+import './App.scss';
 
-const SORT_BY_ALPHABETIC = 'alpabetic';
-const SORT_BY_LENGTH = 'length';
+const SORT_BY = {
+  ALPHABET: 'alpabet',
+  LENGTH: 'length',
+};
 
 export const goodsFromServer = [
   'Dumplings',
@@ -24,10 +26,10 @@ function sortGoodsBy(goodList, sortBy, isNeedReverse) {
 
   goodListCopy.sort((good1, good2) => {
     switch (sortBy) {
-      case ('alpabetic'):
+      case (SORT_BY.ALPHABET):
         return good1.localeCompare(good2);
 
-      case ('length'):
+      case (SORT_BY.LENGTH):
         return good1.length - good2.length;
 
       default:
@@ -45,18 +47,19 @@ function sortGoodsBy(goodList, sortBy, isNeedReverse) {
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [isChanged, setIsChanged] = useState(false);
+  const isShowResetButton = sortBy || isReversed;
   const goods = sortGoodsBy(goodsFromServer, sortBy, isReversed);
+
+  function resetClickHandler() {
+    setSortBy('');
+    setIsReversed(false);
+  }
 
   const resetButton = (
     <button
       type="button"
       className="button is-danger is-light"
-      onClick={() => {
-        setSortBy('');
-        setIsReversed(false);
-        setIsChanged(false);
-      }}
+      onClick={() => resetClickHandler()}
     >
       Reset
     </button>
@@ -68,12 +71,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': sortBy !== SORT_BY_ALPHABETIC,
+            'is-light': sortBy !== SORT_BY.ALPHABET,
           })}
-          onClick={() => {
-            setSortBy(SORT_BY_ALPHABETIC);
-            setIsChanged(true);
-          }}
+          onClick={() => setSortBy(SORT_BY.ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -81,12 +81,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': sortBy !== SORT_BY_LENGTH,
+            'is-light': sortBy !== SORT_BY.LENGTH,
           })}
-          onClick={() => {
-            setSortBy(SORT_BY_LENGTH);
-            setIsChanged(true);
-          }}
+          onClick={() => setSortBy(SORT_BY.LENGTH)}
         >
           Sort by length
         </button>
@@ -96,20 +93,19 @@ export const App = () => {
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => {
-            setIsReversed(!isReversed);
-            setIsChanged(!isReversed || sortBy);
-          }}
+          onClick={() => setIsReversed(currentIsReversed => !currentIsReversed)}
         >
           Reverse
         </button>
 
-        {isChanged ? resetButton : ''}
+        {isShowResetButton && resetButton}
       </div>
 
       <ul>
         {goods.map(good => (
-          <li data-cy="Good" key={good}>{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
