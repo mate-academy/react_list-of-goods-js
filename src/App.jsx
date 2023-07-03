@@ -1,29 +1,27 @@
 import 'bulma/css/bulma.css';
-// import { classNames as cn } from 'classnames';
 
 import './App.scss';
 import { useState } from 'react';
 
 const SORT_ALPHABETICALLY = 'alpabet sort';
 const SORT_BY_LENGTH = 'length sort';
-// const REVERSE = 'reverse';
 
 function getChangedGoods(goods, sortType, isReversed) {
   const changedGoods = [...goods];
 
   if (sortType) {
-    switch (sortType) {
-      case (SORT_ALPHABETICALLY):
-        changedGoods.sort((good1, good2) => good1.localeCompare(good2));
-        break;
+    changedGoods.sort((good1, good2) => {
+      switch (sortType) {
+        case (SORT_ALPHABETICALLY):
+          return good1.localeCompare(good2);
 
-      case (SORT_BY_LENGTH):
-        changedGoods.sort((good1, good2) => good1.length - good2.length);
-        break;
+        case (SORT_BY_LENGTH):
+          return good1.length - good2.length;
 
-      default:
-        return 0;
-    }
+        default:
+          return 0;
+      }
+    });
   }
 
   if (isReversed) {
