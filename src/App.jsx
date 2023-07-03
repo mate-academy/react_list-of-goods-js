@@ -1,5 +1,10 @@
 import 'bulma/css/bulma.css';
+import { useState } from 'react';
+
 import './App.scss';
+import { SORT_FIELD } from './constants';
+import { GoodList } from './components/GoodList';
+import { SortPanel } from './components/SortPanel';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +19,51 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const getPreparedGoods = (goods, { sortField, isReverse }) => {
+  const preparedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case 'alphabet':
+          return good1.localeCompare(good2);
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+        case 'length':
+          return good1.length - good2.length;
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReverse) {
+    return preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+};
+
+export const App = () => {
+  const [sortField, setSortField] = useState(SORT_FIELD.DEFAULT);
+  const [isReverse, setIsReverse] = useState(false);
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+    isReverse,
+  });
+
+  return (
+    <div className="section content">
+      <SortPanel sortPanelData={{
+        SORT_FIELD,
+        sortField,
+        isReverse,
+        setSortField,
+        setIsReverse,
+      }}
+      />
+
+      <GoodList goods={visibleGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
