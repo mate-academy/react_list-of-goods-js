@@ -50,7 +50,7 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReverse, setReverse] = useState(false);
 
-  const forVisibleReset = sortField.length > 0 || isReverse === true;
+  const forVisibleReset = sortField || isReverse;
 
   const visibleGoods = preparedGoodsFromServer(
     goodsFromServer,
