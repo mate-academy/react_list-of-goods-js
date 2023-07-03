@@ -20,14 +20,14 @@ export const goodsFromServer = [
 ];
 
 const getSortedGoods = (goods, { sortField, isReversed }) => {
-  const sortedGoods = [...goods];
+  const visibleGoods = [...goods];
 
   if (sortField) {
-    sortedGoods.sort((item1, item2) => {
+    visibleGoods.sort((item1, item2) => {
       switch (sortField) {
-        case 'name':
+        case SORT_FIELD_NAME:
           return item1.localeCompare(item2);
-        case 'length':
+        case SORT_FIELD_LENGTH:
           return item1.length - item2.length;
         default:
           return 0;
@@ -35,7 +35,7 @@ const getSortedGoods = (goods, { sortField, isReversed }) => {
     });
   }
 
-  return isReversed ? sortedGoods.reverse() : sortedGoods;
+  return isReversed ? visibleGoods.reverse() : visibleGoods;
 };
 
 export const App = () => {
