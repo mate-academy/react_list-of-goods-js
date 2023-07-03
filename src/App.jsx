@@ -99,7 +99,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => clearSortType('')}
+            onClick={() => clearSortType()}
           >
             Reset
           </button>
