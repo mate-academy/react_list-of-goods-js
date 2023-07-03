@@ -19,9 +19,36 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+function getPreparedGoods(goods, { sortField, isReversed }) {
+  const preparedGoods = [...goods];
+
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_NAME:
+          return good1.localeCompare(good2);
+
+        case SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+  const preparedGoods = getPreparedGoods(goodsFromServer,
+    { sortField, isReversed });
 
   return (
     <div className="section content">
@@ -91,12 +118,9 @@ export const App = () => {
       </div>
 
       <ul>
-        <li data-cy="Good">Dumplings</li>
-        <li data-cy="Good">Carrot</li>
-        <li data-cy="Good">Eggs</li>
-        <li data-cy="Good">Ice cream</li>
-        <li data-cy="Good">Apple</li>
-        <li data-cy="Good">...</li>
+        {preparedGoods.map(good => (
+          <li data-cy="Good">{good}</li>
+        ))}
       </ul>
     </div>
   );
