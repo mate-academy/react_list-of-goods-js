@@ -24,7 +24,7 @@ export const App = () => {
   const [select, setSelect] = useState('');
   const [isReversed, setReversed] = useState();
 
-  const sortMethod = () => {
+  const sortMethod = (rever) => {
     let res = [...goodsFromServer];
 
     if (select === ALPHABETICALLY) {
@@ -35,10 +35,6 @@ export const App = () => {
       res = [...goodsFromServer].sort((a, b) => a.length - b.length);
     }
 
-    if (select === RESET) {
-      return goodsFromServer;
-    }
-
     if (isReversed) {
       res = res.reverse();
     }
@@ -47,7 +43,7 @@ export const App = () => {
   };
 
   const Reset = () => {
-    if (select !== '' && !isReversed) {
+    if (select !== '') {
       return (
         <button
           type="button"
