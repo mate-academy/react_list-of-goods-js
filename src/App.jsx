@@ -47,7 +47,7 @@ export const App = () => {
   };
 
   const Reset = () => {
-    if (select !== '') {
+    if (select !== '' && !isReversed) {
       return (
         <button
           type="button"
