@@ -17,6 +17,9 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_NAME = 'alphabetic';
+const SORT_BY_LENGTH = 'length';
+
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preperedGoods = [...goods];
 
@@ -26,9 +29,7 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
         case 'alphabetic':
           return good1.localeCompare(good2);
         case 'length':
-          return good1.includes(' ')
-            ? 1
-            : good1.length - good2.length;
+          return good1.length - good2.length;
         default:
           return 0;
       }
@@ -47,9 +48,6 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer,
     { sortField, isReversed });
-
-  const SORT_BY_NAME = 'alphabetic';
-  const SORT_BY_LENGTH = 'length';
 
   const toggleReverse = () => setIsReversed(prevReverse => !prevReverse);
 
