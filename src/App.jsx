@@ -19,12 +19,12 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY = 'alphabetically';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, toChangeDirection, theWayToSort) {
+function getPreparedGoods(goods, isReversed, sortType) {
   const preparedGoods = [...goods];
 
-  if (theWayToSort) {
+  if (sortType) {
     preparedGoods.sort((a, b) => {
-      switch (theWayToSort) {
+      switch (sortType) {
         case SORT_ALPHABETICALLY:
           return a.localeCompare(b);
 
@@ -37,7 +37,7 @@ function getPreparedGoods(goods, toChangeDirection, theWayToSort) {
     });
   }
 
-  if (toChangeDirection) {
+  if (isReversed) {
     preparedGoods.reverse();
   }
 
@@ -46,12 +46,16 @@ function getPreparedGoods(goods, toChangeDirection, theWayToSort) {
 
 export const App = () => {
   const [theWayToSort, setTheWayToSort] = useState('');
-  const [reverseList, setReverseList] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const sortedList = getPreparedGoods(
     goodsFromServer,
-    reverseList,
+    isReversed,
     theWayToSort,
   );
+  const resetChanges = () => {
+    setTheWayToSort('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -74,21 +78,18 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setReverseList(!reverseList);
+            setIsReversed(!isReversed);
           }}
           type="button"
-          className={`button is-warning ${!reverseList && ('is-light')}`}
+          className={`button is-warning ${!isReversed && ('is-light')}`}
         >
           Reverse
         </button>
 
         {(sortedList.toString() !== goodsFromServer.toString()
-          || reverseList) && (
+          || isReversed) && (
           <button
-            onClick={() => {
-              setTheWayToSort('');
-              setReverseList(false);
-            }}
+            onClick={resetChanges}
             type="button"
             className="button is-danger is-light"
           >
