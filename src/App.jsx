@@ -55,6 +55,11 @@ export const App = () => {
     { sortFilter, reversedGoods },
   );
 
+  function resetSort() {
+    setSortFilter('');
+    setReversedGoods('');
+  }
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -100,14 +105,11 @@ export const App = () => {
           Reverse
         </button>
 
-        { (sortFilter !== '' || reversedGoods !== '') && (
+        { (sortFilter || reversedGoods) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortFilter('');
-              setReversedGoods('');
-            }}
+            onClick={resetSort}
           >
             Reset
           </button>
