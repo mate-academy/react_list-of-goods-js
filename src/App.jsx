@@ -16,9 +16,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-// const SORT_BY_ALPHABET = 'alphabet';
-// const SORT_BY_LENGTH = 'length';
-
 export const SORT_TYPE = {
   ALPHABET: 'alphabet',
   LENGTH: 'length',
@@ -82,7 +79,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setIsReversed(isReverse => !isReverse)}
+          onClick={() => setIsReversed(isReversed => !isReversed)}
           className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
