@@ -5,7 +5,7 @@ import './App.scss';
 
 const ALPHABETICALLY = 'alphabetically';
 const LENGTH = 'length';
-const RESET = 'reset';
+const RESET = '';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -54,6 +54,7 @@ export const App = () => {
           className={cn('button is-danger', { 'is-light': select !== RESET })}
           onClick={() => {
             setSelect(RESET);
+            setReversed(false);
           }}
         >
           Reset
