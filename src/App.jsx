@@ -19,7 +19,10 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPreparedGoods(goods, { sortField, isReversed }) {
+function getPreparedGoods(goods, {
+  sortField,
+  isReversed,
+}) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -57,7 +60,6 @@ export const App = () => {
           type="button"
           className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_FIELD_NAME,
-            'is-active': sortField === SORT_FIELD_NAME,
           })}
           onClick={() => setSortField(SORT_FIELD_NAME)}
         >
@@ -68,7 +70,6 @@ export const App = () => {
           type="button"
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
-            'is-active': sortField === SORT_FIELD_LENGTH,
           })}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
@@ -79,7 +80,6 @@ export const App = () => {
           type="button"
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
-            'is-active': isReversed,
           })}
           onClick={() => setIsReversed(!isReversed)}
         >
@@ -87,18 +87,16 @@ export const App = () => {
         </button>
 
         {sortField || isReversed ? (
-          <>
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setIsReversed(false);
-              }}
-            >
-              Reset
-            </button>
-          </>
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setIsReversed(false);
+            }}
+          >
+            Reset
+          </button>
         ) : (
           ''
         )}
@@ -106,7 +104,7 @@ export const App = () => {
 
       <ul>
         {preparedGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
