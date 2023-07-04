@@ -43,11 +43,11 @@ export const App = () => {
   };
 
   const Reset = () => {
-    if (select !== '') {
+    if (select !== '' || isReversed) {
       return (
         <button
           type="button"
-          className={cn('button is-danger', { 'is-light': select !== RESET })}
+          className="button is-danger is-light"
           onClick={() => {
             setSelect(RESET);
             setReversed(false);
