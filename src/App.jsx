@@ -50,7 +50,7 @@ export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const visibleGoods = getSortedGoods(goodsFromServer, {
+  const sortedGoods = getSortedGoods(goodsFromServer, {
     sortField: sortType,
     isReversed,
   });
@@ -108,7 +108,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {sortedGoods.map(good => (
           <li
             data-cy="Good"
             key={good}
