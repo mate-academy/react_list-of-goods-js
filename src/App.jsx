@@ -17,33 +17,12 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function prepareGoods(goods, sortRule) {
+function getPreparedGoods(goods, { sortField, isReversed }) {
   const preperedGoods = [...goods];
 
-  if (sortRule && sortRule.includes('reverse')) {
-    const reversedArr = [...goods].sort(() => -1);
-
-    reversedArr.sort((good1, good2) => {
-      switch (sortRule) {
-        case 'reverse':
-          return 1;
-        case 'alphabetic reverse':
-          return good2.localeCompare(good1);
-        case 'length reverse':
-          return good1.includes(' ')
-            ? -1
-            : good2.length - good1.length;
-        default:
-          return 0;
-      }
-    });
-
-    return reversedArr;
-  }
-
-  if (sortRule) {
+  if (sortField) {
     preperedGoods.sort((good1, good2) => {
-      switch (sortRule) {
+      switch (sortField) {
         case 'alphabetic':
           return good1.localeCompare(good2);
         case 'length':
@@ -56,43 +35,38 @@ function prepareGoods(goods, sortRule) {
     });
   }
 
+  if (isReversed) {
+    preperedGoods.reverse();
+  }
+
   return preperedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const visibleGoods = prepareGoods(goodsFromServer, sortField);
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getPreparedGoods(goodsFromServer,
+    { sortField, isReversed });
 
   const SORT_BY_NAME = 'alphabetic';
   const SORT_BY_LENGTH = 'length';
-  const SORT_REVERSE = 'reverse';
 
-  const toggleReverse = () => setSortField((prevState) => {
-    if (prevState === '') {
-      return SORT_REVERSE;
-    }
+  const toggleReverse = () => setIsReversed(prevReverse => !prevReverse);
 
-    const haveReverse = prevState.includes('reverse');
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
-    if (haveReverse && prevState.split(' ').length === 1) {
-      return '';
-    }
+  const setSortByName = () => setSortField(SORT_BY_NAME);
 
-    return haveReverse
-      ? prevState.split(' ')[0]
-      : `${sortField} ${SORT_REVERSE}`;
-  });
+  const setSortByLength = () => setSortField(SORT_BY_LENGTH);
 
-  const handleSort = sortParameter => setSortField(prevSort => (
-    prevSort.includes(SORT_REVERSE)
-      ? `${sortParameter} ${SORT_REVERSE}`
-      : sortParameter));
-
-  const resetButton = sortField && (
+  const resetButton = (sortField || isReversed) && (
     <button
       type="button"
       className="button is-danger is-light"
-      onClick={() => setSortField('')}
+      onClick={reset}
     >
       Reset
     </button>
@@ -108,7 +82,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', handleClasses(SORT_BY_NAME))}
-          onClick={() => handleSort(SORT_BY_NAME)}
+          onClick={setSortByName}
         >
           Sort alphabetically
         </button>
@@ -116,15 +90,17 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', handleClasses(SORT_BY_LENGTH))}
-          onClick={() => handleSort(SORT_BY_LENGTH)}
+          onClick={setSortByLength}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => toggleReverse()}
-          className={cn('button is-warning', handleClasses(SORT_REVERSE))}
+          onClick={toggleReverse}
+          className={cn('button is-warning', {
+            'is-light': !isReversed,
+          })}
         >
           Reverse
         </button>
