@@ -81,14 +81,12 @@ export const App = () => {
           onClick={() => setIsReversed(!isReversed)}
           type="button"
           className={cn('button is-warning',
-            { 'is-light': isReversed !== true })}
+            { 'is-light': !isReversed })}
         >
           Reverse
         </button>
 
-        {(sortField === SORT_LENGHT
-        || sortField === SORT_ALPHABETICALLY
-        || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             onClick={handleReset}
             type="button"
