@@ -97,7 +97,7 @@ export const App = () => {
         {sortField || isReversed
           ? (
             <button
-              onClick={() => clearSort()}
+              onClick={clearSort}
               type="button"
               className="button is-danger is-light"
             >
