@@ -17,22 +17,30 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [isAlphabeticaly, setIsAlphabeticaly] = useState(true);
-  const [isLength, setIsLength] = useState(true);
-  const [isReverse, setReverse] = useState(true);
+  const [isAlphabeticaly, setIsAlphabeticaly] = useState(false);
+  const [isLength, setIsLength] = useState(false);
+  const [isReverse, setReverse] = useState(false);
+  const [sortedType, setSortedType] = useState(null);
 
-  const sortGoods = () => {
+  const sortGoods = (sortType) => {
     let newGoods = [...goodsFromServer];
 
-    if (!isAlphabeticaly) {
-      newGoods = newGoods.sort((good1, good2) => good1.localeCompare(good2));
+    switch (sortType) {
+      case 'isAlphabeticaly':
+        newGoods = newGoods.sort((good1, good2) => good1.localeCompare(good2));
+
+        break;
+
+      case 'isLength':
+        newGoods = newGoods.sort((good1, good2) => good1.length - good2.length);
+
+        break;
+
+      default:
+        newGoods = [...newGoods];
     }
 
-    if (!isLength) {
-      newGoods = newGoods.sort((good1, good2) => good1.length - good2.length);
-    }
-
-    if (!isReverse) {
+    if (isReverse) {
       newGoods = newGoods.reverse();
     }
 
@@ -40,15 +48,15 @@ export const App = () => {
   };
 
   const sortByAlphabetically = () => {
-    setIsAlphabeticaly(false);
-    setIsLength(true);
-    setReverse(true);
+    setIsAlphabeticaly(true);
+    setIsLength(false);
+    setSortedType('isAlphabeticaly');
   };
 
   const sortByLength = () => {
-    setIsAlphabeticaly(true);
-    setIsLength(false);
-    setReverse(true);
+    setIsAlphabeticaly(false);
+    setIsLength(true);
+    setSortedType('isLength');
   };
 
   const reverseGoods = () => {
@@ -56,9 +64,10 @@ export const App = () => {
   };
 
   const reset = () => {
-    setIsAlphabeticaly(true);
-    setIsLength(true);
-    setReverse(true);
+    setIsAlphabeticaly(false);
+    setIsLength(false);
+    setReverse(false);
+    setSortedType(null);
   };
 
   return (
@@ -67,7 +76,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': isAlphabeticaly,
+            'is-light': !isAlphabeticaly,
           })}
           onClick={sortByAlphabetically}
         >
@@ -77,7 +86,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': isLength,
+            'is-light': !isLength,
           })}
           onClick={sortByLength}
         >
@@ -87,14 +96,14 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReverse,
+            'is-light': !isReverse,
           })}
           onClick={reverseGoods}
         >
           Reverse
         </button>
 
-        {!(isAlphabeticaly && isLength && isReverse) && (
+        {(isAlphabeticaly || isLength || isReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -106,7 +115,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortGoods().map(good => (
+        {sortGoods(sortedType).map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
