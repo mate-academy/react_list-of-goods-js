@@ -58,7 +58,7 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [sortDirection, setSortDirection] = useState(ASC);
   const sortGoods = getSortGoods(goodsFromServer, sortField, sortDirection);
-  const sortReverse = function() {
+  const sortReverse = () => {
     if (sortField === '') {
       setSortField(SORT_BY_INDEX_DESC);
     }
@@ -74,6 +74,11 @@ export const App = () => {
     if (sortDirection === ASC) {
       setSortDirection(DESC);
     }
+  };
+
+  const forReset = () => {
+    setSortField('');
+    setSortDirection(ASC);
   };
 
   return (
@@ -116,8 +121,7 @@ export const App = () => {
         {sortField && (
           <button
             onClick={() => {
-              setSortField('');
-              setSortDirection(ASC);
+              forReset();
             }}
             type="button"
             className="button is-danger is-light"
