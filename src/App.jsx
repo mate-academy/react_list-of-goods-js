@@ -58,6 +58,23 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [sortDirection, setSortDirection] = useState(ASC);
   const sortGoods = getSortGoods(goodsFromServer, sortField, sortDirection);
+  const sortReverse = function() {
+    if (sortField === '') {
+      setSortField(SORT_BY_INDEX_DESC);
+    }
+
+    if (sortDirection === DESC && sortField === SORT_BY_INDEX_DESC) {
+      setSortField('');
+    }
+
+    if (sortDirection === DESC) {
+      setSortDirection(ASC);
+    }
+
+    if (sortDirection === ASC) {
+      setSortDirection(DESC);
+    }
+  };
 
   return (
     <div className="section content">
@@ -87,23 +104,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => {
-            if (sortField === '') {
-              setSortField(SORT_BY_INDEX_DESC);
-            }
-
-            if (sortDirection === DESC && sortField === SORT_BY_INDEX_DESC) {
-              setSortField('');
-            }
-
-            if (sortDirection === DESC) {
-              setSortDirection(ASC);
-            }
-
-            if (sortDirection === ASC) {
-              setSortDirection(DESC);
-            }
-          }}
+          onClick={() => sortReverse()}
           type="button"
           className={cn('button is-warning', {
             'is-light': sortDirection === ASC,
