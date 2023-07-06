@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import cn from 'classnames';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -14,45 +17,112 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const buttons = [
+  {
+    name: 'Sort alphabetically',
+    class: 'is-info',
+  },
+  {
+    name: 'Sort by length',
+    class: 'is-success',
+  },
+];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+const sortList = (goods, buttonClass, isReversed) => {
+  const list = [...goods];
+  const sortLength = (good1, good2) => good1.length - good2.length;
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (buttonClass === 'is-info') {
+    return isReversed ? list.sort().reverse() : list.sort();
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  if (buttonClass === 'is-success') {
+    return isReversed
+      ? list.sort(sortLength).reverse()
+      : list.sort(sortLength);
+  }
+
+  if (isReversed) {
+    list.reverse();
+  }
+
+  return list;
+};
+
+export const App = () => {
+  const [status, setStatus] = useState('');
+  const [direction, setDirection] = useState(false);
+
+  const preparedGoods = sortList(goodsFromServer, status, direction);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {buttons.map(button => (
+          <button
+            type="button"
+            key={button.class}
+            className={cn(
+              'button',
+              `${button.class}`, {
+                'is-light': status !== button.class,
+              },
+            )}
+            onClick={() => {
+              if (button.class === 'is-info'
+              || button.class === 'is-success'
+              ) {
+                setStatus(button.class);
+              }
+
+              if (button.class === 'is-warning') {
+                setDirection(!direction);
+              }
+            }}
+          >
+            {button.name}
+          </button>
+        ))}
+        <button
+          type="button"
+          className={cn(
+            'button is-warning', {
+              'is-light': !direction,
+            },
+          )}
+          onClick={() => {
+            setDirection(!direction);
+          }}
+        >
+          Reverse
+        </button>
+
+        {(
+          status !== '' || direction
+        ) && (
+        <button
+          type="button"
+          className="button is-danger is-light"
+          onClick={() => {
+            setDirection(false);
+            setStatus('');
+          }}
+        >
+          Reset
+        </button>
+        )}
+      </div>
+
+      <ul>
+        {preparedGoods.map(goodItem => (
+          <li
+            data-cy="Good"
+            key={goodItem}
+          >
+            {goodItem}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
