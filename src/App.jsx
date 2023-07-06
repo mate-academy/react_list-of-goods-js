@@ -35,9 +35,12 @@ function getSortGoods(goods, sortField, sortDirection) {
             : good2.localeCompare(good1);
 
         case SORT_BY_LENGTH:
+          // eslint-disable-next-line no-nested-ternary
           return sortDirection === ASC
             ? good1.length - good2.length
-            : good2.length - good1.length;
+            : (good1.length === good2.length)
+              ? good2.localeCompare(good1)
+              : good2.length - good1.length;
 
         case SORT_BY_INDEX_DESC:
           return preparedGoods.indexOf(good2) - preparedGoods.indexOf(good1);
@@ -87,6 +90,10 @@ export const App = () => {
           onClick={() => {
             if (sortField === '') {
               setSortField(SORT_BY_INDEX_DESC);
+            }
+
+            if (sortDirection === DESC && sortField === SORT_BY_INDEX_DESC) {
+              setSortField('');
             }
 
             if (sortDirection === DESC) {
