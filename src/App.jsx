@@ -22,22 +22,36 @@ const SORT_FIELD_LENGTH = 'length';
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState(false);
-  const goods = [...goodsFromServer];
 
   const onClickReverse = () => {
     setReverseField(!reverseField);
   };
 
-  if (sortField === SORT_FIELD_ALPHABET) {
-    goods.sort();
+  const onReset = () => {
+    setSortField('');
+    setReverseField(false);
+  };
+
+  function prepareGoods(sortBy) {
+    const allGoods = [...goodsFromServer];
+
+    if (sortBy === SORT_FIELD_ALPHABET) {
+      return allGoods.sort();
+    }
+
+    if (sortBy === SORT_FIELD_LENGTH) {
+      return allGoods.sort(
+        (firstGood, nextGood) => firstGood.length - nextGood.length,
+      );
+    }
+
+    return allGoods;
   }
 
-  if (sortField === SORT_FIELD_LENGTH) {
-    goods.sort((firstGood, nextGood) => firstGood.length - nextGood.length);
-  }
+  const preparedGoods = prepareGoods(sortField);
 
   if (reverseField) {
-    goods.reverse();
+    preparedGoods.reverse();
   }
 
   return (
@@ -75,10 +89,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setReverseField(false);
-              }}
+              onClick={onReset}
             >
               Reset
             </button>
@@ -87,7 +98,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {preparedGoods.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
