@@ -4,6 +4,9 @@ import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+const SORT_BY_NAME = 'is-info';
+const SORT_BY_LENGTH = 'is-success';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -32,14 +35,14 @@ const sortList = (goods, buttonClass, isReversed) => {
   const list = [...goods];
   const sortLength = (good1, good2) => good1.length - good2.length;
 
-  if (buttonClass === 'is-info') {
-    return isReversed ? list.sort().reverse() : list.sort();
+  if (buttonClass === SORT_BY_NAME) {
+    return !isReversed ? list.sort() : list.sort().reverse();
   }
 
-  if (buttonClass === 'is-success') {
-    return isReversed
-      ? list.sort(sortLength).reverse()
-      : list.sort(sortLength);
+  if (buttonClass === SORT_BY_LENGTH) {
+    return !isReversed
+      ? list.sort(sortLength)
+      : list.sort(sortLength).reverse();
   }
 
   if (isReversed) {
@@ -55,6 +58,11 @@ export const App = () => {
 
   const preparedGoods = sortList(goodsFromServer, status, direction);
 
+  const clickReset = () => {
+    setDirection(false);
+    setStatus('');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -69,14 +77,10 @@ export const App = () => {
               },
             )}
             onClick={() => {
-              if (button.class === 'is-info'
-              || button.class === 'is-success'
+              if (button.class === SORT_BY_NAME
+              || button.class === SORT_BY_LENGTH
               ) {
                 setStatus(button.class);
-              }
-
-              if (button.class === 'is-warning') {
-                setDirection(!direction);
               }
             }}
           >
@@ -103,10 +107,7 @@ export const App = () => {
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={() => {
-            setDirection(false);
-            setStatus('');
-          }}
+          onClick={clickReset}
         >
           Reset
         </button>
