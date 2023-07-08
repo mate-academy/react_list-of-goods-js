@@ -4,8 +4,8 @@ import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-const SORT_BY_NAME = 'is-info';
-const SORT_BY_LENGTH = 'is-success';
+export const SORT_BY_NAME = 'is-info';
+export const SORT_BY_LENGTH = 'is-success';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -20,94 +20,96 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const buttons = [
-  {
-    name: 'Sort alphabetically',
-    class: 'is-info',
-  },
-  {
-    name: 'Sort by length',
-    class: 'is-success',
-  },
-];
-
 const sortList = (goods, buttonClass, isReversed) => {
-  const list = [...goods];
-  const sortLength = (good1, good2) => good1.length - good2.length;
+  const goodsCopy = [...goods];
 
-  if (buttonClass === SORT_BY_NAME) {
-    return !isReversed ? list.sort() : list.sort().reverse();
-  }
+  if (buttonClass) {
+    goodsCopy.sort((good1, good2) => {
+      switch (buttonClass) {
+        case SORT_BY_NAME:
+          return good1.localeCompare(good2);
 
-  if (buttonClass === SORT_BY_LENGTH) {
-    return !isReversed
-      ? list.sort(sortLength)
-      : list.sort(sortLength).reverse();
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
   }
 
   if (isReversed) {
-    list.reverse();
+    goodsCopy.reverse();
   }
 
-  return list;
+  return goodsCopy;
 };
 
 export const App = () => {
-  const [status, setStatus] = useState('');
-  const [direction, setDirection] = useState(false);
+  const [sortBy, setSortBy] = useState('');
+  const [sortDirection, setSortDirection] = useState(false);
 
-  const preparedGoods = sortList(goodsFromServer, status, direction);
+  const preparedGoods = sortList(goodsFromServer, sortBy, sortDirection);
 
-  const clickReset = () => {
-    setDirection(false);
-    setStatus('');
+  const reset = () => {
+    setSortDirection(false);
+    setSortBy('');
   };
 
   return (
     <div className="section content">
       <div className="buttons">
-        {buttons.map(button => (
-          <button
-            type="button"
-            key={button.class}
-            className={cn(
-              'button',
-              `${button.class}`, {
-                'is-light': status !== button.class,
-              },
-            )}
-            onClick={() => {
-              if (button.class === SORT_BY_NAME
-              || button.class === SORT_BY_LENGTH
-              ) {
-                setStatus(button.class);
-              }
-            }}
-          >
-            {button.name}
-          </button>
-        ))}
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-info', {
+              'is-light': sortBy !== 'is-info',
+            },
+          )}
+          onClick={() => {
+            setSortBy('is-info');
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-success', {
+              'is-light': sortBy !== 'is-success',
+            },
+          )}
+          onClick={() => {
+            setSortBy('is-success');
+          }}
+        >
+          Sort by length
+        </button>
+
         <button
           type="button"
           className={cn(
             'button is-warning', {
-              'is-light': !direction,
+              'is-light': !sortDirection,
             },
           )}
           onClick={() => {
-            setDirection(!direction);
+            setSortDirection(!sortDirection);
           }}
         >
           Reverse
         </button>
 
         {(
-          status !== '' || direction
+          sortBy || sortDirection
         ) && (
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={clickReset}
+          onClick={reset}
         >
           Reset
         </button>
