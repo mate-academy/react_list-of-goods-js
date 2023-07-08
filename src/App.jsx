@@ -51,6 +51,17 @@ export const App = () => {
 
   const visibleGoods = sorting(goodsFromServer, sortMethod, isReversed);
 
+  const makeSetSortMethod = (sortingMethod) => {
+    setSortMethod(sortingMethod);
+  };
+
+  const makeSetOrder = () => setOrder(!isReversed);
+
+  const makeReset = () => {
+    setSortMethod('');
+    setOrder(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -59,7 +70,7 @@ export const App = () => {
           className={classNames('button', 'is-info', {
             'is-light': sortMethod !== sortByABC,
           })}
-          onClick={() => setSortMethod(sortByABC)}
+          onClick={setSortMethod(sortByABC)}
         >
           Sort alphabetically
         </button>
@@ -69,7 +80,7 @@ export const App = () => {
           className={classNames('button', 'is-success', {
             'is-light': sortMethod !== sortByLength,
           })}
-          onClick={() => setSortMethod(sortByLength)}
+          onClick={makeSetSortMethod(sortByLength)}
         >
           Sort by length
         </button>
@@ -79,7 +90,7 @@ export const App = () => {
           className={classNames('button', 'is-warning', {
             'is-light': isReversed === false,
           })}
-          onClick={() => setOrder(!isReversed)}
+          onClick={makeSetOrder()}
         >
           Reverse
         </button>
@@ -88,15 +99,11 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortMethod('');
-              setOrder(false);
-            }}
+            onClick={makeReset()}
           >
             Reset
           </button>
-        )
-        }
+        )}
       </div>
 
       <ul>
