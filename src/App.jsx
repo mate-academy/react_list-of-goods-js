@@ -23,7 +23,7 @@ function getPreparedGoods(goods, { sortType, reverse } = {}) {
   let preparedGoods = [...goods];
 
   if (sortType) {
-    preparedGoods = preparedGoods.sort((firstGood, secondGood) => {
+    preparedGoods.sort((firstGood, secondGood) => {
       switch (sortType) {
         case SORT_TYPE_AB:
           return firstGood.localeCompare(secondGood);
@@ -81,19 +81,18 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortType || reverse)
-                && (
-                <button
-                  onClick={() => {
-                    setReverse(false);
-                    setSortType('');
-                  }}
-                  type="button"
-                  className="button is-danger is-light"
-                >
-                  Reset
-                </button>
-                )}
+        {(sortType || reverse) && (
+          <button
+            onClick={() => {
+              setReverse(false);
+              setSortType('');
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
