@@ -83,12 +83,12 @@ export const App = () => {
               Reset
             </button>
           )
-        }
+          }
       </div>
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good" key={good.toString()}>{good}</li>
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
