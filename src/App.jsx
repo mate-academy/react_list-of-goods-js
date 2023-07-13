@@ -103,17 +103,19 @@ export const App = () => {
         >
           Reverse
         </button>
+        {visibleGoods !== goodsFromServer && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => setSortOption({
+              option: '',
+              reversed: false,
+            })}
+          >
+            Reset
+          </button>
+        )}
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => setSortOption({
-            option: '',
-            reversed: false,
-          })}
-        >
-          Reset
-        </button>
       </div>
 
       <ul>
