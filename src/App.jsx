@@ -16,8 +16,10 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_BY_ALPHA = 'alphabet';
-const SORT_BY_LENGTH = 'length';
+const SORT_BY = {
+  ALPHA: 'alphabet',
+  LENGTH: 'length',
+};
 
 function getPrepareGoods(goods, sortGood, reverse) {
   const prepareGoods = [...goods];
@@ -25,10 +27,10 @@ function getPrepareGoods(goods, sortGood, reverse) {
   if (prepareGoods) {
     prepareGoods.sort((good1, good2) => {
       switch (sortGood) {
-        case SORT_BY_ALPHA:
+        case SORT_BY.ALPHA:
           return good1.localeCompare(good2);
 
-        case SORT_BY_LENGTH:
+        case SORT_BY.LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -63,19 +65,19 @@ export const App = () => {
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortGood(SORT_BY_ALPHA)}
+          onClick={() => setSortGood(SORT_BY.ALPHA)}
           type="button"
           className={cn('button', ' is-info', {
-            'is-light': sortGood !== SORT_BY_ALPHA,
+            'is-light': sortGood !== SORT_BY.ALPHA,
           })}
         >
           Sort alphabetically
         </button>
         <button
-          onClick={() => setSortGood(SORT_BY_LENGTH)}
+          onClick={() => setSortGood(SORT_BY.LENGTH)}
           type="button"
           className={cn('button', ' is-success', {
-            'is-light': sortGood !== SORT_BY_LENGTH,
+            'is-light': sortGood !== SORT_BY.LENGTH,
           })}
         >
           Sort by length
