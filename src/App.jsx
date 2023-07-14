@@ -94,15 +94,15 @@ export const App = () => {
         </button>
 
         {isSortedOrIsReversed
-        && (
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={reset}
-        >
-          Reset
-        </button>
-        )}
+          && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+          )}
       </div>
 
       <GoodsList goods={visibleGoods} />
