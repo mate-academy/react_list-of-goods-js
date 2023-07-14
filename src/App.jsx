@@ -24,6 +24,7 @@ const compareGoods = (good1, good2, orderBy) => {
   switch (orderBy) {
     case SORT_BY_NAME:
       return good1.localeCompare(good2);
+
     case SORT_BY_LENGTH:
       return good1.length - good2.length;
 
@@ -32,27 +33,34 @@ const compareGoods = (good1, good2, orderBy) => {
   }
 };
 
-const getPreparedGoods = (goods, { sortBy, query, reverse }) => {
+const getPreparedGoods = (goods, { sortBy, query, isReversed }) => {
   const filtered = query
-    ? [...goods].filter(good => good.include(query))
+    ? goods.filter(good => good.include(query))
     : [...goods];
+
   const sorted = sortBy
     ? filtered.sort((good1, good2) => compareGoods(good1, good2, sortBy))
     : filtered;
 
-  return reverse
+  return isReversed
     ? sorted.reverse()
     : sorted;
 };
 
 export const App = () => {
   const [sortBy, setSortBy] = useState(null);
-  const [reverse, setReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
+  const isSortedOrIsReversed = sortBy !== null || isReversed;
+  const reset = () => {
+    setSortBy(null);
+    setIsReversed(false);
+  };
+
   const visibleGoods = getPreparedGoods(
     goodsFromServer,
     { sortBy,
       query: null,
-      reverse },
+      isReversed },
   );
 
   return (
@@ -79,26 +87,22 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning',
-            { 'is-light': !reverse })}
-          onClick={() => setReverse(!reverse)}
+            { 'is-light': !isReversed })}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortBy !== null || reverse)
+        {isSortedOrIsReversed
         && (
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={() => {
-            setSortBy(null);
-            setReverse(false);
-          }}
+          onClick={reset}
         >
           Reset
         </button>
         )}
-
       </div>
 
       <GoodsList goods={visibleGoods} />
