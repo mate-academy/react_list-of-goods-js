@@ -16,8 +16,12 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_NAME = 'name';
-const SORT_FIELD_LENGTH = 'length';
+const fields = {
+  SORT_FIELD_NAME: 'name',
+  SORT_FIELD_LENGTH: 'length',
+};
+// const SORT_FIELD_NAME = 'name';
+// const SORT_FIELD_LENGTH = 'length';
 
 const getVisbleGoods = (goods, sortOption, isReversed) => {
   let visibleGoods = goods;
@@ -25,10 +29,10 @@ const getVisbleGoods = (goods, sortOption, isReversed) => {
   if (sortOption) {
     visibleGoods = [...visibleGoods].sort((good1, good2) => {
       switch (sortOption) {
-        case SORT_FIELD_LENGTH:
+        case fields.SORT_FIELD_LENGTH:
           return good1[sortOption] - good2[sortOption];
 
-        case SORT_FIELD_NAME:
+        case fields.SORT_FIELD_NAME:
           return good1.localeCompare(good2);
         default:
           return 0;
@@ -64,11 +68,11 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': sortOption.option !== SORT_FIELD_NAME },
+            { 'is-light': sortOption.option !== fields.SORT_FIELD_NAME },
           )}
           onClick={() => setSortOption({
             ...sortOption,
-            option: SORT_FIELD_NAME,
+            option: fields.SORT_FIELD_NAME,
           })}
         >
           Sort alphabetically
@@ -79,11 +83,11 @@ export const App = () => {
           className={cn(
             'button',
             'is-success',
-            { 'is-light': sortOption.option !== SORT_FIELD_LENGTH },
+            { 'is-light': sortOption.option !== fields.SORT_FIELD_LENGTH },
           )}
           onClick={() => setSortOption({
             ...sortOption,
-            option: SORT_FIELD_LENGTH,
+            option: fields.SORT_FIELD_LENGTH,
           })}
         >
           Sort by length
