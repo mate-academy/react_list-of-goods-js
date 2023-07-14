@@ -20,8 +20,6 @@ const fields = {
   SORT_FIELD_NAME: 'name',
   SORT_FIELD_LENGTH: 'length',
 };
-// const SORT_FIELD_NAME = 'name';
-// const SORT_FIELD_LENGTH = 'length';
 
 const getVisbleGoods = (goods, sortOption, isReversed) => {
   let visibleGoods = goods;
