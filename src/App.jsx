@@ -46,7 +46,7 @@ const getVisbleGoods = (goods, sortOption, isReversed) => {
 export const App = () => {
   const [sortOption, setSortOption] = useState({
     option: '',
-    reverse: false,
+    reversed: false,
   });
 
   const visibleGoods = getVisbleGoods(
@@ -94,7 +94,7 @@ export const App = () => {
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': !sortOption.reverse },
+            { 'is-light': !sortOption.reversed },
           )}
           onClick={() => setSortOption({
             ...sortOption,
