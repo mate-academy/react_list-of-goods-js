@@ -51,7 +51,7 @@ export const App = () => {
     setVisibleGoods(goodsFromServer);
     setSortField('');
     setIsReset(false);
-    setIsReversed(!isReversed);
+    setIsReversed(false);
   };
 
   const sortAlphabeticallyClick = () => {
