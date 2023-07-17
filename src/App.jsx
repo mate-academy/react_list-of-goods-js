@@ -18,6 +18,7 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_FIELD_BY_LENGTH = 'Sort by length';
+const isLight = 'is-light';
 
 function sortGoods(goods, sortField, makeReverse = false) {
   const preparedGoods = [...goods];
@@ -46,10 +47,6 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const [isReset, setIsReset] = useState(false);
 
-  console.log(`
-    Reverse - ${isReversed}
-    Reset - ${isReset}`);
-
   const resetClick = () => {
     setVisibleGoods(goodsFromServer);
     setSortField('');
@@ -70,7 +67,7 @@ export const App = () => {
 
   const sortByLengthClick = () => {
     if (isReversed) {
-      setVisibleGoods(sortGoods(visibleGoods, SORT_FIELD_BY_LENGTH, true));
+      setVisibleGoods(sortGoods(goodsFromServer, SORT_FIELD_BY_LENGTH, true));
     } else {
       setVisibleGoods(sortGoods(visibleGoods, SORT_FIELD_BY_LENGTH));
     }
@@ -94,7 +91,7 @@ export const App = () => {
             'button',
             'is-info',
             {
-              'is-light': sortField !== SORT_FIELD_ALPHABETICALLY,
+              [isLight]: sortField !== SORT_FIELD_ALPHABETICALLY,
             },
           )}
           onClick={sortAlphabeticallyClick}
@@ -108,7 +105,7 @@ export const App = () => {
             'button',
             'is-success',
             {
-              'is-light': sortField !== SORT_FIELD_BY_LENGTH,
+              [isLight]: sortField !== SORT_FIELD_BY_LENGTH,
             },
           )}
           onClick={sortByLengthClick}
@@ -122,7 +119,7 @@ export const App = () => {
             'button',
             'is-warning',
             {
-              'is-light': !isReversed || !isReset,
+              [isLight]: !isReversed || !isReset,
             },
           )}
           onClick={reverseClick}
