@@ -46,6 +46,8 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
   const [isReset, setIsReset] = useState(false);
+  const isResetConditionMet = isReset
+  && JSON.stringify(visibleGoods) !== JSON.stringify(goodsFromServer);
 
   const resetClick = () => {
     setVisibleGoods(goodsFromServer);
@@ -55,22 +57,16 @@ export const App = () => {
   };
 
   const sortAlphabeticallyClick = () => {
-    if (isReversed) {
-      setVisibleGoods(sortGoods(visibleGoods, SORT_FIELD_ALPHABETICALLY, true));
-    } else {
-      setVisibleGoods(sortGoods(visibleGoods, SORT_FIELD_ALPHABETICALLY));
-    }
+    setVisibleGoods(sortGoods(visibleGoods,
+      SORT_FIELD_ALPHABETICALLY, isReversed));
 
     setSortField(SORT_FIELD_ALPHABETICALLY);
     setIsReset(true);
   };
 
   const sortByLengthClick = () => {
-    if (isReversed) {
-      setVisibleGoods(sortGoods(goodsFromServer, SORT_FIELD_BY_LENGTH, true));
-    } else {
-      setVisibleGoods(sortGoods(visibleGoods, SORT_FIELD_BY_LENGTH));
-    }
+    setVisibleGoods(sortGoods(goodsFromServer,
+      SORT_FIELD_BY_LENGTH, isReversed));
 
     setSortField(SORT_FIELD_BY_LENGTH);
     setIsReset(true);
@@ -127,9 +123,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {isReset
-        && JSON.stringify(visibleGoods) !== JSON.stringify(goodsFromServer)
-        && (
+        {isResetConditionMet && (
           <button
             type="button"
             className="button is-danger is-light"
