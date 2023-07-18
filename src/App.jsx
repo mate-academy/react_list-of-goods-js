@@ -109,8 +109,8 @@ export const App = () => {
         }
 
         {
-          sortField !== '' || reverseIsActive
-            ? (
+          (sortField !== '' || reverseIsActive)
+            && (
               <button
                 onClick={() => {
                   setSortField('');
@@ -122,7 +122,6 @@ export const App = () => {
                 Reset
               </button>
             )
-            : ''
         }
       </div>
 
