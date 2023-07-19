@@ -48,12 +48,11 @@ export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [isReverse, setIsReverse] = useState(false);
 
-  let prepearedGoods = prepearGoods(goodsFromServer, sortBy, isReverse);
+  const prepearedGoods = prepearGoods(goodsFromServer, sortBy, isReverse);
 
   const reset = () => {
     setSortBy('');
     setIsReverse(false);
-    prepearedGoods = goodsFromServer;
   };
 
   return (
