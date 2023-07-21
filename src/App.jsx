@@ -106,7 +106,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || isReversed) && <Reset />}
+        {(sortField || isReversed) && <reset />}
       </div>
 
       <ul>
