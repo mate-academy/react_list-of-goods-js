@@ -40,10 +40,10 @@ function getPreparedGoods(goods, { sortBy, order = '' }) {
           return 0;
       }
     });
+  }
 
-    if (order === REVERSE) {
-      return preparedGoods.reverse();
-    }
+  if (order === REVERSE) {
+    return preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -51,22 +51,22 @@ function getPreparedGoods(goods, { sortBy, order = '' }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [sortOrder, setSortOrder] = useState('');
+  const [isReversed, setIsReversed] = useState('');
+
   const goodsForSort = getPreparedGoods(goodsFromServer,
-    { sortBy: sortField, order: sortOrder });
+    { sortBy: sortField, order: isReversed });
 
   const reverseGoods = () => {
-    if (sortOrder === REVERSE) {
-      setSortOrder('');
+    if (isReversed === REVERSE) {
+      setIsReversed('');
     } else {
-      setSortOrder(REVERSE);
+      setIsReversed(REVERSE);
     }
   };
 
   const resetGoods = () => {
-    setSortField(RESET);
     setSortField('');
-    setSortOrder('');
+    setIsReversed('');
   };
 
   const Reset = () => (
@@ -100,17 +100,17 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${sortOrder === REVERSE ? '' : LIGTH_COLOR_STYLE}`}
+          className={`button is-warning ${isReversed === REVERSE ? '' : LIGTH_COLOR_STYLE}`}
           onClick={reverseGoods}
         >
           Reverse
         </button>
 
-        {(sortField || sortOrder) && <Reset />}
+        {(sortField || isReversed) && <Reset />}
       </div>
 
       <ul>
-        {goodsForSort.map(good => <li data-cy="Good" key={good}>{good}</li>)}
+        {goodsForSort.map(good => <li key={good} data-cy="Good">{good}</li>)}
       </ul>
     </div>
   );
