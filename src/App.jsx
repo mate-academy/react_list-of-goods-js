@@ -69,7 +69,7 @@ export const App = () => {
     setIsReversed('');
   };
 
-  const Reset = () => (
+  const reset = () => (
     <button
       type="button"
       onClick={resetGoods}
