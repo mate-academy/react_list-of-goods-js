@@ -49,11 +49,8 @@ export const App = () => {
 
   const goods = goodsSorter(goodsFromServer, { sortType, arrayMethod });
 
-  function toggleArrayMethod() {
-    // eslint-disable-next-line no-unused-expressions
-    arrayMethod === ARRAY_METHOD
-      ? setArrayMethod('')
-      : setArrayMethod(ARRAY_METHOD);
+  function toggleArrayMethod(newMethod) {
+    setArrayMethod(prevMethod => (prevMethod === newMethod ? '' : newMethod));
   }
 
   function handleResetClick() {
@@ -85,7 +82,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => toggleArrayMethod()}
+          onClick={() => toggleArrayMethod(ARRAY_METHOD)}
           type="button"
           className={cn('button', 'is-warning', {
             'is-light': !arrayMethod,
