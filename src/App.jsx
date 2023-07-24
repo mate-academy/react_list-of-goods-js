@@ -16,19 +16,21 @@ export const goodsFromServer = [
   { id: 10, name: 'Garlic' },
 ];
 
-const SORT_BY_ALPHABET = 'alphabet';
-const SORT_BY_LENGTH = 'length';
-const ARRAY_METHOD = 'reverse';
+const sortTypes = {
+  SORT_BY_ALPHABET: 'alphabet',
+  SORT_BY_LENGTH: 'length',
+  REVERSE: 'reverse',
+};
 
-function goodsSorter(goods, { sortType, arrayMethod }) {
+function goodsSorter(goods, { sortType, isReversed }) {
   const sortedGoods = [...goods];
 
   if (sortType) {
     sortedGoods.sort((good1, good2) => {
       switch (sortType) {
-        case SORT_BY_ALPHABET:
+        case sortTypes.SORT_BY_ALPHABET:
           return good1.name.localeCompare(good2.name);
-        case SORT_BY_LENGTH:
+        case sortTypes.SORT_BY_LENGTH:
           return good1.name.length - good2.name.length;
         default:
           return 0;
@@ -36,8 +38,8 @@ function goodsSorter(goods, { sortType, arrayMethod }) {
     });
   }
 
-  if (arrayMethod) {
-    sortedGoods[arrayMethod]();
+  if (isReversed) {
+    sortedGoods.reverse();
   }
 
   return sortedGoods;
@@ -45,53 +47,53 @@ function goodsSorter(goods, { sortType, arrayMethod }) {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const [arrayMethod, setArrayMethod] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-  const goods = goodsSorter(goodsFromServer, { sortType, arrayMethod });
+  const goods = goodsSorter(goodsFromServer, { sortType, isReversed });
 
-  function toggleArrayMethod(newMethod) {
-    setArrayMethod(prevMethod => (prevMethod === newMethod ? '' : newMethod));
+  function toggleArrayMethod() {
+    setIsReversed(prevState => !prevState);
   }
 
   function handleResetClick() {
     setSortType('');
-    setArrayMethod('');
+    setIsReversed(false);
   }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortType(SORT_BY_ALPHABET)}
+          onClick={() => setSortType(sortTypes.SORT_BY_ALPHABET)}
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': sortType !== SORT_BY_ALPHABET,
+            'is-light': sortType !== sortTypes.SORT_BY_ALPHABET,
           })}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setSortType(SORT_BY_LENGTH)}
+          onClick={() => setSortType(sortTypes.SORT_BY_LENGTH)}
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': sortType !== SORT_BY_LENGTH,
+            'is-light': sortType !== sortTypes.SORT_BY_LENGTH,
           })}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => toggleArrayMethod(ARRAY_METHOD)}
+          onClick={() => toggleArrayMethod()}
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': !arrayMethod,
+            'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {(sortType || arrayMethod) && (
+        {(sortType || isReversed) && (
           <button
             onClick={() => handleResetClick()}
             type="button"
