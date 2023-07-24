@@ -1,7 +1,8 @@
-import 'bulma/css/bulma.css';
-import './App.scss';
 import { useState } from 'react';
 import cn from 'classnames';
+
+import 'bulma/css/bulma.css';
+import './App.scss';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -88,13 +89,15 @@ export const App = () => {
           Reverse
         </button>
 
+        {(sortBy || isReverse) && (
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={() => resetSorting()}
+          onClick={resetSorting}
         >
           Reset
         </button>
+        )}
       </div>
 
       <ul>
