@@ -21,13 +21,23 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
 
   const sortAlphabet = () => {
-    setGoodVisible([...goodVisible].sort((a, b) => a.localeCompare(b)));
-    setSortField('alphabet');
+    if (sortField.includes('reverse')) {
+      setGoodVisible([...goodVisible].sort((a, b) => b.localeCompare(a)));
+      setSortField('alphabet reverse');
+    } else {
+      setGoodVisible([...goodVisible].sort((a, b) => a.localeCompare(b)));
+      setSortField('alphabet');
+    }
   };
 
   const sortLength = () => {
-    setGoodVisible([...goodVisible].sort((a, b) => a.length - b.length));
-    setSortField('length');
+    if (sortField.includes('reverse')) {
+      setGoodVisible([...goodVisible].sort((a, b) => b.length - a.length));
+      setSortField('length reverse');
+    } else {
+      setGoodVisible([...goodVisible].sort((a, b) => a.length - b.length));
+      setSortField('length');
+    }
   };
 
   const reverse = () => {
