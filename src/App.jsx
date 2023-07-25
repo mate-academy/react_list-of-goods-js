@@ -3,9 +3,11 @@ import './App.scss';
 import { useState } from 'react';
 import classNames from 'classnames';
 
-const SORT_FIELD_ALPHABET = 'alphabet';
-const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_NONE = '';
+const sortFields = { 
+  SORT_FIELD_ALPHABET: 'alphabet',
+  SORT_FIELD_LENGTH: 'length',
+  SORT_FIELD_NONE: '',
+}
 
 export const goodsFromServer = [
   'Dumplings',
@@ -26,10 +28,10 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_FIELD_ALPHABET:
+        case sortFields.SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
 
-        case SORT_FIELD_LENGTH:
+        case sortFields.SORT_FIELD_LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -46,7 +48,7 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState(SORT_FIELD_NONE);
+  const [sortField, setSortField] = useState(sortFields.SORT_FIELD_NONE);
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer,
     { sortField, isReversed });
@@ -59,9 +61,9 @@ export const App = () => {
           className={classNames(
             'button',
             'is-info',
-            { 'is-light': sortField !== SORT_FIELD_ALPHABET },
+            { 'is-light': sortField !== sortFields.SORT_FIELD_ALPHABET },
           )}
-          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
+          onClick={() => setSortField(sortFields.SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -71,9 +73,9 @@ export const App = () => {
           className={classNames(
             'button',
             'is-success',
-            { 'is-light': sortField !== SORT_FIELD_LENGTH },
+            { 'is-light': sortField !== sortFields.SORT_FIELD_LENGTH },
           )}
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          onClick={() => setSortField(sortFields.SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -96,9 +98,9 @@ export const App = () => {
             'button',
             'is-danger',
             'is-light',
-            { hidden: sortField === SORT_FIELD_NONE },
+            { hidden: sortField === sortFields.SORT_FIELD_NONE },
           )}
-          onClick={() => setSortField(SORT_FIELD_NONE)}
+          onClick={() => setSortField(sortFields.SORT_FIELD_NONE)}
         >
           Reset
         </button>
