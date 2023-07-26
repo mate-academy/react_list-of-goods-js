@@ -41,13 +41,25 @@ export const App = () => {
   };
 
   const reverse = () => {
+    setGoodVisible([...goodVisible].reverse());
     if (sortField.includes('reverse')) {
-      setGoodVisible([...goodVisible].reverse());
       setSortField(sortField.split(' ')[0]);
     } else {
-      setGoodVisible([...goodVisible].reverse());
       setSortField(`${sortField} reverse`);
     }
+  };
+
+  const reset = () => {
+    setGoodVisible(goodsFromServer);
+    setSortField('');
+  };
+
+  const classButton = (buttonName, classButtonActive) => {
+    if (sortField.includes(buttonName)) {
+      return classButtonActive;
+    }
+
+    return `${classButtonActive} is-light`;
   };
 
   return (
@@ -55,11 +67,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={
-            sortField.includes('alphabet')
-              ? 'button is-info'
-              : 'button is-info is-light'
-          }
+          className={classButton('alphabet', 'button is-info')}
           onClick={sortAlphabet}
         >
           Sort alphabetically
@@ -67,11 +75,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={
-            sortField.includes('length')
-              ? 'button is-success'
-              : 'button is-success is-light'
-          }
+          className={classButton('length', 'button is-success')}
           onClick={sortLength}
         >
           Sort by length
@@ -79,11 +83,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={
-            sortField.includes('reverse')
-              ? 'button is-warning'
-              : 'button is-warning is-light'
-          }
+          className={classButton('reverse', 'button is-warning')}
           onClick={reverse}
         >
           Reverse
@@ -94,10 +94,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setGoodVisible(goodsFromServer);
-                setSortField('');
-              }}
+              onClick={reset}
             >
               Reset
             </button>
