@@ -17,11 +17,10 @@ export const goodsFromServer = [
 
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_ALPHABET = 'alphabet';
-const REVERSE_FIELD = '+';
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseField, setRevField] = useState('');
+  const [reverseField, setRevField] = useState(false);
   const visibleGoods = [...goodsFromServer];
 
   if (sortField) {
@@ -72,23 +71,20 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${reverseField !== REVERSE_FIELD && 'is-light'
+          className={`button is-warning ${reverseField === false && 'is-light'
           }`}
-          onClick={() => (reverseField
-            ? setRevField('')
-            : setRevField(REVERSE_FIELD)
-          )}
+          onClick={() => (setRevField(!reverseField))}
         >
           Reverse
         </button>
 
-        {(reverseField || sortField) && (
+        {(reverseField !== false || sortField !== '') && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField('');
-              setRevField('');
+              setRevField(false);
             }}
           >
             Reset
