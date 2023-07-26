@@ -4,7 +4,7 @@ import './App.scss';
 
 import { reverseGoods } from './functions/reverseGoods';
 import { sortGoods } from './functions/sortGoods';
-import { ALPHABET, NO_SORT, LENTGH } from './constances';
+import { ALPHABET, NO_SORT, LENGTH } from './constances';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -24,6 +24,15 @@ export const App = () => {
   const [reversed, setReversed] = useState(false);
   const [goods, setGoods] = useState([...goodsFromServer]);
 
+  const argsForSortGoods = typeOfSorting => ([
+    typeOfSorting,
+    setSortBy,
+    setReversed,
+    setGoods,
+    [...goodsFromServer],
+    reversed,
+  ]);
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -31,14 +40,7 @@ export const App = () => {
           type="button"
           className={`button is-info ${sortBy !== ALPHABET && 'is-light'}`}
           onClick={() => {
-            sortGoods(
-              ALPHABET,
-              setSortBy,
-              setReversed,
-              setGoods,
-              [...goodsFromServer],
-              reversed,
-            );
+            sortGoods(...argsForSortGoods(ALPHABET));
           }}
         >
           Sort alphabetically
@@ -46,16 +48,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortBy !== LENTGH && 'is-light'}`}
+          className={`button is-success ${sortBy !== LENGTH && 'is-light'}`}
           onClick={() => {
-            sortGoods(
-              LENTGH,
-              setSortBy,
-              setReversed,
-              setGoods,
-              [...goodsFromServer],
-              reversed,
-            );
+            sortGoods(sortGoods(...argsForSortGoods(LENGTH)));
           }}
         >
           Sort by length
@@ -76,14 +71,7 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              sortGoods(
-                NO_SORT,
-                setSortBy,
-                setReversed,
-                setGoods,
-                [...goodsFromServer],
-                reversed,
-              );
+              sortGoods(...argsForSortGoods(NO_SORT));
             }}
           >
             Reset

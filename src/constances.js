@@ -1,5 +1,5 @@
 const ALPHABET = 'alphabet';
-const LENTGH = 'length';
+const LENGTH = 'length';
 const NO_SORT = 'nosort';
 
-export { ALPHABET, LENTGH, NO_SORT };
+export { ALPHABET, LENGTH, NO_SORT };

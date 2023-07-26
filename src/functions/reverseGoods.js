@@ -1,9 +1,5 @@
 export function reverseGoods(goods, reversed, setReversed, setGoods) {
-  if (!reversed) {
-    setReversed(true);
-  } else {
-    setReversed(false);
-  }
+  setReversed(!reversed);
 
   setGoods([...goods].reverse());
 }
