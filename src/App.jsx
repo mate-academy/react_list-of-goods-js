@@ -16,41 +16,47 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+export const rev = 'reverse';
+export const alphabet = 'alphabet';
+export const alphabetRev = 'alphabet reverse';
+export const length = 'length';
+export const lengthRev = 'length reverse';
+
 export const App = () => {
-  const [goodVisible, setGoodVisible] = useState(goodsFromServer);
+  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
 
   const sortAlphabet = () => {
-    if (sortField.includes('reverse')) {
-      setGoodVisible([...goodVisible].sort((a, b) => b.localeCompare(a)));
-      setSortField('alphabet reverse');
+    if (sortField.includes(rev)) {
+      setVisibleGoods([...visibleGoods].sort((a, b) => b.localeCompare(a)));
+      setSortField(alphabetRev);
     } else {
-      setGoodVisible([...goodVisible].sort((a, b) => a.localeCompare(b)));
-      setSortField('alphabet');
+      setVisibleGoods([...visibleGoods].sort((a, b) => a.localeCompare(b)));
+      setSortField(alphabet);
     }
   };
 
   const sortLength = () => {
-    if (sortField.includes('reverse')) {
-      setGoodVisible([...goodVisible].sort((a, b) => b.length - a.length));
-      setSortField('length reverse');
+    if (sortField.includes(rev)) {
+      setVisibleGoods([...visibleGoods].sort((a, b) => b.length - a.length));
+      setSortField(lengthRev);
     } else {
-      setGoodVisible([...goodVisible].sort((a, b) => a.length - b.length));
-      setSortField('length');
+      setVisibleGoods([...visibleGoods].sort((a, b) => a.length - b.length));
+      setSortField(length);
     }
   };
 
   const reverse = () => {
-    setGoodVisible([...goodVisible].reverse());
-    if (sortField.includes('reverse')) {
+    setVisibleGoods([...visibleGoods].reverse());
+    if (sortField.includes(rev)) {
       setSortField(sortField.split(' ')[0]);
     } else {
-      setSortField(`${sortField} reverse`);
+      setSortField(`${sortField} ${rev}`);
     }
   };
 
   const reset = () => {
-    setGoodVisible(goodsFromServer);
+    setVisibleGoods(goodsFromServer);
     setSortField('');
   };
 
@@ -67,7 +73,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={classButton('alphabet', 'button is-info')}
+          className={classButton(alphabet, 'button is-info')}
           onClick={sortAlphabet}
         >
           Sort alphabetically
@@ -75,7 +81,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={classButton('length', 'button is-success')}
+          className={classButton(length, 'button is-success')}
           onClick={sortLength}
         >
           Sort by length
@@ -83,27 +89,25 @@ export const App = () => {
 
         <button
           type="button"
-          className={classButton('reverse', 'button is-warning')}
+          className={classButton(rev, 'button is-warning')}
           onClick={reverse}
         >
           Reverse
         </button>
 
-        {sortField.length > 0
-          && (
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={reset}
-            >
-              Reset
-            </button>
-          )
-        }
+        {sortField.length > 0 && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
-        {goodVisible.map(good => <li data-cy="Good" key={good}>{good}</li>)}
+        {visibleGoods.map(good => <li data-cy="Good" key={good}>{good}</li>)}
       </ul>
     </div>
   );
