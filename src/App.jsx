@@ -22,12 +22,11 @@ const sortGoods = (array, sortParameter, reverseParameter) => {
   switch (sortParameter) {
     case SORT_FIELD_ALPHABETICALLY:
       // eslint-disable-next-line no-param-reassign
-      array = array.sort((a, b) => a.localeCompare(b));
+      array = [...array].sort((a, b) => a.localeCompare(b));
       break;
     case SORT_FIELD_LENGTH:
-
       // eslint-disable-next-line no-param-reassign
-      array = array.sort((a, b) => a.length - b.length);
+      array = [...array].sort((a, b) => a.length - b.length);
       break;
     default:
       break;
@@ -35,16 +34,23 @@ const sortGoods = (array, sortParameter, reverseParameter) => {
 
   if (reverseParameter) {
     // eslint-disable-next-line no-param-reassign
-    array = array.reverse();
+    array = [...array].reverse();
   }
+
+  return array;
 };
 
 export const App = () => {
-  const goods = [...goodsFromServer];
+  let visibleGoods = [...goodsFromServer];
   const [sortField, setSortField] = useState('');
   const [reverseList, setReverseList] = useState(false);
+  const makeResetButtonVisible = sortField !== '' || reverseList;
 
-  sortGoods(goods, sortField, reverseList);
+  const handleClick = (sortBy) => {
+    setSortField(sortBy);
+  };
+
+  visibleGoods = sortGoods(visibleGoods, sortField, reverseList);
 
   return (
     <div className="section content">
@@ -52,9 +58,9 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortField !== SORT_FIELD_ALPHABETICALLY ? 'is-light' : ''}`}
-          onClick={() => (
-            setSortField(SORT_FIELD_ALPHABETICALLY)
-          )}
+          onClick={() => {
+            handleClick(SORT_FIELD_ALPHABETICALLY);
+          }}
         >
           Sort alphabetically
         </button>
@@ -62,9 +68,9 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${sortField !== SORT_FIELD_LENGTH ? 'is-light' : ''}`}
-          onClick={() => (
-            setSortField(SORT_FIELD_LENGTH)
-          )}
+          onClick={() => {
+            handleClick(SORT_FIELD_LENGTH);
+          }}
         >
           Sort by length
         </button>
@@ -73,22 +79,19 @@ export const App = () => {
           type="button"
           className={`button is-warning ${reverseList ? '' : 'is-light'}`}
           onClick={() => {
-            if (reverseList) {
-              setReverseList(false);
-            } else {
-              setReverseList(true);
-            }
+            setReverseList(prevReverseList => !prevReverseList);
           }}
+
         >
           Reverse
         </button>
 
-        {(sortField !== '' || reverseList) && (
+        {makeResetButtonVisible && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortField('');
+              handleClick('');
               setReverseList(false);
             }}
           >
@@ -98,7 +101,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
