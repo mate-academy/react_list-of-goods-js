@@ -18,25 +18,33 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-export const App = () => {
-  let goods = [...goodsFromServer];
-  const [sortField, setSortField] = useState('');
-  const [reverseList, setReverseList] = useState(false);
-
-  switch (sortField) {
+const sortGoods = (array, sortParameter, reverseParameter) => {
+  switch (sortParameter) {
     case SORT_FIELD_ALPHABETICALLY:
-      goods = goods.sort((a, b) => a.localeCompare(b));
+      // eslint-disable-next-line no-param-reassign
+      array = array.sort((a, b) => a.localeCompare(b));
       break;
     case SORT_FIELD_LENGTH:
-      goods = goods.sort((a, b) => a.length - b.length);
+
+      // eslint-disable-next-line no-param-reassign
+      array = array.sort((a, b) => a.length - b.length);
       break;
     default:
       break;
   }
 
-  if (reverseList) {
-    goods = goods.reverse();
+  if (reverseParameter) {
+    // eslint-disable-next-line no-param-reassign
+    array = array.reverse();
   }
+};
+
+export const App = () => {
+  const goods = [...goodsFromServer];
+  const [sortField, setSortField] = useState('');
+  const [reverseList, setReverseList] = useState(false);
+
+  sortGoods(goods, sortField, reverseList);
 
   return (
     <div className="section content">
