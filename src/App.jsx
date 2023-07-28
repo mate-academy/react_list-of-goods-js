@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -44,10 +43,19 @@ function getPreparedGoods(goods, { sortField }, shouldReverse = false) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [shouldReverse, setShouldReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
 
   const visibleGoods = getPreparedGoods(goodsFromServer,
-    { sortField }, shouldReverse);
+    { sortField }, isReversed);
+
+  const handleReverse = () => {
+    setIsReversed(!isReversed);
+  };
+
+  const handleReset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -70,29 +78,28 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${shouldReverse ? '' : 'is-light'}`}
-          onClick={() => setShouldReverse(!shouldReverse)}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          onClick={handleReverse}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => setSortField('')}
-        >
-          Reset
-        </button>
+        {sortField !== '' || isReversed ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        ) : null}
       </div>
 
-      {
-        visibleGoods.map(good => (
-          <ul>
-            <li data-cy="Good">{good}</li>
-          </ul>
-        ))
-      }
-
+      {visibleGoods.map(good => (
+        <ul key={good}>
+          <li data-cy="Good">{good}</li>
+        </ul>
+      ))}
     </div>
   );
 };
