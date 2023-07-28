@@ -18,6 +18,7 @@ export const goodsFromServer = [
 
 const SORT_FIELD_LENGTH = 'Sort by length';
 const SORT_FIELD_ALFABETICALLY = 'Sort alphabetically';
+const defaultValue = '';
 
 function getPreparedGoods(goods, { sortField, sortReverse }) {
   const preparedGoods = [...goods];
@@ -45,7 +46,7 @@ function getPreparedGoods(goods, { sortField, sortReverse }) {
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(defaultValue);
   const [sortReverse, setToReverse] = useState(false);
   const visibleGoods
     = getPreparedGoods(goodsFromServer, { sortField, sortReverse });
@@ -94,7 +95,7 @@ export const App = () => {
             ? (
               <button
                 onClick={() => {
-                  setSortField('');
+                  setSortField(defaultValue);
                   setToReverse(false);
                 }}
                 type="button"
@@ -103,7 +104,7 @@ export const App = () => {
                 Reset
               </button>
             )
-            : ''
+            : defaultValue
         }
       </div>
 
