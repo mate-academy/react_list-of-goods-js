@@ -18,9 +18,8 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ABC = 'abc';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERSE = 'reverse';
 
-function getPreparedGoods(goods, { sortField }) {
+function getPreparedGoods(goods, { sortField }, shouldReverse = false) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -29,13 +28,15 @@ function getPreparedGoods(goods, { sortField }) {
         case SORT_FIELD_ABC:
           return good1.localeCompare(good2);
         case SORT_FIELD_LENGTH:
-          return good1[sortField] - good2[sortField];
-        case SORT_FIELD_REVERSE:
-          return good2.localeCompare(good1);
+          return good1.length - good2.length;
         default:
           return 0;
       }
     });
+  }
+
+  if (shouldReverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -43,16 +44,10 @@ function getPreparedGoods(goods, { sortField }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
+  const [shouldReverse, setShouldReverse] = useState(false);
 
-  const toggleSortField = (field) => {
-    if (sortField === field) {
-      setSortField(`${field}-reverse`);
-    } else {
-      setSortField(field);
-    }
-  };
-
-  const visibleGoods = getPreparedGoods(goodsFromServer, { sortField });
+  const visibleGoods = getPreparedGoods(goodsFromServer,
+    { sortField }, shouldReverse);
 
   return (
     <div className="section content">
@@ -75,8 +70,8 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-warning is-light"
-          onClick={() => toggleSortField(SORT_FIELD_REVERSE)}
+          className={`button is-warning ${shouldReverse ? '' : 'is-light'}`}
+          onClick={() => setShouldReverse(!shouldReverse)}
         >
           Reverse
         </button>
