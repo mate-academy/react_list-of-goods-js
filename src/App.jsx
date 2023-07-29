@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const ALPHABET_SORT = 'alphabet';
 const LENGTH_SORT = 'length';
 
-function getSortedGoods(goods, sortType) {
+function getSortedGoods(goods, sortType, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortType) {
@@ -33,9 +33,13 @@ function getSortedGoods(goods, sortType) {
           return good1.length - good2.length;
 
         default:
-          return preparedGoods;
+          return 0;
       }
     });
+  }
+
+  if (isReversed) {
+    return preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -43,12 +47,8 @@ function getSortedGoods(goods, sortType) {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const visibleGoods = getSortedGoods(goodsFromServer, sortType);
   const [isReversed, setIsReversed] = useState(false);
-
-  function handleReverse(goods) {
-    return [...goods].reverse();
-  }
+  const visibleGoods = getSortedGoods(goodsFromServer, sortType, isReversed);
 
   return (
     <div className="section content">
@@ -86,16 +86,18 @@ export const App = () => {
             setSortType(''); setIsReversed(false);
           }}
           type="button"
-          className="button is-danger is-light"
-          style={{ display: isReversed || sortType ? 'block' : 'none' }}
+          className={cn(
+            'button',
+            'is-light',
+            'is-danger',
+            { 'is-hidden': !sortType && !isReversed },
+          )}
         >
           Reset
         </button>
       </div>
 
-      {isReversed
-        ? <ListOfGoods goods={handleReverse(visibleGoods)} />
-        : <ListOfGoods goods={visibleGoods} />}
+      <ListOfGoods goods={visibleGoods} />
     </div>
   );
 };
