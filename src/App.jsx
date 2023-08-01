@@ -20,16 +20,24 @@ export const goodsFromServer = [
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [isActive, setIsActive] = useState(true);
+  const [isSorted, setIsSorted] = useState(false);
 
   const sortByAlphabet = () => {
     setVisibleGoods(
       [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
     );
+    setIsSorted(true);
   };
 
   const handleClick = () => {
     setIsActive(false);
     sortByAlphabet();
+  };
+
+  const reset = () => {
+    setVisibleGoods(goodsFromServer);
+    setIsActive(true);
+    setIsSorted(false);
   };
 
   return (
@@ -57,12 +65,15 @@ export const App = () => {
           Reverse
         </button>
 
+      {isSorted && (
         <button
           type="button"
           className="button is-danger is-light"
+          onClick={reset}
         >
           Reset
         </button>
+      )}
       </div>
 
       <ul>
