@@ -21,30 +21,40 @@ export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [isAlphabetActive, setAlphabetActive] = useState(true);
   const [isLengthActive, setLengthActive] = useState(true);
+  const [isReverseActive, setReverseActive] = useState(true);
   const [isSorted, setIsSorted] = useState(false);
 
   const sortByAlphabet = () => {
     setVisibleGoods(
       [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
     );
+    setIsSorted(true);
     setAlphabetActive(false);
     setLengthActive(true);
-    setIsSorted(true);
+    setReverseActive(true);
   };
 
   const sortByLength = () => {
     setVisibleGoods(
       [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
     );
+    setIsSorted(true);
     setLengthActive(false);
     setAlphabetActive(true);
+    setReverseActive(true);
+  };
+
+  const reverseGoods = () => {
+    setVisibleGoods([...visibleGoods].reverse());
     setIsSorted(true);
+    setReverseActive(false);
   };
 
   const reset = () => {
     setVisibleGoods(goodsFromServer);
     setAlphabetActive(true);
     setLengthActive(true);
+    setReverseActive(true);
     setIsSorted(false);
   };
 
@@ -69,7 +79,8 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-warning is-light"
+          className={cn('button is-warning', { 'is-light': isReverseActive })}
+          onClick={reverseGoods}
         >
           Reverse
         </button>
