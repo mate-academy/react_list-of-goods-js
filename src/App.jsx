@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+import { useState } from 'react';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -14,45 +16,109 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const rev = 'reverse';
+export const alphabet = 'alphabet';
+export const alphabetRev = 'alphabet reverse';
+export const length = 'length';
+export const lengthRev = 'length reverse';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+export const App = () => {
+  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
+  const [sortField, setSortField] = useState('');
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  const searchClass = (allClass) => {
+    if (allClass.includes(rev)) {
+      return true;
+    }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+    return false;
+  };
+
+  const classButton = (buttonName, classButtonActive) => {
+    if (sortField.includes(buttonName)) {
+      return classButtonActive;
+    }
+
+    return `${classButtonActive} is-light`;
+  };
+
+  const sortAlphabet = () => {
+    setVisibleGoods(prevGoods => (
+      searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.localeCompare(a))
+        : [...prevGoods].sort((a, b) => a.localeCompare(b))
+    ));
+    setSortField(searchClass(sortField) ? alphabetRev : alphabet);
+  };
+
+  const sortLength = () => {
+    setVisibleGoods(prevGoods => (
+      searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.length - a.length)
+        : [...prevGoods].sort((a, b) => a.length - b.length)
+    ));
+    setSortField(searchClass(sortField) ? lengthRev : length);
+  };
+
+  const reverse = () => {
+    setVisibleGoods(prevGoods => ([...prevGoods].reverse()));
+    setSortField(prevSortField => (
+      searchClass(prevSortField)
+        ? prevSortField.split(' ')[0]
+        : `${prevSortField} ${rev}`
+    ));
+  };
+
+  const reset = () => {
+    setVisibleGoods(goodsFromServer);
+    setSortField('');
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={classButton(alphabet, 'button is-info')}
+          onClick={sortAlphabet}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={classButton(length, 'button is-success')}
+          onClick={sortLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={classButton(rev, 'button is-warning')}
+          onClick={reverse}
+        >
+          Reverse
+        </button>
+
+        {sortField.length > 0 && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
