@@ -92,7 +92,7 @@ export const App = () => {
         </button>
 
         {
-          (sortField || isReversed) && (
+          ((sortField || isReversed) && (sortField !== SORT_FIELD.NONE)) && (
             <button
               onClick={handleReset}
               type="button"
