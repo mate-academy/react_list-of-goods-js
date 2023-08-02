@@ -14,12 +14,12 @@ export const goodsFromServer = [
   'Dumplings',
   'Carrot',
   'Eggs',
+  'Ice cream',
   'Apple',
   'Bread',
   'Fish',
   'Honey',
   'Jam',
-  'Ice cream',
   'Garlic',
 ];
 
@@ -49,7 +49,7 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState(false);
+  const [sortField, setSortField] = useState(SORT_FIELD.NONE);
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer,
     { sortField, reverseField: isReversed });
