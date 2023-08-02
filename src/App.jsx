@@ -26,33 +26,46 @@ export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
 
+  const searchClass = (allClass) => {
+    allClass.includes(rev);
+  };
+
   const sortAlphabet = () => {
-    if (sortField.includes(rev)) {
-      setVisibleGoods([...visibleGoods].sort((a, b) => b.localeCompare(a)));
-      setSortField(alphabetRev);
-    } else {
-      setVisibleGoods([...visibleGoods].sort((a, b) => a.localeCompare(b)));
-      setSortField(alphabet);
-    }
+    setVisibleGoods((prevGoods) => {
+      const sortedGoods = searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.localeCompare(a))
+        : [...prevGoods].sort((a, b) => a.localeCompare(b));
+
+      setSortField(searchClass(sortField) ? alphabetRev : alphabet);
+
+      return sortedGoods;
+    });
   };
 
   const sortLength = () => {
-    if (sortField.includes(rev)) {
-      setVisibleGoods([...visibleGoods].sort((a, b) => b.length - a.length));
-      setSortField(lengthRev);
-    } else {
-      setVisibleGoods([...visibleGoods].sort((a, b) => a.length - b.length));
-      setSortField(length);
-    }
+    setVisibleGoods((prevGoods) => {
+      const sortedGoods = searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.length - a.length)
+        : [...prevGoods].sort((a, b) => a.length - b.length);
+
+      setSortField(searchClass(sortField) ? lengthRev : length);
+
+      return sortedGoods;
+    });
   };
 
   const reverse = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    if (sortField.includes(rev)) {
-      setSortField(sortField.split(' ')[0]);
-    } else {
-      setSortField(`${sortField} ${rev}`);
-    }
+    setVisibleGoods((prevGoods) => {
+      const reversedGoods = [...prevGoods].reverse();
+
+      setSortField(prevSortField => (
+        searchClass(prevSortField)
+          ? prevSortField.split(' ')[0]
+          : `${prevSortField} ${rev}`
+      ));
+
+      return reversedGoods;
+    });
   };
 
   const reset = () => {
@@ -107,7 +120,11 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => <li data-cy="Good" key={good}>{good}</li>)}
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
       </ul>
     </div>
   );
