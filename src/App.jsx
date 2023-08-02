@@ -4,8 +4,11 @@ import './App.scss';
 import cn from 'classnames';
 import { useState } from 'react';
 
-const SORT_FIELD_ALPHABET = 'name';
-const SORT_FIELD_LENGTH = 'length';
+const SORT_FIELD = {
+  ALPHABET: 'name',
+  LENGTH: 'length',
+  NONE: 'none',
+};
 
 export const goodsFromServer = [
   'Dumplings',
@@ -26,10 +29,10 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
   if (sortField) {
     preparedGoods.sort((element1, element2) => {
       switch (sortField) {
-        case SORT_FIELD_LENGTH:
+        case SORT_FIELD.LENGTH:
           return element1[sortField] - element2[sortField];
 
-        case SORT_FIELD_ALPHABET:
+        case SORT_FIELD.ALPHABET:
           return element1.localeCompare(element2);
 
         default:
@@ -46,48 +49,52 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState('');
+  const [sortField, setSortField] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer,
-    { sortField, reverseField });
+    { sortField, reverseField: isReversed });
+
+  const handleSort = field => () => setSortField(field);
+  const handleReverse = () => setIsReversed(prevIsReversed => !prevIsReversed);
+  const handleReset = () => {
+    setIsReversed(false);
+    setSortField(SORT_FIELD.NONE);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
+          onClick={handleSort(SORT_FIELD.ALPHABET)}
           type="button"
           className={cn('button is-info',
-            { 'is-light': sortField !== SORT_FIELD_ALPHABET })}
+            { 'is-light': sortField !== SORT_FIELD.ALPHABET })}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          onClick={handleSort(SORT_FIELD.LENGTH)}
           type="button"
           className={cn('button is-success',
-            { 'is-light': sortField !== SORT_FIELD_LENGTH })}
+            { 'is-light': sortField !== SORT_FIELD.LENGTH })}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => setReverseField(!reverseField)}
+          onClick={handleReverse}
           type="button"
           className={cn('button is-warning',
-            { 'is-light': !reverseField })}
+            { 'is-light': !isReversed })}
         >
           Reverse
         </button>
 
         {
-          (sortField || reverseField) && (
+          (sortField || isReversed) && (
             <button
-              onClick={() => {
-                setReverseField('');
-                setSortField('');
-              }}
+              onClick={handleReset}
               type="button"
               className="button is-danger is-light"
             >
