@@ -27,50 +27,11 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
 
   const searchClass = (allClass) => {
-    allClass.includes(rev);
-  };
+    if (allClass.includes(rev)) {
+      return true;
+    }
 
-  const sortAlphabet = () => {
-    setVisibleGoods((prevGoods) => {
-      const sortedGoods = searchClass(sortField)
-        ? [...prevGoods].sort((a, b) => b.localeCompare(a))
-        : [...prevGoods].sort((a, b) => a.localeCompare(b));
-
-      setSortField(searchClass(sortField) ? alphabetRev : alphabet);
-
-      return sortedGoods;
-    });
-  };
-
-  const sortLength = () => {
-    setVisibleGoods((prevGoods) => {
-      const sortedGoods = searchClass(sortField)
-        ? [...prevGoods].sort((a, b) => b.length - a.length)
-        : [...prevGoods].sort((a, b) => a.length - b.length);
-
-      setSortField(searchClass(sortField) ? lengthRev : length);
-
-      return sortedGoods;
-    });
-  };
-
-  const reverse = () => {
-    setVisibleGoods((prevGoods) => {
-      const reversedGoods = [...prevGoods].reverse();
-
-      setSortField(prevSortField => (
-        searchClass(prevSortField)
-          ? prevSortField.split(' ')[0]
-          : `${prevSortField} ${rev}`
-      ));
-
-      return reversedGoods;
-    });
-  };
-
-  const reset = () => {
-    setVisibleGoods(goodsFromServer);
-    setSortField('');
+    return false;
   };
 
   const classButton = (buttonName, classButtonActive) => {
@@ -79,6 +40,38 @@ export const App = () => {
     }
 
     return `${classButtonActive} is-light`;
+  };
+
+  const sortAlphabet = () => {
+    setVisibleGoods(prevGoods => (
+      searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.localeCompare(a))
+        : [...prevGoods].sort((a, b) => a.localeCompare(b))
+    ));
+    setSortField(searchClass(sortField) ? alphabetRev : alphabet);
+  };
+
+  const sortLength = () => {
+    setVisibleGoods(prevGoods => (
+      searchClass(sortField)
+        ? [...prevGoods].sort((a, b) => b.length - a.length)
+        : [...prevGoods].sort((a, b) => a.length - b.length)
+    ));
+    setSortField(searchClass(sortField) ? lengthRev : length);
+  };
+
+  const reverse = () => {
+    setVisibleGoods(prevGoods => ([...prevGoods].reverse()));
+    setSortField(prevSortField => (
+      searchClass(prevSortField)
+        ? prevSortField.split(' ')[0]
+        : `${prevSortField} ${rev}`
+    ));
+  };
+
+  const reset = () => {
+    setVisibleGoods(goodsFromServer);
+    setSortField('');
   };
 
   return (
