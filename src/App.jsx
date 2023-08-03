@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import cn from 'classnames';
 import './App.scss';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ListOfGoods } from './components/ListOfGoods';
 
 export const goodsFromServer = [
@@ -48,7 +48,14 @@ function getSortedGoods(goods, sortType, isReversed) {
 export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const visibleGoods = getSortedGoods(goodsFromServer, sortType, isReversed);
+  const visibleGoods = useMemo(() => getSortedGoods(goodsFromServer, sortType,
+    isReversed),
+  [goodsFromServer, sortType, isReversed]);
+
+  function resetAll() {
+    setSortType('');
+    setIsReversed(false);
+  }
 
   return (
     <div className="section content">
@@ -82,9 +89,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => {
-            setSortType(''); setIsReversed(false);
-          }}
+          onClick={() => resetAll()}
           type="button"
           className={cn(
             'button',
