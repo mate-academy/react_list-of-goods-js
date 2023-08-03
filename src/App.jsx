@@ -75,7 +75,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={cn('button', 'is-info', {
+          className={cn('button is-info', {
             'is-light': sortValue !== SORT_BY_ALPHABETICALLY,
           })}
           onClick={() => sortBy(SORT_BY_ALPHABETICALLY)}
@@ -85,7 +85,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-success', {
+          className={cn('button is-success', {
             'is-light': sortValue !== SORT_BY_LENGTH,
           })}
           onClick={() => sortBy(SORT_BY_LENGTH)}
@@ -95,7 +95,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-warning', {
+          className={cn('button is-warning', {
             'is-light': !reverseValue,
           })}
           onClick={reverse}
