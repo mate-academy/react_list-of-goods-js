@@ -29,13 +29,9 @@ export const App = () => {
   const sortBy = (value) => {
     if (value === SORT_BY_ALPHABETICALLY) {
       if (reverseValue) {
-        setGoodsArr((prevState) => {
-          [...prevState].sort((a, b) => b.localeCompare(a));
-        });
+        setGoodsArr([...goodsArr].sort((a, b) => b.localeCompare(a)));
       } else {
-        setGoodsArr((prevState) => {
-          [...goodsArr].sort((a, b) => a.localeCompare(b));
-        });
+        setGoodsArr([...goodsArr].sort((a, b) => a.localeCompare(b)));
       }
 
       setSortValue(SORT_BY_ALPHABETICALLY);
@@ -46,13 +42,9 @@ export const App = () => {
 
     if (value === SORT_BY_LENGTH) {
       if (reverseValue) {
-        setGoodsArr((prevState) => {
-          [...goodsArr].sort((a, b) => b.length - a.length);
-        });
+        setGoodsArr([...goodsArr].sort((a, b) => b.length - a.length));
       } else {
-        setGoodsArr((prevState) => {
-          [...goodsArr].sort((a, b) => a.length - b.length);
-        });
+        setGoodsArr([...goodsArr].sort((a, b) => a.length - b.length));
       }
 
       setSortValue(SORT_BY_LENGTH);
@@ -74,7 +66,7 @@ export const App = () => {
       setResetValue(true);
     }
 
-    setGoodsArr(prevState => [...prevState].reverse());
+    setGoodsArr([...goodsArr].reverse());
     setReverseValue(!reverseValue);
   };
 
