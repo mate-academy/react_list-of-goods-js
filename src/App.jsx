@@ -35,10 +35,10 @@ function getPreparedGoods(goods, sortField, isReversed) {
 
         case SORT_FIELD_LENGTH:
           if (isReversed) {
-            return good2.name.length - good1.name.length;
+            return good1.name.length - good2.name.length;
           }
 
-          return good1.name.length - good2.name.length;
+          return good2.name.length - good1.name.length;
 
         default:
           return 0;
