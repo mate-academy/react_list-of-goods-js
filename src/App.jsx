@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-fallthrough */
 import { useState } from 'react';
 import cn from 'classnames';
@@ -29,9 +30,9 @@ export const App = () => {
   const sortBy = (value) => {
     if (value === SORT_BY_ALPHABETICALLY) {
       if (reverseValue) {
-        setGoodsArr([...goodsArr].sort((a, b) => b.localeCompare(a)));
+        setGoodsArr(prevState => [...prevState].sort((a, b) => b.localeCompare(a)));
       } else {
-        setGoodsArr([...goodsArr].sort((a, b) => a.localeCompare(b)));
+        setGoodsArr(prevState => [...prevState].sort((a, b) => a.localeCompare(b)));
       }
 
       setSortValue(SORT_BY_ALPHABETICALLY);
@@ -42,9 +43,9 @@ export const App = () => {
 
     if (value === SORT_BY_LENGTH) {
       if (reverseValue) {
-        setGoodsArr([...goodsArr].sort((a, b) => b.length - a.length));
+        setGoodsArr(prevState => [...prevState].sort((a, b) => b.length - a.length));
       } else {
-        setGoodsArr([...goodsArr].sort((a, b) => a.length - b.length));
+        setGoodsArr(prevState => [...prevState].sort((a, b) => a.length - b.length));
       }
 
       setSortValue(SORT_BY_LENGTH);
@@ -66,7 +67,7 @@ export const App = () => {
       setResetValue(true);
     }
 
-    setGoodsArr([...goodsArr].reverse());
+    setGoodsArr(prevState => [...prevState].reverse());
     setReverseValue(!reverseValue);
   };
 
