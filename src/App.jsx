@@ -34,7 +34,11 @@ function getPreparedGoods(goods, sortField, isReversed) {
           return good1.name.localeCompare(good2.name);
 
         case SORT_FIELD_LENGTH:
-          return good2.name.length - good1.name.length;
+          if (isReversed) {
+            return good2.name.length - good1.name.length;
+          }
+
+          return good1.name.length - good2.name.length;
 
         default:
           return 0;
