@@ -25,12 +25,13 @@ export const App = () => {
   const visibleGoods = [...goodsFromServer];
 
   visibleGoods.sort((good1, good2) => {
-    if (sortField === SORT_FIELD_ALPHABET) {
-      return good1.localeCompare(good2);
-    } else if (sortField === SORT_FIELD_LENGTH) {
-      return good1.length - good2.length;
-    } else {
-      return 0;
+    switch (sortField) {
+      case SORT_FIELD_ALPHABET:
+        return good1.localeCompare(good2);
+      case SORT_FIELD_LENGTH:
+        return good1.length - good2.length;
+      default:
+        return 0;
     }
   });
 
@@ -70,7 +71,7 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(sortField !== '' || sortReverse) && (
+        {(sortField || sortReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
