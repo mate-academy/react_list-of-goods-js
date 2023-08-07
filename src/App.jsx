@@ -49,6 +49,12 @@ export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
   const goods = getFinalGoods(goodsFromServer, { sortType, isReversed });
+  const isModified = isReversed || sortType;
+
+  function reset() {
+    setSortType('');
+    setIsReversed(false);
+  }
 
   return (
     <div className="section content">
@@ -83,14 +89,11 @@ export const App = () => {
           Reverse
         </button>
 
-        {(isReversed || sortType) && (
+        {isModified && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortType('');
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
