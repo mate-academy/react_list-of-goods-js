@@ -35,10 +35,10 @@ function getPreparedGoods(goods, { sortField, reverse }) {
           return 0;
       }
     });
+  }
 
-    if (reverse) {
-      preparedGoods.reverse();
-    }
+  if (reverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -46,7 +46,7 @@ function getPreparedGoods(goods, { sortField, reverse }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [reverse, setReverse] = useState(false);
 
   const visibleGoods
     = getPreparedGoods(goodsFromServer, { sortField, reverse });
@@ -109,4 +109,4 @@ export const App = () => {
       </ul>
     </div>
   );
-}
+};
