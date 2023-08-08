@@ -58,7 +58,7 @@ export const App = () => {
   const [sortDirection, setSortDirection] = useState(ASC);
   const sortGoods = getSortGoods(goodsFromServer, sortField, sortDirection);
   const sortReverse = () => {
-    if (sortField === false) {
+    if (sortField === '') {
       setSortField(SORT_BY_INDEX_DESC);
     }
 
