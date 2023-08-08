@@ -58,7 +58,7 @@ export const App = () => {
   const [sortDirection, setSortDirection] = useState(ASC);
   const sortGoods = getSortGoods(goodsFromServer, sortField, sortDirection);
   const sortReverse = () => {
-    if (sortField === '') {
+    if (sortField === false) {
       setSortField(SORT_BY_INDEX_DESC);
     }
 
@@ -75,7 +75,7 @@ export const App = () => {
     }
   };
 
-  const forReset = () => {
+  const resetSort = () => {
     setSortField('');
     setSortDirection(ASC);
   };
@@ -108,7 +108,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => sortReverse()}
+          onClick={sortReverse}
           type="button"
           className={cn('button is-warning', {
             'is-light': sortDirection === ASC,
@@ -119,9 +119,7 @@ export const App = () => {
 
         {sortField && (
           <button
-            onClick={() => {
-              forReset();
-            }}
+            onClick={resetSort}
             type="button"
             className="button is-danger is-light"
           >
