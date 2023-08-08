@@ -25,29 +25,31 @@ const DESC = 'desc';
 function getSortGoods(goods, sortField, sortDirection) {
   const preparedGoods = [...goods];
 
-  if (sortField) {
+  if (sortField === SORT_BY_ALPHABET) {
     preparedGoods.sort((good1, good2) => {
-      switch (sortField) {
-        case SORT_BY_ALPHABET:
-          return sortDirection === ASC
-            ? good1.localeCompare(good2)
-            : good2.localeCompare(good1);
-
-        case SORT_BY_LENGTH:
-          // eslint-disable-next-line no-nested-ternary
-          return sortDirection === ASC
-            ? good1.length - good2.length
-            : (good1.length === good2.length)
-              ? good2.localeCompare(good1)
-              : good2.length - good1.length;
-
-        case SORT_BY_INDEX_DESC:
-          return preparedGoods.indexOf(good2) - preparedGoods.indexOf(good1);
-
-        default:
-          return 0;
+      if (sortDirection === ASC) {
+        return good1.localeCompare(good2);
       }
+
+      return good2.localeCompare(good1);
     });
+  } else if (sortField === SORT_BY_LENGTH) {
+    preparedGoods.sort((good1, good2) => {
+      const lengthComparison = good1.length - good2.length;
+
+      if (sortDirection === ASC) {
+        return lengthComparison;
+      }
+
+      if (lengthComparison !== 0) {
+        return -lengthComparison;
+      }
+
+      return good2.localeCompare(good1);
+    });
+  } else if (sortField === SORT_BY_INDEX_DESC) {
+    preparedGoods.sort((good1, good2) => preparedGoods.indexOf(good2)
+    - preparedGoods.indexOf(good1));
   }
 
   return preparedGoods;
