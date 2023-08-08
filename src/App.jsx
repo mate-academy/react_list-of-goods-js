@@ -1,4 +1,6 @@
 import 'bulma/css/bulma.css';
+import { useState } from 'react';
+import cn from 'classnames';
 import './App.scss';
 
 export const goodsFromServer = [
@@ -14,45 +16,123 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_ALPHABETICALLY = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+const REVERSE = 'reverse';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getSortedGoods(goods, { sortMethod, reverseMethod }) {
+  const sortedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (reverseMethod && sortMethod === SORT_ALPHABETICALLY) {
+    return sortedGoods
+      .sort((good1, good2) => good1.localeCompare(good2))
+      .reverse();
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  if (reverseMethod && sortMethod === SORT_BY_LENGTH) {
+    return sortedGoods
+      .sort((good1, good2) => good1.length - good2.length)
+      .reverse();
+  }
+
+  if (reverseMethod) {
+    return sortedGoods.reverse();
+  }
+
+  if (sortMethod) {
+    sortedGoods.sort((good1, good2) => {
+      switch (sortMethod) {
+        case SORT_ALPHABETICALLY:
+          return good1.localeCompare(good2);
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  return sortedGoods;
+}
+
+export const App = () => {
+  const [sortMethod, setSortMethod] = useState('');
+  const [reverseMethod, setreverseMethod] = useState('');
+  const visibleGoods = getSortedGoods(
+    goodsFromServer,
+    {
+      sortMethod,
+      reverseMethod,
+    },
+  );
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortMethod !== SORT_ALPHABETICALLY },
+          )}
+          onClick={() => setSortMethod(SORT_ALPHABETICALLY)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortMethod !== SORT_BY_LENGTH },
+          )}
+          onClick={() => setSortMethod(SORT_BY_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        {reverseMethod ? (
+          <button
+            type="button"
+            className={cn(
+              'button',
+              'is-warning',
+              { 'is-light': reverseMethod !== REVERSE },
+            )}
+            onClick={() => setreverseMethod('')}
+          >
+            Reverse
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={cn(
+              'button',
+              'is-warning',
+              { 'is-light': reverseMethod !== REVERSE },
+            )}
+            onClick={() => setreverseMethod(REVERSE)}
+          >
+            Reverse
+          </button>
+        )}
+
+        {(sortMethod || reverseMethod) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => setSortMethod('') || setreverseMethod('')}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {visibleGoods.map(good => (
+        <li data-cy="Good" key={good}>{good}</li>
+      ))}
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
