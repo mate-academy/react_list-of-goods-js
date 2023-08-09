@@ -50,6 +50,11 @@ export const App = () => {
     setSortField(sortBy);
   };
 
+  const handleReset = () => {
+    setSortField('');
+    setReverseList(false);
+  };
+
   visibleGoods = sortGoods(visibleGoods, sortField, reverseList);
 
   return (
@@ -91,8 +96,7 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              handleClick('');
-              setReverseList(false);
+              handleReset();
             }}
           >
             Reset
