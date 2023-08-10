@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +15,94 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_FIELD_ALPHABET = 'Alphabet';
+const SORT_FIELD_LENGTH = 'Length';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getPreparedGoods(goods, { sortField, reverse }) {
+  const preparedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABET:
+          return good1.localeCompare(good2);
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+        case SORT_FIELD_LENGTH:
+          return good1.length - (good2.length);
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (reverse) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [reverse, setReverse] = useState(false);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    { sortField, reverse },
+  );
+
+  const toggleReverse = () => {
+    setReverse(prevReverse => !prevReverse);
+  };
+
+  const resetSortAndReverse = () => {
+    setSortField('');
+    setReverse(false);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortField === SORT_FIELD_ALPHABET ? '' : 'is-light'}`}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-info ${sortField === SORT_FIELD_LENGTH ? '' : 'is-light'}`}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${reverse ? '' : 'is-light'}`}
+          onClick={toggleReverse}
+        >
+          Reverse
+        </button>
+
+        {(sortField || reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetSortAndReverse}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {visibleGoods.map(good => (
+        <ul key={good}>
+          <li data-cy="Good">{good}</li>
+        </ul>
+      ))}
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
