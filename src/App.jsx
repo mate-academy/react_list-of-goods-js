@@ -52,7 +52,12 @@ export const App = () => {
   );
 
   const toggleReverse = () => {
-    setReverse(!reverse);
+    setReverse(prevReverse => !prevReverse);
+  };
+
+  const resetSortAndReverse = () => {
+    setSortField('');
+    setReverse(false);
   };
 
   return (
@@ -82,16 +87,15 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => {
-            setSortField('');
-            setReverse(false);
-          }}
-        >
-          Reset
-        </button>
+        {(sortField || reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetSortAndReverse}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       {visibleGoods.map(good => (
