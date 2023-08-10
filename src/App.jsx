@@ -1,8 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import cn from 'classnames'
+import cn from 'classnames';
 import { useState } from 'react';
-import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -18,35 +17,32 @@ export const goodsFromServer = [
 ];
 
 const alphabeticallySort = 'alphabet';
-const reversedSort = 'reverse';
 const lengthSort = 'length';
 
 function getPreparedItems(goods, sortField, isReversed) {
-  let sortedGoods = [...goods];
- 
-  if(sortField) {
+  const sortedGoods = [...goods];
+
+  if (sortField) {
     sortedGoods.sort((good1, good2) => {
-
-      switch(sortField) {
-
-        case alphabeticallySort :
+      switch (sortField) {
+        case alphabeticallySort:
           return good1.localeCompare(good2);
 
-        case lengthSort :
+        case lengthSort:
           return good1.length - good2.length;
 
+        default:
+          return 0;
       }
-    })
+    });
   }
 
   if (isReversed) {
-    return sortedGoods.reverse()
+    return sortedGoods.reverse();
   }
-  
+
   return sortedGoods;
 }
-
-
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
@@ -58,8 +54,8 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={cn("button", "is-info", {
-            "is-light" : sortField !== alphabeticallySort
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== alphabeticallySort,
           })}
           onClick={() => setSortField(alphabeticallySort)}
         >
@@ -68,8 +64,8 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn("button", "is-success", {
-            "is-light" : sortField !== lengthSort
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== lengthSort,
           })}
           onClick={() => setSortField(lengthSort)}
         >
@@ -78,18 +74,17 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn("button", "is-warning", {
-            "is-light" : !isReversed
+          className={cn('button', 'is-warning', {
+            'is-light': !isReversed,
           })}
           onClick={() => {
-            setIsReversed(prev => !prev)
-            
+            setIsReversed(prev => !prev);
           }}
         >
           Reverse
         </button>
 
-        {sortField && (
+        {(sortField || isReversed) && (
 
         <button
           type="button"
@@ -102,14 +97,12 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map((good) => {
-          return (
-            <li data-cy="Good" key={good}>
-              {good}
-            </li>
-          )
-        })}
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
       </ul>
     </div>
-  )
+  );
 };
