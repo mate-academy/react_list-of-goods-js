@@ -19,25 +19,24 @@ const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
 const sortGoods = (array, sortParameter, reverseParameter) => {
+  let sortedGoods = [...array];
+
   switch (sortParameter) {
     case SORT_FIELD_ALPHABETICALLY:
-      // eslint-disable-next-line no-param-reassign
-      array = [...array].sort((a, b) => a.localeCompare(b));
+      sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
     case SORT_FIELD_LENGTH:
-      // eslint-disable-next-line no-param-reassign
-      array = [...array].sort((a, b) => a.length - b.length);
+      sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
       break;
     default:
       break;
   }
 
   if (reverseParameter) {
-    // eslint-disable-next-line no-param-reassign
-    array = [...array].reverse();
+    sortedGoods = sortedGoods.reverse();
   }
 
-  return array;
+  return sortedGoods;
 };
 
 export const App = () => {
@@ -53,6 +52,10 @@ export const App = () => {
   const handleReset = () => {
     setSortField('');
     setReverseList(false);
+  };
+
+  const handleReverse = () => {
+    setReverseList(prevReverseList => !prevReverseList);
   };
 
   visibleGoods = sortGoods(visibleGoods, sortField, reverseList);
@@ -83,10 +86,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${reverseList ? '' : 'is-light'}`}
-          onClick={() => {
-            setReverseList(prevReverseList => !prevReverseList);
-          }}
-
+          onClick={handleReverse}
         >
           Reverse
         </button>
