@@ -90,8 +90,8 @@ export const App = () => {
           type="button"
           className="button is-danger is-light"
           onClick={() => {
-            setSortField('')
-            setIsReversed(false)
+            setSortField('');
+            setIsReversed(false);
           }}
         >
           Reset
