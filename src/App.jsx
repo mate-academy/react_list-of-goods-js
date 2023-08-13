@@ -1,6 +1,5 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -16,113 +15,109 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const ALPHABET_SORTING = 'alphabetically';
-const LENGTH_SORTING = 'length';
-const REVERSE = 'reverse';
-const UNREVERSE = 'unreverse';
-const RESET = 'reset';
-let currentGoods = [...goodsFromServer];
+const GoodsList = ({ goods }) => (
+  <ul>
+    {goods.map(good => (
+      <GoodCard key={good} good={good} />
+    ))}
+  </ul>
+);
 
-export const App = () => {
-  const [currentSorting, setCurentSorting] = useState('');
+const GoodCard = ({ good }) => (
+  <li data-cy="Good">{good}</li>
+);
 
-  const [currentDirection, setCurrentDirection] = useState('');
+const SORT_BY = {
+  ALPHABET: 'alphabeticaly',
+  LENGTH: 'length',
+  NONE: '',
+};
 
-  if (currentSorting === RESET) {
-    currentGoods = [...goodsFromServer];
-    setCurrentDirection('');
-    setCurentSorting('');
-  }
+function getPreparedGoods(goods, { sortField, reversed }) {
+  let preparedGoods = [...goods];
 
-  if (currentDirection === UNREVERSE) {
-    currentGoods = [...goodsFromServer];
-  }
-
-  if (currentSorting === ALPHABET_SORTING
-     || currentSorting === LENGTH_SORTING) {
-    currentGoods = [...goodsFromServer];
-
-    currentGoods.sort((good1, good2) => {
-      switch (currentSorting) {
-        case ALPHABET_SORTING: {
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_BY.ALPHABET:
           return good1.localeCompare(good2);
-        }
 
-        case LENGTH_SORTING: {
+        case SORT_BY.LENGTH:
           return good1.length - good2.length;
-        }
 
-        default: return 0;
+        default:
+          return 0;
       }
     });
   }
 
-  if (currentDirection === REVERSE && currentSorting !== RESET) {
-    currentGoods.reverse();
+  if (reversed) {
+    preparedGoods = preparedGoods.reverse();
   }
+
+  return preparedGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState(SORT_BY.NONE);
+  const [reversed, setReversed] = useState(false);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer, { sortField, reversed },
+  );
+
+  const reset = () => {
+    setReversed(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn('button',
-            'is-info', {
-              'is-light': currentSorting !== ALPHABET_SORTING,
-            })}
-          onClick={() => setCurentSorting(ALPHABET_SORTING)}
+          onClick={() => setSortField(SORT_BY.LENGTH)}
+          className={sortField === SORT_BY.LENGTH
+            ? 'button is-info'
+            : 'button is-info is-light'
+          }
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={cn('button',
-            'is-success', {
-              'is-light': currentSorting !== LENGTH_SORTING,
-            })}
-          onClick={() => setCurentSorting(LENGTH_SORTING)}
+          onClick={() => setSortField(SORT_BY.ALPHABET)}
+          className={sortField === SORT_BY.ALPHABET
+            ? 'button is-success'
+            : 'button is-success is-light'
+          }
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={cn('button',
-            'is-warning', {
-              'is-light': currentDirection !== REVERSE,
-            })}
-          onClick={() => {
-            if (currentDirection !== REVERSE) {
-              setCurrentDirection(REVERSE);
-            } else {
-              setCurrentDirection(UNREVERSE);
-            }
+          onClick={() => setReversed(!reversed)}
+          className={reversed
+            ? 'button is-warning'
+            : 'button is-warning is-light'
           }
-        }
         >
           Reverse
         </button>
 
-        {currentGoods.some((currentGood, id) => (
-          currentGood !== goodsFromServer[id]
-        )) && (
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => setCurentSorting(RESET)}
-        >
-          Reset
-        </button>
+        {(sortField || reversed) && (
+          <button
+            type="button"
+            onClick={reset}
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
         )}
-
       </div>
 
-      <ul>
-        {currentGoods.map(good => (
-          <li data-cy="Good">{good}</li>
-        ))}
-      </ul>
+      <GoodsList goods={visibleGoods} />
     </div>
   );
 };
