@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import React, { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +15,116 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const initialState = {
+    sortedGoods: [...goodsFromServer],
+    showResetButton: false,
+  };
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  const [state, setState] = useState(initialState);
+  const {
+    sortedGoods,
+    showResetButton,
+    sortByAlphabeticallyActive,
+    sortByLengthActive,
+    reverseActive,
+  } = state;
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  const setActiveState = activeSort => ({
+    sortByAlphabeticallyActive: activeSort === 'alphabetical',
+    sortByLengthActive: activeSort === 'length',
+    reverseActive: activeSort === 'reverse',
+  });
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  const updateState = (updatedState) => {
+    setState(prevState => ({
+      ...prevState,
+      ...updatedState,
+    }));
+  };
+
+  const sortArray = (sortFunction, activeSort) => {
+    const sortedArray = [...sortedGoods].sort(sortFunction);
+
+    updateState({
+      sortedGoods: sortedArray,
+      showResetButton: true,
+      ...setActiveState(activeSort),
+    });
+  };
+
+  const reverseArray = () => {
+    const reversedArray = [...sortedGoods].reverse();
+
+    updateState({
+      sortedGoods: reversedArray,
+      reverseActive: !reverseActive,
+    });
+  };
+
+  const resetArray = () => {
+    setState(initialState);
+  };
+
+  const sortAlphabetically = () => {
+    sortArray((a, b) => a.localeCompare(b), 'alphabetical');
+  };
+
+  const sortByLength = () => {
+    sortArray((a, b) => a.length - b.length, 'length');
+  };
+
+  const handleReverse = () => {
+    if (reverseActive) {
+      resetArray();
+    } else {
+      reverseArray();
+    }
+  };
+
+  const generateButtonClass = isActive => `button ${isActive ? '' : 'is-light'}`;
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`${generateButtonClass(sortByAlphabeticallyActive)} is-info`}
+          onClick={sortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+        <button
+          type="button"
+          className={`${generateButtonClass(sortByLengthActive)} is-success`}
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+        <button
+          type="button"
+          className={`${generateButtonClass(reverseActive)} is-warning`}
+          onClick={handleReverse}
+        >
+          Reverse
+        </button>
+        {showResetButton && (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={resetArray}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <ul>
+        {sortedGoods.map(item => (
+          <li key={item} data-cy="Good">
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
