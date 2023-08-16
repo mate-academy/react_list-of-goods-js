@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 import { GoodList } from './Components/GoodList';
 
 export const goodsFromServer = [
@@ -16,16 +17,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const APPLIED_SORT_ALPHABETICALLY = 'alphabetically';
+const APPLIED_SORT_LENGTH = 'length';
+
 function getSortedGoods(goods, { appliedSort, reverseOrder }) {
   const visibleGoods = [...goods];
 
   if (appliedSort) {
     visibleGoods.sort((good1, good2) => {
       switch (appliedSort) {
-        case 'alphabetically':
+        case APPLIED_SORT_ALPHABETICALLY:
           return good1.localeCompare(good2);
 
-        case 'length':
+        case APPLIED_SORT_LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -58,23 +62,26 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${appliedSort === 'alphabetically' ? '' : 'is-light'}`}
-          onClick={() => setAppliedSort('alphabetically')}
+          className={cn('button is-info',
+            { 'is-light': appliedSort !== APPLIED_SORT_ALPHABETICALLY })}
+          onClick={() => setAppliedSort(APPLIED_SORT_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${appliedSort === 'length' ? '' : 'is-light'}`}
-          onClick={() => setAppliedSort('length')}
+          className={cn('button is-success',
+            { 'is-light': appliedSort !== APPLIED_SORT_LENGTH })}
+          onClick={() => setAppliedSort(APPLIED_SORT_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${reverseOrder ? '' : 'is-light'}`}
+          className={cn('button is-warning',
+            { 'is-light': !reverseOrder })}
           onClick={() => setReverseOrder(!reverseOrder)}
         >
           Reverse
