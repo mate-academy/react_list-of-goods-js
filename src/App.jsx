@@ -26,6 +26,13 @@ export const App = () => {
   const SORT_BY_ALPH = 'alph';
   const SORT_BY_LENGTH = 'length';
 
+  const sortByLength = sortBy === SORT_BY_LENGTH;
+  const sortByAlphabeth = sortBy === SORT_BY_ALPH;
+
+  function toggleReverse(val, setVal) {
+    setVal(!val);
+  }
+
   switch (sortBy) {
     case SORT_BY_ALPH:
       if (reverse) {
@@ -67,7 +74,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info',
-            { 'is-light': sortBy !== SORT_BY_ALPH })}
+            { 'is-light': !sortByAlphabeth })}
           onClick={() => setSortBy(SORT_BY_ALPH)}
         >
           Sort alphabetically
@@ -76,7 +83,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info',
-            { 'is-light': sortBy !== SORT_BY_LENGTH })}
+            { 'is-light': !sortByLength })}
           onClick={() => setSortBy(SORT_BY_LENGTH)}
         >
           Sort by length
@@ -86,7 +93,7 @@ export const App = () => {
           type="button"
           className={cn('button is-warning',
             { 'is-light': !reverse })}
-          onClick={() => setReverse(!reverse)}
+          onClick={() => toggleReverse(reverse, setReverse)}
         >
           Reverse
         </button>
