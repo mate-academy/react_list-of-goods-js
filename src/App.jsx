@@ -25,7 +25,7 @@ const SORT_OPTIONS = {
 const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <li data-cy="Good">{good}</li>))}
+      <li key={good} data-cy="Good">{good}</li>))}
   </ul>
 );
 
