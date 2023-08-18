@@ -25,9 +25,17 @@ export const App = () => {
   const sortList = (list, type) => {
     switch (type) {
       case 'Sort alphabetically':
+        if (isReverse) {
+          return list.sort((good1, good2) => good2.localeCompare(good1));
+        }
+
         return list.sort((good1, good2) => good1.localeCompare(good2));
 
       case 'Sort by length':
+        if (isReverse) {
+          return list.sort((good1, good2) => good2.length - good1.length);
+        }
+
         return list.sort((good1, good2) => good1.length - good2.length);
 
       case 'Reverse':
