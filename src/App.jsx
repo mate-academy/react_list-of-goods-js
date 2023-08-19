@@ -120,7 +120,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {[...filteredAndSortedGoods].map(({ id, name }) => (
+        {filteredAndSortedGoods.map(({ id, name }) => (
           <li
             key={id}
             data-cy="Good"
