@@ -19,6 +19,7 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 const REVERSE = 'reverse';
+const EMPTY = '';
 
 function getPreparedGoods(goods, { sortField, reverseField }) {
   let preparedGoods = [...goods];
@@ -45,9 +46,13 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
   return preparedGoods;
 }
 
+function resetField(field) {
+  field(EMPTY);
+}
+
 export const App = () => {
-  const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState('');
+  const [sortField, setSortField] = useState(EMPTY);
+  const [reverseField, setReverseField] = useState(EMPTY);
 
   const visibleGoods = getPreparedGoods(
     goodsFromServer,
@@ -83,21 +88,20 @@ export const App = () => {
             'is-light': reverseField !== REVERSE,
           })}
           onClick={() => setReverseField(
-            reverseField === REVERSE ? '' : REVERSE,
+            reverseField === REVERSE ? EMPTY : REVERSE,
           )}
         >
           Reverse
         </button>
 
         {
-          (sortField !== '' || reverseField !== '')
-          && (
+          (sortField || reverseField) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortField('');
-              setReverseField('');
+              resetField(setSortField);
+              resetField(setReverseField);
             }}
           >
             Reset
