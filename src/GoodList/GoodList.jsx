@@ -1,9 +1,9 @@
-import GoodCard from '../GoodCard';
-
 export const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <GoodCard good={good} key={good} />
+      <li data-cy="Good" key={good}>
+        {good}
+      </li>
     ))}
   </ul>
 );
