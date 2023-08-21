@@ -1,5 +1,5 @@
 import 'bulma/css/bulma.css';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import cn from 'classnames';
 import './App.scss';
 
@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
-function getSortedGoods(goods, { sortField, reverseField }) {
+function getSortedGoods(goods, { sortField, isReversed }) {
   const sortedGoods = [...goods];
 
   if (sortField) {
@@ -37,7 +37,7 @@ function getSortedGoods(goods, { sortField, reverseField }) {
     });
   }
 
-  if (reverseField) {
+  if (isReversed) {
     sortedGoods.reverse();
   }
 
@@ -46,11 +46,18 @@ function getSortedGoods(goods, { sortField, reverseField }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState(false);
-  const sortedGoods = getSortedGoods(
-    goodsFromServer,
-    { sortField, reverseField },
-  );
+  const [isReversed, setIsReversed] = useState(false);
+
+  const sortedGoods = useMemo(() => (
+    getSortedGoods(goodsFromServer, {
+      sortField,
+      isReversed,
+    })
+  ), [goodsFromServer, sortField, isReversed]);
+
+  const handleReverseClick = () => {
+    setIsReversed(prevIsReversed => !prevIsReversed);
+  };
 
   return (
     <div className="section content">
@@ -61,6 +68,7 @@ export const App = () => {
           className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
+          aria-label="Sort goods alphabetically"
         >
           Sort alphabetically
         </button>
@@ -71,28 +79,31 @@ export const App = () => {
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
+          aria-label="Sort goods by length"
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => setReverseField(!reverseField)}
+          onClick={handleReverseClick}
           className={cn('button', 'is-warning', {
-            'is-light': !reverseField,
+            'is-light': !isReversed,
           })}
+          aria-label="Reverse sort"
         >
           Reverse
         </button>
 
-        {(sortField || reverseField) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             onClick={() => {
               setSortField('');
-              setReverseField(false);
+              setIsReversed(false);
             }}
             className="button is-danger is-light"
+            aria-label="Reset sort"
           >
             Reset
           </button>
