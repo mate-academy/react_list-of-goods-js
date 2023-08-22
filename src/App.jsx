@@ -46,16 +46,12 @@ function getPreparesGoods(goods, sortType, reverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [sortReverse, setSortReverse] = useState(false);
-  const visibleGoods = getPreparesGoods(
-    goodsFromServer,
-    sortField,
-    sortReverse,
-  );
+  const [isReverse, setisReverse] = useState(false);
+  const visibleGoods = getPreparesGoods(goodsFromServer, sortField, isReverse);
 
   const resetSort = () => {
     setSortField('');
-    setSortReverse(false);
+    setisReverse(false);
   };
 
   return (
@@ -82,14 +78,14 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSortReverse(!sortReverse)}
+          onClick={() => setisReverse(!isReverse)}
           type="button"
-          className={cn('button is-warning', { 'is-light': !sortReverse })}
+          className={cn('button is-warning', { 'is-light': !isReverse })}
         >
           Reverse
         </button>
 
-        {(sortField !== '' || sortReverse) && (
+        {(sortField !== '' || isReverse) && (
           <button
             onClick={resetSort}
             type="button"
