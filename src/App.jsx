@@ -18,12 +18,12 @@ export const goodsFromServer = [
 const SORT_GOODS_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_GOODS_BY_LENGTH = 'Sort by length';
 
-function updateGoods(goods, ligthedButton, isReversed) {
+function updateGoods(goods, sortBy, isReversed) {
   let prepearedGoods = [...goods];
 
-  if (ligthedButton) {
+  if (sortBy) {
     prepearedGoods.sort((good1, good2) => {
-      switch (ligthedButton) {
+      switch (sortBy) {
         case SORT_GOODS_ALPHABETICALLY:
           return good1.localeCompare(good2);
         case SORT_GOODS_BY_LENGTH:
@@ -42,10 +42,10 @@ function updateGoods(goods, ligthedButton, isReversed) {
 }
 
 export const App = () => {
-  const [ligthedButton, setLightedButton] = useState('');
-  const [isGoodsreversed, setIsGoodsreversed] = useState(false);
+  const [sortBy, setSortBy] = useState('');
+  const [isGoodsReversed, setIsGoodsReversed] = useState(false);
   const finalGoods
-    = updateGoods(goodsFromServer, ligthedButton, isGoodsreversed);
+    = updateGoods(goodsFromServer, sortBy, isGoodsReversed);
 
   return (
     <div className="section content">
@@ -53,9 +53,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': ligthedButton !== SORT_GOODS_ALPHABETICALLY,
+            'is-light': sortBy !== SORT_GOODS_ALPHABETICALLY,
           })}
-          onClick={() => setLightedButton(SORT_GOODS_ALPHABETICALLY)}
+          onClick={() => setSortBy(SORT_GOODS_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
@@ -63,9 +63,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': ligthedButton !== SORT_GOODS_BY_LENGTH,
+            'is-light': sortBy !== SORT_GOODS_BY_LENGTH,
           })}
-          onClick={() => setLightedButton(SORT_GOODS_BY_LENGTH)}
+          onClick={() => setSortBy(SORT_GOODS_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -73,20 +73,20 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': !isGoodsreversed,
+            'is-light': !isGoodsReversed,
           })}
-          onClick={() => setIsGoodsreversed(!isGoodsreversed)}
+          onClick={() => setIsGoodsReversed(!isGoodsReversed)}
         >
           Reverse
         </button>
 
-        {(ligthedButton || isGoodsreversed) && (
+        {(sortBy || isGoodsReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setIsGoodsreversed(false);
-              setLightedButton('');
+              setIsGoodsReversed(false);
+              setSortBy('');
             }}
           >
             Reset
@@ -96,7 +96,12 @@ export const App = () => {
 
       <ul>
         {finalGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li
+            data-cy="Good"
+            key={good}
+          >
+            {good}
+          </li>
         ))}
       </ul>
     </div>
