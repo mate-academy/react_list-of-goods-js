@@ -27,10 +27,6 @@ const SORT_FIELD_LENGTH = 'byLength';
 function getPreparedGoods(goods, sortBy, isReversed) {
   const preparedGoods = [...goods];
 
-  if (isReversed) {
-    return preparedGoods.reverse();
-  }
-
   preparedGoods.sort((good1, good2) => {
     const name1 = good1.name;
     const name2 = good2.name;
@@ -45,6 +41,10 @@ function getPreparedGoods(goods, sortBy, isReversed) {
         return 0;
     }
   });
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
 
   return preparedGoods;
 }
