@@ -44,7 +44,7 @@ function updateGoods(goods, sortBy, isReversed) {
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [isGoodsReversed, setIsGoodsReversed] = useState(false);
-  const finalGoods
+  const sortedGoods
     = updateGoods(goodsFromServer, sortBy, isGoodsReversed);
 
   return (
@@ -95,7 +95,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {finalGoods.map(good => (
+        {sortedGoods.map(good => (
           <li
             data-cy="Good"
             key={good}
