@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 
 export const goodsFromServer = [
@@ -91,7 +92,12 @@ export const App = () => {
 
       <ul>
         {goods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li
+            data-cy="Good"
+            key={uuidv4()}
+          >
+            {good}
+          </li>
         ))}
       </ul>
     </div>
