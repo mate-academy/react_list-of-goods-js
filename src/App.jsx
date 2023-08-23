@@ -48,6 +48,11 @@ export const App = () => {
   const [actionButtons, setActionButtons] = useState('');
   const [reverse, setReverse] = useState('');
 
+  const resetAction = () => {
+    setActionButtons('');
+    setReverse('');
+  };
+
   const visibleGoods = sortGoods(goodsFromServer, { actionButtons, reverse });
 
   return (
@@ -89,10 +94,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setActionButtons('');
-                setReverse('');
-              }}
+              onClick={() => resetAction()}
             >
               Reset
             </button>
@@ -101,10 +103,7 @@ export const App = () => {
               <button
                 type="button"
                 className="button is-danger is-light"
-                onClick={() => {
-                  setActionButtons('');
-                  setReverse('');
-                }}
+                onClick={() => resetAction()}
               >
                 Reset
               </button>
