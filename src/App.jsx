@@ -46,7 +46,7 @@ const updateGoods = (goods, { sortType, isReverse }) => {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
+  const [isReverse, setIsReverse] = useState(REVERSE_BASE_STATE);
 
   const goods = updateGoods(goodsFromServer, { sortType, isReverse });
 
