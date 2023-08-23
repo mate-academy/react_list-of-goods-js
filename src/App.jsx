@@ -19,17 +19,17 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY = 'sort alphabetically';
 const SORT_BY_LENGTH = 'sort by length';
 
-const sortByCondition = (condition, isReversed) => {
+const getSortedGoods = (condition, isReversed) => {
   const goodsCopy = [...goodsFromServer];
 
   if (condition) {
-    goodsCopy.sort((good1, good2) => {
+    goodsCopy.sort((a, b) => {
       switch (condition) {
         case SORT_ALPHABETICALLY:
-          return good1.localeCompare(good2);
+          return a.localeCompare(b);
 
         case SORT_BY_LENGTH:
-          return good1.length - good2.length;
+          return a.length - b.length;
 
         default:
           return 0;
@@ -37,53 +37,65 @@ const sortByCondition = (condition, isReversed) => {
     });
   }
 
-  return isReversed
-    ? goodsCopy.reverse()
-    : goodsCopy;
+  return isReversed ? goodsCopy.reverse() : goodsCopy;
 };
 
 export const App = () => {
-  const [sortParam, setSortParam] = useState('');
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const goods = sortByCondition(sortParam, isReversed);
+  const goods = getSortedGoods(sortField, isReversed);
+
+  const reset = () => {
+    setIsReversed(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${cn({ 'is-light': sortParam !== SORT_ALPHABETICALLY })}`}
-          onClick={() => setSortParam(SORT_ALPHABETICALLY)}
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortField !== SORT_ALPHABETICALLY },
+          )}
+          onClick={() => setSortField(SORT_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${cn({ 'is-light': sortParam !== SORT_BY_LENGTH })}`}
-          onClick={() => setSortParam(SORT_BY_LENGTH)}
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_BY_LENGTH },
+          )}
+          onClick={() => setSortField(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${cn({ 'is-light': !isReversed })}`}
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': !isReversed },
+          )}
           onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortParam || isReversed)
+        {(sortField || isReversed)
           && (
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setIsReversed(false);
-                setSortParam('');
-              }}
+              onClick={reset}
             >
               Reset
             </button>
