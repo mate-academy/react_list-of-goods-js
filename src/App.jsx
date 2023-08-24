@@ -16,7 +16,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORTED_BY_ALPHABET = 'name';
+const SORTED_BY_ALPHABET = 'alphabet';
 const SORTED_BY_LENGTH = 'length';
 
 const getPreparedGoods = (goods, { sortField, isReversed }) => {
