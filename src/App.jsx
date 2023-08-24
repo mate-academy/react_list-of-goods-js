@@ -18,32 +18,44 @@ const initialGoods = [
 
 export const App = () => {
   const [goods, setGoods] = useState(initialGoods);
-  const [sortAlphabeticallyLight, setSortAlphabeticallyLight] = useState(true);
-  const [sortByLengthLight, setSortByLengthLight] = useState(true);
-  const [reverseLight, setReverseLight] = useState(true);
-  const [resetLight, setResetLight] = useState(true);
+  const [buttonStates, setButtonStates] = useState({
+    sortAlphabetically: true,
+    sortByLength: true,
+    reverse: true,
+    reset: true,
+  });
   const [ascending, setAscending] = useState(true);
+  const [originalOrder] = useState([...initialGoods]); // Store the original order during component initialization
+
+  const handleButtonClick = (buttonName) => {
+    const newButtonStates = { ...buttonStates };
+
+    Object.keys(newButtonStates).forEach((key) => {
+      newButtonStates[key] = key === buttonName;
+    });
+    setButtonStates(newButtonStates);
+  };
 
   const sortAlphabetically = () => {
     const sortedGoods = [...goods].sort();
 
     setGoods(sortedGoods);
     setAscending(true);
-    setSortAlphabeticallyLight(false);
-    setSortByLengthLight(true);
-    setReverseLight(true);
-    setResetLight(true);
+    handleButtonClick('sortAlphabetically');
   };
 
-  const sortByLength = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
+  const sortByLengthStable = () => {
+    const sortedGoods = [...goods].sort((a, b) => {
+      if (a.length !== b.length) {
+        return a.length - b.length;
+      }
+
+      return goods.indexOf(a) - goods.indexOf(b);
+    });
 
     setGoods(sortedGoods);
     setAscending(true);
-    setSortAlphabeticallyLight(true);
-    setSortByLengthLight(false);
-    setReverseLight(true);
-    setResetLight(true);
+    handleButtonClick('sortByLength');
   };
 
   const reverseOrder = () => {
@@ -51,19 +63,13 @@ export const App = () => {
 
     setGoods(reversedGoods);
     setAscending(!ascending);
-    setSortAlphabeticallyLight(true);
-    setSortByLengthLight(true);
-    setReverseLight(false);
-    setResetLight(true);
+    handleButtonClick('reverse');
   };
 
   const resetOrder = () => {
-    setGoods(initialGoods);
+    setGoods(originalOrder);
     setAscending(true);
-    setSortAlphabeticallyLight(true);
-    setSortByLengthLight(true);
-    setReverseLight(true);
-    setResetLight(true);
+    handleButtonClick('reset');
   };
 
   return (
@@ -71,7 +77,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortAlphabeticallyLight ? '' : 'is-light'}`}
+          className={`button is-info ${buttonStates.sortAlphabetically ? '' : 'is-light'}`}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -79,15 +85,15 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortByLengthLight ? '' : 'is-light'}`}
-          onClick={sortByLength}
+          className={`button is-success ${buttonStates.sortByLength ? '' : 'is-light'}`}
+          onClick={sortByLengthStable}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${reverseLight ? '' : 'is-light'}`}
+          className={`button is-warning ${buttonStates.reverse ? '' : 'is-light'}`}
           onClick={reverseOrder}
         >
           Reverse
@@ -95,7 +101,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-danger ${resetLight ? '' : 'is-light'}`}
+          className={`button is-danger ${buttonStates.reset ? '' : 'is-light'}`}
           onClick={resetOrder}
         >
           Reset
