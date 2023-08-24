@@ -21,13 +21,13 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const goodsDataWithId = goodsFromServer
+const updatedData = goodsFromServer
   .map(good => ({ id: getRandomKey(), name: good, length: good.length }));
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(REVERSE_STATE);
-  const visibleGoods = getPreparedGoods(goodsDataWithId, {
+  const visibleGoods = getPreparedGoods(updatedData, {
     sortField,
     isReversed,
   });
