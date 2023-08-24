@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -25,27 +24,36 @@ export const App = () => {
     reset: true,
   });
   const [ascending, setAscending] = useState(true);
-  const [originalOrder] = useState([...initialGoods]); // Store the original order during component initialization
+  const [originalOrder] = useState([...initialGoods]);
+  const [isReversed, setIsReversed] = useState(false);
 
   const handleButtonClick = (buttonName) => {
-    const newButtonStates = { ...buttonStates };
+    const newButtonStates = {
+      sortAlphabetically: buttonName === 'sortAlphabetically',
+      sortByLength: buttonName === 'sortByLength',
+      reverse: buttonName === 'reverse',
+      reset: buttonName === 'reset',
+    };
 
-    Object.keys(newButtonStates).forEach((key) => {
-      newButtonStates[key] = key === buttonName;
-    });
     setButtonStates(newButtonStates);
   };
 
+  const stableSort = (array, compareFunction) => array
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => compareFunction(a.item, b.item) || a.index - b.index)
+    .map(({ item }) => item);
+
   const sortAlphabetically = () => {
-    const sortedGoods = [...goods].sort();
+    const sortedGoods = stableSort([...goods], (a, b) => a.localeCompare(b));
 
     setGoods(sortedGoods);
     setAscending(true);
     handleButtonClick('sortAlphabetically');
+    setIsReversed(false);
   };
 
   const sortByLengthStable = () => {
-    const sortedGoods = [...goods].sort((a, b) => {
+    const sortedGoods = stableSort([...goods], (a, b) => {
       if (a.length !== b.length) {
         return a.length - b.length;
       }
@@ -56,20 +64,23 @@ export const App = () => {
     setGoods(sortedGoods);
     setAscending(true);
     handleButtonClick('sortByLength');
+    setIsReversed(false);
   };
 
-  const reverseOrder = () => {
-    const reversedGoods = [...goods].reverse();
+  const toggleReverseOrder = () => {
+    const newGoods = isReversed ? [...originalOrder] : [...goods].reverse();
 
-    setGoods(reversedGoods);
+    setGoods(newGoods);
     setAscending(!ascending);
     handleButtonClick('reverse');
+    setIsReversed(!isReversed);
   };
 
   const resetOrder = () => {
-    setGoods(originalOrder);
+    setGoods([...originalOrder]);
     setAscending(true);
     handleButtonClick('reset');
+    setIsReversed(false);
   };
 
   return (
@@ -94,7 +105,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${buttonStates.reverse ? '' : 'is-light'}`}
-          onClick={reverseOrder}
+          onClick={toggleReverseOrder}
         >
           Reverse
         </button>
@@ -109,8 +120,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map((good, index) => (
-          <li key={index} data-cy="Good">
+        {goods.map(good => (
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
