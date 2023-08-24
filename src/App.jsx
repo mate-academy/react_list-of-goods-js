@@ -15,31 +15,50 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+function getPreparedGoods(goods) {
+  return goods.map((good, index) => ({ good, key: index }));
+}
+
+const preparedGoods = getPreparedGoods(goodsFromServer);
+
+// eslint-disable-next-line no-console
+console.log(preparedGoods);
+
 const SORT_BY_ALPHABET = 'alpha';
 const SORT_BY_LENGTH = 'length';
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
+  const [visibleGoods, setVisibleGoods] = useState(preparedGoods);
+  const [resetButtonHidden, setResetButtonHidden] = useState(false);
 
   function getSortBy(products, sortBy) {
     if (sortBy === SORT_BY_ALPHABET) {
-      return () => setVisibleGoods([...products]
-        .sort((a, b) => a.localeCompare(b)));
+      return () => {
+        setResetButtonHidden(true);
+        setVisibleGoods([...products]
+          .sort((good1, good2) => good1.good.localeCompare(good2.good)));
+      };
     }
 
     if (sortBy === SORT_BY_LENGTH) {
-      return () => setVisibleGoods([...products]
-        .sort((a, b) => a.length - b.length));
+      return () => {
+        setResetButtonHidden(true);
+        setVisibleGoods([...products]
+          .sort((good1, good2) => good1.good.length - good2.good.length));
+      };
     }
 
-    return () => setVisibleGoods([...visibleGoods].reverse());
-  };
+    return () => {
+      setResetButtonHidden(true);
+      setVisibleGoods([...visibleGoods].reverse());
+    };
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={getSortBy(goodsFromServer, SORT_BY_ALPHABET)}
+          onClick={getSortBy(preparedGoods, SORT_BY_ALPHABET)}
           type="button"
           className="button is-info is-light"
         >
@@ -47,7 +66,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={getSortBy(goodsFromServer, SORT_BY_LENGTH)}
+          onClick={getSortBy(preparedGoods, SORT_BY_LENGTH)}
           type="button"
           className="button is-success is-light"
         >
@@ -55,25 +74,34 @@ export const App = () => {
         </button>
 
         <button
-          onClick={getSortBy(goodsFromServer)}
+          onClick={getSortBy(preparedGoods)}
           type="button"
           className="button is-warning is-light"
         >
           Reverse
         </button>
 
-        <button
-          onClick={() => setVisibleGoods([...goodsFromServer])}
-          type="button"
-          className="button is-danger is-light"
-        >
-          Reset
-        </button>
+        {resetButtonHidden && (
+          <button
+            onClick={() => {
+              setResetButtonHidden(false);
+              setVisibleGoods([...preparedGoods]);
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good">
+        {visibleGoods.map(({ good, key }) => (
+          <li
+            data-cy="Good"
+            key={key}
+          >
             {good}
           </li>
         ))}
