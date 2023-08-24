@@ -17,7 +17,7 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [visibileGoods, setVisibileGoods] = useState(goodsFromServer);
+  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
 
   const [isAlphActive, setIsAlphActive] = useState(false);
   const [isLengthActive, setIsLengthActive] = useState(false);
@@ -25,8 +25,10 @@ export const App = () => {
   const [resetButtonVisible, setResetButtonVisible] = useState(false);
 
   const sortByAlph = () => {
-    setVisibileGoods(
-      [...visibileGoods].sort((goods1, goods2) => goods1.localeCompare(goods2)),
+    setVisibleGoods(
+      [...visibleGoods].sort(
+        (goods1, goods2) => goods1.localeCompare(goods2).toLowerCase(),
+      ),
     );
 
     setIsAlphActive(true);
@@ -35,8 +37,8 @@ export const App = () => {
   };
 
   const sortByLength = () => {
-    setVisibileGoods(
-      [...visibileGoods].sort(
+    setVisibleGoods(
+      [...visibleGoods].sort(
         (goods1, goods2) => goods1.length - goods2.length,
       ),
     );
@@ -47,15 +49,15 @@ export const App = () => {
   };
 
   const reverse = () => {
-    setVisibileGoods(
-      visibileGoods.reverse(),
+    setVisibleGoods(
+      [...visibleGoods].reverse(),
     );
 
     setIsReverseActive(!isReverseActive);
   };
 
   const reset = () => {
-    setVisibileGoods(goodsFromServer);
+    setVisibleGoods(goodsFromServer);
 
     setIsAlphActive(false);
     setIsLengthActive(false);
@@ -107,7 +109,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibileGoods.map(good => (
+        {visibleGoods.map(good => (
           <li
             key={good}
             data-cy="Good"
