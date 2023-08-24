@@ -91,7 +91,7 @@ export const App = () => {
         </button>
 
         {goods.join`` !== goodsFromServer.join``
-          ? (
+          && (
             <button
               type="button"
               className="button is-danger is-light"
@@ -100,9 +100,7 @@ export const App = () => {
               Reset
             </button>
           )
-          : (
-            ''
-          )}
+        }
       </div>
 
       <ul>
