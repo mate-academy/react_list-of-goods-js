@@ -1,7 +1,9 @@
+/* eslint-disable react/no-array-index-key */
+import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-export const goodsFromServer = [
+const initialGoods = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -14,45 +16,99 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState(initialGoods);
+  const [sortAlphabeticallyLight, setSortAlphabeticallyLight] = useState(true);
+  const [sortByLengthLight, setSortByLengthLight] = useState(true);
+  const [reverseLight, setReverseLight] = useState(true);
+  const [resetLight, setResetLight] = useState(true);
+  const [ascending, setAscending] = useState(true);
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  const sortAlphabetically = () => {
+    const sortedGoods = [...goods].sort();
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+    setGoods(sortedGoods);
+    setAscending(true);
+    setSortAlphabeticallyLight(false);
+    setSortByLengthLight(true);
+    setReverseLight(true);
+    setResetLight(true);
+  };
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  const sortByLength = () => {
+    const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
+
+    setGoods(sortedGoods);
+    setAscending(true);
+    setSortAlphabeticallyLight(true);
+    setSortByLengthLight(false);
+    setReverseLight(true);
+    setResetLight(true);
+  };
+
+  const reverseOrder = () => {
+    const reversedGoods = [...goods].reverse();
+
+    setGoods(reversedGoods);
+    setAscending(!ascending);
+    setSortAlphabeticallyLight(true);
+    setSortByLengthLight(true);
+    setReverseLight(false);
+    setResetLight(true);
+  };
+
+  const resetOrder = () => {
+    setGoods(initialGoods);
+    setAscending(true);
+    setSortAlphabeticallyLight(true);
+    setSortByLengthLight(true);
+    setReverseLight(true);
+    setResetLight(true);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortAlphabeticallyLight ? '' : 'is-light'}`}
+          onClick={sortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${sortByLengthLight ? '' : 'is-light'}`}
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${reverseLight ? '' : 'is-light'}`}
+          onClick={reverseOrder}
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className={`button is-danger ${resetLight ? '' : 'is-light'}`}
+          onClick={resetOrder}
+        >
+          Reset
+        </button>
+      </div>
+
+      <ul>
+        {goods.map((good, index) => (
+          <li key={index} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
