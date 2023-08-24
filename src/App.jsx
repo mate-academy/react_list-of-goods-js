@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { GoodList } from './components/GoodList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -51,20 +52,16 @@ function getPreparedGoods(goods, sortBy, isReversed) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReversed, setReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsWithId, sortField, isReversed);
 
   function resetGoods() {
     setSortField('');
-    setReverse(false);
+    setIsReversed(false);
   }
 
   function reverseGoods() {
-    if (isReversed) {
-      setReverse(false);
-    } else {
-      setReverse(true);
-    }
+    setIsReversed(prev => !prev);
   }
 
   return (
@@ -103,7 +100,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             onClick={resetGoods}
@@ -118,16 +115,3 @@ export const App = () => {
     </div>
   );
 };
-
-export const GoodList = ({ goods }) => (
-  <ul className="GoodList">
-    {goods.map(good => (
-      <GoodCard
-        key={good.id}
-        name={good.name}
-      />
-    ))}
-  </ul>
-);
-
-export const GoodCard = ({ name }) => <li data-cy="Good">{name}</li>;
