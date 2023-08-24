@@ -19,6 +19,7 @@ export const App = () => {
   const [goods, setGoods] = useState(initialGoods);
   const [sortType, setSortType] = useState('');
   const [ascending, setAscending] = useState(true);
+  const [originalOrderReversed, setOriginalOrderReversed] = useState(false);
 
   const handleSort = (type) => {
     let sortedGoods = [...goods];
@@ -39,12 +40,19 @@ export const App = () => {
     setGoods(sortedGoods);
     setSortType(type);
     setAscending(true);
+    setOriginalOrderReversed(false);
   };
 
   const handleReverse = () => {
     if (sortType) {
       setGoods([...goods].reverse());
       setAscending(!ascending);
+      setOriginalOrderReversed(false);
+    } else {
+      const reversedOriginalOrder = [...initialGoods].reverse();
+
+      setGoods(reversedOriginalOrder);
+      setOriginalOrderReversed(!originalOrderReversed);
     }
   };
 
@@ -52,6 +60,7 @@ export const App = () => {
     setGoods(initialGoods);
     setSortType('');
     setAscending(true);
+    setOriginalOrderReversed(false);
   };
 
   return (
@@ -73,25 +82,21 @@ export const App = () => {
           Sort by length
         </button>
 
-        {(sortType || !ascending) && (
-          <button
-            type="button"
-            className="button is-warning"
-            onClick={handleReverse}
-          >
-            Reverse
-          </button>
-        )}
+        <button
+          type="button"
+          className={`button is-warning ${originalOrderReversed || !sortType || !ascending ? '' : 'is-light'}`}
+          onClick={handleReverse}
+        >
+          Reverse
+        </button>
 
-        {(sortType || !ascending) && (
-          <button
-            type="button"
-            className="button is-danger"
-            onClick={handleReset}
-          >
-            Reset
-          </button>
-        )}
+        <button
+          type="button"
+          className={`button is-danger ${sortType || !ascending || originalOrderReversed ? '' : 'is-light'}`}
+          onClick={handleReset}
+        >
+          Reset
+        </button>
       </div>
 
       <ul>
@@ -105,7 +110,6 @@ export const App = () => {
   );
 };
 
-// Stable sort implementation
 const stableSort = (array, compareFunction) => array
   .map((item, index) => ({ item, index }))
   .sort((a, b) => compareFunction(a.item, b.item) || a.index - b.index)
