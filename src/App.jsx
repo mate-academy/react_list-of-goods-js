@@ -26,7 +26,11 @@ const RESET = 'reset';
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(preparedGoods);
   const [sortField, setSortField] = useState('');
-  const [isActive, setIsActive] = useState(true);
+  const [isActiveButton, setIsActiveButton] = useState({
+    sortByAlpha: true,
+    sortByLength: true,
+    sortReverse: true,
+  });
 
   function getSortBy(products, sortBy) {
     if (sortBy === SORT_BY_ALPHABET) {
@@ -34,6 +38,12 @@ export const App = () => {
         setSortField(SORT_BY_ALPHABET);
         setVisibleGoods([...products]
           .sort((good1, good2) => good1.good.localeCompare(good2.good)));
+
+        setIsActiveButton({
+          sortByAlpha: false,
+          sortByLength: true,
+          sortReverse: true,
+        });
       };
     }
 
@@ -42,18 +52,34 @@ export const App = () => {
         setSortField(SORT_BY_LENGTH);
         setVisibleGoods([...products]
           .sort((good1, good2) => good1.good.length - good2.good.length));
+
+        setIsActiveButton({
+          sortByAlpha: true,
+          sortByLength: false,
+          sortReverse: true,
+        });
       };
     }
 
     return () => {
-      setIsActive(!isActive);
+      setSortField(' ');
       setVisibleGoods([...visibleGoods].reverse());
+      setIsActiveButton({
+        sortByAlpha: isActiveButton.sortByAlpha,
+        sortByLength: isActiveButton.sortByLength,
+        sortReverse: true,
+      });
     };
   }
 
   const resetGoods = () => {
     setSortField('');
     setVisibleGoods([...preparedGoods]);
+    setIsActiveButton({
+      sortByAlpha: true,
+      sortByLength: true,
+      sortReverse: true,
+    });
   };
 
   return (
@@ -65,7 +91,7 @@ export const App = () => {
           className={
           cn('button',
             'is-info',
-            { 'is-light': SORT_BY_ALPHABET !== sortField })
+            { 'is-light': isActiveButton.sortByAlpha })
           }
         >
           Sort alphabetically
@@ -77,7 +103,7 @@ export const App = () => {
           className={
           cn('button',
             'is-success',
-            { 'is-light': SORT_BY_LENGTH !== sortField })
+            { 'is-light': isActiveButton.sortByLength })
           }
         >
           Sort by length
@@ -90,7 +116,7 @@ export const App = () => {
           cn(
             'button',
             'is-warning',
-            { 'is-light': isActive },
+            { 'is-light': isActiveButton.sortReverse },
           )}
         >
           Reverse
