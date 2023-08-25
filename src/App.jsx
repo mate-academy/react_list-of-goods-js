@@ -17,25 +17,20 @@ export const goodsFromServer = [
 ];
 const preparedGoods
   = [...goodsFromServer]
-    .map((good, index) => ({ good, key: index }));
+    .map((good, index) => ({ good, id: index }));
 
 const SORT_BY_ALPHABET = 'alpha';
 const SORT_BY_LENGTH = 'length';
-const REVERSE = 'reverse';
 const RESET = 'reset';
 
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(preparedGoods);
-  const [resetButtonHidden, setResetButtonHidden] = useState(false);
   const [sortField, setSortField] = useState('');
+  const [isActive, setIsActive] = useState(true);
 
   function getSortBy(products, sortBy) {
     if (sortBy === SORT_BY_ALPHABET) {
-      // eslint-disable-next-line no-console
-      console.log(products)
-
       return () => {
-        setResetButtonHidden(true);
         setSortField(SORT_BY_ALPHABET);
         setVisibleGoods([...products]
           .sort((good1, good2) => good1.good.localeCompare(good2.good)));
@@ -44,7 +39,6 @@ export const App = () => {
 
     if (sortBy === SORT_BY_LENGTH) {
       return () => {
-        setResetButtonHidden(true);
         setSortField(SORT_BY_LENGTH);
         setVisibleGoods([...products]
           .sort((good1, good2) => good1.good.length - good2.good.length));
@@ -52,15 +46,13 @@ export const App = () => {
     }
 
     return () => {
-      setResetButtonHidden(true);
-      setSortField(REVERSE);
+      setIsActive(!isActive);
       setVisibleGoods([...visibleGoods].reverse());
     };
   }
 
   const resetGoods = () => {
-    setSortField(RESET);
-    setResetButtonHidden(false);
+    setSortField('');
     setVisibleGoods([...preparedGoods]);
   };
 
@@ -98,13 +90,13 @@ export const App = () => {
           cn(
             'button',
             'is-warning',
-            { 'is-light': REVERSE !== sortField },
+            { 'is-light': isActive },
           )}
         >
           Reverse
         </button>
 
-        {resetButtonHidden && (
+        {sortField && (
           <button
             onClick={() => resetGoods()}
             type="button"
@@ -122,10 +114,10 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(({ good, key }) => (
+        {visibleGoods.map(({ good, id }) => (
           <li
             data-cy="Good"
-            key={key}
+            key={id}
           >
             {good}
           </li>
