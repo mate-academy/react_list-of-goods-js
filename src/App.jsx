@@ -67,7 +67,7 @@ export const App = () => {
       setIsActiveButton({
         sortByAlpha: isActiveButton.sortByAlpha,
         sortByLength: isActiveButton.sortByLength,
-        sortReverse: true,
+        sortReverse: !isActiveButton.sortReverse,
       });
     };
   }
