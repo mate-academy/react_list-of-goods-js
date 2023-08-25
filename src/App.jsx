@@ -49,9 +49,8 @@ export const App = () => {
   const [reverseField, setReverseField] = useState(false);
 
   const visibleGoods = getPreparedGoods(
-    goodsFromServer, {
-      sortField, reverseField,
-    },
+    goodsFromServer,
+    { sortField, reverseField },
   );
 
   return (
@@ -107,7 +106,12 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li
+            data-cy="Good"
+            key={good}
+          >
+            {good}
+          </li>
         ))}
       </ul>
     </div>
