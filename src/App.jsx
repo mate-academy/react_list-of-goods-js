@@ -21,8 +21,8 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPrepareGoods(goods, sortType, isReverse ) {
-  const prepareGoods = [...goods];  
+function getPrepareGoods(goods, sortType, isReverse) {
+  const prepareGoods = [...goods];
 
   if (sortType) {
     prepareGoods.sort((good1, good2) => {
