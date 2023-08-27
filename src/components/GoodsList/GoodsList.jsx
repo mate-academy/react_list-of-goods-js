@@ -6,7 +6,7 @@ export const GoodList = ({ goods }) => (
       goods.map(good => (
         <GoodCard
           good={good}
-          key={goods.indexOf(good)}
+          key={good}
         />
       ))
     }
