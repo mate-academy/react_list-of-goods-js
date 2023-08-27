@@ -21,7 +21,7 @@ const SORT_BY_NAME = 'name';
 const SORT_BY_LENGTH = 'length';
 const NO_REVERSE = false;
 
-function getPreparedGoods(goods, sortBy, inReverseOrder) {
+function getPreparedGoods(goods, { sortBy, inReverseOrder }) {
   const preparedGoods = [...goods];
 
   if (sortBy) {
@@ -50,7 +50,7 @@ export const App = () => {
   const [sortBy, setSortBy] = useState(NO_SORT);
   const [inReverseOrder, setInReverseOrder] = useState(NO_REVERSE);
 
-  const goods = getPreparedGoods(goodsFromServer, sortBy, inReverseOrder);
+  const goods = getPreparedGoods(goodsFromServer, { sortBy, inReverseOrder });
 
   return (
     <div className="section content">
