@@ -20,22 +20,38 @@ const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 const REVERSE_FIELD = 'reversed';
 
+function getPreparedGoods(goods, { sortField, reverseField }) {
+  const preparedGoods = [...goods];
+
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABET: {
+          return good1.localeCompare(good2);
+        }
+
+        case SORT_FIELD_LENGTH: {
+          return good1.length - good2.length;
+        }
+
+        default: {
+          return 0;
+        }
+      }
+    });
+  }
+
+  if (reverseField) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
-  const goods = [...goodsFromServer];
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState('');
-
-  if (sortField === SORT_FIELD_ALPHABET) {
-    goods.sort();
-  }
-
-  if (sortField === SORT_FIELD_LENGTH) {
-    goods.sort((good1, good2) => good1.length - good2.length);
-  }
-
-  if (reverseField === REVERSE_FIELD) {
-    goods.reverse();
-  }
+  const goods = getPreparedGoods(goodsFromServer, { sortField, reverseField });
 
   return (
     <div className="section content">
@@ -108,7 +124,10 @@ export const App = () => {
 export const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <li data-cy="Good">
+      <li
+        data-cy="Good"
+        key={good}
+      >
         {good}
       </li>
     ))}
