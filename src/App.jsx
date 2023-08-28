@@ -19,7 +19,6 @@ export const goodsFromServer = [
 
 const SORT_GOODS_BY_ALPHABET = 'alphabetically';
 const SORT_GOODS_BY_LENGTH = 'by length';
-const REVERSED_ORDER = 'reverse';
 
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
@@ -32,10 +31,6 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 
       case SORT_GOODS_BY_LENGTH:
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
-        break;
-
-      case REVERSED_ORDER:
-        preparedGoods.reverse();
         break;
 
       default:
