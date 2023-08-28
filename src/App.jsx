@@ -6,7 +6,7 @@ import { GoodList } from './Components/GoodList/GoodList';
 import { goodsFromServer } from './Components/GoodsFromServer';
 
 const SORT_FIELD_NAME = 'name';
-const SORT_FIELD_LENGTH = 'LENGTH';
+const SORT_FIELD_LENGTH = 'length';
 
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const prepatedGoods = [...goods];
