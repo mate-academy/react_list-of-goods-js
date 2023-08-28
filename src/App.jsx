@@ -47,7 +47,7 @@ export const App = () => {
   const [isReversedGoods, setIsReversedGoods] = useState(false);
   const sortedGoods = getPreperedGoods(
     goodsFromServer,
-    setSortField,
+    sortField,
     isReversedGoods,
   );
 
