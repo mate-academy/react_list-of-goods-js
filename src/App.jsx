@@ -19,12 +19,15 @@ export const goodsFromServer = [
 
 const SORT_TYPE_LENG = 'leng';
 const SORT_TYPE_ALPH = 'alph';
-const REVERSE_BASE_STATE = false;
 
 const updateGoods = (goods, { sortType, isReverse }) => {
+  if (sortType === '' && !isReverse) {
+    return goods;
+  }
+
   const udatedGoods = [...goods];
 
-  if (sortType) {
+  if (sortType === SORT_TYPE_LENG || sortType === SORT_TYPE_ALPH) {
     udatedGoods.sort((good1, good2) => {
       switch (sortType) {
         case SORT_TYPE_LENG:
@@ -32,7 +35,7 @@ const updateGoods = (goods, { sortType, isReverse }) => {
         case SORT_TYPE_ALPH:
           return good1.localeCompare(good2);
         default:
-          return 0;
+          throw new Error('Unbelievable error');
       }
     });
   }
@@ -46,7 +49,7 @@ const updateGoods = (goods, { sortType, isReverse }) => {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const [isReverse, setIsReverse] = useState(REVERSE_BASE_STATE);
+  const [isReverse, setIsReverse] = useState(false);
 
   const goods = updateGoods(goodsFromServer, { sortType, isReverse });
 
@@ -89,7 +92,7 @@ export const App = () => {
             className="button is-danger is-light"
             onClick={() => {
               setSortType('');
-              setIsReverse(REVERSE_BASE_STATE);
+              setIsReverse(false);
             }}
           >
             Reset
