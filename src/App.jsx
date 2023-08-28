@@ -19,12 +19,12 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabetical';
 const SORT_BY_LENGTH = 'length';
 
-function getSortedGoodsList(goods, parameter, reversed) {
+function getSortedGoodsList(goods, { sortType, isReversed }) {
   const sortedGoodList = [...goods];
 
-  if (parameter) {
+  if (sortType) {
     sortedGoodList.sort((a, b) => {
-      switch (parameter) {
+      switch (sortType) {
         case SORT_BY_LENGTH: {
           return a.length - b.length;
         }
@@ -39,7 +39,7 @@ function getSortedGoodsList(goods, parameter, reversed) {
     });
   }
 
-  if (reversed) {
+  if (isReversed) {
     sortedGoodList.reverse();
   }
 
@@ -47,16 +47,21 @@ function getSortedGoodsList(goods, parameter, reversed) {
 }
 
 export const App = () => {
-  const [sortType, setSortType] = useState('');
-  const [isReversed, setIsReversed] = useState(false);
+  const [sortingOptions, setSortingOptions] = useState({
+    sortType: '',
+    isReversed: false,
+  });
+
   const visibleGoodsList = getSortedGoodsList(
     goodsFromServer,
-    sortType,
-    isReversed,
+    sortingOptions,
   );
+
   const resetSortingOptions = () => {
-    setSortType('');
-    setIsReversed(false);
+    setSortingOptions({
+      sortType: '',
+      isReversed: false,
+    });
   };
 
   return (
@@ -67,9 +72,12 @@ export const App = () => {
           className={cl(
             'button',
             'is-info',
-            { 'is-light': sortType !== SORT_BY_ALPHABET },
+            { 'is-light': sortingOptions.sortType !== SORT_BY_ALPHABET },
           )}
-          onClick={() => setSortType(SORT_BY_ALPHABET)}
+          onClick={() => setSortingOptions(prevState => ({
+            ...prevState,
+            sortType: SORT_BY_ALPHABET,
+          }))}
         >
           Sort alphabetically
         </button>
@@ -79,9 +87,12 @@ export const App = () => {
           className={cl(
             'button',
             'is-success',
-            { 'is-light': sortType !== SORT_BY_LENGTH },
+            { 'is-light': sortingOptions.sortType !== SORT_BY_LENGTH },
           )}
-          onClick={() => setSortType(SORT_BY_LENGTH)}
+          onClick={() => setSortingOptions(prevState => ({
+            ...prevState,
+            sortType: SORT_BY_LENGTH,
+          }))}
         >
           Sort by length
         </button>
@@ -91,19 +102,22 @@ export const App = () => {
           className={cl(
             'button',
             'is-warning',
-            { 'is-light': !isReversed },
+            { 'is-light': !sortingOptions.isReversed },
           )}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => setSortingOptions(prevState => ({
+            ...prevState,
+            isReversed: !prevState.isReversed,
+          }))}
         >
           Reverse
         </button>
 
-        {(sortType !== '' || isReversed !== false)
+        {(sortingOptions.sortType !== '' || sortingOptions.isReversed !== false)
           && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => resetSortingOptions()}
+            onClick={resetSortingOptions}
           >
             Reset
           </button>
