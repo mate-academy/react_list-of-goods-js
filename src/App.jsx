@@ -39,7 +39,7 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
           return good1.length - good2.length;
 
         default:
-          return 0;
+          throw new Error(`Invalid sortField: ${sortField}`);
       }
     });
   }
@@ -57,6 +57,12 @@ export const App = () => {
     goodsFromServer,
     { sortField, isReversed },
   );
+
+  const resetBtnFilter = sortField !== '' || isReversed;
+  const handleResetClick = () => {
+    setIsReversed(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
@@ -88,14 +94,11 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed) && (
+        {resetBtnFilter && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setIsReversed(false);
-              setSortField('');
-            }}
+            onClick={handleResetClick}
           >
             Reset
           </button>
