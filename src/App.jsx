@@ -64,6 +64,13 @@ export const App = () => {
     });
   };
 
+  const handleSortOptionClick = (option, value) => {
+    setSortingOptions(prevState => ({
+      ...prevState,
+      [option]: value,
+    }));
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -74,10 +81,7 @@ export const App = () => {
             'is-info',
             { 'is-light': sortingOptions.sortType !== SORT_BY_ALPHABET },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            sortType: SORT_BY_ALPHABET,
-          }))}
+          onClick={() => handleSortOptionClick('sortType', SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -89,10 +93,7 @@ export const App = () => {
             'is-success',
             { 'is-light': sortingOptions.sortType !== SORT_BY_LENGTH },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            sortType: SORT_BY_LENGTH,
-          }))}
+          onClick={() => handleSortOptionClick('sortType', SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -104,16 +105,13 @@ export const App = () => {
             'is-warning',
             { 'is-light': !sortingOptions.isReversed },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            isReversed: !prevState.isReversed,
-          }))}
+          // eslint-disable-next-line max-len
+          onClick={() => handleSortOptionClick('isReversed', !sortingOptions.isReversed)}
         >
           Reverse
         </button>
 
-        {(sortingOptions.sortType !== '' || sortingOptions.isReversed !== false)
-          && (
+        {(sortingOptions.sortType || sortingOptions.isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -121,8 +119,7 @@ export const App = () => {
           >
             Reset
           </button>
-          )
-        }
+        )}
       </div>
 
       <ul>
