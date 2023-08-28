@@ -91,12 +91,10 @@ export const App = () => {
           Reverse
         </button>
 
+        {(sortField || reverseField) && (
         <button
           type="button"
           className="button is-danger is-light"
-          style={(sortField || reverseField)
-            ? { visibility: 'visible' }
-            : { visibility: 'hidden' }}
           onClick={() => {
             setSortField(null);
             setReverseField(false);
@@ -104,6 +102,7 @@ export const App = () => {
         >
           Reset
         </button>
+        )}
       </div>
 
       <ul>
