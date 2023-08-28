@@ -24,18 +24,18 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
-    switch (sortField) {
-      case SORT_GOODS_BY_ALPHABET:
-        preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
-        break;
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_GOODS_BY_ALPHABET:
+          return good1.localeCompare(good2);
 
-      case SORT_GOODS_BY_LENGTH:
-        preparedGoods.sort((good1, good2) => good1.length - good2.length);
-        break;
+        case SORT_GOODS_BY_LENGTH:
+          return good1.length - good2.length;
 
-      default:
-        break;
-    }
+        default:
+          return 0;
+      }
+    });
   }
 
   if (isReversed) {
