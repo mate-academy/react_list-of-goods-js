@@ -30,12 +30,12 @@ function getPreparedGoods(
   const preparedGoods = [...goods];
 
   if (sortBy) {
-    preparedGoods.sort((good1, good2) => {
+    preparedGoods.sort((a, b) => {
       switch (sortBy) {
         case 'alphabetically':
-          return good1.localeCompare(good2);
+          return a.localeCompare(b);
         case 'byLength':
-          return good1.length - good2.length;
+          return a.length - b.length;
         default:
           return 0;
       }
@@ -61,6 +61,11 @@ export const App = () => {
   );
 
   const showResetBtn = sortBy || isReversed;
+
+  const handleReset = () => {
+    setSortBy('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -93,10 +98,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortBy('');
-              setIsReversed(false);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
