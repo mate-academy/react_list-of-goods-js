@@ -16,42 +16,48 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const MODE_ALPHABETICALLY = 'alphabetically';
-const MODE_LENGTH = 'length';
-const MODE_RESET = 'reset';
+const sortMode = {
+  alphabetically: 'alphabetically',
+  length: 'length',
+  reset: 'reset',
+};
 
 function getPreparedGoods(goods, mode, reverse) {
-  goods.sort((good1, good2) => {
+  const goodsToSort = [...goods];
+
+  goodsToSort.sort((good1, good2) => {
     switch (mode) {
-      case MODE_ALPHABETICALLY:
+      case sortMode.alphabetically:
         return good1.localeCompare(good2);
 
-      case MODE_LENGTH:
+      case sortMode.length:
         return good1.length - good2.length;
 
-      case MODE_RESET:
-        return good1;
-
       default:
-        return 0;
+        return good1;
     }
   });
 
   if (reverse) {
-    goods.reverse();
+    goodsToSort.reverse();
   }
 
-  return goods;
+  return goodsToSort;
 }
 
 export const App = () => {
-  const [sortMode, setSortMode] = useState(MODE_RESET);
+  const [actualSortMode, setActualSortMode] = useState(sortMode.reset);
   const [listReverse, setListReverse] = useState(false);
   const goodsToRender = getPreparedGoods(
-    [...goodsFromServer],
-    sortMode,
+    goodsFromServer,
+    actualSortMode,
     listReverse,
   );
+
+  const setRevers = () => {
+    setActualSortMode(sortMode.reset);
+    setListReverse(false);
+  };
 
   return (
     <div className="section content">
@@ -59,9 +65,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': !(sortMode === MODE_ALPHABETICALLY),
+            'is-light': !(actualSortMode === sortMode.alphabetically),
           })}
-          onClick={() => setSortMode(MODE_ALPHABETICALLY)}
+          onClick={() => setActualSortMode(sortMode.alphabetically)}
         >
           Sort alphabetically
         </button>
@@ -69,9 +75,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': !(sortMode === MODE_LENGTH),
+            'is-light': !(actualSortMode === sortMode.length),
           })}
-          onClick={() => setSortMode(MODE_LENGTH)}
+          onClick={() => setActualSortMode(sortMode.length)}
         >
           Sort by length
         </button>
@@ -81,19 +87,16 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': !listReverse,
           })}
-          onClick={() => setListReverse(!listReverse)}
+          onClick={() => setListReverse(currrent => !currrent)}
         >
           Reverse
         </button>
 
-        {(!(sortMode === MODE_RESET) || listReverse) && (
+        {(!(actualSortMode === sortMode.reset) || listReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortMode(MODE_RESET);
-              setListReverse(false);
-            }}
+            onClick={setRevers}
           >
             Reset
           </button>
