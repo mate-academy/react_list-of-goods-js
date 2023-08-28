@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,98 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const sortMode = {
+  alphabetically: 'alphabetically',
+  length: 'length',
+  reset: 'reset',
+};
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getPreparedGoods(goods, mode, reverse) {
+  const goodsToSort = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  goodsToSort.sort((good1, good2) => {
+    switch (mode) {
+      case sortMode.alphabetically:
+        return good1.localeCompare(good2);
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+      case sortMode.length:
+        return good1.length - good2.length;
+
+      default:
+        return good1;
+    }
+  });
+
+  if (reverse) {
+    goodsToSort.reverse();
+  }
+
+  return goodsToSort;
+}
+
+export const App = () => {
+  const [actualSortMode, setActualSortMode] = useState(sortMode.reset);
+  const [listReverse, setListReverse] = useState(false);
+  const goodsToRender = getPreparedGoods(
+    goodsFromServer,
+    actualSortMode,
+    listReverse,
+  );
+
+  const setRevers = () => {
+    setActualSortMode(sortMode.reset);
+    setListReverse(false);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': !(actualSortMode === sortMode.alphabetically),
+          })}
+          onClick={() => setActualSortMode(sortMode.alphabetically)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': !(actualSortMode === sortMode.length),
+          })}
+          onClick={() => setActualSortMode(sortMode.length)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': !listReverse,
+          })}
+          onClick={() => setListReverse(currrent => !currrent)}
+        >
+          Reverse
+        </button>
+
+        {(!(actualSortMode === sortMode.reset) || listReverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={setRevers}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goodsToRender.map(good => (
+          <li data-cy="Good" key={good}>{good}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
