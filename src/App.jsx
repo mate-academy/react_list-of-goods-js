@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import cn from 'classnames';
-import { nanoid } from 'nanoid';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -125,7 +124,7 @@ export const App = () => {
         {goodsForRender.map(good => (
           <li
             data-cy="Good"
-            key={nanoid()}
+            key={good}
           >
             {good}
           </li>
