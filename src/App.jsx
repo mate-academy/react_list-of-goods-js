@@ -55,7 +55,7 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
-          className={cn('button', 'is-info', {
+          className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
         >
