@@ -46,6 +46,7 @@ function getGoodsToRender(goods, sortKey, isReversed) {
 export const App = () => {
   const [sortKey, setSortKey] = useState(DEFAULT_SORT_KEY);
   const [isReversed, setIsReversed] = useState(false);
+  const isAppliedSort = isReversed || sortKey;
   const renderedGoods = getGoodsToRender(goodsFromServer, sortKey, isReversed);
   const onClickReset = () => {
     setSortKey(DEFAULT_SORT_KEY);
@@ -85,7 +86,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {!!isReversed && (
+        {!!isAppliedSort && (
         <button
           type="button"
           className="button is-danger is-light"
