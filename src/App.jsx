@@ -22,7 +22,7 @@ const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
 function getPreparedGoods(goods, { sortField, isReversed }) {
-  const preparedGoods = [...goodsFromServer];
+  const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((currentGood, nextGood) => {
