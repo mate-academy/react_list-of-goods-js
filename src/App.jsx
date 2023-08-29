@@ -16,102 +16,86 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const REVERSE_DEFAULT_VALUE = false;
+const SORT_FIELD_ALPHABETICAL = 'alphabetical';
+const SORT_FIELD_LENGTH = 'length';
+
+function getGoodsPrepared(goods, sortField, reverseSort) {
+  const goodsPrepared = [...goods];
+
+  if (sortField) {
+    goodsPrepared.sort((a, b) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABETICAL:
+          return a.localeCompare(b);
+
+        case SORT_FIELD_LENGTH:
+          return a.length - b.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (reverseSort) {
+    goodsPrepared.reverse();
+  }
+
+  return goodsPrepared;
+}
+
+function renderButton(label, onClick, isActive, colorClass) {
+  return (
+    <button
+      type="button"
+      className={classNames('button', colorClass, {
+        'is-light': isActive,
+      })}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+}
+
 export const App = () => {
-  const [sortedGoods, setSortedGoods] = useState([...goodsFromServer]);
-  const [isAlphabetical, setIsAlphabetical] = useState(false);
-  const [isByLength, setIsByLength] = useState(false);
-  const [isReversed, setIsReversed] = useState(false);
-
-  const sortAlphabetically = () => {
-    const newGoods = sortedGoods.sort();
-
-    setSortedGoods(isReversed ? newGoods.reverse() : newGoods);
-    setIsAlphabetical(true);
-    setIsByLength(false);
-  };
-
-  const sortByLength = () => {
-    const newGoods = [...goodsFromServer].sort((a, b) => a.length - b.length);
-
-    setSortedGoods(isReversed ? newGoods.reverse() : newGoods);
-    setIsAlphabetical(false);
-    setIsByLength(true);
-  };
-
-  const reverseGoods = () => {
-    const reversedGoods = sortedGoods.reverse();
-
-    setSortedGoods(reversedGoods);
-    setIsReversed(!isReversed);
-  };
-
-  const resetSorting = () => {
-    setSortedGoods([...goodsFromServer]);
-    setIsAlphabetical(false);
-    setIsByLength(false);
-    setIsReversed(false);
-  };
-
-  const shouldShowResetButton = !(
-    JSON.stringify(sortedGoods) === JSON.stringify(goodsFromServer)
-  );
-
-  const resetButtonClass = classNames(
-    'button',
-    'is-danger', {
-      'is-light': isAlphabetical
-      || isByLength
-      || isReversed,
-    },
-  );
+  const [sortField, setSortField] = useState('');
+  const [reverseSort, setReverseSort] = useState(REVERSE_DEFAULT_VALUE);
+  const sortedGoods = getGoodsPrepared(goodsFromServer, sortField, reverseSort);
 
   return (
     <div className="section content">
       <div className="buttons">
-        <button
-          type="button"
-          className={classNames(
-            'button',
-            'is-info', {
-              'is-light': !isAlphabetical,
-            },
-          )}
-          onClick={sortAlphabetically}
-        >
-          Sort alphabetically
-        </button>
+        {renderButton(
+          'Sort alphabetically',
+          () => setSortField(SORT_FIELD_ALPHABETICAL),
+          sortField !== SORT_FIELD_ALPHABETICAL,
+          'is-info',
+        )}
 
-        <button
-          type="button"
-          className={classNames(
-            'button',
-            'is-success', {
-              'is-light': !isByLength,
-            },
-          )}
-          onClick={sortByLength}
-        >
-          Sort by length
-        </button>
+        {renderButton(
+          'Sort by length',
+          () => setSortField(SORT_FIELD_LENGTH),
+          sortField !== SORT_FIELD_LENGTH,
+          'is-success',
+        )}
 
-        <button
-          type="button"
-          className={classNames(
-            'button',
-            'is-warning', {
-              'is-light': !isReversed,
-            },
-          )}
-          onClick={reverseGoods}
-        >
-          Reverse
-        </button>
+        {renderButton(
+          'Reverse',
+          () => setReverseSort(!reverseSort),
+          !reverseSort,
+          'is-warning',
+        )}
 
-        {shouldShowResetButton && (
+        {(sortField || reverseSort) && (
           <button
             type="button"
-            className={resetButtonClass}
-            onClick={resetSorting}
+            className={classNames('button', 'is-danger', 'is-light')}
+            onClick={() => {
+              setSortField('');
+              setReverseSort(REVERSE_DEFAULT_VALUE);
+            }}
           >
             Reset
           </button>
