@@ -37,7 +37,7 @@ function sort(goods, howSort, reverse) {
   return array;
 }
 
-function abc(boolean) {
+function reverseBoolean(boolean) {
   if (boolean === true) {
     return false;
   }
@@ -53,7 +53,7 @@ export const App = () => {
   const [boolean, setBoolean] = useState(false);
   const arraySort = sort(goodsFromServer, actual, boolean);
 
-  function aaaaa() {
+  function sumSets() {
     setSort('');
 
     setBoolean(false);
@@ -81,7 +81,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${boolean === true ? null : 'is-light'}`}
-          onClick={() => boolean === setBoolean(abc(boolean))}
+          onClick={() => boolean === setBoolean(reverseBoolean(boolean))}
         >
           Reverse
         </button>
@@ -91,7 +91,7 @@ export const App = () => {
             <button
               type="button"
               className={`button is-danger ${actual !== '' || boolean ? null : 'is-light'}`}
-              onClick={() => aaaaa()}
+              onClick={() => sumSets()}
             >
               Reset
             </button>
