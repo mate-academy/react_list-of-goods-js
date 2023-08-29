@@ -20,10 +20,10 @@ const GOOD_BY_LENGTH = 'length';
 const GOOD_BY_NAME = 'alphabetically';
 
 function getPreperedGoods(goods, sortGoods, isReverseGoods) {
-  const preperedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortGoods) {
-    preperedGoods.sort((good1, good2) => {
+    preparedGoods.sort((good1, good2) => {
       switch (sortGoods) {
         case GOOD_BY_LENGTH:
           return good1.length - good2.length;
@@ -36,15 +36,15 @@ function getPreperedGoods(goods, sortGoods, isReverseGoods) {
   }
 
   if (isReverseGoods) {
-    preperedGoods.reverse();
+    preparedGoods.reverse();
   }
 
-  return preperedGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
   const [sortGoods, setSortGoods] = useState('');
-  const [isReverseGoods, setIsReversedGoods] = useState(false);
+  const [isReverseGoods, setIsReverseGoods] = useState(false);
   const sortedGoods = getPreperedGoods(
     goodsFromServer,
     sortGoods,
@@ -88,7 +88,7 @@ export const App = () => {
             'is-warning',
             { 'is-light': !isReverseGoods },
           )}
-          onClick={() => setIsReversedGoods(!isReverseGoods)}
+          onClick={() => setIsReverseGoods(!isReverseGoods)}
         >
           Reverse
         </button>
@@ -98,7 +98,7 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setIsReversedGoods(false);
+              setIsReverseGoods(false);
               setSortGoods('');
             }}
           >
