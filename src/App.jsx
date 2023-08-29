@@ -21,16 +21,16 @@ const SORT_FIELD_LETTERS = 'letters';
 const SORT_FIELD_LENGTH = 'length';
 const REVESER_DEFAULT_VALUE = false;
 
-function getPrepearedGoods(goods, { sortField, reverseField }) {
-  const prepearedGoods = [...goods];
+function getPreparedGoods(goods, { sortField, reverseField }) {
+  const preparedGoods = [...goods];
 
   if (sortField) {
-    prepearedGoods.sort((good1, good2) => {
+    preparedGoods.sort((a, b) => {
       switch (sortField) {
         case SORT_FIELD_LETTERS:
-          return good1.localeCompare(good2);
+          return a.localeCompare(b);
         case SORT_FIELD_LENGTH:
-          return good1.length - good2.length;
+          return a.length - b.length;
         default:
           return 0;
       }
@@ -38,16 +38,16 @@ function getPrepearedGoods(goods, { sortField, reverseField }) {
   }
 
   if (reverseField) {
-    prepearedGoods.reverse();
+    preparedGoods.reverse();
   }
 
-  return prepearedGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState(REVESER_DEFAULT_VALUE);
-  const visibleGoods = getPrepearedGoods(
+  const visibleGoods = getPreparedGoods(
     goodsFromServer,
     {
       sortField, reverseField,
