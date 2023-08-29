@@ -26,13 +26,13 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
-    preparedGoods.sort((good1, good2) => {
+    preparedGoods.sort((a, b) => {
       switch (sortField) {
         case SORT_FIELDS.length:
-          return good1[sortField] - good2[sortField];
+          return a[sortField] - b[sortField];
 
         case SORT_FIELDS.name:
-          return good1.localeCompare(good2);
+          return a.localeCompare(b);
 
         default:
           return 0;
