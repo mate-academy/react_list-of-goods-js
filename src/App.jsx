@@ -30,13 +30,13 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
   ));
 
   if (sortField) {
-    visibleGoods.sort((good1, good2) => {
+    visibleGoods.sort((a, b) => {
       switch (sortField) {
         case SORT_FIELD_ALPH:
-          return good1.name.localeCompare(good2.name);
+          return a.name.localeCompare(b.name);
 
         case SORT_FIELD_LENGTH:
-          return good1.long - good2.long;
+          return a.long - b.long;
 
         default:
           return '';
