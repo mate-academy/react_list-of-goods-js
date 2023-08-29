@@ -25,13 +25,13 @@ function getPreparedGoods(goods, { sortBy, inReverseOrder }) {
   const preparedGoods = [...goods];
 
   if (sortBy) {
-    preparedGoods.sort((good1, good2) => {
+    preparedGoods.sort((a, b) => {
       switch (sortBy) {
         case SORT_BY_NAME:
-          return good1.localeCompare(good2);
+          return a.localeCompare(b);
 
         case SORT_BY_LENGTH:
-          return good1.length - good2.length;
+          return a.length - b.length;
 
         default:
           return 0;
