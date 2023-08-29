@@ -1,7 +1,7 @@
-import { SORT_BY_ALPHABHET, SORT_BY_LENGTH } from './vars';
+import { SORT_BY_ALPHABHET, SORT_BY_LENGTH, SORT_BY_NONE } from './vars';
 
 export const getPreparedGoods = (goods, { sortField, isReversed }) => {
-  if (sortField === '' && isReversed === '') {
+  if (sortField === SORT_BY_NONE && isReversed === '') {
     return goods;
   }
 
