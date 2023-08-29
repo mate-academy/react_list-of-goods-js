@@ -1,6 +1,10 @@
 import { SORT_BY_ALPHABHET, SORT_BY_LENGTH } from './vars';
 
 export const getPreparedGoods = (goods, { sortField, isReversed }) => {
+  if (sortField === '' && isReversed === '') {
+    return goods;
+  }
+
   const preparedGoods = [...goods];
 
   if (sortField) {

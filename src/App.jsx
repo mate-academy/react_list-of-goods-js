@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { v4 as getRandomKey } from 'uuid';
 
 import { changeColorIfPressed } from './utils/BulbaUtils';
-import { SORT_BY_ALPHABHET, SORT_BY_LENGTH, REVERSE_STATE } from './utils/vars';
+import { SORT_BY_ALPHABHET, SORT_BY_LENGTH } from './utils/vars';
 import { getPreparedGoods } from './utils/goodsPrepared';
 
 import 'bulma/css/bulma.css';
@@ -26,7 +26,7 @@ const updatedGoodsData = goodsFromServer
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReversed, setIsReversed] = useState(REVERSE_STATE);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(updatedGoodsData, {
     sortField,
     isReversed,
@@ -34,7 +34,7 @@ export const App = () => {
 
   const resetGoods = () => {
     setSortField('');
-    setIsReversed(REVERSE_STATE);
+    setIsReversed(false);
   };
 
   const isVisibleButton = sortField || isReversed;
