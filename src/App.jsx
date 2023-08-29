@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -14,45 +15,97 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+function sort(goods, howSort, reverse) {
+  const array = [...goods];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  array.sort((value1, value2) => {
+    if (howSort === SORT_NAME) {
+      return value1.localeCompare(value2);
+    }
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+    if (howSort === SORT_LENGTH) {
+      return value1.length - value2.length;
+    }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+    return 0;
+  });
+
+  if (reverse) {
+    array.reverse();
+  }
+
+  return array;
+}
+
+function abc(boolean) {
+  if (boolean === true) {
+    return false;
+  }
+
+  return true;
+}
+
+const SORT_NAME = 'name';
+const SORT_LENGTH = 'lenght';
+
+export const App = () => {
+  const [actual, setSort] = useState('');
+  const [boolean, setBoolean] = useState(false);
+  const arraySort = sort(goodsFromServer, actual, boolean);
+
+  function aaaaa() {
+    setSort('');
+
+    setBoolean(false);
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${actual === SORT_NAME ? null : 'is-light'}`}
+          onClick={() => setSort(SORT_NAME)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${actual === SORT_LENGTH ? null : 'is-light'}`}
+          onClick={() => setSort(SORT_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${boolean === true ? null : 'is-light'}`}
+          onClick={() => boolean === setBoolean(abc(boolean))}
+        >
+          Reverse
+        </button>
+
+        {actual !== '' || boolean
+          ? (
+            <button
+              type="button"
+              className={`button is-danger ${actual !== '' || boolean ? null : 'is-light'}`}
+              onClick={() => aaaaa()}
+            >
+              Reset
+            </button>
+          )
+          : null
+        }
+
+      </div>
+
+      <ul>
+        {arraySort.map(word => (
+          <li data-cy="Good">{word}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
