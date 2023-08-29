@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -47,13 +47,18 @@ export const App = () => {
   const visibleGoods = getOrderedGoods(
     goodsFromServer, sortField, isReversed,
   );
+  const isSorted = !!(sortField || isReversed);
+  const setDefault = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-info',
             { 'is-light': sortField !== SORT_FIELD_ALPHABET },
@@ -65,7 +70,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-success',
             { 'is-light': sortField !== SORT_FIELD_LENGTH },
@@ -77,7 +82,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-warning',
             { 'is-light': !isReversed },
@@ -87,13 +92,12 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed) && (
+        {isSorted && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortField('');
-              setIsReversed(false);
+              setDefault();
             }}
           >
             Reset
