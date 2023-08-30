@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
+
+import FancyButton from './FancyButton/FancyButton';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -16,7 +18,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const REVERSE_DEFAULT_VALUE = false;
 const SORT_FIELD_ALPHABETICAL = 'alphabetical';
 const SORT_FIELD_LENGTH = 'length';
 
@@ -45,61 +46,45 @@ function getGoodsPrepared(goods, sortField, reverseSort) {
   return goodsPrepared;
 }
 
-function renderButton(label, onClick, isActive, colorClass) {
-  return (
-    <button
-      type="button"
-      className={classNames('button', colorClass, {
-        'is-light': isActive,
-      })}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  );
-}
-
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseSort, setReverseSort] = useState(REVERSE_DEFAULT_VALUE);
+  const [reverseSort, setReverseSort] = useState(false);
   const sortedGoods = getGoodsPrepared(goodsFromServer, sortField, reverseSort);
 
   return (
     <div className="section content">
       <div className="buttons">
-        {renderButton(
-          'Sort alphabetically',
-          () => setSortField(SORT_FIELD_ALPHABETICAL),
-          sortField !== SORT_FIELD_ALPHABETICAL,
-          'is-info',
-        )}
+        <FancyButton
+          label="Sort alphabetically"
+          onClick={() => setSortField(SORT_FIELD_ALPHABETICAL)}
+          isActive={sortField !== SORT_FIELD_ALPHABETICAL}
+          colorClass="is-info"
+        />
 
-        {renderButton(
-          'Sort by length',
-          () => setSortField(SORT_FIELD_LENGTH),
-          sortField !== SORT_FIELD_LENGTH,
-          'is-success',
-        )}
+        <FancyButton
+          label="Sort by length"
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          isActive={sortField !== SORT_FIELD_LENGTH}
+          colorClass="is-success"
+        />
 
-        {renderButton(
-          'Reverse',
-          () => setReverseSort(!reverseSort),
-          !reverseSort,
-          'is-warning',
-        )}
+        <FancyButton
+          label="Reverse"
+          onClick={() => setReverseSort(!reverseSort)}
+          isActive={!reverseSort}
+          colorClass="is-warning"
+        />
 
-        {(sortField || reverseSort) && (
-          <button
-            type="button"
-            className={classNames('button', 'is-danger', 'is-light')}
+        {sortField || reverseSort ? (
+          <FancyButton
+            label="Reset"
             onClick={() => {
               setSortField('');
-              setReverseSort(REVERSE_DEFAULT_VALUE);
+              setReverseSort(false);
             }}
-          >
-            Reset
-          </button>
-        )}
+            colorClass="is-danger is-light"
+          />
+        ) : null}
       </div>
 
       <ul>
