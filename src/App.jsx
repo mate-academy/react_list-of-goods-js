@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -18,126 +18,96 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alpha';
 const SORT_BY_LENGTH = 'length';
+const REVERSE = 'reverse';
 
-const buttonsStatus = {
-  alphaSort: true,
-  lengthSort: true,
-  reset: false,
-};
+function sortBy(fieldForSort, isReversed) {
+  const goods = [...goodsFromServer];
+
+  if (fieldForSort) {
+    switch (fieldForSort) {
+      case SORT_BY_ALPHABET:
+        goods.sort((a, b) => a.localeCompare(b));
+        break;
+
+      case SORT_BY_LENGTH:
+        goods.sort((a, b) => a.length - b.length);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  return isReversed ? goods.reverse() : goods;
+}
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState([...goodsFromServer]);
-  const [activeReverse, setReverseActive] = useState(true);
-  const [activeButtons, setActiveButtons] = useState(buttonsStatus);
+  const [isReverseActive, setIsReverseActive] = useState(false);
+  const [sortField, setSortField] = useState('');
 
-  function resetGoods() {
-    setVisibleGoods([...goodsFromServer]);
-    setReverseActive(true);
-    setActiveButtons({
-      alphaSort: true,
-      lengthSort: true,
-      reset: false,
-    });
-  }
+  const preparedGoods = sortBy(sortField, isReverseActive);
 
-  function getReverseResult() {
-    setVisibleGoods(visibleGoods.reverse());
-    setReverseActive(!activeReverse);
-    setActiveButtons({
-      alphaSort: activeButtons.alphaSort,
-      lengthSort: activeButtons.lengthSort,
-      reset: true,
-    });
-
-    if (!activeReverse
-      && activeButtons.alphaSort
-      && activeButtons.lengthSort
-    ) {
-      setActiveButtons({
-        alphaSort: activeButtons.alphaSort,
-        lengthSort: activeButtons.lengthSort,
-        reset: false,
-      });
-    }
-  }
-
-  function sortBy(sortMethod) {
-    if (sortMethod === SORT_BY_ALPHABET) {
-      setActiveButtons({
-        alphaSort: false,
-        lengthSort: true,
-        reset: true,
-      });
-
-      return setVisibleGoods(visibleGoods
-        .sort(activeReverse
-          ? (a, b) => a.localeCompare(b)
-          : (a, b) => b.localeCompare(a)));
-    }
-
-    if (sortMethod === SORT_BY_LENGTH) {
-      setActiveButtons({
-        alphaSort: true,
-        lengthSort: false,
-        reset: true,
-      });
-
-      return setVisibleGoods(visibleGoods
-        .sort(activeReverse
-          ? (a, b) => a.length - b.length
-          : (a, b) => b.length - a.length));
-    }
-
-    return new Error('invalid method sort')
-  }
+  const resetAllSort = () => {
+    setIsReverseActive(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => sortBy(SORT_BY_ALPHABET)}
+          onClick={() => {
+            setSortField(SORT_BY_ALPHABET);
+            sortBy(SORT_BY_ALPHABET, isReverseActive);
+          }}
           type="button"
           className={
-          cn('button',
+          classnames('button',
             'is-info',
-            { 'is-light': activeButtons.alphaSort })}
+            { 'is-light': sortField !== SORT_BY_ALPHABET })}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => sortBy(SORT_BY_LENGTH)}
+          onClick={() => {
+            setSortField(SORT_BY_LENGTH);
+            sortBy(SORT_BY_LENGTH, isReverseActive);
+          }}
           type="button"
           className={
-          cn('button',
+          classnames('button',
             'is-success',
-            { 'is-light': activeButtons.lengthSort })}
+            { 'is-light': sortField !== SORT_BY_LENGTH })}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => getReverseResult()}
+          onClick={() => {
+            setSortField(REVERSE);
+            setIsReverseActive(!isReverseActive);
+          }}
           type="button"
           className={
-          cn(
+          classnames(
             'button',
             'is-warning',
-            { 'is-light': activeReverse },
+            { 'is-light': !isReverseActive },
           )}
         >
           Reverse
         </button>
 
-        {activeButtons.reset && (
+        {sortField && (
           <button
-            onClick={() => resetGoods()}
+            onClick={() => resetAllSort()}
             type="button"
             className={
-            cn(
+            classnames(
               'button',
               'is-danger',
-              { 'is-light': activeButtons.reset },
+              { 'is-light': true },
             )}
           >
             Reset
@@ -146,7 +116,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {preparedGoods.map(good => (
           <li
             data-cy="Good"
             key={good}
