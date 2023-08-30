@@ -15,7 +15,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function sort(goods, howSort, reverse) {
+function sortArray(goods, howSort, reverse) {
   const array = [...goods];
 
   array.sort((value1, value2) => {
@@ -37,26 +37,18 @@ function sort(goods, howSort, reverse) {
   return array;
 }
 
-function reverseBoolean(boolean) {
-  if (boolean === true) {
-    return false;
-  }
-
-  return true;
-}
-
 const SORT_NAME = 'name';
 const SORT_LENGTH = 'lenght';
 
 export const App = () => {
-  const [actual, setSort] = useState('');
-  const [boolean, setBoolean] = useState(false);
-  const arraySort = sort(goodsFromServer, actual, boolean);
+  const [sort, setSort] = useState('');
+  const [reverse, setIsReversed] = useState(false);
+  const visibleGoods = sortArray(goodsFromServer, sort, reverse);
 
-  function sumSets() {
+  function resetAll() {
     setSort('');
 
-    setBoolean(false);
+    setIsReversed(false);
   }
 
   return (
@@ -64,7 +56,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${actual === SORT_NAME ? null : 'is-light'}`}
+          className={`button is-info ${sort === SORT_NAME ? null : 'is-light'}`}
           onClick={() => setSort(SORT_NAME)}
         >
           Sort alphabetically
@@ -72,7 +64,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${actual === SORT_LENGTH ? null : 'is-light'}`}
+          className={`button is-success ${sort === SORT_LENGTH ? null : 'is-light'}`}
           onClick={() => setSort(SORT_LENGTH)}
         >
           Sort by length
@@ -80,18 +72,18 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${boolean === true ? null : 'is-light'}`}
-          onClick={() => boolean === setBoolean(reverseBoolean(boolean))}
+          className={`button is-warning ${reverse === true ? null : 'is-light'}`}
+          onClick={() => reverse === setIsReversed(value => !value)}
         >
           Reverse
         </button>
 
-        {actual !== '' || boolean
+        {sort !== '' || reverse
           ? (
             <button
               type="button"
-              className={`button is-danger ${actual !== '' || boolean ? null : 'is-light'}`}
-              onClick={() => sumSets()}
+              className={`button is-danger ${sort !== '' || reverse ? null : 'is-light'}`}
+              onClick={resetAll}
             >
               Reset
             </button>
@@ -102,8 +94,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {arraySort.map(word => (
-          <li data-cy="Good">{word}</li>
+        {visibleGoods.map(word => (
+          <li data-cy="Good" key={word}>{word}</li>
         ))}
       </ul>
     </div>
