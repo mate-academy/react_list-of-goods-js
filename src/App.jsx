@@ -24,15 +24,13 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 
   if (sortField) {
     switch (sortField) {
-      case SORT_FIELD_NAME: (
-        preparedGoods.sort((good1, good2) => good1.localeCompare(good2))
-      );
+      case SORT_FIELD_NAME:
+        preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
         break;
 
-      case SORT_FIELD_LENGTH: (
+      case SORT_FIELD_LENGTH:
         preparedGoods
-          .sort((good1, good2) => good1[sortField] - good2[sortField])
-      );
+          .sort((good1, good2) => good1[sortField] - good2[sortField]);
         break;
 
       default:
