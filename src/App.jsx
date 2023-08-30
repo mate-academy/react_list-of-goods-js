@@ -52,7 +52,7 @@ export const App = () => {
   );
 
   const isSortedByLength = sortField !== GOOD_BY_LENGTH;
-  const isSortByName = sortField !== GOOD_BY_NAME;
+  const isSortedByName = sortField !== GOOD_BY_NAME;
   const isSortingOrReversingActive = sortField || isReverseGoods;
 
   const reset = () => {
@@ -68,7 +68,7 @@ export const App = () => {
           className={classnames(
             'button',
             'is-info',
-            { 'is-light': isSortByName },
+            { 'is-light': isSortedByName },
           )}
           onClick={() => setSortField(GOOD_BY_NAME)}
         >
