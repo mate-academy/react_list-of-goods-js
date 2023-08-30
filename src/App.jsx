@@ -16,69 +16,61 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPrepearedGoods(goods, { currentSortField, reversedState }) {
+const SORT_FIELD_NAME = 'Name';
+const SORT_FIELD_LENGTH = 'length';
+
+function getPrepearedGoods(goods, { currentSortField, isReversed }) {
   const prepearedGoods = [...goods];
 
-  if (currentSortField === '') {
-    if (reversedState === 'reversed') {
-      prepearedGoods.reverse();
-    }
+  if (currentSortField !== '') {
+    prepearedGoods.sort((good1, good2) => {
+      switch (currentSortField) {
+        case SORT_FIELD_NAME: {
+          return good1.localeCompare(good2);
+        }
+
+        case SORT_FIELD_LENGTH: {
+          return good1.length - good2.length;
+        }
+
+        default:
+          return 0;
+      }
+    });
   }
 
-  if (currentSortField === 'Name') {
-    if (reversedState === 'reversed') {
-      prepearedGoods.sort().reverse();
-    }
-
-    if (reversedState !== 'reversed') {
-      prepearedGoods.sort();
-    }
-  }
-
-  if (currentSortField === 'Length') {
-    if (reversedState === 'reversed') {
-      prepearedGoods.sort(
-        (good1, good2) => (good1.length - good2.length),
-      ).reverse();
-    }
-
-    if (reversedState !== 'reversed') {
-      prepearedGoods.sort((good1, good2) => (good1.length - good2.length));
-    }
-  }
-
-  return prepearedGoods;
+  return isReversed ? prepearedGoods.reverse() : prepearedGoods;
 }
 
 export const App = () => {
   const [currentSortField, setCurrentSortField] = useState('');
-  const [reversedState, setReversedState] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const vissibleGoods = getPrepearedGoods(goodsFromServer,
-    { currentSortField, reversedState });
+    { currentSortField, isReversed });
 
   const isStateNotReversedOrSorted
-  = (reversedState === 'reversed') || (currentSortField !== '');
+    = isReversed || currentSortField;
 
   const sortByName = () => {
-    setCurrentSortField('Name');
+    setCurrentSortField(SORT_FIELD_NAME);
   };
 
   const sortByLength = () => {
-    setCurrentSortField('Length');
+    setCurrentSortField(SORT_FIELD_LENGTH);
   };
 
   const reverse = () => {
-    if (reversedState === 'reversed') {
-      setReversedState('');
+    if (isReversed) {
+      setIsReversed(false);
     }
 
-    if (reversedState !== 'reversed') {
-      setReversedState('reversed');
+    if (!isReversed) {
+      setIsReversed(true);
     }
   };
 
   const reset = () => {
-    setReversedState('');
+    setIsReversed(false);
     setCurrentSortField('');
   };
 
@@ -88,9 +80,11 @@ export const App = () => {
         <button
           onClick={sortByName}
           type="button"
-          className={
-            classnames('button is-info',
-              { 'is-light': currentSortField !== 'Name' })
+          className={classnames(
+            'button',
+            'is-info',
+            { 'is-light': currentSortField !== SORT_FIELD_NAME },
+          )
           }
         >
           Sort alphabetically
@@ -99,9 +93,11 @@ export const App = () => {
         <button
           onClick={sortByLength}
           type="button"
-          className={
-          classnames('button is-success',
-            { 'is-light': currentSortField !== 'Length' })
+          className={classnames(
+            'button',
+            'is-success',
+            { 'is-light': currentSortField !== SORT_FIELD_LENGTH },
+          )
           }
         >
           Sort by length
@@ -112,8 +108,8 @@ export const App = () => {
           type="button"
           className={
             classnames('button is-warning',
-              { 'is-light': reversedState !== 'reversed' })
-            }
+              { 'is-light': !isReversed })
+          }
         >
           Reverse
         </button>
