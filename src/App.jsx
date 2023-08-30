@@ -15,7 +15,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function sortArray(goods, howSort, reverse) {
+function sortArray(goods, howSort, isReversed) {
   const array = [...goods];
 
   array.sort((value1, value2) => {
@@ -30,8 +30,8 @@ function sortArray(goods, howSort, reverse) {
     return 0;
   });
 
-  if (reverse) {
-    array.reverse();
+  if (isReversed) {
+    array.isReversed();
   }
 
   return array;
@@ -43,7 +43,7 @@ const SORT_LENGTH = 'lenght';
 export const App = () => {
   const [sort, setSort] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const visibleGoods = sortArray(goodsFromServer, sort, reverse);
+  const visibleGoods = sortArray(goodsFromServer, sort, isReversed);
 
   function resetAll() {
     setSort('');
@@ -72,17 +72,17 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${reverse === true ? null : 'is-light'}`}
-          onClick={() => reverse === setIsReversed(value => !value)}
+          className={`button is-warning ${isReversed === true ? null : 'is-light'}`}
+          onClick={() => isReversed === setIsReversed(value => !value)}
         >
-          Reverse
+          ReveisReversedrse
         </button>
 
-        {sort !== '' || reverse
+        {sort !== '' || isReversed
           ? (
             <button
               type="button"
-              className={`button is-danger ${sort !== '' || reverse ? null : 'is-light'}`}
+              className={`button is-danger ${sort !== '' || isReversed ? null : 'is-light'}`}
               onClick={resetAll}
             >
               Reset
