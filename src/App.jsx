@@ -31,7 +31,7 @@ function sortArray(goods, howSort, isReversed) {
   });
 
   if (isReversed) {
-    array.isReversed();
+    array.reverse();
   }
 
   return array;
@@ -75,7 +75,7 @@ export const App = () => {
           className={`button is-warning ${isReversed === true ? null : 'is-light'}`}
           onClick={() => isReversed === setIsReversed(value => !value)}
         >
-          ReveisReversedrse
+          Reverse
         </button>
 
         {sort !== '' || isReversed
