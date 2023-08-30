@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alpha';
 const SORT_BY_LENGTH = 'length';
-const REVERSE = 'reverse';
 
 function sortBy(fieldForSort, isReversed) {
   const goods = [...goodsFromServer];
@@ -85,7 +84,6 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setSortField(REVERSE);
             setIsReverseActive(!isReverseActive);
           }}
           type="button"
@@ -99,7 +97,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField && (
+        {(sortField || isReverseActive) && (
           <button
             onClick={() => resetAllSort()}
             type="button"
