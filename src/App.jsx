@@ -42,7 +42,7 @@ const SORT_LENGTH = 'lenght';
 
 export const App = () => {
   const [sort, setSort] = useState('');
-  const [reverse, setIsReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = sortArray(goodsFromServer, sort, reverse);
 
   function resetAll() {
