@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import cn from 'classnames';
+import classnames from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -43,47 +43,53 @@ function getPreperedGoods(goods, sortGoods, isReverseGoods) {
 }
 
 export const App = () => {
-  const [sortGoods, setSortGoods] = useState('');
+  const [sortField, setSortField] = useState('');
   const [isReverseGoods, setIsReverseGoods] = useState(false);
   const sortedGoods = getPreperedGoods(
     goodsFromServer,
-    sortGoods,
+    sortField,
     isReverseGoods,
   );
 
-  const isSortByLength = sortGoods !== GOOD_BY_LENGTH;
-  const isSortByName = sortGoods !== GOOD_BY_NAME;
+  const isSortedByLength = sortField !== GOOD_BY_LENGTH;
+  const isSortByName = sortField !== GOOD_BY_NAME;
+  const isSortingOrReversingActive = sortField || isReverseGoods;
+
+  const reset = () => {
+    setIsReverseGoods(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-info',
             { 'is-light': isSortByName },
           )}
-          onClick={() => setSortGoods(GOOD_BY_NAME)}
+          onClick={() => setSortField(GOOD_BY_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-success',
-            { 'is-light': isSortByLength },
+            { 'is-light': isSortedByLength },
           )}
-          onClick={() => setSortGoods(GOOD_BY_LENGTH)}
+          onClick={() => setSortField(GOOD_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-warning',
             { 'is-light': !isReverseGoods },
@@ -92,15 +98,12 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(sortGoods || isReverseGoods)
+        {isSortingOrReversingActive
         && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setIsReverseGoods(false);
-              setSortGoods('');
-            }}
+            onClick={reset}
           >
             Reset
           </button>
