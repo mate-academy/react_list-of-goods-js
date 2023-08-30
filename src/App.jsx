@@ -16,16 +16,16 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const GOOD_LEGTH = 'length';
+const GOOD_LENGTH = 'length';
 const GOOD_NAME = 'name';
 
-function getPreparedGoods(goods, sortField, isReverse) {
+function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case GOOD_LEGTH:
+        case GOOD_LENGTH:
           return good1.length - good2.length;
         case GOOD_NAME:
           return good1.localeCompare(good2);
@@ -35,7 +35,7 @@ function getPreparedGoods(goods, sortField, isReverse) {
     });
   }
 
-  if (isReverse) {
+  if (isReversed) {
     preparedGoods.reverse();
   }
 
@@ -44,8 +44,8 @@ function getPreparedGoods(goods, sortField, isReverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
-  const sortedGoods = getPreparedGoods(goodsFromServer, sortField, isReverse);
+  const [isReversed, setIsReversed] = useState(false);
+  const sortedGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
   return (
     <div className="section content">
@@ -63,9 +63,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': sortField !== GOOD_LEGTH,
+            'is-light': sortField !== GOOD_LENGTH,
           })}
-          onClick={() => setSortField(GOOD_LEGTH)}
+          onClick={() => setSortField(GOOD_LENGTH)}
         >
           Sort by length
         </button>
@@ -73,20 +73,20 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReverse !== true,
+            'is-light': isReversed !== true,
           })}
-          onClick={() => setIsReverse(!isReverse)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortField || isReverse) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField('');
-              setIsReverse(false);
+              setIsReversed(false);
             }}
           >
             Reset
