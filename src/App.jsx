@@ -20,34 +20,41 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY = 'alphabetically';
 const SORT_LENGTH = 'length';
 
-function getPreparedGood(goods, { sortField, isReverse }) {
-  const prepeardeGoods = [...goods];
+function getPreparedGood(goods, { sortField, isReversed }) {
+  const preparedGoods = [...goods];
 
   if (sortField) {
-    prepeardeGoods.sort((item1, item2) => {
-      switch (sortField) {
-        case SORT_ALPHABETICALLY:
-          return item1.localeCompare(item2);
-        case SORT_LENGTH:
-          return item1.length - item2.length;
-        default:
-          return 0;
-      }
-    });
+    switch (sortField) {
+      case SORT_ALPHABETICALLY:
+        preparedGoods.sort((item1, item2) => item1.localeCompare(item2));
+        break;
+      case SORT_LENGTH:
+        preparedGoods.sort((item1, item2) => item1.length - item2.length);
+        break;
+      default:
+        return preparedGoods;
+    }
   }
 
-  if (isReverse) {
-    prepeardeGoods.reverse();
+  if (isReversed) {
+    preparedGoods.reverse();
   }
 
-  return prepeardeGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGood(goodsFromServer,
-    { sortField, isReverse });
+    { sortField, isReversed });
+
+  const isVisibleReset = isReversed || sortField;
+
+  const onResetClicked = () => {
+    setIsReversed(false);
+    setSortField('');
+  };
 
   return (
     <div className="section content">
@@ -83,21 +90,20 @@ export const App = () => {
           className={cn(
             'button is-warning',
             {
-              'is-light': !isReverse,
+              'is-light': !isReversed,
             },
           )}
-          onClick={() => setIsReverse(!isReverse)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(isReverse || sortField) && (
+        {isVisibleReset && (
         <button
           type="button"
           className="button is-danger is-light"
           onClick={() => {
-            setIsReverse(false);
-            setSortField('');
+            onResetClicked();
           }}
         >
           Reset
