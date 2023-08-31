@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import cn from 'classnames';
 
 export const goodsFromServer = [
@@ -42,7 +42,13 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const sortedList = getPreparedList(sortField, isReversed);
+  function resetHandle() {
+    setSortField('');
+    setIsReversed(false);
+  }
+
+  const sortedList = useMemo(() => getPreparedList(sortField, isReversed),
+    [sortField, isReversed]);
 
   return (
     <div className="section content">
@@ -87,10 +93,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={resetHandle}
           >
             Reset
           </button>
