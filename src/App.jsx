@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_BY_NAME = 'alphabetically';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, isReverse }) {
+function getPreparedGoods(goods, sortField, isReverse) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -46,14 +46,15 @@ export const App = () => {
   const [isReverse, setIsReverse] = useState(false);
   const sortedGoods = getPreparedGoods(
     goodsFromServer,
-    { sortField, isReverse },
+    sortField,
+    isReverse,
   );
   const handleClick = () => {
     setSortField('');
     setIsReverse(false);
   };
 
-  const isListChanged = sortField !== '' || isReverse;
+  const isListChanged = !!sortField || isReverse;
 
   return (
     <div className="section content">
