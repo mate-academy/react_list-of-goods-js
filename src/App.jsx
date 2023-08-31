@@ -27,16 +27,16 @@ function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortField) {
-    preparedGoods.sort((good1, good2) => {
-      switch (sortField) {
-        case GOOD_LENGTH:
-          return good1.length - good2.length;
-        case GOOD_NAME:
-          return good1.localeCompare(good2);
-        default:
-          return 0;
-      }
-    });
+    switch (sortField) {
+      case GOOD_LENGTH:
+        preparedGoods.sort((good1, good2) => good1.length - good2.length);
+        break;
+      case GOOD_NAME:
+        preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
+        break;
+      default:
+        return new Error('sortField is not correct');
+    }
   }
 
   if (isReversed) {
@@ -51,7 +51,7 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const sortedGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
   const isSortMetodSecelted = sortField || isReversed;
-  const resetByDefolt = () => {
+  const handleButtonReset = () => {
     setSortField('');
     setIsReversed(false);
   };
@@ -93,7 +93,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={resetByDefolt}
+            onClick={handleButtonReset}
           >
             Reset
           </button>
