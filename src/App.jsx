@@ -56,7 +56,7 @@ export const App = () => {
 
   const handleClearButtonClick = () => {
     setSortType('');
-    setIsReversed(isReversed);
+    setIsReversed(false);
   };
 
   return (
