@@ -60,13 +60,7 @@ export const App = () => {
   };
 
   const reverse = () => {
-    if (isReversed) {
-      setIsReversed(false);
-    }
-
-    if (!isReversed) {
-      setIsReversed(true);
-    }
+    setIsReversed(prev => !prev);
   };
 
   const reset = () => {
