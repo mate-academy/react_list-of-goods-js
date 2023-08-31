@@ -20,6 +20,10 @@ const GOOD_LENGTH = 'length';
 const GOOD_NAME = 'name';
 
 function getPreparedGoods(goods, sortField, isReversed) {
+  if (!sortField && !isReversed) {
+    return goods;
+  }
+
   const preparedGoods = [...goods];
 
   if (sortField) {
