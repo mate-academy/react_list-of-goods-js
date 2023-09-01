@@ -1,4 +1,4 @@
-import { GoodCard } from '../GoodCard/GoodCard';
+import { GoodCard } from '../GoodCard';
 
 export const GoodsList = ({ goods }) => (
   <ul className="GoodsList">
