@@ -1,9 +1,9 @@
-import { Good } from './Good';
-
 export const GoodsList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <Good key={good} good={good} />
+      <li data-cy="Good" key={good}>
+        {good}
+      </li>
     ))}
   </ul>
 );
