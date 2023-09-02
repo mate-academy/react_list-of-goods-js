@@ -57,12 +57,30 @@ export const App = () => {
     sortingOptions,
   );
 
+  const handlerSetSortType = sortType => () => {
+    setSortingOptions(prevState => ({
+      ...prevState,
+      sortType,
+    }));
+  };
+
+  const handlerSetIsReversed = () => {
+    setSortingOptions(prevState => ({
+      ...prevState,
+      isReversed: !prevState.isReversed,
+    }));
+  };
+
   const resetSortingOptions = () => {
     setSortingOptions({
       sortType: '',
       isReversed: false,
     });
   };
+
+  const isSortingOptionsInstalled = (
+    sortingOptions.sortType || sortingOptions.isReversed
+  );
 
   return (
     <div className="section content">
@@ -74,10 +92,7 @@ export const App = () => {
             'is-info',
             { 'is-light': sortingOptions.sortType !== SORT_BY_ALPHABET },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            sortType: SORT_BY_ALPHABET,
-          }))}
+          onClick={handlerSetSortType(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -89,10 +104,7 @@ export const App = () => {
             'is-success',
             { 'is-light': sortingOptions.sortType !== SORT_BY_LENGTH },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            sortType: SORT_BY_LENGTH,
-          }))}
+          onClick={handlerSetSortType(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -104,15 +116,12 @@ export const App = () => {
             'is-warning',
             { 'is-light': !sortingOptions.isReversed },
           )}
-          onClick={() => setSortingOptions(prevState => ({
-            ...prevState,
-            isReversed: !prevState.isReversed,
-          }))}
+          onClick={handlerSetIsReversed}
         >
           Reverse
         </button>
 
-        {(sortingOptions.sortType !== '' || sortingOptions.isReversed !== false)
+        {isSortingOptionsInstalled
           && (
           <button
             type="button"
