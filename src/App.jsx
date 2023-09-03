@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import className from 'classnames';
+import classnames from 'classnames';
 import { useState } from 'react';
 
 const SORT_BY_LENGTH = 'length';
@@ -19,7 +19,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPreparedGoods(goods,  sortField, isReversed ) {
+function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -41,21 +41,21 @@ function getPreparedGoods(goods,  sortField, isReversed ) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const visibleGoods
-    = getPreparedGoods(goodsFromServer, sortField, isReversed );
+
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
+  const isResetButtonVisible = isReversed || sortField;
+
   const setDefaultSort = () => {
     setSortField('');
     setIsReversed(false);
   };
-  const compare = isReversed || sortField;
-
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={className('button', 'is-info', {
+          className={classnames('button', 'is-info', {
             'is-light': sortField !== SORT_BY_ALPHABET,
           })}
           onClick={() => setSortField(SORT_BY_ALPHABET)}
@@ -65,7 +65,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={className('button is-success', {
+          className={classnames('button', 'is-success', {
             'is-light': sortField !== SORT_BY_LENGTH,
           })}
           onClick={() => setSortField(SORT_BY_LENGTH)}
@@ -75,14 +75,15 @@ export const App = () => {
 
         <button
           type="button"
-          className={className('button is-warning', {
+          className={classnames('button', 'is-warning', {
             'is-light': !isReversed,
           })}
           onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
-        {compare && (
+
+        {isResetButtonVisible && (
           <button
             type="button"
             onClick={() => setDefaultSort()}
