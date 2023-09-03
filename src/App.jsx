@@ -24,18 +24,20 @@ const SORT_FIELD_LENGTH = 'length';
 function getPreparedGoods(goods, sortField, isReversed) {
   const prepearedGoods = [...goods];
 
-  prepearedGoods.sort((good1, good2) => {
-    switch (sortField) {
-      case SORT_FIELD_ALPHABET:
-        return good1.localeCompare(good2);
+  if (sortField) {
+    prepearedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABET:
+          return good1.localeCompare(good2);
 
-      case SORT_FIELD_LENGTH:
-        return good1.length - good2.length;
+        case SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
 
-      default:
-        return 0;
-    }
-  });
+        default:
+          return 0;
+      }
+    });
+  }
 
   return isReversed
     ? prepearedGoods.reverse()
