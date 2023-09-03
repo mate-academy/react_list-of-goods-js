@@ -56,7 +56,7 @@ export const App = () => {
     setVisibleGoods(getSortedGoods(sortField, isReversed));
   }, [sortField, isReversed]);
 
-  const reset = () => {
+  const handleButtonReset = () => {
     setSortField('');
     setIsReversed(false);
   };
@@ -110,7 +110,7 @@ export const App = () => {
           isShowResetButton && (
             <button
               type="button"
-              onClick={reset}
+              onClick={handleButtonReset}
               className="button is-danger is-light"
             >
               Reset
