@@ -41,30 +41,39 @@ function getPreparedGoods(goods, { sortCase, isReversed }) {
 }
 
 export const App = () => {
-  const [sortCase, setSortField] = useState('');
+  const [sortCase, setSortCase] = useState('');
   const [isReversed, setIsReversed] = useState(false);
   const sortedGoods
     = getPreparedGoods(goodsFromServer, { sortCase, isReversed });
+
+  function clickHandle() {
+    setSortCase('');
+    setIsReversed(false);
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => (setSortField(SORT_ALPHABETICALLY))}
+          onClick={() => (setSortCase(SORT_ALPHABETICALLY))}
           type="button"
-          className={cn('button', 'is-info', {
-            'is-light': sortCase !== SORT_ALPHABETICALLY,
-          })}
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortCase !== SORT_ALPHABETICALLY },
+          )}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => (setSortField(SORT_BY_LENGTH))}
+          onClick={() => (setSortCase(SORT_BY_LENGTH))}
           type="button"
-          className={cn('button', 'is-success', {
-            'is-light': sortCase !== SORT_BY_LENGTH,
-          })}
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortCase !== SORT_BY_LENGTH },
+          )}
         >
           Sort by length
         </button>
@@ -72,19 +81,18 @@ export const App = () => {
         <button
           onClick={() => setIsReversed(!isReversed)}
           type="button"
-          className={cn('button', 'is-warning', {
-            'is-light': !isReversed,
-          })}
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': !isReversed },
+          )}
         >
           Reverse
         </button>
 
         {(sortCase || isReversed) && (
           <button
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={clickHandle}
             type="button"
             className="button is-danger is-light"
           >
