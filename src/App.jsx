@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import cn from 'classnames';
+import classnames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -46,10 +46,12 @@ export const App = () => {
   const sortedGoods
     = getPreparedGoods(goodsFromServer, { sortCase, isReversed });
 
-  function clickHandle() {
+  function handleReset() {
     setSortCase('');
     setIsReversed(false);
   }
+
+  const resetPossible = sortCase || isReversed;
 
   return (
     <div className="section content">
@@ -57,7 +59,7 @@ export const App = () => {
         <button
           onClick={() => (setSortCase(SORT_ALPHABETICALLY))}
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-info',
             { 'is-light': sortCase !== SORT_ALPHABETICALLY },
@@ -69,7 +71,7 @@ export const App = () => {
         <button
           onClick={() => (setSortCase(SORT_BY_LENGTH))}
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-success',
             { 'is-light': sortCase !== SORT_BY_LENGTH },
@@ -81,7 +83,7 @@ export const App = () => {
         <button
           onClick={() => setIsReversed(!isReversed)}
           type="button"
-          className={cn(
+          className={classnames(
             'button',
             'is-warning',
             { 'is-light': !isReversed },
@@ -90,9 +92,9 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortCase || isReversed) && (
+        {resetPossible && (
           <button
-            onClick={clickHandle}
+            onClick={handleReset}
             type="button"
             className="button is-danger is-light"
           >
