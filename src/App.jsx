@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +15,70 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  const handleButtonSortAlphabetically = () => {
+    const sorted = [...sortedGoods].sort();
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+    setSortedGoods(sorted);
+  };
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  const handleButtonSortByLength = () => {
+    const sorted = [...sortedGoods].sort((a, b) => a.length - b.length);
+
+    setSortedGoods(sorted);
+  };
+
+  const handleButtonReverse = () => {
+    const sorted = [...sortedGoods].reverse();
+
+    setSortedGoods(sorted);
+  };
+
+  const handleButtonReset = () => {
+    setSortedGoods(goodsFromServer);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className="button is-info is-light"
+          onClick={handleButtonSortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className="button is-success is-light"
+          onClick={handleButtonSortByLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className="button is-warning is-light"
+          onClick={handleButtonReverse}
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className="button is-danger is-light"
+          onClick={handleButtonReset}
+        >
+          Reset
+        </button>
+      </div>
+      <ul>
+        {sortedGoods
+          .map(good => <li data-cy="Good" key={good}>{good}</li>)}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
