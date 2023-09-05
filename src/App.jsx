@@ -18,65 +18,67 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
 
-  const sortAlphabetically = () => {
+  const handleButtonSortAlphabetically = () => {
     const sorted = [...sortedGoods].sort();
 
     setSortedGoods(sorted);
   };
 
-  const sortLength = () => {
+  const handleButtonSortByLength = () => {
     const sorted = [...sortedGoods].sort((a, b) => a.length - b.length);
 
     setSortedGoods(sorted);
   };
 
-  const sortReverese = () => {
+  const handleButtonReverse = () => {
     const sorted = [...sortedGoods].reverse();
 
     setSortedGoods(sorted);
   };
 
+  const handleButtonReset = () => {
+    setSortedGoods(goodsFromServer);
+  };
+
   return (
-    <>
-      <div className="section content">
-        <div className="buttons">
-          <button
-            type="button"
-            className="button is-info is-light"
-            onClick={sortAlphabetically}
-          >
-            Sort alphabetically
-          </button>
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className="button is-info is-light"
+          onClick={handleButtonSortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
 
-          <button
-            type="button"
-            className="button is-success is-light"
-            onClick={sortLength}
-          >
-            Sort by length
-          </button>
+        <button
+          type="button"
+          className="button is-success is-light"
+          onClick={handleButtonSortByLength}
+        >
+          Sort by length
+        </button>
 
-          <button
-            type="button"
-            className="button is-warning is-light"
-            onClick={sortReverese}
-          >
-            Reverse
-          </button>
+        <button
+          type="button"
+          className="button is-warning is-light"
+          onClick={handleButtonReverse}
+        >
+          Reverse
+        </button>
 
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={() => setSortedGoods(goodsFromServer)}
-          >
-            Reset
-          </button>
-        </div>
-
-        <ul>
-          {sortedGoods.map((good, i) => <li data-cy="Good">{good}</li>)}
-        </ul>
+        <button
+          type="button"
+          className="button is-danger is-light"
+          onClick={handleButtonReset}
+        >
+          Reset
+        </button>
       </div>
-    </>
+      <ul>
+        {sortedGoods
+          .map(good => <li data-cy="Good" key={good}>{good}</li>)}
+      </ul>
+    </div>
   );
 };
