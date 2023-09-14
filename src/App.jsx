@@ -18,10 +18,14 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ABC = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERSE = 'reverse';
+// const SORT_FIELD_REVERSE = 'reverse';
 
-function getPreparedGood(goods, sortField) {
+function getPreparedGood(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
+
+  if (isReversed === true) {
+    preparedGoods.reverse();
+  }
 
   if (sortField === SORT_FIELD_ABC) {
     preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
@@ -31,16 +35,13 @@ function getPreparedGood(goods, sortField) {
     preparedGoods.sort((good1, good2) => good1.length - good2.length);
   }
 
-  if (sortField === SORT_FIELD_REVERSE) {
-    preparedGoods.reverse();
-  }
-
   return preparedGoods;
 }
 
 export const App = () => {
+  const [isReversed, setIsReversed] = useState(false);
   const [sortField, setSortField] = useState('');
-  const visibleGoods = getPreparedGood(goodsFromServer, sortField);
+  const visibleGoods = getPreparedGood(goodsFromServer, sortField, isReversed);
 
   return (
     <div className="section content">
@@ -66,18 +67,22 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSortField(SORT_FIELD_REVERSE)}
+          // onClick={() => setSortField(SORT_FIELD_REVERSE)}
+          onClick={() => setIsReversed(true)}
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': sortField !== SORT_FIELD_REVERSE,
+            'is-light': isReversed === false,
           })}
         >
           Reverse
         </button>
 
-        {sortField !== '' && (
+        {(sortField !== '' || isReversed === true) && (
           <button
-            onClick={() => setSortField('')}
+            onClick={() => {
+              setSortField('');
+              setIsReversed(false);
+            }}
             type="button"
             className="button is-danger is-light"
           >
