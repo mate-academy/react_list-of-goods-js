@@ -18,14 +18,9 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ABC = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
-// const SORT_FIELD_REVERSE = 'reverse';
 
 function getPreparedGood(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
-
-  if (isReversed === true) {
-    preparedGoods.reverse();
-  }
 
   if (sortField === SORT_FIELD_ABC) {
     preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
@@ -33,6 +28,10 @@ function getPreparedGood(goods, sortField, isReversed) {
 
   if (sortField === SORT_FIELD_LENGTH) {
     preparedGoods.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (isReversed === true) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -67,8 +66,7 @@ export const App = () => {
         </button>
 
         <button
-          // onClick={() => setSortField(SORT_FIELD_REVERSE)}
-          onClick={() => setIsReversed(true)}
+          onClick={() => setIsReversed(!isReversed)}
           type="button"
           className={cn('button', 'is-warning', {
             'is-light': isReversed === false,
