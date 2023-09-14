@@ -48,7 +48,7 @@ function getSortedGoods(goods, { sortField, query, reversed }) {
 export const App = () => {
   const [sortField, setsortField] = useState(SetByDanger);
   const [reversed, setReversed] = useState(false);
-  const SortedOptions
+  const sortedGoods
     = getSortedGoods(goodsFromServer,
       { sortField, query: 'o', reversed });
 
@@ -95,7 +95,7 @@ export const App = () => {
           </button>
         )}
       </div>
-      <GoodList goods={SortedOptions} />
+      <GoodList goods={sortedGoods} />
     </div>
   );
 };
