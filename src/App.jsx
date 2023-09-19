@@ -54,7 +54,11 @@ export const App = () => {
     setIsreversed(false);
   };
 
-  const hiddenButton = isReversed === true || sortType;
+  const hiddenButton = isReversed || sortType;
+
+  function toggleReverse() {
+    setIsreversed(prev => !prev);
+  }
 
   return (
     <div className="section content">
@@ -85,9 +89,9 @@ export const App = () => {
           type="button"
           className={cn(
             'button is-warning',
-            { 'is-light': isReversed === false },
+            { 'is-light': !isReversed },
           )}
-          onClick={() => setIsreversed(prev => !prev)}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
