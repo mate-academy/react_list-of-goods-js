@@ -22,7 +22,7 @@ export const App = () => {
   const SORT_BY_ALPHABET = 'alphabet';
   const SORT_BY_LENGTH = 'length';
 
-  function getSortedGoods(goods, sortField) {
+  function getSortedGoods(goods, sortField, isReversed) {
     const goodsCopy = [...goods];
 
     if (sortType) {
