@@ -109,7 +109,7 @@ export const App = () => {
 
       <ul>
         {goodsRepresentation.map(good => (
-          <li>{good}</li>
+          <li data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
