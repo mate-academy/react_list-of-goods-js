@@ -46,20 +46,17 @@ function getPreparedGoods(goods, { sortField, isSorted }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [action, setAction] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer,
     { sortField, isSorted });
 
   const resetFunc = () => {
-    setAction(false);
     setSortField('');
     setIsSorted(false);
   };
 
   const toggleSort = () => {
     setIsSorted(!isSorted);
-    setAction(!action);
   };
 
   return (
@@ -91,7 +88,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning',
-            { 'is-light': !action })}
+            { 'is-light': !isSorted })}
           onClick={toggleSort}
         >
           Reverse
@@ -100,7 +97,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-danger', 'is-light',
-            { 'is-hidden': !action && !sortField })}
+            { 'is-hidden': !sortField })}
           onClick={resetFunc}
         >
           Reset
