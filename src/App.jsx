@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -17,45 +17,46 @@ export const goodsFromServer = [
 ];
 const CONST_STATE_BY_LENGTH = 'byLength';
 const CONST_STATE_BY_ALPHABET = 'byAlphabet';
-const CONST_STATE_BY_REVERSE = 'byReverse';
+
+function prepareTodos(data, sortBy, isReversed) {
+  let todos = [...data];
+
+  if (sortBy === CONST_STATE_BY_LENGTH) {
+    todos.sort((a, b) => a.length - b.length);
+  } else if (sortBy === CONST_STATE_BY_ALPHABET) {
+    todos.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (isReversed) {
+    todos = todos.reverse();
+  }
+
+  return todos;
+}
 
 export const App = () => {
-  const [goodsFromServerApp, setGoodsFromServer] = useState(goodsFromServer);
-  const [sortStateByLength, setSortStateByLength] = useState(null);
-  const [sortStateByAlphabet, setSortStateByAlphabet] = useState(null);
-  const [sortStateReverse, setSortStateReverse] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortStateReverse, setSortStateReverse] = useState(false); // Use a boolean to track the reverse state
 
-  function sortByLength() {
-    setGoodsFromServer(
-      [...goodsFromServer].sort((good1, good2) => good1.length - good2.length),
+  const [todos, setTodos] = useState(goodsFromServer);
+
+  useEffect(() => {
+    const preparedTodos = prepareTodos(
+      goodsFromServer,
+      sortBy,
+      sortStateReverse,
     );
-    setSortStateByLength(CONST_STATE_BY_LENGTH);
-    setSortStateByAlphabet(null);
-  }
 
-  function sortByAlphabet() {
-    setGoodsFromServer(
-      [...goodsFromServer].sort((good1, good2) => good1.localeCompare(good2)),
-    );
-    setSortStateByAlphabet(CONST_STATE_BY_ALPHABET);
-    setSortStateByLength(null);
-  }
+    setTodos(preparedTodos);
+  }, [sortBy, sortStateReverse]);
 
-  function reverseGood() {
-    if (sortStateReverse === CONST_STATE_BY_REVERSE) {
-      setGoodsFromServer([...goodsFromServerApp].reverse());
-      setSortStateReverse(null);
-    } else {
-      setGoodsFromServer([...goodsFromServerApp].reverse());
-      setSortStateReverse(CONST_STATE_BY_REVERSE);
-    }
+  function toggleReverse() {
+    setSortStateReverse(!sortStateReverse);
   }
 
   function reset() {
-    setGoodsFromServer([...goodsFromServer]);
-    setSortStateByLength(null);
-    setSortStateByAlphabet(null);
-    setSortStateReverse(null);
+    setSortBy(null);
+    setSortStateReverse(false);
   }
 
   return (
@@ -64,9 +65,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortStateByAlphabet === null,
+            'is-light': sortBy !== CONST_STATE_BY_ALPHABET,
           })}
-          onClick={sortByAlphabet}
+          onClick={() => setSortBy(CONST_STATE_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -74,9 +75,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortStateByLength === null,
+            'is-light': sortBy !== CONST_STATE_BY_LENGTH,
           })}
-          onClick={sortByLength}
+          onClick={() => setSortBy(CONST_STATE_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -84,14 +85,14 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': sortStateReverse === null,
+            'is-light': !sortStateReverse,
           })}
-          onClick={reverseGood}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
 
-        {(sortStateByLength || sortStateByAlphabet || sortStateReverse) && (
+        {(sortBy || sortStateReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -103,9 +104,9 @@ export const App = () => {
       </div>
 
       <ul>
-        {goodsFromServerApp.map((good, index) => (
+        {todos.map((todo, index) => (
           <li data-cy="Good">
-            {good}
+            {todo}
           </li>
         ))}
       </ul>
