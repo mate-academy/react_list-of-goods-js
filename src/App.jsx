@@ -104,11 +104,15 @@ export const App = () => {
       </div>
 
       <ul>
-        {todos.map((todo, index) => (
-          <li data-cy="Good">
-            {todo}
-          </li>
-        ))}
+        {todos.map((todo, index) => {
+          const key = index;
+
+          return (
+            <li key={key} data-cy="Good">
+              {todo}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
