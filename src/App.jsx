@@ -56,7 +56,7 @@ export const App = () => {
   };
 
   return (
-    <div div className="section content">
+    <div className="section content">
       <div className="buttons">
         <button
           type="button"
