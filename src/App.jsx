@@ -47,13 +47,15 @@ function getSortedGoods(goods, { sortField, reversed }) {
 export const App = () => {
   const [sortField, setsortField] = useState(SetByDanger);
   const [reversed, setReversed] = useState(false);
+
   const sortedGoods
     = getSortedGoods(goodsFromServer,
       { sortField, reversed });
+
   const onReset = () => {
     setReversed(false);
     setsortField(SetByDanger);
-  }
+  };
 
   return (
     <div className="section content">
@@ -87,9 +89,7 @@ export const App = () => {
 
         {(reversed || sortField !== SetByDanger) && (
           <button
-            onClick={() => {
-              onReset();
-            }}
+            onClick={onReset}
             type="button"
             className="button is-danger is-light"
           >
