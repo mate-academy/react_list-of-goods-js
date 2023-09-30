@@ -6,6 +6,7 @@ import { GoodList } from './components/GoodList/GoodList';
 
 const SORT_FIELD_ALPHABET = 'name';
 const SORT_FIELD_LENGTH = 'length';
+const SORT_FIELD_REVERESE = 'id';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -20,45 +21,43 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+function getPreparedGoods(goods, { sortField }) {
+  let preparedGoods = [...goods];
+
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABET:
+          return good1.localeCompare(good2);
+
+        case SORT_FIELD_LENGTH:
+          return good1[sortField] - good2[sortField];
+
+        case SORT_FIELD_REVERESE:
+          return preparedGoods.reverse();
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
 
-  // if (sortField) {
-  //   visibleGoods.sort((good1, good2) => good1.localeCompare(good2));
-  //   visibleGoods.sort((good1, good2) => good1.length - good2.length);
-  // }
-
-  const reset = () => {
-    setVisibleGoods(goodsFromServer);
-    setSortField('');
-  };
-
-  const sortByAlphabet = () => {
-    setVisibleGoods(
-      [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
-    );
-    setSortField(SORT_FIELD_ALPHABET);
-  };
-
-  const sortByLength = () => {
-    setVisibleGoods(
-      [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-    );
-    setSortField(SORT_FIELD_LENGTH);
-  };
-
-  const sortByReverse = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    // setSortField('');
-  };
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer, { sortField },
+  );
 
   return (
     <div className="section content">
       <div className="buttons">
 
         <button
-          onClick={sortByAlphabet}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
           type="button"
           className={cn(
             'button',
@@ -71,7 +70,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={sortByLength}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
           className={cn(
             'button',
@@ -83,12 +82,12 @@ export const App = () => {
         </button>
 
         <button
-          onClick={sortByReverse}
+          onClick={() => setSortField(SORT_FIELD_REVERESE)}
           type="button"
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': sortField },
+            { 'is-light': visibleGoods },
           )}
         >
           Reverse
@@ -96,7 +95,7 @@ export const App = () => {
 
         {sortField && (
           <button
-            onClick={reset}
+            onClick={() => setSortField('')}
             type="button"
             className="button is-danger is-light"
           >
