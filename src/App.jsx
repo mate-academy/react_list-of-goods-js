@@ -22,7 +22,7 @@ export const goodsFromServer = [
 ];
 
 function getPreparedGoods(goods, { sortField }) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
