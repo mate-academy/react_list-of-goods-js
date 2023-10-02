@@ -6,7 +6,6 @@ import { GoodList } from './components/GoodList/GoodList';
 
 const SORT_FIELD_ALPHABET = 'name';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERESE = 'id';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -21,7 +20,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPreparedGoods(goods, { sortField }) {
+function getPreparedGoods(goods, { sortField, isReveresed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -33,13 +32,12 @@ function getPreparedGoods(goods, { sortField }) {
         case SORT_FIELD_LENGTH:
           return good1[sortField] - good2[sortField];
 
-        case SORT_FIELD_REVERESE:
-          return preparedGoods.reverse();
-
         default:
           return 0;
       }
     });
+
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -47,9 +45,10 @@ function getPreparedGoods(goods, { sortField }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
+  const [isReveresed, setIsReversed] = useState(false);
 
   const visibleGoods = getPreparedGoods(
-    goodsFromServer, { sortField },
+    goodsFromServer, { sortField, isReveresed },
   );
 
   return (
@@ -82,7 +81,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSortField(SORT_FIELD_REVERESE)}
+          onClick={() => setIsReversed()}
           type="button"
           className={cn(
             'button',
