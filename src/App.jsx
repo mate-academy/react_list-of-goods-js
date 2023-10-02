@@ -50,15 +50,20 @@ export const App = () => {
   const [reversed, setReversed] = useState(false);
   const visibleGoods = getPrepareGoods(goodsFromServer, sortField, reversed);
 
-  const buttons = [
+  const sortButtons = [
     { name: 'Sort alphabetically', class: 'is-info', change: SORT_FIELD_NAME },
     { name: 'Sort by length', class: 'is-success', change: SORT_FIELD_LENGTH },
   ];
 
+  const reset = () => {
+    setReversed(false);
+    setSortField('');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
-        {buttons.map(button => (
+        {sortButtons.map(button => (
           <button
             key={button.name}
             type="button"
@@ -81,10 +86,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
