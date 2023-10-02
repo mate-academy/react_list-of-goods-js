@@ -3,6 +3,7 @@ import cn from 'classnames';
 import './App.scss';
 import { useState } from 'react';
 import { GoodList } from './components/GoodList/GoodList';
+import { prependListener } from 'process';
 
 const SORT_FIELD_ALPHABET = 'name';
 const SORT_FIELD_LENGTH = 'length';
@@ -83,19 +84,18 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReversed(visibleGoods)}
+          onClick={() => setIsReversed(prevState => !prevState)}
           type="button"
           className={cn(
             'button',
             'is-warning',
-            { 'is-light':
-              sortField !== visibleGoods },
+            { 'is-light': !isReveresed },
           )}
         >
           Reverse
         </button>
 
-        {sortField && (
+        {(sortField || isReveresed) && (
           <button
             onClick={() => setSortField('')}
             type="button"
