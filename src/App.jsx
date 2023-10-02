@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { cn } from 'classnames';
+import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -28,7 +28,7 @@ function getPreparedGoods(goods, { sortField, reversed }) {
         case SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
         case SORT_FIELD_LENGTH:
-          return good2.length - good1.length;
+          return good1.length - good2.length;
         default:
           return 0;
       }
@@ -93,7 +93,7 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
