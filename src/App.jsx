@@ -37,7 +37,9 @@ function getPreparedGoods(goods, { sortField, isReveresed }) {
       }
     });
 
-    preparedGoods.reverse();
+    if (isReveresed === true) {
+      preparedGoods.reverse();
+    }
   }
 
   return preparedGoods;
@@ -45,7 +47,7 @@ function getPreparedGoods(goods, { sortField, isReveresed }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReveresed, setIsReversed] = useState(false);
+  const [isReveresed, setIsReversed] = useState(true);
 
   const visibleGoods = getPreparedGoods(
     goodsFromServer, { sortField, isReveresed },
@@ -81,12 +83,13 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReversed()}
+          onClick={() => setIsReversed(visibleGoods)}
           type="button"
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': visibleGoods },
+            { 'is-light':
+              sortField !== visibleGoods },
           )}
         >
           Reverse
