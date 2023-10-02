@@ -57,36 +57,30 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          onClick={() => (setSortBy(SORT_BY_ALPHABET))}
-          className={
-            classNames('button is-info', sortBy === SORT_BY_ALPHABET
-              ? ''
-              : 'is-light')
-          }
+          onClick={() => setSortBy(SORT_BY_ALPHABET)}
+          className={classNames('button is-info', {
+            'is-light': sortBy !== SORT_BY_ALPHABET,
+          })}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          onClick={() => (setSortBy(SORT_BY_LENGTH))}
-          className={
-            classNames('button is-success', sortBy === SORT_BY_LENGTH
-              ? ''
-              : 'is-light')
-          }
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
+          className={classNames('button is-success', {
+            'is-light': sortBy !== SORT_BY_LENGTH,
+          })}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => (setReverseStatus(!reverseStatus))}
-          className={
-            classNames('button is-warning', reverseStatus
-              ? ''
-              : 'is-light')
-          }
+          onClick={() => setReverseStatus(!reverseStatus)}
+          className={classNames('button is-warning', {
+            'is-light': !reverseStatus,
+          })}
         >
           Reverse
         </button>
@@ -104,7 +98,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li key={good} data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
