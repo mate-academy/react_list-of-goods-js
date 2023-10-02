@@ -3,7 +3,6 @@ import cn from 'classnames';
 import './App.scss';
 import { useState } from 'react';
 import { GoodList } from './components/GoodList/GoodList';
-import { prependListener } from 'process';
 
 const SORT_FIELD_ALPHABET = 'name';
 const SORT_FIELD_LENGTH = 'length';
