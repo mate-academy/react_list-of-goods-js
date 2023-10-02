@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import cn from 'classnames';
 import './App.scss';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { GoodList } from './components/GoodList/GoodList';
 
 const SORT_FIELD_ALPHABET = 'name';
@@ -37,7 +37,7 @@ function getPreparedGoods(goods, { sortField, isReveresed }) {
       }
     });
 
-    if (isReveresed === true) {
+    if (isReveresed) {
       preparedGoods.reverse();
     }
   }
@@ -49,9 +49,9 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReveresed, setIsReversed] = useState(false);
 
-  const visibleGoods = getPreparedGoods(
+  const visibleGoods = useMemo(() => getPreparedGoods(
     goodsFromServer, { sortField, isReveresed },
-  );
+  ), [sortField, isReveresed]);
 
   return (
     <div className="section content">
