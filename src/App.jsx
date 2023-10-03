@@ -22,51 +22,45 @@ export const App = () => {
   const [targetInnerText, setTargetInnerText] = useState('');
   const [isReverse, setIsReverse] = useState(false);
 
-  const sortList = (list, type) => {
+  const sortList = (type) => {
+    let newList;
+
     switch (type) {
       case 'Sort alphabetically':
-        if (isReverse) {
-          return list.sort((good1, good2) => good2.localeCompare(good1));
-        }
-
-        return list.sort((good1, good2) => good1.localeCompare(good2));
+        newList = [...goodsFromServer]
+          .sort((good1, good2) => good1.localeCompare(good2));
+        break;
 
       case 'Sort by length':
-        if (isReverse) {
-          return list.sort((good1, good2) => good2.length - good1.length);
-        }
-
-        return list.sort((good1, good2) => good1.length - good2.length);
-
-      case 'Reverse':
-        return list.reverse();
+        newList = [...goodsFromServer]
+          .sort((good1, good2) => good1.length - good2.length);
+        break;
 
       default:
-        return list;
+        newList = [...goodsFromServer];
     }
+
+    if (isReverse) {
+      newList.reverse();
+    }
+
+    setListOfGoods(newList);
   };
 
   const handleSort = (e) => {
-    const text = e.currentTarget.innerText;
+    const buttonText = e.currentTarget.innerText;
 
-    setTargetInnerText(text);
-    setListOfGoods(sortList(listOfGoods, text));
+    sortList(buttonText);
+    setTargetInnerText(buttonText);
   };
 
   const handlleReverse = (e) => {
-    const text = e.currentTarget.innerText;
-
-    if (isReverse) {
-      setIsReverse(false);
-    } else {
-      setIsReverse(true);
-    }
-
-    setListOfGoods(sortList(listOfGoods, text));
+    setIsReverse(!isReverse);
+    setListOfGoods([...listOfGoods].reverse());
   };
 
   const handleReset = () => {
-    setListOfGoods(sortList([...goodsFromServer], ''));
+    setListOfGoods([...goodsFromServer]);
     setTargetInnerText('');
     setIsReverse(false);
   };
@@ -82,9 +76,7 @@ export const App = () => {
               { 'is-light': targetInnerText !== 'Sort alphabetically' },
             )
           }
-          onClick={(e) => {
-            handleSort(e);
-          }}
+          onClick={handleSort}
         >
           Sort alphabetically
         </button>
@@ -97,9 +89,7 @@ export const App = () => {
               { 'is-light': targetInnerText !== 'Sort by length' },
             )
           }
-          onClick={(e) => {
-            handleSort(e);
-          }}
+          onClick={handleSort}
         >
           Sort by length
         </button>
@@ -112,9 +102,7 @@ export const App = () => {
               { 'is-light': !isReverse },
             )
           }
-          onClick={(e) => {
-            handlleReverse(e);
-          }}
+          onClick={handlleReverse}
         >
           Reverse
         </button>
@@ -125,9 +113,7 @@ export const App = () => {
               <button
                 type="button"
                 className="button is-danger is-light"
-                onClick={() => {
-                  handleReset();
-                }}
+                onClick={handleReset}
               >
                 Reset
               </button>
