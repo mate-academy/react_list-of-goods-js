@@ -2,7 +2,7 @@ import 'bulma/css/bulma.css';
 import cn from 'classnames';
 import './App.scss';
 import { useState } from 'react';
-import { GoodList } from './components/GoodList/GoodList';
+import { GoodList } from './components/GoodList';
 
 const SORT_FIELD_ALPHABET = 'name';
 const SORT_FIELD_LENGTH = 'length';
