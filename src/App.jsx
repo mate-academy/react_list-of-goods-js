@@ -17,6 +17,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SortType = {
+  alphabetically: 'Sort alphabetically',
+  byLength: 'Sort by length',
+};
+
 export const App = () => {
   const [listOfGoods, setListOfGoods] = useState([...goodsFromServer]);
   const [targetInnerText, setTargetInnerText] = useState('');
@@ -26,12 +31,12 @@ export const App = () => {
     let newList;
 
     switch (type) {
-      case 'Sort alphabetically':
+      case SortType.alphabetically:
         newList = [...goodsFromServer]
           .sort((good1, good2) => good1.localeCompare(good2));
         break;
 
-      case 'Sort by length':
+      case SortType.byLength:
         newList = [...goodsFromServer]
           .sort((good1, good2) => good1.length - good2.length);
         break;
@@ -109,7 +114,7 @@ export const App = () => {
 
         {
           (targetInnerText || isReverse)
-            ? (
+            && (
               <button
                 type="button"
                 className="button is-danger is-light"
@@ -118,7 +123,6 @@ export const App = () => {
                 Reset
               </button>
             )
-            : null
         }
       </div>
 
