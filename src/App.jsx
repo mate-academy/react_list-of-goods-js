@@ -22,12 +22,6 @@ const SORT_GOODS_ALPHABET = 'alphabet';
 const SORT_GOODS_LENGTH = 'length';
 const SORT_GOODS_REVERSE = 'reverse';
 
-// function setQuery(name) {
-//   const query = name;
-
-//   return query;
-// }
-
 function getPreparedGoods(goods, { sortField, query }) {
   const preparedGoods = [...goods];
 
