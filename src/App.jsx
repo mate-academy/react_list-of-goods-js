@@ -23,7 +23,7 @@ const SortType = {
 };
 
 const getGoodsList = (goods, sortField, isReversed) => {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
@@ -39,7 +39,7 @@ const getGoodsList = (goods, sortField, isReversed) => {
   }
 
   if (isReversed) {
-    preparedGoods = preparedGoods.reverse();
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
