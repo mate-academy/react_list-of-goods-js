@@ -115,7 +115,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed !== false)
+        {(sortField || isReversed)
           && (
             <button
               type="button"
