@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,136 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_BY_ALPHABETICALLY = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+const SORT_BY_REVERSE = 'reverse';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getPreparedGood(goods, sortField, revers) {
+  let visibleGoods = [...goods];
+  const copyGoodsFromServer = [...goodsFromServer];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortField) {
+    switch (sortField) {
+      case SORT_BY_ALPHABETICALLY:
+        visibleGoods.sort((good1, good2) => good1.localeCompare(good2));
+        break;
+      case SORT_BY_LENGTH:
+        visibleGoods
+          = copyGoodsFromServer.sort((good1, good2) => (
+            good1.length - good2.length
+          ));
+        break;
+      case SORT_BY_REVERSE:
+        visibleGoods.reverse();
+        break;
+      default:
+        break;
+    }
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  return revers ? visibleGoods.reverse() : visibleGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState(null);
+  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
+  const [reverse, setReverse] = useState(false);
+  const [alphabet, setAlphabet] = useState(false);
+  const [length, setLength] = useState(false);
+  const [isReset, setIsReset] = useState(false);
+  const copyVisibleGoods = [...visibleGoods];
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            '': alphabet === true,
+            'is-light': alphabet === false,
+          })}
+          onClick={() => {
+            setSortField(SORT_BY_ALPHABETICALLY);
+            setVisibleGoods(
+              getPreparedGood(visibleGoods, SORT_BY_ALPHABETICALLY, reverse),
+            );
+            setAlphabet(true);
+            setLength(false);
+            setIsReset(true);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            '': length === true,
+            'is-light': length === false,
+          })}
+          onClick={() => {
+            setSortField(SORT_BY_LENGTH);
+            setVisibleGoods(
+              getPreparedGood(visibleGoods, SORT_BY_LENGTH, reverse),
+            );
+            setLength(true);
+            setAlphabet(false);
+            setIsReset(true);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            '': reverse,
+            'is-light': !reverse,
+          })}
+          onClick={() => {
+            setReverse(!reverse);
+            setSortField(SORT_BY_REVERSE);
+            setVisibleGoods(getPreparedGood(visibleGoods, sortField, !reverse));
+            setIsReset(
+              JSON.stringify(copyVisibleGoods.reverse())
+              !== JSON.stringify(goodsFromServer),
+            );
+          }}
+        >
+          Reverse
+        </button>
+
+        {isReset && (
+          <button
+            type="button"
+            className={cn('button is-danger', {
+              '': sortField === '',
+              'is-light': sortField !== '',
+            })}
+            onClick={() => {
+              setSortField('');
+              setVisibleGoods(goodsFromServer);
+              setAlphabet(false);
+              setLength(false);
+              setReverse(false);
+              setIsReset(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li
+            data-cy="Good"
+            key={good}
+          >
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
