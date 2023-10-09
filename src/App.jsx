@@ -36,11 +36,10 @@ export const App = () => {
 
   const sortByLength = () => {
     const sortedGoods = [...visibleGoods].sort(
-      (good1, good2) => good2.length - good1.length,
+      (good1, good2) => good1.length - good2.length,
     );
-
     const newVisibleGoods = isReverseActive
-      ? [...sortedGoods].reverse()
+      ? sortedGoods.reverse()
       : sortedGoods;
 
     setVisibleGoods(newVisibleGoods);
