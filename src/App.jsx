@@ -21,7 +21,7 @@ const SORT_BY_LENGTH = 'length';
 function getPreparedGoods(
   goods,
   { sortBy = SORT_BY_ALPHABET,
-    isSortRevers = false },
+    isSortReversed = false },
 ) {
   let preparedGoods = [...goods];
 
@@ -38,35 +38,35 @@ function getPreparedGoods(
       break;
   }
 
-  return isSortRevers ? preparedGoods.reverse() : preparedGoods;
+  return isSortReversed ? preparedGoods.reverse() : preparedGoods;
 }
 
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
-  const [isSortRevers, setIsSortRevers] = useState(false);
-  const handlerSortByAlphabet = () => {
+  const [isSortReversed, setIsSortReversed] = useState(false);
+  const handleSortByAlphabet = () => {
     setSortBy(sortBy === SORT_BY_ALPHABET
       ? ''
       : SORT_BY_ALPHABET);
   };
 
-  const handlerSortByLength = () => {
+  const handleSortByLength = () => {
     setSortBy(sortBy === SORT_BY_LENGTH
       ? ''
       : SORT_BY_LENGTH);
   };
 
-  const handlerSortRevers = () => {
-    setIsSortRevers(isSortRevers === false);
+  const handleSortReversed = () => {
+    setIsSortReversed((prev = isSortReversed) => !prev);
   };
 
-  const handlerSortReset = () => {
+  const handleSortReset = () => {
     setSortBy('');
-    setIsSortRevers(false);
+    setIsSortReversed(false);
   };
 
   const visibleGoods = getPreparedGoods(goodsFromServer,
-    { sortBy, isSortRevers });
+    { sortBy, isSortReversed });
 
   return (
     <div className="section content">
@@ -75,7 +75,7 @@ export const App = () => {
           type="button"
           className={`button is-info
           ${sortBy !== SORT_BY_ALPHABET && 'is-light'}`}
-          onClick={handlerSortByAlphabet}
+          onClick={handleSortByAlphabet}
         >
           Sort alphabetically
         </button>
@@ -84,7 +84,7 @@ export const App = () => {
           type="button"
           className={`button is-success
           ${sortBy !== SORT_BY_LENGTH && 'is-light'}`}
-          onClick={handlerSortByLength}
+          onClick={handleSortByLength}
         >
           Sort by length
         </button>
@@ -92,18 +92,18 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning
-          ${isSortRevers === false && 'is-light'}`}
-          onClick={handlerSortRevers}
+          ${isSortReversed === false && 'is-light'}`}
+          onClick={handleSortReversed}
         >
           Reverse
         </button>
 
-        {(sortBy !== '' || isSortRevers === true)
+        {(sortBy || isSortReversed)
           && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={handlerSortReset}
+            onClick={handleSortReset}
           >
             Reset
           </button>
