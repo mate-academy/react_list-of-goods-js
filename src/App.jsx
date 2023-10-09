@@ -20,71 +20,50 @@ const SortTypes = {
   LENGTH: 'LENGTH',
 };
 
+const SortHandlers = {
+  ALPHABET: (a, b) => a.localeCompare(b),
+  LENGTH: (a, b) => a.length - b.length,
+};
+
+const getPreparedGoods = (listOfGoods, sortType, isReversed) => {
+  const nextListOfGoods = [...listOfGoods];
+  const sortHandler = SortHandlers[sortType];
+
+  if (sortHandler) {
+    nextListOfGoods.sort(sortHandler);
+  }
+
+  if (isReversed) {
+    nextListOfGoods.reverse();
+  }
+
+  return nextListOfGoods;
+};
+
 export const App = () => {
-  const [listOfGoods, setListOfGoods] = useState(goodsFromServer);
   const [sortType, setSortType] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
+  const listOfGoods = getPreparedGoods(goodsFromServer, sortType, isReversed);
 
-  const isResetDisplayed = listOfGoods !== goodsFromServer
+  const isResetDisplayed = listOfGoods.toString() !== goodsFromServer.toString()
     || sortType !== null
     || isReversed;
 
   const handleSortAlphabetically = () => {
     setSortType(SortTypes.ALPHABET);
-
-    setListOfGoods(
-      (prev) => {
-        const next = [...prev];
-
-        next.sort(
-          (a, b) => a.localeCompare(b),
-        );
-
-        return next;
-      },
-    );
   };
 
   const handleSortByLength = () => {
     setSortType(SortTypes.LENGTH);
-
-    setListOfGoods(
-      (prev) => {
-        const next = [...prev];
-
-        next.sort(
-          (a, b) => a.length - b.length,
-        );
-
-        return next;
-      },
-    );
   };
 
   const handleReverse = () => {
-    if (isReversed && sortType === null) {
-      handleReset();
-
-      return;
-    }
-
     setIsReversed(prev => !prev);
-
-    setListOfGoods(
-      (prev) => {
-        const next = [...prev];
-
-        next.reverse();
-
-        return next;
-      },
-    );
   };
 
   const handleReset = () => {
     setSortType(null);
     setIsReversed(false);
-    setListOfGoods(goodsFromServer);
   };
 
   return (
