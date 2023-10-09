@@ -18,12 +18,22 @@ export const goodsFromServer = [
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [isReversed, setIsReversed] = useState(false);
+  const [isSortAlphabeticallyActive, setIsSortAlphabeticallyActive]
+  = useState(false);
+  const [isSortByLengthActive, setIsSortByLengthActive] = useState(false);
+
+  const isGoodsNotInOriginalOrder
+  = visibleGoods.join() !== goodsFromServer.join();
 
   const sortAlphabetically = () => {
     const sortedGoods = [...visibleGoods].sort();
 
-    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
+    setVisibleGoods(isSortAlphabeticallyActive
+      ? sortedGoods.reverse()
+      : sortedGoods);
     setIsReversed(false);
+    setIsSortAlphabeticallyActive(!isSortAlphabeticallyActive);
+    setIsSortByLengthActive(false);
   };
 
   const sortByLength = () => {
@@ -33,16 +43,22 @@ export const App = () => {
 
     setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setIsReversed(false);
+    setIsSortAlphabeticallyActive(false);
+    setIsSortByLengthActive(!isSortByLengthActive);
   };
 
   const reverseGoods = () => {
     setVisibleGoods([...visibleGoods].reverse());
     setIsReversed(!isReversed);
+    setIsSortAlphabeticallyActive(false);
+    setIsSortByLengthActive(false);
   };
 
   const resetGoods = () => {
     setVisibleGoods(goodsFromServer);
     setIsReversed(false);
+    setIsSortAlphabeticallyActive(false);
+    setIsSortByLengthActive(false);
   };
 
   return (
@@ -50,7 +66,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${isReversed ? '' : 'is-light'}`}
+          className={`button is-info ${isSortAlphabeticallyActive ? '' : 'is-light'}`}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -58,7 +74,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${isReversed ? '' : 'is-light'}`}
+          className={`button is-success ${isSortByLengthActive ? '' : 'is-light'}`}
           onClick={sortByLength}
         >
           Sort by length
@@ -72,7 +88,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {visibleGoods.join() !== goodsFromServer.join() && (
+        {isGoodsNotInOriginalOrder && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -85,7 +101,7 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
