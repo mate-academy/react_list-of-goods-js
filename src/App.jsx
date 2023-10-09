@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -17,56 +18,62 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [isReversed, setIsReversed] = useState(false);
   const [isSortAlphabeticallyActive, setIsSortAlphabeticallyActive]
   = useState(false);
   const [isSortByLengthActive, setIsSortByLengthActive] = useState(false);
-
-  const isGoodsNotInOriginalOrder
-  = visibleGoods.join() !== goodsFromServer.join();
+  const [isReverseActive, setIsReverseActive] = useState(false);
 
   const sortAlphabetically = () => {
     const sortedGoods = [...visibleGoods].sort();
-
-    setVisibleGoods(isSortAlphabeticallyActive
+    const newVisibleGoods = isReverseActive
       ? sortedGoods.reverse()
-      : sortedGoods);
-    setIsReversed(false);
-    setIsSortAlphabeticallyActive(!isSortAlphabeticallyActive);
+      : sortedGoods;
+
+    setVisibleGoods(newVisibleGoods);
+    setIsSortAlphabeticallyActive(true);
     setIsSortByLengthActive(false);
   };
 
   const sortByLength = () => {
     const sortedGoods = [...visibleGoods].sort(
-      (good1, good2) => good1.length - good2.length,
+      (good1, good2) => good2.length - good1.length,
     );
 
-    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
-    setIsReversed(false);
+    const newVisibleGoods = isReverseActive
+      ? [...sortedGoods].reverse()
+      : sortedGoods;
+
+    setVisibleGoods(newVisibleGoods);
     setIsSortAlphabeticallyActive(false);
-    setIsSortByLengthActive(!isSortByLengthActive);
+    setIsSortByLengthActive(true);
   };
 
   const reverseGoods = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    setIsReversed(!isReversed);
-    setIsSortAlphabeticallyActive(false);
-    setIsSortByLengthActive(false);
+    setIsReverseActive(!isReverseActive);
+
+    const newVisibleGoods = [...visibleGoods].reverse();
+
+    setVisibleGoods(newVisibleGoods);
   };
 
   const resetGoods = () => {
     setVisibleGoods(goodsFromServer);
-    setIsReversed(false);
     setIsSortAlphabeticallyActive(false);
     setIsSortByLengthActive(false);
+    setIsReverseActive(false);
   };
+
+  const shouldRenderResetButton
+  = isSortAlphabeticallyActive || isSortByLengthActive || isReverseActive;
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${isSortAlphabeticallyActive ? '' : 'is-light'}`}
+          className={classNames('button is-info', {
+            'is-light': !isSortAlphabeticallyActive,
+          })}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -74,7 +81,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${isSortByLengthActive ? '' : 'is-light'}`}
+          className={classNames('button is-success', {
+            'is-light': !isSortByLengthActive,
+          })}
           onClick={sortByLength}
         >
           Sort by length
@@ -82,13 +91,15 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={classNames('button is-warning', {
+            'is-light': !isReverseActive,
+          })}
           onClick={reverseGoods}
         >
           Reverse
         </button>
 
-        {isGoodsNotInOriginalOrder && (
+        {shouldRenderResetButton && (
           <button
             type="button"
             className="button is-danger is-light"
