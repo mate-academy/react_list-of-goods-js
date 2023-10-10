@@ -102,7 +102,9 @@ export const App = () => {
           const { nameGood, id } = good;
 
           return (
-            <li key={id} data-cy="Good">{nameGood}</li>
+            <li key={id} data-cy="Good">
+              {nameGood}
+            </li>
           );
         })}
       </ul>
