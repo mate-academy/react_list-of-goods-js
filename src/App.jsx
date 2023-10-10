@@ -44,10 +44,10 @@ const sortByParams = (toSortArray, sortType, reversing) => {
 
 export const App = () => {
   const [sortType, setType] = useState('');
-  const [reversed, reverse] = useState(false);
+  const [reversed, setReverse] = useState(false);
   const reset = () => {
     setType('');
-    reverse(false);
+    setReverse(false);
   };
 
   const sorted = sortByParams(goodsFromServer, sortType, reversed);
@@ -59,7 +59,7 @@ export const App = () => {
           <button
             onClick={() => (
               button.sortType === 'Reverse'
-                ? reverse(!reversed)
+                ? setReverse(!reversed)
                 : setType(button.sortType)
             )
             }
