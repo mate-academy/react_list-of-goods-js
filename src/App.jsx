@@ -18,7 +18,7 @@ export const goodsFromServer = [
 
 const SORT_ALPHABETICAL_TYPE = 'alpha';
 const SORT_LENGTH_TYPE = 'length';
-const REVERSED = 'reverse';
+// const REVERSED = 'reverse';
 
 function getPreparedGoods(goods, { sortType, reversed }) {
   const preparedGoods = [...goods];
@@ -47,7 +47,7 @@ function getPreparedGoods(goods, { sortType, reversed }) {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const [reversed, setReverse] = useState('');
+  const [reversed, setReverse] = useState(false);
   const displayGoods
     = getPreparedGoods(goodsFromServer, { sortType, reversed });
 
@@ -75,10 +75,8 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning',
-            { 'is-light': reversed !== REVERSED })}
-          onClick={reversed
-            ? () => setReverse(null)
-            : () => setReverse(REVERSED)}
+            { 'is-light': !reversed })}
+          onClick={() => setReverse(!reversed)}
         >
           Reverse
         </button>
