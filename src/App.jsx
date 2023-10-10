@@ -22,7 +22,7 @@ const SORT_BY_LENGTH = 'Sort by length';
 const buttons = [
   { sortType: SORT_BY_NAME, buttonStyle: 'is-info' },
   { sortType: SORT_BY_LENGTH, buttonStyle: 'is-success' },
-  { sortType: 'Reverse', buttonStyle: 'is-danger' },
+  { sortType: 'Reverse', buttonStyle: 'is-warning' },
 ];
 
 const sortByParams = (toSortArray, sortType, reversing) => {
