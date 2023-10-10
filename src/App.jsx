@@ -73,6 +73,7 @@ export const App = () => {
   function resetSorting() {
     setSortField('');
     setDirection('');
+    CHANGED_DIRECTION = false;
   }
 
   function displayResetButton(sorting) {
