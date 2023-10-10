@@ -22,12 +22,12 @@ function getPrepeadGoods(goods, sortFiled, reverse) {
   const prepearedGoods = [...goods];
 
   if (sortFiled) {
-    prepearedGoods.sort((a, b) => {
+    prepearedGoods.sort((good1, good2) => {
       switch (sortFiled) {
         case SORT_FILD_BY_ALPHABET:
-          return a.nameGood.localeCompare(b.nameGood);
+          return good1.nameGood.localeCompare(good2.nameGood);
         case SORT_BY_LENGTH:
-          return a.nameGood.length - b.nameGood.length;
+          return good1.nameGood.length - good2.nameGood.length;
         default:
           return 0;
       }
