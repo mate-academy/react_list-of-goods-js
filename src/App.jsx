@@ -15,19 +15,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SortTypes = {
+const sortTypes = {
   ALPHABET: 'ALPHABET',
   LENGTH: 'LENGTH',
 };
 
-const SortHandlers = {
+const sortHandlers = {
   ALPHABET: (a, b) => a.localeCompare(b),
   LENGTH: (a, b) => a.length - b.length,
 };
 
 const getPreparedGoods = (listOfGoods, sortType, isReversed) => {
   const nextListOfGoods = [...listOfGoods];
-  const sortHandler = SortHandlers[sortType];
+  const sortHandler = sortHandlers[sortType];
 
   if (sortHandler) {
     nextListOfGoods.sort(sortHandler);
@@ -50,11 +50,11 @@ export const App = () => {
     || isReversed;
 
   const handleSortAlphabetically = () => {
-    setSortType(SortTypes.ALPHABET);
+    setSortType(sortTypes.ALPHABET);
   };
 
   const handleSortByLength = () => {
-    setSortType(SortTypes.LENGTH);
+    setSortType(sortTypes.LENGTH);
   };
 
   const handleReverse = () => {
@@ -71,18 +71,20 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortType === SortTypes.ALPHABET ? '' : 'is-light'}`}
+          className={`button is-info ${sortType === sortTypes.ALPHABET ? '' : 'is-light'}`}
           onClick={handleSortAlphabetically}
         >
           Sort alphabetically
         </button>
+
         <button
           type="button"
-          className={`button is-success ${sortType === SortTypes.LENGTH ? '' : 'is-light'}`}
+          className={`button is-success ${sortType === sortTypes.LENGTH ? '' : 'is-light'}`}
           onClick={handleSortByLength}
         >
           Sort by length
         </button>
+
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
@@ -90,6 +92,7 @@ export const App = () => {
         >
           Reverse
         </button>
+
         {isResetDisplayed && (
           <button
             type="button"
