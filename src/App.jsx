@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-array-index-key */
 import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -18,11 +16,45 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const Good = ({ good }) => <li data-cy="Good">{good}</li>;
+const SORT_BY_NAME = 'name';
+const SORT_BY_LENGTH = 'length';
+
+const Good = ({ good }) => (
+  <li data-cy="Good">
+    {good}
+  </li>
+);
+
+const getPreparedGoods = (goods, sortedBy, isReversed) => {
+  let preparedGoods = [...goods];
+
+  if (sortedBy) {
+    preparedGoods.sort((goodA, goodB) => {
+      switch (sortedBy) {
+        case SORT_BY_NAME:
+          return goodA.localeCompare(goodB);
+
+        case SORT_BY_LENGTH:
+          return goodA.length - goodB.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    preparedGoods = preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
 
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
-  const [activeSorting, setActiveSorting] = useState('');
+  const [sortBy, setSortBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const goods = getPreparedGoods(goodsFromServer, sortBy, isReversed);
 
   return (
     <div className="section content">
@@ -30,25 +62,20 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': !activeSorting.includes('name'),
-          })}
-          onClick={() => {
-            setGoods([...goods].sort((a, b) => a.localeCompare(b)));
-            setActiveSorting([...activeSorting, 'name']);
-          }}
+            'is-light': sortBy !== SORT_BY_NAME,
+          })
+          }
+          onClick={() => setSortBy(SORT_BY_NAME)}
         >
           Sort alphabetically
         </button>
-
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': !activeSorting.includes('length'),
-          })}
-          onClick={() => {
-            setGoods([...goods].sort((a, b) => a.length - b.length));
-            setActiveSorting([...activeSorting, 'length']);
-          }}
+            'is-light': sortBy !== SORT_BY_LENGTH,
+          })
+          }
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -56,23 +83,21 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': !activeSorting.includes('reverse'),
-          })}
-          onClick={() => {
-            setGoods(goods.reverse());
-            setActiveSorting([...activeSorting, 'reverse']);
-          }}
+            'is-light': !isReversed,
+          })
+          }
+          onClick={() => setIsReversed(prevState => !prevState)}
         >
           Reverse
         </button>
 
-        {activeSorting && (
+        {(sortBy || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setGoods(goodsFromServer);
-              setActiveSorting('');
+              setSortBy('');
+              setIsReversed(false);
             }}
           >
             Reset
@@ -81,7 +106,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => <Good good={good} />)}
+        {goods.map(good => <Good good={good} key={good} />)}
       </ul>
     </div>
   );
