@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { getPreparedGoods } from './helpers';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -20,34 +21,13 @@ const sortTypes = {
   LENGTH: 'LENGTH',
 };
 
-const sortHandlers = {
-  ALPHABET: (a, b) => a.localeCompare(b),
-  LENGTH: (a, b) => a.length - b.length,
-};
-
-const getPreparedGoods = (listOfGoods, sortType, isReversed) => {
-  const nextListOfGoods = [...listOfGoods];
-  const sortHandler = sortHandlers[sortType];
-
-  if (sortHandler) {
-    nextListOfGoods.sort(sortHandler);
-  }
-
-  if (isReversed) {
-    nextListOfGoods.reverse();
-  }
-
-  return nextListOfGoods;
-};
-
 export const App = () => {
   const [sortType, setSortType] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
   const listOfGoods = getPreparedGoods(goodsFromServer, sortType, isReversed);
 
   const isResetDisplayed = listOfGoods.toString() !== goodsFromServer.toString()
-    || sortType !== null
-    || isReversed;
+    || sortType !== null;
 
   const handleSortAlphabetically = () => {
     setSortType(sortTypes.ALPHABET);
