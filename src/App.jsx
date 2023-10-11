@@ -24,6 +24,10 @@ export const App = () => {
   const [isReverse, setIsReverse] = useState(false);
   const visibleGoods = [...goodsFromServer];
 
+  if (isReverse && !sortField) {
+    visibleGoods.reverse();
+  }
+
   if (sortField) {
     visibleGoods.sort((a, b) => {
       let result;
@@ -55,8 +59,8 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-info is-light',
-            { 'is-active': sortField === 'alphabet' },
+            'button is-info',
+            { 'is-light': sortField !== SORT_FIELD_ALPHABET },
           )}
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
@@ -66,8 +70,8 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button is-success is-light',
-            { 'is-active': sortField === SORT_FIELD_LENGTH }
+            'button is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH },
           )}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
@@ -77,28 +81,30 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-              'button is-warning is-light',
-              { 'is-active': isReverse }
+            'button is-warning',
+            { 'is-light': !isReverse },
           )}
           onClick={() => {
-            if (sortField) {
-              setIsReverse(!isReverse);
-            }
+            setIsReverse(!isReverse);
           }}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => {
-            setSortField('');
-            setIsReverse(false);
-          }}
-        >
-          Reset
-        </button>
+        {(sortField || isReverse) && (
+          <>
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={() => {
+                setSortField('');
+                setIsReverse(false);
+              }}
+            >
+              Reset
+            </button>
+          </>
+        )}
       </div>
 
       <ul>
