@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,101 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_BY_ALPHABET = 'SORT_BY_ALPHABET ';
+const SORT_BY_LENGTH = 'SORT_BY_LENGTH';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function getPreparedGoods(
+  goods,
+  sortField,
+  reverse,
+) {
+  const preparedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  if (reverse) {
+    return preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
+export const App = () => {
+  const [isSorting, setSortBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const goodsList = getPreparedGoods(
+    goodsFromServer,
+    isSorting,
+    isReversed,
+  );
+  const showResetBtn = (isSorting !== '') || isReversed;
+
+  const handleClickReset = () => {
+    setSortBy('');
+    setIsReversed(false);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${isSorting !== SORT_BY_ALPHABET && 'is-light'} `}
+          onClick={() => setSortBy(SORT_BY_ALPHABET)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${isSorting !== SORT_BY_LENGTH && 'is-light'}`}
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${!isReversed && 'is-light'}`}
+          onClick={() => setIsReversed(prevVal => !prevVal)}
+        >
+          Reverse
+        </button>
+
+        {showResetBtn && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleClickReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goodsList.map((good) => {
+          const idUuid = uuidv4();
+
+          return (
+            <li key={idUuid} data-cy="Good">
+              {good}
+            </li>
+          );
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
