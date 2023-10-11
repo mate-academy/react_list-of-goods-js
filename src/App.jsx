@@ -18,15 +18,13 @@ export const goodsFromServer = [
 
 const SORT_FIELD_NAME = 'name';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_DIRECTION_REVERSED = 'reversed';
-let CHANGED_DIRECTION = false;
-let CHANGED_SORTING = false;
+let isResetVisible = false;
 
-function getPreparedGoods(goods, { sortField, direction }) {
+function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
-    CHANGED_SORTING = true;
+    isResetVisible = true;
 
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
@@ -42,8 +40,8 @@ function getPreparedGoods(goods, { sortField, direction }) {
     });
   }
 
-  if (direction === SORT_DIRECTION_REVERSED) {
-    CHANGED_SORTING = true;
+  if (isReversed) {
+    isResetVisible = true;
     preparedGoods.reverse();
   }
 
@@ -52,38 +50,26 @@ function getPreparedGoods(goods, { sortField, direction }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [direction, setDirection] = useState('');
+  const [isReversed, setReversed] = useState(false);
   const visibleGoods = getPreparedGoods(
     goodsFromServer,
-    { sortField, direction },
+    { sortField, isReversed },
   );
 
-  function setReverseButtonAction(directionChanges) {
-    if (directionChanges) {
-      CHANGED_DIRECTION = false;
+  function setReverseButtonAction(reverse) {
+    if (isReversed) {
+      isResetVisible = false;
 
-      return setDirection('');
+      return setReversed(false);
     }
 
-    CHANGED_DIRECTION = true;
-
-    return setDirection(SORT_DIRECTION_REVERSED);
+    return setReversed(true);
   }
 
   function resetSorting() {
     setSortField('');
-    setDirection('');
-    CHANGED_DIRECTION = false;
-  }
-
-  function displayResetButton(sorting) {
-    if (sorting) {
-      CHANGED_SORTING = false;
-
-      return true;
-    }
-
-    return false;
+    setReversed(false);
+    isResetVisible = false;
   }
 
   return (
@@ -107,17 +93,17 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setReverseButtonAction(CHANGED_DIRECTION)}
-          className={`button is-warning ${cn({ 'is-light': direction !== SORT_DIRECTION_REVERSED })}`}
+          onClick={() => setReverseButtonAction(isReversed)}
+          className={`button is-warning ${cn({ 'is-light': !isReversed })}`}
         >
           Reverse
         </button>
 
-        {displayResetButton(CHANGED_SORTING)
+        {isResetVisible
         && (
           <button
             type="button"
-            onClick={() => resetSorting()}
+            onClick={resetSorting}
             className="button is-danger is-light"
           >
             Reset
@@ -127,7 +113,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good" key={good}>{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
