@@ -17,11 +17,11 @@ export const goodsFromServer = [
 ];
 
 function getSortedGoods(listOfGoods, { sortType, isReverse }) {
-  let copyOfGoods = [...listOfGoods];
+  const copyOfGoods = [...listOfGoods];
 
   copyOfGoods.sort((good1, good2) => {
     switch (sortType) {
-      case SORT_FIELD_ALPH:
+      case SORT_FIELD_ALPHABET:
         return good1.localeCompare(good2);
       case SORT_FIELD_LENGTH:
         return good1.length - good2.length;
@@ -31,13 +31,13 @@ function getSortedGoods(listOfGoods, { sortType, isReverse }) {
   });
 
   if (isReverse === true) {
-    copyOfGoods = [...copyOfGoods].reverse();
+    copyOfGoods.reverse();
   }
 
   return copyOfGoods;
 }
 
-const SORT_FIELD_ALPH = 'alph';
+const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
 export const App = () => {
@@ -45,6 +45,10 @@ export const App = () => {
   const [sortType, setSortType] = useState('');
   const sortedGoods
   = getSortedGoods(goodsFromServer, { sortType, isReverse });
+  const reset = () => {
+    setSortType('');
+    setIsReverse(false);
+  };
 
   return (
     <div className="section content">
@@ -54,10 +58,10 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': sortType !== SORT_FIELD_ALPH },
+            { 'is-light': sortType !== SORT_FIELD_ALPHABET },
           )}
           onClick={() => {
-            setSortType(SORT_FIELD_ALPH);
+            setSortType(SORT_FIELD_ALPHABET);
           }}
         >
           Sort alphabetically
@@ -84,13 +88,7 @@ export const App = () => {
             'is-warning',
             { 'is-light': isReverse === false },
           )}
-          onClick={(isReverse === false)
-            ? () => {
-              setIsReverse(true);
-            }
-            : () => {
-              setIsReverse(false);
-            }}
+          onClick={() => setIsReverse(!isReverse)} // altered into a simpler expression
         >
           Reverse
         </button>
@@ -103,10 +101,7 @@ export const App = () => {
             'is-danger',
             'is-light',
           )}
-          onClick={() => {
-            setSortType('');
-            setIsReverse(false);
-          }}
+          onClick={reset} // made into separate function
         >
           Reset
         </button>
