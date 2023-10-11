@@ -78,7 +78,6 @@ export const App = () => {
               if (button.value === SORT_FIELD_REVERSE) {
                 setIsReversed(!isReversed);
               } else {
-                setIsReversed(false);
                 setSortField(button.value);
               }
             }}
@@ -103,7 +102,10 @@ export const App = () => {
 
       <ul>
         {goods.map(good => (
-          <li data-cy="Good" key={good}>
+          <li
+            data-cy="Good"
+            key={good}
+          >
             {good}
           </li>
         ))}
