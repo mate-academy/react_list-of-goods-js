@@ -42,14 +42,53 @@ function sortGoods(goods, type, reverse) {
 
 export const App = () => {
   const [sortType, setSortType] = useState(false);
-  const [sortReverse, setSortReverse] = useState(false);
-  const goods = sortGoods(goodsFromServer, sortType, sortReverse);
+  const [isReversed, setisReversed] = useState(false);
+  const goods = sortGoods(goodsFromServer, sortType, isReversed);
+
+  function isLight(name) {
+    switch (name) {
+      case 'Sort alphabetically':
+        return sortType !== name;
+      case 'Sort by length':
+        return sortType !== name;
+      case 'Reverse':
+        return !isReversed;
+      case 'Reset':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function clickEvent(name) {
+    switch (name) {
+      case 'Sort alphabetically':
+        return setSortType(name);
+      case 'Sort by length':
+        return setSortType(name);
+      case 'Reverse':
+        return (isReversed)
+          ? setisReversed(false)
+          : setisReversed(true);
+      case 'Reset':
+        return (
+          setisReversed(false),
+          setSortType(false)
+        );
+      default:
+        return false;
+    }
+  }
+
+  function enethingButReset(name) {
+    return name !== 'Reset' || (sortType || isReversed);
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         {sortBy.map(el => (
-          (el.name !== 'Reset' || (sortType || sortReverse)) && (
+          (enethingButReset(el.name)) && (
             <button
               type="button"
               key={el.name}
@@ -57,40 +96,11 @@ export const App = () => {
                 'button',
                 el.color,
                 {
-                  'is-light': (() => {
-                    switch (el.name) {
-                      case 'Sort alphabetically':
-                        return sortType !== el.name;
-                      case 'Sort by length':
-                        return sortType !== el.name;
-                      case 'Reverse':
-                        return !sortReverse;
-                      case 'Reset':
-                        return true;
-                      default:
-                        return false;
-                    }
-                  })(),
+                  'is-light': isLight(el.name),
                 },
               )}
               onClick={() => {
-                switch (el.name) {
-                  case 'Sort alphabetically':
-                    return setSortType(el.name);
-                  case 'Sort by length':
-                    return setSortType(el.name);
-                  case 'Reverse':
-                    return (sortReverse)
-                      ? setSortReverse(false)
-                      : setSortReverse(true);
-                  case 'Reset':
-                    return (
-                      setSortReverse(false),
-                      setSortType(false)
-                    );
-                  default:
-                    return false;
-                }
+                clickEvent(el.name);
               }}
             >
               {el.name}
@@ -106,7 +116,6 @@ export const App = () => {
           </li>
         ))}
       </ul>
-
     </div>
   );
 };
