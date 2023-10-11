@@ -43,14 +43,16 @@ const sortByParams = (toSortArray, sortType, reversing) => {
 };
 
 export const App = () => {
-  const [sortType, setType] = useState('');
-  const [reversed, setReverse] = useState(false);
+  const [sortType, setSortType] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const reset = () => {
-    setType('');
-    setReverse(false);
+    setSortType('');
+    setIsReversed(false);
   };
 
-  const sorted = sortByParams(goodsFromServer, sortType, reversed);
+  const sortedGoods = sortByParams(goodsFromServer, sortType, isReversed);
+
+  const isSorted = sortType || isReversed;
 
   return (
     <div className="section content">
@@ -59,8 +61,8 @@ export const App = () => {
           <button
             onClick={() => (
               button.sortType === 'Reverse'
-                ? setReverse(!reversed)
-                : setType(button.sortType)
+                ? setIsReversed(prevState => !prevState)
+                : setSortType(button.sortType)
             )
             }
             type="button"
@@ -69,7 +71,7 @@ export const App = () => {
                 'button',
                 button.buttonStyle,
                 { 'is-light': button.sortType === 'Reverse'
-                  ? !reversed
+                  ? !isReversed
                   : button.sortType !== sortType },
               )
             }
@@ -78,10 +80,10 @@ export const App = () => {
           </button>
         ))}
 
-        {(sortType || reversed)
+        {isSorted
           && (
             <button
-              onClick={() => reset()}
+              onClick={reset}
               type="button"
               className="button is-danger is-light"
             >
@@ -91,7 +93,11 @@ export const App = () => {
       </div>
 
       <ul>
-        {sorted.map(elem => <li data-cy="Good" key={elem}>{elem}</li>)}
+        {sortedGoods.map(elem => (
+          <li data-cy="Good" key={elem}>
+            {elem}
+          </li>
+        ))}
       </ul>
     </div>
   );
