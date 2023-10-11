@@ -47,7 +47,7 @@ function getPreparedGoods(
 }
 
 export const App = () => {
-  const [isSorting, setIsSorting] = useState('');
+  const [isSorting, setSortBy] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
   const goodsList = getPreparedGoods(
@@ -58,7 +58,7 @@ export const App = () => {
   const showResetBtn = (isSorting !== '') || isReversed;
 
   const handleClickReset = () => {
-    setIsSorting('');
+    setSortBy('');
     setIsReversed(false);
   };
 
@@ -68,7 +68,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${isSorting !== SORT_BY_ALPHABET && 'is-light'} `}
-          onClick={() => setIsSorting(SORT_BY_ALPHABET)}
+          onClick={() => setSortBy(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -76,7 +76,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${isSorting !== SORT_BY_LENGTH && 'is-light'}`}
-          onClick={() => setIsSorting(SORT_BY_LENGTH)}
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -84,7 +84,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${!isReversed && 'is-light'}`}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => setIsReversed(prevVal => !prevVal)}
         >
           Reverse
         </button>
