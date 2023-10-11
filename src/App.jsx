@@ -1,5 +1,4 @@
 import 'bulma/css/bulma.css';
-import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
 import cn from 'classnames';
 import './App.scss';
@@ -26,8 +25,9 @@ const getPreparedGoods = (goods, visibleGoods, reversed) => {
     copyGoods.sort((good1, good2) => {
       switch (visibleGoods) {
         case SORT__ALPHABETICALLY: return good1.localeCompare(good2);
-        default: return 0;
         case SORT__BY__LENGTH: return good1.length - good2.length;
+
+        default: return 0;
       }
     });
   }
@@ -47,7 +47,6 @@ const getPreparedGoods = (goods, visibleGoods, reversed) => {
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(null);
   const [reversed, setReversed] = useState(false);
-
   const preparedGoods = getPreparedGoods(
     goodsFromServer, visibleGoods, reversed,
   );
@@ -90,7 +89,7 @@ export const App = () => {
           onClick={() => (
             !reversed
               ? setReversed('reverse')
-              : setReversed('')
+              : setReversed(false)
           )}
         >
           Reverse
@@ -105,7 +104,7 @@ export const App = () => {
             )}
             onClick={() => {
               setVisibleGoods(null);
-              setReversed(false);
+              setReversed('');
             }}
           >
             Reset
@@ -117,7 +116,6 @@ export const App = () => {
         {preparedGoods.map(good => (
           <li
             data-cy="Good"
-            key={uuidv4()}
           >
             {good}
           </li>
