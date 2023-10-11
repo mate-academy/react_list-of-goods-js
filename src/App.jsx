@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,19 +16,23 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FILD_BY_ALPHABET = 'SORT_FILD_BY_ALPHABET';
+const SORT_BY_ALPHABET = 'SORT_BY_ALPHABET ';
 const SORT_BY_LENGTH = 'SORT_BY_LENGTH';
 
-function getPrepeadGoods(goods, sortFiled, reverse) {
-  const prepearedGoods = [...goods];
+function getPreparedGoods(
+  goods,
+  sortField,
+  reverse,
+) {
+  const preparedGoods = [...goods];
 
-  if (sortFiled) {
-    prepearedGoods.sort((good1, good2) => {
-      switch (sortFiled) {
-        case SORT_FILD_BY_ALPHABET:
-          return good1.nameGood.localeCompare(good2.nameGood);
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
         case SORT_BY_LENGTH:
-          return good1.nameGood.length - good2.nameGood.length;
+          return good1.length - good2.length;
         default:
           return 0;
       }
@@ -35,50 +40,51 @@ function getPrepeadGoods(goods, sortFiled, reverse) {
   }
 
   if (reverse) {
-    return prepearedGoods.reverse();
+    return preparedGoods.reverse();
   }
 
-  return prepearedGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
-  const goodsFromServerObjekt = goodsFromServer
-    .map((item, index) => ({ nameGood: item, id: index + 1 }));
+  const [isSorting, setIsSorting] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-  const [sortBtnFild, setSortBtnFild] = useState('');
-  const [reverseList, setReversedList] = useState(false);
-
-  const goodsList = getPrepeadGoods(
-    goodsFromServerObjekt,
-    sortBtnFild,
-    reverseList,
+  const goodsList = getPreparedGoods(
+    goodsFromServer,
+    isSorting,
+    isReversed,
   );
+  const showResetBtn = (isSorting !== '') || isReversed;
 
-  const showResetBtn = (sortBtnFild !== '') || reverseList;
+  const handleClickReset = () => {
+    setIsSorting('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortBtnFild !== SORT_FILD_BY_ALPHABET && 'is-light'} `}
-          onClick={() => setSortBtnFild(SORT_FILD_BY_ALPHABET)}
+          className={`button is-info ${isSorting !== SORT_BY_ALPHABET && 'is-light'} `}
+          onClick={() => setIsSorting(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortBtnFild !== SORT_BY_LENGTH && 'is-light'}`}
-          onClick={() => setSortBtnFild(SORT_BY_LENGTH)}
+          className={`button is-success ${isSorting !== SORT_BY_LENGTH && 'is-light'}`}
+          onClick={() => setIsSorting(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${!reverseList && 'is-light'}`}
-          onClick={() => setReversedList(!reverseList)}
+          className={`button is-warning ${!isReversed && 'is-light'}`}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
@@ -87,10 +93,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortBtnFild('');
-              setReversedList(false);
-            }}
+            onClick={handleClickReset}
           >
             Reset
           </button>
@@ -99,11 +102,11 @@ export const App = () => {
 
       <ul>
         {goodsList.map((good) => {
-          const { nameGood, id } = good;
+          const idUuid = uuidv4();
 
           return (
-            <li key={id} data-cy="Good">
-              {nameGood}
+            <li key={idUuid} data-cy="Good">
+              {good}
             </li>
           );
         })}
