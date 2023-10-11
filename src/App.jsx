@@ -20,12 +20,10 @@ const SORT_FIELD_ALPHABET = 'Alphabet';
 const SORT_FIELD_LENGTH = 'Length';
 const FIELD_REVERSE = 'Reverse';
 
-export const App = () => {
-  const [sortField, setSortField] = useState(null);
-  const [reverseField, setReverseField] = useState(null);
-  let visibleGoods = [...goodsFromServer];
+function getSortedPeople(goods, sort, reverse) {
+  let visibleGoods = [...goods];
 
-  switch (sortField) {
+  switch (sort) {
     case SORT_FIELD_ALPHABET:
       visibleGoods = visibleGoods.sort((
         good1, good2,
@@ -41,9 +39,22 @@ export const App = () => {
       break;
   }
 
-  if (reverseField) {
+  if (reverse) {
     visibleGoods = visibleGoods.reverse();
   }
+
+  return visibleGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState(null);
+  const [reverseField, setReverseField] = useState(false);
+
+  const sortedPeople = getSortedPeople(
+    goodsFromServer,
+    sortField,
+    reverseField,
+  );
 
   return (
     <div className="section content">
@@ -52,9 +63,7 @@ export const App = () => {
           type="button"
           className={cn('button is-info',
             { 'is-light': sortField !== SORT_FIELD_ALPHABET })}
-          onClick={() => setSortField(sortField === SORT_FIELD_ALPHABET
-            ? null
-            : SORT_FIELD_ALPHABET)}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -63,9 +72,7 @@ export const App = () => {
           type="button"
           className={cn('button is-success',
             { 'is-light': sortField !== SORT_FIELD_LENGTH })}
-          onClick={() => setSortField(sortField === SORT_FIELD_LENGTH
-            ? null
-            : SORT_FIELD_LENGTH)}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -75,8 +82,8 @@ export const App = () => {
           className={cn('button is-warning',
             { 'is-light': reverseField !== FIELD_REVERSE })}
           onClick={() => setReverseField(reverseField === FIELD_REVERSE
-            ? null
-            : FIELD_REVERSE)}
+            ? false
+            : 'Reverse')}
         >
           Reverse
         </button>
@@ -96,7 +103,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {sortedPeople.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
