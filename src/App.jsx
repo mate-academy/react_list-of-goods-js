@@ -39,6 +39,11 @@ export const App = () => {
 
         case SORT_FIELD_LENGTH:
           result = a.length - b.length;
+
+          if (result === 0) {
+            result = a.localeCompare(b);
+          }
+
           break;
 
         default:
