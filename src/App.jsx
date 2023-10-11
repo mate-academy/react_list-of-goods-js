@@ -100,7 +100,7 @@ export const App = () => {
             type="button"
             className={cn(
               'button',
-              { 'is-danger': visibleGoods || reversed },
+              { 'is-danger is-light': visibleGoods || reversed },
             )}
             onClick={() => {
               setVisibleGoods(null);
