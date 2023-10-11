@@ -25,7 +25,7 @@ const buttons = [
   { sortType: 'Reverse', buttonStyle: 'is-warning' },
 ];
 
-const sortByParams = (toSortArray, sortType, reversing) => {
+const sortByParams = (toSortArray, sortType, isReversed) => {
   const array = [...toSortArray];
 
   switch (sortType) {
@@ -39,7 +39,7 @@ const sortByParams = (toSortArray, sortType, reversing) => {
       break;
   }
 
-  return reversing ? array.reverse() : array;
+  return isReversed ? array.reverse() : array;
 };
 
 export const App = () => {
