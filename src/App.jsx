@@ -1,7 +1,7 @@
-import 'bulma/css/bulma.css';
 import { useState } from 'react';
-import cn from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
+import cn from 'classnames';
+import 'bulma/css/bulma.css';
 import './App.scss';
 
 export const goodsFromServer = [
