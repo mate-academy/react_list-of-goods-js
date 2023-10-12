@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 
 import 'bulma/css/bulma.css';
@@ -126,6 +126,7 @@ export const App = () => {
         {visibleGoods.map(good => (
           <li
             data-cy="Good"
+            key={good}
           >
             {good}
           </li>
