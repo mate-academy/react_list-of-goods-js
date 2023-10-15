@@ -53,7 +53,35 @@ export const App = () => {
   const [alphabet, setAlphabet] = useState(false);
   const [length, setLength] = useState(false);
   const [isReset, setIsReset] = useState(false);
+
   const copyVisibleGoods = [...visibleGoods];
+
+  const sortByLength = () => {
+    setSortField(SORT_BY_LENGTH);
+    setVisibleGoods(
+      getPreparedGood(visibleGoods, SORT_BY_LENGTH, reverse),
+    );
+    setLength(true);
+    setAlphabet(false);
+    setIsReset(true);
+  }
+  const sortByReverse = () => {
+    setReverse(!reverse);
+    setSortField(SORT_BY_REVERSE);
+    setVisibleGoods(getPreparedGood(visibleGoods, sortField, !reverse));
+    setIsReset(
+      JSON.stringify(copyVisibleGoods.reverse())
+      !== JSON.stringify(goodsFromServer),
+    );
+  }
+  const resetGoods = () => {
+    setSortField('');
+    setVisibleGoods(goodsFromServer);
+    setAlphabet(false);
+    setLength(false);
+    setReverse(false);
+    setIsReset(false);
+  }
 
   return (
     <div className="section content">
@@ -61,8 +89,8 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            '': alphabet === true,
-            'is-light': alphabet === false,
+            '': alphabet,
+            'is-light': !alphabet,
           })}
           onClick={() => {
             setSortField(SORT_BY_ALPHABETICALLY);
@@ -80,18 +108,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            '': length === true,
-            'is-light': length === false,
+            '': length,
+            'is-light': !length,
           })}
-          onClick={() => {
-            setSortField(SORT_BY_LENGTH);
-            setVisibleGoods(
-              getPreparedGood(visibleGoods, SORT_BY_LENGTH, reverse),
-            );
-            setLength(true);
-            setAlphabet(false);
-            setIsReset(true);
-          }}
+          onClick={() => sortByLength()}
         >
           Sort by length
         </button>
@@ -102,15 +122,7 @@ export const App = () => {
             '': reverse,
             'is-light': !reverse,
           })}
-          onClick={() => {
-            setReverse(!reverse);
-            setSortField(SORT_BY_REVERSE);
-            setVisibleGoods(getPreparedGood(visibleGoods, sortField, !reverse));
-            setIsReset(
-              JSON.stringify(copyVisibleGoods.reverse())
-              !== JSON.stringify(goodsFromServer),
-            );
-          }}
+          onClick={() => sortByReverse()}
         >
           Reverse
         </button>
@@ -122,14 +134,7 @@ export const App = () => {
               '': sortField === '',
               'is-light': sortField !== '',
             })}
-            onClick={() => {
-              setSortField('');
-              setVisibleGoods(goodsFromServer);
-              setAlphabet(false);
-              setLength(false);
-              setReverse(false);
-              setIsReset(false);
-            }}
+            onClick={() => resetGoods()}
           >
             Reset
           </button>
