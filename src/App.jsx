@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -25,7 +24,7 @@ function getPreparedGoods(
   sortField,
   reverse,
 ) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
     switch (sortField) {
@@ -36,7 +35,7 @@ function getPreparedGoods(
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
         break;
       default:
-        preparedGoods = [...preparedGoods];
+        break;
     }
   }
 
@@ -49,20 +48,12 @@ function getPreparedGoods(
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const sortedGoods = getPreparedGoods(
     goodsFromServer,
     sortField,
-    reverseField,
+    isReversed,
   );
-
-  const resetReverse = () => {
-    if (reverseField || sortField) {
-      return true;
-    }
-
-    return false;
-  };
 
   return (
     <div className="section content">
@@ -96,20 +87,20 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': !reverseField },
+            { 'is-light': !isReversed },
           )}
-          onClick={() => setReverseField(!reverseField)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {reverseField || (sortField && (
+        {isReversed || (sortField && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField('');
-              setReverseField(false);
+              setIsReversed(false);
             }}
           >
             Reset
