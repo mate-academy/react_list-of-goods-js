@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY = 'alphabetically';
 const SORT_LENGTH = 'length';
 
-function getPreparedGood(goods, { sortField, isReverse }) {
+function getPreparedGood(goods, { sortField, isReversed }) {
   const prepeardeGoods = [...goods];
 
   if (sortField) {
@@ -36,7 +36,7 @@ function getPreparedGood(goods, { sortField, isReverse }) {
     });
   }
 
-  if (isReverse) {
+  if (isReversed) {
     prepeardeGoods.reverse();
   }
 
@@ -45,9 +45,22 @@ function getPreparedGood(goods, { sortField, isReverse }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGood(goodsFromServer,
-    { sortField, isReverse });
+    { sortField, isReversed });
+
+  const handleReverseClick = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleResetClick = () => {
+    setIsReversed(false);
+    setSortField('');
+  };
+
+  const handleSortClick = () => {
+    setSortField(SORT_ALPHABETICALLY);
+  };
 
   return (
     <div className="section content">
@@ -60,7 +73,7 @@ export const App = () => {
               'is-light': sortField !== SORT_ALPHABETICALLY,
             },
           )}
-          onClick={() => setSortField(SORT_ALPHABETICALLY)}
+          onClick={handleSortClick}
         >
           Sort alphabetically
         </button>
@@ -83,22 +96,19 @@ export const App = () => {
           className={cn(
             'button is-warning',
             {
-              'is-light': !isReverse,
+              'is-light': !isReversed,
             },
           )}
-          onClick={() => setIsReverse(!isReverse)}
+          onClick={handleReverseClick}
         >
           Reverse
         </button>
 
-        {(isReverse || sortField) && (
+        {(isReversed || sortField) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setIsReverse(false);
-              setSortField('');
-            }}
+            onClick={handleResetClick}
           >
             Reset
           </button>
