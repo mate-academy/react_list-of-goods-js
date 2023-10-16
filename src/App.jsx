@@ -31,9 +31,11 @@ function getPreparedGoods(
       case SORT_FIELD_ALPH:
         preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
         break;
+
       case SORT_FIELD_LENGTH:
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
         break;
+
       default:
         break;
     }
@@ -48,12 +50,19 @@ function getPreparedGoods(
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReversed, setIsReversed] = useState(false);
-  const sortedGoods = getPreparedGoods(
+  const [reverseField, setReverseField] = useState(false);
+  const sortedGods = getPreparedGoods(
     goodsFromServer,
-    sortField,
-    isReversed,
+    { sortField },
+    reverseField,
   );
+  const resetReverse = () => {
+    if (reverseField || sortField !== '') {
+      return true;
+    }
+
+    return false;
+  };
 
   return (
     <div className="section content">
@@ -87,30 +96,37 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': !isReversed },
+            { 'is-light': !reverseField },
           )}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => {
+            if (!reverseField) {
+              setReverseField(true);
+            } else {
+              setReverseField(false);
+            }
+          }}
         >
           Reverse
         </button>
 
-        {isReversed || (sortField && (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
-          >
-            Reset
-          </button>
-        ))}
+        {resetReverse()
+          && (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={() => {
+                setSortField('');
+                setReverseField(false);
+              }}
+            >
+              Reset
+            </button>
+          )}
       </div>
 
       <ul>
-        {sortedGoods.map(good => (
-          <li key={good} data-cy="Good">
+        {sortedGods.map(good => (
+          <li data-cy="Good">
             {good}
           </li>
         ))}
