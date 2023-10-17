@@ -20,7 +20,7 @@ const SORT_FIELD_ALPH = 'alph';
 const SORT_FIELD_LENGTH = 'length';
 
 function getPreparedGoods(goods, sortField, reverse) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
     switch (sortField) {
@@ -31,8 +31,7 @@ function getPreparedGoods(goods, sortField, reverse) {
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
         break;
       default:
-        // Додано відсутній випадок default
-        preparedGoods = [...preparedGoods];
+        break;
     }
   }
 
@@ -45,15 +44,15 @@ function getPreparedGoods(goods, sortField, reverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const sortedGoods = getPreparedGoods(
     goodsFromServer,
     sortField,
-    reverseField,
+    isReversed,
   );
 
   const resetReverse = () => {
-    if (reverseField || sortField) {
+    if (isReversed || sortField) {
       return true;
     }
 
@@ -92,9 +91,9 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': !reverseField },
+            { 'is-light': !isReversed },
           )}
-          onClick={() => setReverseField(!reverseField)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
@@ -105,7 +104,7 @@ export const App = () => {
             className={cn('button', 'is-danger', 'is-light')}
             onClick={() => {
               setSortField('');
-              setReverseField(false);
+              setIsReversed(false);
             }}
           >
             Reset
