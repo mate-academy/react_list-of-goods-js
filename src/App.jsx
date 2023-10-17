@@ -31,6 +31,7 @@ function getPreparedGoods(goods, sortField, reverse) {
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
         break;
       default:
+        // Додано відсутній випадок default
         preparedGoods = [...preparedGoods];
     }
   }
@@ -101,7 +102,7 @@ export const App = () => {
         {resetReverse() && (
           <button
             type="button"
-            className="button is-danger is-light"
+            className={cn('button', 'is-danger', 'is-light')}
             onClick={() => {
               setSortField('');
               setReverseField(false);
