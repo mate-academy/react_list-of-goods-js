@@ -15,21 +15,21 @@ export const SORT_FIELD_ALPHABET = 'alphabet';
 export const SORT_FIELD_LENGTH = 'length';
 
 export const sortedData = (sortField, reverse) => {
-  let data;
+  const data = [...goodsFromServer];
 
   switch (sortField) {
     case SORT_FIELD_ALPHABET:
-      data = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+      data.sort((a, b) => a.localeCompare(b));
       break;
     case SORT_FIELD_LENGTH:
-      data = [...goodsFromServer].sort((a, b) => a.length - b.length);
+      data.sort((a, b) => a.length - b.length);
       break;
     default:
-      data = [...goodsFromServer];
+      break;
   }
 
   if (reverse) {
-    data = data.reverse();
+    data.reverse();
   }
 
   return data;
