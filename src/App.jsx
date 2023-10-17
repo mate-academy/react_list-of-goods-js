@@ -59,6 +59,8 @@ export const App = () => {
     return false;
   };
 
+  const shouldReset = resetReverse();
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -98,7 +100,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {resetReverse() && (
+        {shouldReset && (
           <button
             type="button"
             className={cn('button', 'is-danger', 'is-light')}
