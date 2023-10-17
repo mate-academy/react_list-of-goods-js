@@ -58,8 +58,12 @@ export const App = () => {
     setSortField('');
   };
 
-  const handleSortClick = () => {
+  const handleSortAlphabeticallyClick = () => {
     setSortField(SORT_ALPHABETICALLY);
+  };
+
+  const handleSortLengthClick = () => {
+    setSortField(SORT_LENGTH);
   };
 
   return (
@@ -73,7 +77,7 @@ export const App = () => {
               'is-light': sortField !== SORT_ALPHABETICALLY,
             },
           )}
-          onClick={handleSortClick}
+          onClick={handleSortAlphabeticallyClick}
         >
           Sort alphabetically
         </button>
@@ -86,7 +90,7 @@ export const App = () => {
               'is-light': sortField !== SORT_LENGTH,
             },
           )}
-          onClick={() => setSortField(SORT_LENGTH)}
+          onClick={handleSortLengthClick}
         >
           Sort by length
         </button>
