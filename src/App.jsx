@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import classNames from 'classnames';
 
 export const App = () => {
   const initialGoods = [
@@ -50,7 +52,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortOrder === 'alphabetical' ? '' : 'is-light'}`}
+          className={classNames('button is-info', { 'is-light': sortOrder !== 'alphabetical' })}
           onClick={() => handleSort('alphabetical')}
         >
           Sort alphabetically
@@ -58,7 +60,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortOrder === 'length' ? '' : 'is-light'}`}
+          className={classNames('button is-success', { 'is-light': sortOrder !== 'length' })}
           onClick={() => handleSort('length')}
         >
           Sort by length
@@ -66,11 +68,8 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${sortOrder === 'reverse' ? '' : 'is-light'}`}
-          onClick={() => {
-            handleSort(sortOrder === 'reverse' ? 'initial' : 'reverse');
-          }
-          }
+          className={classNames('button is-warning', { 'is-light': sortOrder !== 'reverse' })}
+          onClick={() => handleSort(sortOrder === 'reverse' ? 'initial' : 'reverse')}
         >
           Reverse
         </button>
