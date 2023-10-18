@@ -51,15 +51,7 @@ export const App = () => {
     isReversed,
   );
 
-  const resetReverse = () => {
-    if (isReversed || sortField) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const shouldReset = resetReverse();
+  const shouldReset = isReversed || sortField;
 
   return (
     <div className="section content">
