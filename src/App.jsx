@@ -25,25 +25,25 @@ export const App = () => {
   const handleSort = (order) => {
     let sortedGoods = [...goods];
 
+    switch (order) {
+      case 'alphabetical':
+        sortedGoods.sort((a, b) => a.localeCompare(b));
+        break;
+      case 'length':
+        sortedGoods.sort((a, b) => a.length - b.length);
+        break;
+      case 'reverse':
+        sortedGoods.reverse();
+        break;
+      case 'initial':
+        sortedGoods = initialGoods;
+        break;
+      default:
+        break;
+    }
+
     if (isReversed) {
       sortedGoods.reverse();
-    } else {
-      switch (order) {
-        case 'alphabetical':
-          sortedGoods.sort((a, b) => a.localeCompare(b));
-          break;
-        case 'length':
-          sortedGoods.sort((a, b) => a.length - b.length);
-          break;
-        case 'reverse':
-          sortedGoods.reverse();
-          break;
-        case 'initial':
-          sortedGoods = initialGoods;
-          break;
-        default:
-          break;
-      }
     }
 
     setGoods(sortedGoods);
@@ -52,17 +52,18 @@ export const App = () => {
 
   const showResetButton = sortOrder !== 'initial';
 
-  const handleReverse = () => {
-    setIsReversed(!isReversed);
-  };
-
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
           className={classNames('button is-info', { 'is-light': sortOrder !== 'alphabetical' })}
-          onClick={() => handleSort('alphabetical')}
+          onClick={() => {
+            handleSort('alphabetical');
+            if (isReversed) {
+              setIsReversed(!isReversed);
+            }
+          }}
         >
           Sort alphabetically
         </button>
@@ -70,17 +71,22 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-success', { 'is-light': sortOrder !== 'length' })}
-          onClick={() => handleSort('length')}
+          onClick={() => {
+            handleSort('length');
+            if (isReversed) {
+              setIsReversed(!isReversed);
+            }
+          }}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={classNames('button is-warning', { 'is-light': sortOrder !== 'reverse' })}
+          className={classNames('button', 'is-warning', { 'is-light': !isReversed && sortOrder !== 'reverse' })}
           onClick={() => {
             handleSort(sortOrder === 'reverse' ? 'initial' : 'reverse');
-            handleReverse();
+            setIsReversed(!isReversed);
           }}
         >
           Reverse
@@ -90,7 +96,12 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger"
-            onClick={() => handleSort('initial')}
+            onClick={() => {
+              handleSort('initial');
+              if (isReversed) {
+                setIsReversed(!isReversed);
+              }
+            }}
           >
             Reset
           </button>
