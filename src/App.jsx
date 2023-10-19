@@ -46,8 +46,6 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-
-
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
   return (
@@ -89,7 +87,9 @@ export const App = () => {
               className="button is-danger is-light"
               onClick={() => {
                 setSortField('');
-                isReversed ? setIsReversed(!isReversed) : null;
+                if (isReversed) {
+                  setIsReversed(!isReversed);
+                }
               }}
             >
               Reset
