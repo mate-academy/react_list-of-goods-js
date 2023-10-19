@@ -59,8 +59,6 @@ export const App = () => {
 
     if (sortType !== activeSort || (sortType === 'reverse' && isReversed)) {
       sortFunctions[sortType]();
-    } else {
-      sortFunctions[reset]();
     }
   };
 
