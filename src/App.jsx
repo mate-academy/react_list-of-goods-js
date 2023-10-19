@@ -20,21 +20,19 @@ const SORT_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_BY_LENGTH = 'Sort by length';
 
 function getSortedGoods(goods, sortField, reversed) {
-  let sortedGoods = [...goods];
+  const sortedGoods = [...goods];
 
   if (sortField) {
-    switch (sortField) {
-      case SORT_ALPHABETICALLY:
-        sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
-        break;
-
-      case SORT_BY_LENGTH:
-        sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
-        break;
-
-      default:
-        return 0;
-    }
+    sortedGoods.sort((a, b) => {
+      switch (sortField) {
+        case SORT_ALPHABETICALLY:
+          return a.localeCompare(b);
+        case SORT_BY_LENGTH:
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
   }
 
   if (reversed) {
@@ -114,13 +112,13 @@ export const App = () => {
         )}
       </div>
 
-      {visibleGoods.map(good => (
-        <ul>
-          <li key={good} data-cy="Good">
+      <ul>
+        {visibleGoods.map(good => (
+          <li key={good.id} data-cy="Good">
             {good}
           </li>
-        </ul>
-      ))}
+        ))}
+      </ul>
     </div>
   );
 };
