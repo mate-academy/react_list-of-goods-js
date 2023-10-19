@@ -17,33 +17,51 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
+  const [activeSort, setActiveSort] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
+  const reset = 'reset';
+  const alphabeticaly = 'alphabeticaly';
+  const length = 'byLength';
+  const reverse = 'reverse';
+  const isSorted = activeSort !== null;
 
-  const sortAlphabetically = () => {
-    const sortedGoods
-      = [...goods].sort((a, b) => a[0].localeCompare(b[0],
-        'en', { sensitivity: 'base' }));
+  const handleSort = (sortType) => {
+    const sortFunctions = {
+      alphabeticaly: () => {
+        const sortedGoods
+          = [...goods].sort((a, b) => a[0].localeCompare(b[0],
+            'en', { sensitivity: 'base' }));
 
-    setGoods(sortedGoods);
-    console.log('Alphabet sort');
-  };
+        setGoods(sortedGoods);
+        setActiveSort(sortType);
+        setIsReversed(false);
+      },
+      byLength: () => {
+        const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
 
-  const sortByLength = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
+        setGoods(sortedGoods);
+        setActiveSort(sortType);
+        setIsReversed(false);
+      },
+      reverse: () => {
+        const reversedGoods = [...goods].reverse();
 
-    setGoods(sortedGoods);
-    console.log('Length sort');
-  };
+        setGoods(reversedGoods);
+        setActiveSort(sortType);
+        setIsReversed(!isReversed);
+      },
+      reset: () => {
+        setGoods(goodsFromServer);
+        setActiveSort(null);
+        setIsReversed(false);
+      },
+    };
 
-  const reverseGoods = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-    console.log('Reverse sort');
-  };
-
-  const resetGoods = () => {
-    setGoods(goodsFromServer);
-    console.log('Reset sort');
+    if (sortType !== activeSort || (sortType === 'reverse' && isReversed)) {
+      sortFunctions[sortType]();
+    } else {
+      sortFunctions[reset]();
+    }
   };
 
   return (
@@ -51,42 +69,46 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortAlphabetically ? 'is-light' : ''}`}
-          onClick={sortAlphabetically}
+          className={`button is-info ${activeSort === alphabeticaly ? 'is-info' : 'is-light'}`}
+          onClick={() => handleSort(alphabeticaly)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className="button is-success is-light"
-          onClick={sortByLength}
+          className={`button is-success ${activeSort === length ? 'is-info' : 'is-light'}`}
+          onClick={() => handleSort(length)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className="button is-warning is-light"
-          onClick={reverseGoods}
+          className={`button is-warning ${activeSort === reverse ? 'is-info' : 'is-light'}`}
+          onClick={() => handleSort(reverse)}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={resetGoods}
-        >
-          Reset
-        </button>
+        {isSorted ? (
+          <button
+            type="button"
+            className={`button is-danger ${activeSort === 'reset' ? 'is-info' : 'is-light'}`}
+            onClick={() => handleSort('reset')}
+          >
+            Reset
+          </button>
+        ) : null}
+
       </div>
 
       <ul>
-        {goodsFromServer.map(good => (
-          <li data-cy="Good">{good}</li>
+        {goods.map(good => (
+          <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
+
     </div>
   );
 };
