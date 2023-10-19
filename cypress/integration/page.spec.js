@@ -9,7 +9,7 @@ const page = {
     page.goods().eq(0).should('have.text', first);
     page.goods().eq(1).should('have.text', second);
     page.goods().eq(2).should('have.text', third);
-  }
+  },
 };
 
 const NOT_ACTIVE_CLASS = 'is-light';
@@ -23,6 +23,7 @@ Cypress.on('fail', (e) => {
 
 describe('Page', () => {
   beforeEach(() => {
+    // eslint-disable-next-line curly
     if (failed) Cypress.runner.stop();
 
     cy.visit('/');
@@ -93,7 +94,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -156,7 +157,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -194,12 +195,12 @@ describe('Page', () => {
 
     it('should allow to reverse again', () => {
       page.reverseButton().click();
-      
+
       page.assertFirstGoods('Apple', 'Bread', 'Carrot');
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -235,7 +236,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -273,12 +274,12 @@ describe('Page', () => {
 
     it('should allow to reverse again', () => {
       page.reverseButton().click();
-      
+
       page.assertFirstGoods('Jam', 'Eggs', 'Fish');
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
