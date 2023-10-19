@@ -24,38 +24,23 @@ export const App = () => {
   const [isReverse, setIsReverse] = useState(false);
   const visibleGoods = [...goodsFromServer];
 
-  if (isReverse && !sortField) {
-    visibleGoods.reverse();
-  }
-
   if (sortField) {
     visibleGoods.sort((a, b) => {
-      let result;
-
       switch (sortField) {
         case SORT_FIELD_ALPHABET:
-          result = a.localeCompare(b);
-          break;
+          return a.localeCompare(b);
 
         case SORT_FIELD_LENGTH:
-          result = a.length - b.length;
-
-          if (result === 0) {
-            result = a.localeCompare(b);
-          }
-
-          break;
+          return a.length - b.length;
 
         default:
           return 0;
       }
-
-      if (isReverse) {
-        return -result;
-      }
-
-      return result;
     });
+  }
+
+  if (isReverse) {
+    visibleGoods.reverse();
   }
 
   return (
