@@ -4,7 +4,7 @@ export const GoodList = ({ goods }) => (
   <ul>
     {
     goods.map(good => (
-      <GoodCard good={good} />
+      <GoodCard key={good.id} good={good} />
     ))
     }
   </ul>

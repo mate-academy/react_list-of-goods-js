@@ -78,7 +78,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isAscending === true,
+            'is-light': isAscending,
           })}
           onClick={toggleSortOrder}
         >
@@ -86,7 +86,7 @@ export const App = () => {
         </button>
 
         {
-          sortField !== '' || isAscending !== true ? (
+          (sortField !== '' || !isAscending) && (
             <button
               type="button"
               className="button is-danger is-light"
@@ -97,8 +97,7 @@ export const App = () => {
             >
               Reset
             </button>
-          ) : null
-        }
+          )}
 
       </div>
 
