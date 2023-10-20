@@ -48,6 +48,13 @@ export const App = () => {
 
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
+  const handleResetClick = () => {
+    setSortField('');
+    if (isReversed) {
+      setIsReversed(!isReversed);
+    }
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -80,29 +87,21 @@ export const App = () => {
         >
           Reverse
         </button>
-        {!!sortField.length || isReversed
-          ? (
+        {(!!sortField.length || isReversed)
+          && (
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                if (isReversed) {
-                  setIsReversed(!isReversed);
-                }
-              }}
+              onClick={handleResetClick}
             >
               Reset
             </button>
           )
-          : null
         }
-
       </div>
-
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
