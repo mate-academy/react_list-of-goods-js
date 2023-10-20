@@ -49,6 +49,11 @@ export const App = () => {
     setIsAscending(!isAscending);
   };
 
+  function reset() {
+    setSortField('');
+    setIsAscending(true);
+  }
+
   const sortedGoods = getPreparedGoods(goodsFromServer, sortField);
   const visibleGoods = isAscending ? sortedGoods : sortedGoods.reverse();
 
@@ -90,10 +95,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setIsAscending(true);
-              }}
+              onClick={reset}
             >
               Reset
             </button>
