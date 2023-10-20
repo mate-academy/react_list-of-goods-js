@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -67,7 +68,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeSort === alphabeticaly ? 'is-info' : 'is-light'}`}
+          className={cn('button', 'is-info', {
+            'is-light': activeSort !== alphabeticaly,
+          })}
           onClick={() => handleSort(alphabeticaly)}
         >
           Sort alphabetically
@@ -75,7 +78,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${activeSort === length ? 'is-info' : 'is-light'}`}
+          className={cn('button', 'is-success', {
+            'is-light': activeSort !== length,
+          })}
           onClick={() => handleSort(length)}
         >
           Sort by length
@@ -83,7 +88,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${activeSort === reverse ? 'is-info' : 'is-light'}`}
+          className={cn('button', 'is-warning', {
+            'is-light': activeSort !== reverse,
+          })}
           onClick={() => handleSort(reverse)}
         >
           Reverse
@@ -92,8 +99,10 @@ export const App = () => {
         {isSorted ? (
           <button
             type="button"
-            className={`button is-danger ${activeSort === 'reset' ? 'is-info' : 'is-light'}`}
-            onClick={() => handleSort('reset')}
+            className={cn('button', 'is-danger', {
+              'is-light': activeSort !== reset,
+            })}
+            onClick={() => handleSort(reset)}
           >
             Reset
           </button>
