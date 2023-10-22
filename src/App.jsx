@@ -25,11 +25,24 @@ export const App = () => {
   function sortGoods(sortValue) {
     switch (sortValue) {
       case 'alphabetically':
-        setGoods([...goods].sort((goodA, goodB) => goodB.localeCompare(goodA)));
+        if (isReversed) {
+          setGoods([...goods]
+            .sort((goodA, goodB) => goodB.localeCompare(goodA)));
+        } else {
+          setGoods([...goods]
+            .sort((goodA, goodB) => goodA.localeCompare(goodB)));
+        }
+
         break;
       case 'length':
-        setGoods([...goods]
-          .sort((goodA, goodB) => goodA.length - goodB.length));
+        if (isReversed) {
+          setGoods([...goods]
+            .sort((goodA, goodB) => goodB.length - goodA.length));
+        } else {
+          setGoods([...goods]
+            .sort((goodA, goodB) => goodA.length - goodB.length));
+        }
+
         break;
       default:
         setGoods(defaultValue);
@@ -81,9 +94,7 @@ export const App = () => {
         {(sort || isReversed) && (
           <button
             type="button"
-            className={cn('button is-danger', {
-              'is-light': sort !== defaultValue,
-            })}
+            className="button is-danger is-light"
             onClick={() => {
               sortGoods('');
               setIsReversed(false);
