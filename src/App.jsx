@@ -24,34 +24,22 @@ const reverse = 'reverse';
 const handleSort = (goods, { activeSort, isReversed }) => {
   const prepearedGoods = [...goods];
 
-  switch (activeSort) {
-    case alphabeticaly:
-      prepearedGoods.sort((a, b) => a[0].localeCompare(b[0],
-        'en', { sensitivity: 'base' }));
-      if (isReversed) {
-        prepearedGoods.reverse();
-      }
+  prepearedGoods.sort((a, b) => {
+    switch (activeSort) {
+      case alphabeticaly:
+        return a.localeCompare(b);
+      case length:
+        return a.length - b.length;
+      default:
+        return 0;
+    }
+  });
 
-      return prepearedGoods;
-
-    case length:
-      prepearedGoods.sort((a, b) => a.length - b.length);
-      if (isReversed) {
-        prepearedGoods.reverse();
-      }
-
-      return prepearedGoods;
-
-    case reverse:
-      if (!isReversed) {
-        prepearedGoods.reverse();
-      }
-
-      return prepearedGoods;
-
-    default:
-      return goods;
+  if (isReversed) {
+    prepearedGoods.reverse();
   }
+
+  return prepearedGoods;
 };
 
 export const App = () => {
@@ -88,8 +76,8 @@ export const App = () => {
             'is-light': activeSort !== reverse && !isReversed,
           })}
           onClick={() => {
+            setActiveSort(reverse);
             setIsReversed(!isReversed);
-            // setActiveSort(reverse);
           }}
         >
           Reverse
