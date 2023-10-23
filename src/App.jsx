@@ -76,22 +76,21 @@ export const App = () => {
             'is-light': activeSort !== reverse && !isReversed,
           })}
           onClick={() => {
-            setActiveSort(reverse);
             setIsReversed(!isReversed);
           }}
         >
           Reverse
         </button>
 
-        {activeSort ? (
+        {activeSort || isReversed ? (
           <button
             type="button"
             className={cn('button', 'is-danger', {
               'is-light': activeSort !== reset,
             })}
             onClick={() => {
-              setActiveSort('');
               setIsReversed(false);
+              setActiveSort('');
             }}
           >
             Reset
