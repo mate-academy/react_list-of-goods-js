@@ -3,7 +3,7 @@ import './App.scss';
 import { useState } from 'react';
 import cn from 'classnames';
 
-export const goodsFromServer = [
+const goodsFromServer = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -16,43 +16,38 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const defaultValue = [...goodsFromServer];
-  const [goods, setGoods] = useState(defaultValue);
-  const [sort, setSort] = useState('');
-  const [isReversed, setIsReversed] = useState(false);
+const SORT_ALPHABET = 'alphabet';
+const SORT_LENGTH = 'length';
 
-  function sortGoods(sortValue) {
-    switch (sortValue) {
-      case 'alphabetically':
-        if (isReversed) {
-          setGoods([...goods]
-            .sort((goodA, goodB) => goodB.localeCompare(goodA)));
-        } else {
-          setGoods([...goods]
-            .sort((goodA, goodB) => goodA.localeCompare(goodB)));
-        }
+const sortGoods = (goods, sort, reverse) => {
+  const sortedGoods = [...goods];
 
-        break;
-      case 'length':
-        if (isReversed) {
-          setGoods([...goods]
-            .sort((goodA, goodB) => goodB.length - goodA.length));
-        } else {
-          setGoods([...goods]
-            .sort((goodA, goodB) => goodA.length - goodB.length));
-        }
-
-        break;
-      default:
-        setGoods(defaultValue);
-    }
-
-    setSort(sortValue);
+  switch (sort) {
+    case SORT_ALPHABET:
+      sortedGoods.sort((goodA, goodB) => goodA.localeCompare(goodB));
+      break;
+    case SORT_LENGTH:
+      sortedGoods.sort((goodA, goodB) => goodA.length - goodB.length);
+      break;
+    default:
+      break;
   }
 
-  const handleReverse = function reverse() {
-    setGoods([...goods].reverse());
+  if (reverse) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
+export const App = () => {
+  const [sort, setSort] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const goodsRender = sortGoods(goodsFromServer, sort, isReversed);
+
+  const reset = () => {
+    setSort('');
+    setIsReversed(false);
   };
 
   return (
@@ -61,9 +56,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sort !== 'alphabetically',
+            'is-light': sort !== SORT_ALPHABET,
           })}
-          onClick={() => sortGoods('alphabetically')}
+          onClick={() => setSort(SORT_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -71,9 +66,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sort !== 'length',
+            'is-light': sort !== SORT_LENGTH,
           })}
-          onClick={() => sortGoods('length')}
+          onClick={() => setSort(SORT_LENGTH)}
         >
           Sort by length
         </button>
@@ -83,10 +78,7 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': isReversed === false,
           })}
-          onClick={() => {
-            setIsReversed(!isReversed);
-            handleReverse();
-          }}
+          onClick={() => setIsReversed(current => !current)}
         >
           Reverse
         </button>
@@ -95,10 +87,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              sortGoods('');
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
@@ -106,7 +95,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {goodsRender.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
