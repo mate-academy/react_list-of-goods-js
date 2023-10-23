@@ -84,7 +84,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField && (
+        {sortField !== '' && (
         <button
           type="button"
           className={sortField === SORT_FIELD_RESET
