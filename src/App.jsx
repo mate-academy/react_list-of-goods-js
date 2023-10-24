@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_FIELD_NAME = 'Sort alphabetically';
 const SORT_FIELD_LENGTH = 'Sort by length';
-const SORT_FIELD_REVERSE = 'Reverse';
 const SORT_FIELD_RESET = 'Reset';
 
 function getPreparedGoods(goods, sortField, isReversed) {
@@ -34,7 +33,7 @@ function getPreparedGoods(goods, sortField, isReversed) {
           return good1.length - good2.length;
 
         default:
-          return preparedGoods;
+          return 0;
       }
     });
   }
@@ -49,6 +48,7 @@ function getPreparedGoods(goods, sortField, isReversed) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
   return (
@@ -80,22 +80,21 @@ export const App = () => {
           className={isReversed
             ? 'button is-warning'
             : 'button is-warning is-light'}
-          onClick={() => (
-            // eslint-disable-next-line
-            setIsReversed(!isReversed),
-            setSortField(SORT_FIELD_REVERSE)
-          )}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed) && (
+        {(sortField || isReversed) && (
         <button
           type="button"
           className={sortField === SORT_FIELD_RESET
             ? 'button is-danger'
             : 'button is-danger is-light'}
-          onClick={() => setSortField('')}
+          onClick={() => {
+            setSortField('');
+            setIsReversed(false);
+          }}
         >
           Reset
         </button>
