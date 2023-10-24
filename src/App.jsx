@@ -18,6 +18,7 @@ export const goodsFromServer = [
 
 const SORT_FIELD_NAME = 'Sort alphabetically';
 const SORT_FIELD_LENGTH = 'Sort by length';
+const SORT_FIELD_REVERSE = 'Reverse';
 const SORT_FIELD_RESET = 'Reset';
 
 function getPreparedGoods(goods, sortField, isReversed) {
@@ -79,12 +80,16 @@ export const App = () => {
           className={isReversed
             ? 'button is-warning'
             : 'button is-warning is-light'}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => (
+            // eslint-disable-next-line
+            setIsReversed(!isReversed),
+            setSortField(SORT_FIELD_REVERSE)
+          )}
         >
           Reverse
         </button>
 
-        {sortField !== '' && (
+        {(sortField !== '' || isReversed) && (
         <button
           type="button"
           className={sortField === SORT_FIELD_RESET
