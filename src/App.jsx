@@ -47,23 +47,19 @@ const getPreparedGoods = (goods, { sortedField, isReverse }) => {
 export const App = () => {
   const [sortedField, setSortedField] = useState('');
   const [isReverse, setIsReverse] = useState(false);
-  const [showReset, setShowReset] = useState(false);
   const goods = getPreparedGoods(goodsFromServer, { sortedField, isReverse });
 
   const sortByAlphabet = () => {
     setSortedField(SORT_BY_ALPHABET);
-    setShowReset(true);
   };
 
   const sortByLength = () => {
     setSortedField(SORT_BY_LENGTH);
-    setShowReset(true);
   };
 
   const reset = () => {
     setSortedField('');
     setIsReverse(false);
-    setShowReset(false);
   };
 
   return (
@@ -102,7 +98,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(showReset || isReverse) && (
+        {(isReverse || sortedField) && (
           <button
             type="button"
             className="button is-danger is-light"
