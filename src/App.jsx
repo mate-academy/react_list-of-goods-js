@@ -47,6 +47,7 @@ const getPreparedGoods = (goods, { sortField, isReversed }) => {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+  const [showResetButton, setShowResetButton] = useState(false);
 
   const changedGoods = getPreparedGoods(goodsFromServer, {
     sortField,
@@ -56,13 +57,24 @@ export const App = () => {
   const clearSort = () => {
     setSortField('');
     setIsReversed(false);
+    setShowResetButton(false);
+  };
+
+  const handleSortChange = (newSortField) => {
+    setSortField(newSortField);
+    setShowResetButton(true);
+  };
+
+  const handleReverseToggle = () => {
+    setIsReversed(!isReversed);
+    setShowResetButton(true);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortField(SORTED_BY_ALPHABET)}
+          onClick={() => handleSortChange(SORTED_BY_ALPHABET)}
           type="button"
           className={cn('button', {
             'is-info': sortField === SORTED_BY_ALPHABET,
@@ -73,7 +85,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSortField(SORTED_BY_LENGTH)}
+          onClick={() => handleSortChange(SORTED_BY_LENGTH)}
           type="button"
           className={cn('button', {
             'is-success': sortField === SORTED_BY_LENGTH,
@@ -84,7 +96,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReversed(reversed => !reversed)}
+          onClick={handleReverseToggle}
           type="button"
           className={cn('button', {
             'is-warning': isReversed,
@@ -94,7 +106,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField || isReversed ? (
+        {showResetButton && (
           <button
             onClick={clearSort}
             type="button"
@@ -102,7 +114,7 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
