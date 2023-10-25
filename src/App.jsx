@@ -18,25 +18,31 @@ export const goodsFromServer = [
 const SORTED_ALPHABETICALLY = 'Sort alphabetically';
 const SORTED_BY_LENGTH = 'Sort by length';
 
-export const App = () => {
-  const [value, setValue] = useState('');
-  const [reversed, setReversed] = useState(false);
-  let sortedGoods = [...goodsFromServer];
+function getSortedGoods(sortType, isReversed) {
+  const sortedGoods = [...goodsFromServer];
 
-  switch (value) {
+  switch (sortType) {
     case SORTED_ALPHABETICALLY: sortedGoods
       .sort((a, b) => a.localeCompare(b));
       break;
     case SORTED_BY_LENGTH: sortedGoods
       .sort((a, b) => a.length - b.length);
       break;
-    default: sortedGoods = [...goodsFromServer];
+    default:
       break;
   }
 
-  if (reversed) {
+  if (isReversed) {
     sortedGoods.reverse();
   }
+
+  return sortedGoods;
+}
+
+export const App = () => {
+  const [value, setValue] = useState('');
+  const [reversed, setReversed] = useState(false);
+  const preparedGoods = getSortedGoods(value, reversed);
 
   return (
     <div className="section content">
@@ -45,9 +51,7 @@ export const App = () => {
           type="button"
           className={cn({ 'is-light': value !== SORTED_ALPHABETICALLY },
             'button', 'is-info')}
-          onClick={value === SORTED_ALPHABETICALLY
-            ? () => setValue('')
-            : () => setValue(SORTED_ALPHABETICALLY)}
+          onClick={() => setValue(SORTED_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
@@ -56,9 +60,7 @@ export const App = () => {
           type="button"
           className={cn({ 'is-light': value !== SORTED_BY_LENGTH },
             'button', 'is-success')}
-          onClick={value === SORTED_BY_LENGTH
-            ? () => setValue('')
-            : () => setValue(SORTED_BY_LENGTH)}
+          onClick={() => setValue(SORTED_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -67,14 +69,12 @@ export const App = () => {
           type="button"
           className={cn({ 'is-light': !reversed },
             'button', 'is-warning')}
-          onClick={reversed
-            ? () => setReversed(false)
-            : () => setReversed(true)}
+          onClick={() => setReversed(current => !current)}
         >
           Reverse
         </button>
 
-        {(value !== '' || reversed === true) && (
+        {(value || reversed) && (
           <button
             type="button"
             className="button is-danger"
@@ -89,7 +89,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortedGoods.map(good => (
+        {preparedGoods.map(good => (
           <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
