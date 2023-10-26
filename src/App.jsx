@@ -22,17 +22,16 @@ function sortGoods(arrGoods, { sortBy, sortRevers }) {
   const newArrGoods = [...arrGoods];
 
   if (sortBy) {
-    switch (sortBy) {
-      case 'alphabet':
-        newArrGoods.sort((a, b) => a.localeCompare(b));
-        break;
-      case 'length':
-        newArrGoods.sort((a, b) => a.length - b.length);
-
-        break;
-      default:
-        break;
-    }
+    newArrGoods.sort((a, b) => {
+      switch (sortBy) {
+        case 'alphabet':
+          return a.localeCompare(b);
+        case 'length':
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
   }
 
   if (sortRevers) {
@@ -43,25 +42,21 @@ function sortGoods(arrGoods, { sortBy, sortRevers }) {
 }
 
 export const App = () => {
-  const [sortBy, serSortBy] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const [sortRevers, setSortRevers] = useState(false);
 
   const newSorted = sortGoods(goodsFromServer, { sortBy, sortRevers });
 
   const reset = () => {
-    serSortBy();
+    setSortBy('');
     setSortRevers(false);
-  };
-
-  const clickOnReverse = () => {
-    setSortRevers(!sortRevers);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => serSortBy('alphabet')}
+          onClick={() => setSortBy('alphabet')}
           type="button"
           className={classNames('button', 'is-info', {
             [SORT_GOODS_IS_LIGHT]: sortBy !== 'alphabet',
@@ -71,7 +66,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => serSortBy('length')}
+          onClick={() => setSortBy('length')}
           type="button"
           className={classNames('button', 'is-success', {
             [SORT_GOODS_IS_LIGHT]: sortBy !== 'length',
@@ -81,7 +76,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={clickOnReverse}
+          onClick={() => setSortRevers(curr => !curr)}
           type="button"
           className={classNames('button', 'is-warning', {
             [SORT_GOODS_IS_LIGHT]: !sortRevers,
