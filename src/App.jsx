@@ -46,10 +46,10 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState(false);
   const visibleGoods = getGoods(goodsFromServer, { sortField, reverseField });
-  const resetSort = () => {
+  const resetSorting = () => {
     setReverseField(false);
     setSortField('');
-  }
+  };
 
   return (
     <div className="section content">
@@ -103,7 +103,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={resetSort}
+              onClick={resetSorting}
             >
               Reset
             </button>
