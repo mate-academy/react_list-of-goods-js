@@ -49,13 +49,17 @@ export const App = () => {
 
   let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, isReversed);
 
-  function reverseSort() {
-    [...visibleGoods].reverse();
-    if (!isReversed) {
-      setReverse(true);
-    } else {
-      setReverse(false);
-    }
+  // function reverseSort() {
+  //   [...visibleGoods].reverse();
+  //   if (!isReversed) {
+  //     setReverse(true);
+  //   } else {
+  //     setReverse(false);
+  //   }
+  // }
+
+  const handleReverseClick = () => {
+    setReverse(prev => !prev)
   }
 
   function reset() {
@@ -92,7 +96,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={reverseSort}
+          onClick={handleReverseClick}
           type="button"
           className={cn(
             'button',
