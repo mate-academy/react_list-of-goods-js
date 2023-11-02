@@ -18,9 +18,8 @@ export const goodsFromServer = [
 
 const ALPHABET = 'Alphabet';
 const LENGTH = 'Length';
-const REVERSE = 'Reverse';
 
-function getPreparedGoods(goods, sortFiled, reverse) {
+function getPreparedGoods(goods, sortFiled, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortFiled) {
@@ -37,7 +36,7 @@ function getPreparedGoods(goods, sortFiled, reverse) {
     });
   }
 
-  if (reverse === REVERSE) {
+  if (isReversed) {
     preparedGoods.reverse();
   }
 
@@ -45,49 +44,24 @@ function getPreparedGoods(goods, sortFiled, reverse) {
 }
 
 export const App = () => {
-  // const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortFiled, setSortFiled] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [reverse, setReverse] = useState(false);
 
   let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, reverse);
 
-  // function sortAlphabetically() {
-  //   if (reverse === REVERSE) {
-  //     setVisibleGoods([...visibleGoods].sort().reverse());
-  //   } else {
-  //     setVisibleGoods([...visibleGoods].sort());
-  //   }
-
-  //   setSortFiled(ALPHABET);
-  // }
-
-  // function sortByLength() {
-  //   if (reverse === REVERSE) {
-  //     setVisibleGoods([...visibleGoods].sort(
-  //       (good1, good2) => good2.length - good1.length,
-  //     ));
-  //   } else {
-  //     setVisibleGoods([...visibleGoods].sort(
-  //       (good1, good2) => good1.length - good2.length,
-  //     ));
-  //   }
-
-  //   setSortFiled(LENGTH);
-  // }
-
   function reverseSort() {
     [...visibleGoods].reverse();
-    if (reverse === '') {
-      setReverse(REVERSE);
+    if (!reverse) {
+      setReverse(true);
     } else {
-      setReverse('');
+      setReverse(false);
     }
   }
 
   function reset() {
     visibleGoods = goodsFromServer;
     setSortFiled('');
-    setReverse('');
+    setReverse(false);
   }
 
   return (
@@ -123,13 +97,13 @@ export const App = () => {
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': reverse !== REVERSE },
+            { 'is-light': !reverse },
           )}
         >
           Reverse
         </button>
 
-        {JSON.stringify(goodsFromServer) !== JSON.stringify(visibleGoods)
+        {(sortFiled || reverse)
         && (
           <button
             onClick={reset}
