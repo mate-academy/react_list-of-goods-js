@@ -45,13 +45,13 @@ function getPreparedGoods(goods, sortFiled, isReversed) {
 
 export const App = () => {
   const [sortFiled, setSortFiled] = useState('');
-  const [reverse, setReverse] = useState(false);
+  const [isReversed, setReverse] = useState(false);
 
-  let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, reverse);
+  let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, isReversed);
 
   function reverseSort() {
     [...visibleGoods].reverse();
-    if (!reverse) {
+    if (!isReversed) {
       setReverse(true);
     } else {
       setReverse(false);
@@ -97,13 +97,13 @@ export const App = () => {
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': !reverse },
+            { 'is-light': !isReversed },
           )}
         >
           Reverse
         </button>
 
-        {(sortFiled || reverse)
+        {(sortFiled || isReversed)
         && (
           <button
             onClick={reset}
