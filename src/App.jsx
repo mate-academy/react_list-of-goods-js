@@ -16,23 +16,51 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const ALPHABET = 'Alphabet';
+const LENGTH = 'Length';
+const REVERSE = 'Reverse';
+
+function getPreparedGoods(goods, sortFiled, reverse) {
+  let preparedGoods = [...goods];
+
+  if (sortFiled) {
+    switch(sortFiled) {
+      case reverse === REVERSE && sortFiled === ALPHABET:
+        return preparedGoods.sort().reverse();
+    }
+    if (reverse === REVERSE && sortFiled === ALPHABET) {
+      preparedGoods.sort().reverse();
+    } else {
+      setVisibleGoods([...visibleGoods].sort());
+    }
+
+    if (reverse === REVERSE && sortFiled === LENGTH) {
+
+    }
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortFiled, setSortFiled] = useState('');
   const [reverse, setReverse] = useState('');
 
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, reverse)
+
   function sortAlphabetically() {
-    if (reverse === 'R') {
+    if (reverse === REVERSE) {
       setVisibleGoods([...visibleGoods].sort().reverse());
     } else {
       setVisibleGoods([...visibleGoods].sort());
     }
 
-    setSortFiled('A');
+    setSortFiled(ALPHABET);
   }
 
   function sortByLength() {
-    if (reverse === 'R') {
+    if (reverse === REVERSE) {
       setVisibleGoods([...visibleGoods].sort(
         (good1, good2) => good2.length - good1.length,
       ));
@@ -42,13 +70,13 @@ export const App = () => {
       ));
     }
 
-    setSortFiled('L');
+    setSortFiled(LENGTH);
   }
 
   function reverseSort() {
     setVisibleGoods([...visibleGoods].reverse());
     if (reverse === '') {
-      setReverse('R');
+      setReverse(REVERSE);
     } else {
       setReverse('');
     }
@@ -69,7 +97,7 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': sortFiled !== 'A' },
+            { 'is-light': sortFiled !== ALPHABET },
           )}
         >
           Sort alphabetically
@@ -81,7 +109,7 @@ export const App = () => {
           className={cn(
             'button',
             'is-success',
-            { 'is-light': sortFiled !== 'L' },
+            { 'is-light': sortFiled !== LENGTH },
           )}
         >
           Sort by length
@@ -93,7 +121,7 @@ export const App = () => {
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': reverse !== 'R' },
+            { 'is-light': reverse !== REVERSE },
           )}
         >
           Reverse
