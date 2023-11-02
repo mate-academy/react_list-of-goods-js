@@ -21,60 +21,62 @@ const LENGTH = 'Length';
 const REVERSE = 'Reverse';
 
 function getPreparedGoods(goods, sortFiled, reverse) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortFiled) {
-    switch(sortFiled) {
-      case reverse === REVERSE && sortFiled === ALPHABET:
-        return preparedGoods.sort().reverse();
-    }
-    if (reverse === REVERSE && sortFiled === ALPHABET) {
-      preparedGoods.sort().reverse();
-    } else {
-      setVisibleGoods([...visibleGoods].sort());
-    }
+    preparedGoods.sort((good1, good2) => {
+      switch (sortFiled) {
+        case ALPHABET:
+          return good1.localeCompare(good2);
 
-    if (reverse === REVERSE && sortFiled === LENGTH) {
+        case LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
+  }
 
-    }
+  if (reverse === REVERSE) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
 }
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
+  // const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortFiled, setSortFiled] = useState('');
   const [reverse, setReverse] = useState('');
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, reverse)
+  let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, reverse);
 
-  function sortAlphabetically() {
-    if (reverse === REVERSE) {
-      setVisibleGoods([...visibleGoods].sort().reverse());
-    } else {
-      setVisibleGoods([...visibleGoods].sort());
-    }
+  // function sortAlphabetically() {
+  //   if (reverse === REVERSE) {
+  //     setVisibleGoods([...visibleGoods].sort().reverse());
+  //   } else {
+  //     setVisibleGoods([...visibleGoods].sort());
+  //   }
 
-    setSortFiled(ALPHABET);
-  }
+  //   setSortFiled(ALPHABET);
+  // }
 
-  function sortByLength() {
-    if (reverse === REVERSE) {
-      setVisibleGoods([...visibleGoods].sort(
-        (good1, good2) => good2.length - good1.length,
-      ));
-    } else {
-      setVisibleGoods([...visibleGoods].sort(
-        (good1, good2) => good1.length - good2.length,
-      ));
-    }
+  // function sortByLength() {
+  //   if (reverse === REVERSE) {
+  //     setVisibleGoods([...visibleGoods].sort(
+  //       (good1, good2) => good2.length - good1.length,
+  //     ));
+  //   } else {
+  //     setVisibleGoods([...visibleGoods].sort(
+  //       (good1, good2) => good1.length - good2.length,
+  //     ));
+  //   }
 
-    setSortFiled(LENGTH);
-  }
+  //   setSortFiled(LENGTH);
+  // }
 
   function reverseSort() {
-    setVisibleGoods([...visibleGoods].reverse());
+    [...visibleGoods].reverse();
     if (reverse === '') {
       setReverse(REVERSE);
     } else {
@@ -83,7 +85,7 @@ export const App = () => {
   }
 
   function reset() {
-    setVisibleGoods(goodsFromServer);
+    visibleGoods = goodsFromServer;
     setSortFiled('');
     setReverse('');
   }
@@ -92,7 +94,7 @@ export const App = () => {
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={sortAlphabetically}
+          onClick={() => setSortFiled(ALPHABET)}
           type="button"
           className={cn(
             'button',
@@ -104,7 +106,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={sortByLength}
+          onClick={() => setSortFiled(LENGTH)}
           type="button"
           className={cn(
             'button',
