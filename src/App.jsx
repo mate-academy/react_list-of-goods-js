@@ -20,18 +20,12 @@ const FILTER_ALPHABETICALLY = 'abc';
 const FILTER_LENGTH = 'length';
 
 export const App = () => {
-  const [chosenCategory, setChosenCategory] = useState('');
+  const [chosenFilter, setChosenFilter] = useState('');
   const [reverseBtn, setReverseBtn] = useState(false);
   let sortedGoods = [...goodsFromServer];
 
-  // const handleClickFilter = () => {
-  //   setSortedGoods([...sortedGoods]
-  //     .sort((good1, good2) => good1.localeCompare(good2)));
-  //   setChosenCategory(FILTER_ID);
-  // };
-
-  if (chosenCategory) {
-    switch (chosenCategory) {
+  if (chosenFilter) {
+    switch (chosenFilter) {
       case FILTER_ALPHABETICALLY:
         sortedGoods = sortedGoods.sort((good1, good2) => {
           if (reverseBtn) {
@@ -64,9 +58,9 @@ export const App = () => {
           type="button"
           className={
             cn('button', 'is-info',
-              { 'is-light': chosenCategory !== FILTER_ALPHABETICALLY })
+              { 'is-light': chosenFilter !== FILTER_ALPHABETICALLY })
           }
-          onClick={() => setChosenCategory(FILTER_ALPHABETICALLY)}
+          onClick={() => setChosenFilter(FILTER_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
@@ -75,9 +69,9 @@ export const App = () => {
           type="button"
           className={
             cn('button', 'is-success',
-              { 'is-light': chosenCategory !== FILTER_LENGTH })
+              { 'is-light': chosenFilter !== FILTER_LENGTH })
           }
-          onClick={() => setChosenCategory(FILTER_LENGTH)}
+          onClick={() => setChosenFilter(FILTER_LENGTH)}
         >
           Sort by length
         </button>
@@ -93,13 +87,13 @@ export const App = () => {
           Reverse
         </button>
 
-        {(chosenCategory || reverseBtn)
+        {(chosenFilter || reverseBtn)
           && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setChosenCategory('');
+              setChosenFilter('');
               setReverseBtn(false);
             }}
           >
@@ -109,9 +103,12 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortedGoods.map((good, index) => (
-          <li data-cy="Good">{good}</li>
-        ))}
+        {!chosenFilter && reverseBtn
+          ? sortedGoods
+            .reverse()
+            .map(tempGood => <li data-cy="Good">{tempGood}</li>)
+          : sortedGoods.map(good => <li data-cy="Good">{good}</li>)
+        }
       </ul>
     </div>
   );
