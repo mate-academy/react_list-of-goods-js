@@ -16,8 +16,8 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const FILTER_ALPHABETICALLY = 'abc';
-const FILTER_LENGTH = 'length';
+const FILTER_ALPHABETICALLY = 'Sort alphabetically';
+const FILTER_LENGTH = 'Sort by length';
 
 export const App = () => {
   const [chosenFilter, setChosenFilter] = useState('');
