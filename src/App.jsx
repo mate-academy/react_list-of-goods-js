@@ -49,18 +49,9 @@ export const App = () => {
 
   let visibleGoods = getPreparedGoods(goodsFromServer, sortFiled, isReversed);
 
-  // function reverseSort() {
-  //   [...visibleGoods].reverse();
-  //   if (!isReversed) {
-  //     setReverse(true);
-  //   } else {
-  //     setReverse(false);
-  //   }
-  // }
-
   const handleReverseClick = () => {
-    setReverse(prev => !prev)
-  }
+    setReverse(prev => !prev);
+  };
 
   function reset() {
     visibleGoods = goodsFromServer;
