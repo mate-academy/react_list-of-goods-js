@@ -39,7 +39,11 @@ export const App = () => {
       case FILTER_LENGTH:
         sortedGoods = sortedGoods.sort((good1, good2) => {
           if (reverseBtn) {
-            return good2.length - good1.length;
+            if (good2.length !== good1.length) {
+              return good2.length - good1.length;
+            }
+
+            return good2.localeCompare(good1);
           }
 
           return good1.length - good2.length;
