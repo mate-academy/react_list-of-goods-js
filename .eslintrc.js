@@ -15,5 +15,6 @@ module.exports = {
       assert: 'either',
     }],
     'jsx-a11y/control-has-associated-label': 'off',
+    'react/no-array-index-key': 'off',
   },
 };

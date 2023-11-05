@@ -27,37 +27,34 @@ export const App = () => {
   if (chosenFilter) {
     switch (chosenFilter) {
       case SORT_ALPHABETICALLY:
-        sortedGoods = sortedGoods.sort((good1, good2) => {
-          if (isReverse) {
-            return good2.localeCompare(good1);
-          }
-
-          return good1.localeCompare(good2);
-        });
+        sortedGoods = sortedGoods.sort((good1, good2) => (
+          good1.localeCompare(good2)
+        ));
         break;
 
       case SORT_LENGTH:
-        sortedGoods = sortedGoods.sort((good1, good2) => {
-          if (isReverse) {
-            if (good2.length !== good1.length) {
-              return good2.length - good1.length;
-            }
-
-            return good2.localeCompare(good1);
-          }
-
-          return good1.length - good2.length;
-        });
+        sortedGoods = sortedGoods.sort((good1, good2) => (
+          good1.length - good2.length
+        ));
         break;
 
       default:
         break;
+    }
+
+    if (isReverse) {
+      sortedGoods.reverse();
     }
   }
 
   if (!chosenFilter && isReverse) {
     sortedGoods.reverse();
   }
+
+  const handleClickReset = () => {
+    setChosenFilter('');
+    setIsReverse(false);
+  };
 
   return (
     <div className="section content">
@@ -100,10 +97,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setChosenFilter('');
-              setIsReverse(false);
-            }}
+            onClick={handleClickReset}
           >
             Reset
           </button>
@@ -111,7 +105,9 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortedGoods.map(good => <li data-cy="Good">{good}</li>)}
+        {sortedGoods.map((good, index) => (
+          <li data-cy="Good" key={index}>{good}</li>
+        ))}
       </ul>
     </div>
   );
