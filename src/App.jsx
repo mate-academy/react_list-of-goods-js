@@ -79,13 +79,13 @@ export const App = () => {
           type="button"
           className={cn('button',
             'is-warning',
-            { 'is-light': reverseField !== true })}
+            { 'is-light': !reverseField })}
           onClick={() => setReverseField(!reverseField)}
         >
           Reverse
         </button>
         {
-          (sortField || reverseField) ? (
+          (sortField || reverseField) && (
             <button
               type="button"
               className="button is-danger is-light"
@@ -98,8 +98,6 @@ export const App = () => {
             >
               Reset
             </button>
-          ) : (
-            ''
           )
         }
       </div>
