@@ -48,14 +48,26 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const visibleGoods = getPreparedGoods(goodsFromServer, { sortField, isReversed }); // eslint-disable-line
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    { sortField, isReversed },
+  );
+
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn('button', 'is-info', { 'is-light' : sortField !== SORT_FIELD_ALPHABET } )} // eslint-disable-line
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortField !== SORT_FIELD_ALPHABET },
+          )}
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
@@ -63,7 +75,11 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-success', { 'is-light' : sortField !== SORT_FIELD_LENGTH } )} // eslint-disable-line
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH },
+          )}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
@@ -81,10 +97,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
