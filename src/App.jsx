@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
-function sortList(goods, { sortFilter, doReverse }) {
+function sortList(goods, { sortFilter, isReverse }) {
   const copyOfGoods = [...goods];
 
   if (sortFilter) {
@@ -36,7 +36,7 @@ function sortList(goods, { sortFilter, doReverse }) {
     });
   }
 
-  if (doReverse) {
+  if (isReverse) {
     copyOfGoods.reverse();
   }
 
@@ -45,11 +45,9 @@ function sortList(goods, { sortFilter, doReverse }) {
 
 export const App = () => {
   const [sortFilter, setSortFilter] = useState('');
-  const [doReverse, setDoReverse] = useState(false);
-  const [reset, setReset] = useState(false);
-  const [resetOffByReverse, setResetOffByReverse] = useState(false);
+  const [isReverse, setIsReverse] = useState(false);
 
-  const sortGoods = sortList(goodsFromServer, { sortFilter, doReverse });
+  const sortGoods = sortList(goodsFromServer, { sortFilter, isReverse });
 
   return (
     <>
@@ -62,7 +60,6 @@ export const App = () => {
             })}
             onClick={() => {
               setSortFilter(SORT_BY_ALPHABET);
-              setReset(true);
             }}
           >
             Sort alphabetically
@@ -75,7 +72,6 @@ export const App = () => {
             })}
             onClick={() => {
               setSortFilter(SORT_BY_LENGTH);
-              setReset(true);
             }}
           >
             Sort by length
@@ -84,29 +80,22 @@ export const App = () => {
           <button
             type="button"
             className={cn('button is-info', {
-              'is-light': !doReverse,
+              'is-light': !isReverse,
             })}
             onClick={() => {
-              setDoReverse(!doReverse);
-              setResetOffByReverse(true);
-
-              if (resetOffByReverse) {
-                setResetOffByReverse(false);
-              }
+              setIsReverse(!isReverse);
             }}
           >
             Reverse
           </button>
 
-          {reset || resetOffByReverse ? (
+          {sortFilter || isReverse ? (
             <button
               type="button"
               className="button is-danger is-light"
               onClick={() => {
                 setSortFilter('');
-                setReset(false);
-                setDoReverse(false);
-                setResetOffByReverse(false);
+                setIsReverse(false);
               }}
             >
               Reset
@@ -115,7 +104,7 @@ export const App = () => {
         </div>
 
         <ul>
-          {sortGoods.map((good, index) => (
+          {sortGoods.map(good => (
             <li
               data-cy="Good"
             >
