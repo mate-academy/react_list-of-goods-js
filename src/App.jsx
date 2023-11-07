@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reverse, isReversed }) {
+function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -36,10 +36,6 @@ function getPreparedGoods(goods, { sortField, reverse, isReversed }) {
           return 0;
       }
     });
-  }
-
-  if (reverse) {
-    preparedGoods.reverse();
   }
 
   if (isReversed) {
