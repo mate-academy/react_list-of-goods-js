@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -50,15 +51,11 @@ export const App = () => {
       sortField,
       reverseField,
     });
-  const buttonClassName = sortField === SORT_FIELD_NAME
-    ? 'button is-info'
-    : 'button is-info is-light';
-  const buttonClassLength = sortField === SORT_FIELD_LENGTH
-    ? 'button is-success'
-    : 'button is-success is-light';
-  const buttonClassNameReverse = reverseField
-    ? 'button is-warning'
-    : 'button is-warning is-light';
+
+  const onReset = () => {
+    setSortField('');
+    setReverseField(false);
+  };
 
   return (
     <div className="section content">
@@ -66,7 +63,9 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_NAME)}
           type="button"
-          className={buttonClassName}
+          className={cn('button is-info', {
+            'button is-info is-light': sortField !== SORT_FIELD_NAME,
+          })}
         >
           Sort alphabetically
         </button>
@@ -74,7 +73,9 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
-          className={buttonClassLength}
+          className={cn('button is-success', {
+            'button is-success is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
         >
           Sort by length
         </button>
@@ -82,14 +83,16 @@ export const App = () => {
         <button
           onClick={() => setReverseField(!reverseField)}
           type="button"
-          className={buttonClassNameReverse}
+          className={cn('button is-warning', {
+            'button is-warning is-light': !reverseField,
+          })}
         >
           Reverse
         </button>
 
         {(sortField || reverseField) && (
           <button
-            onClick={() => setSortField('') || setReverseField(false)}
+            onClick={onReset}
             type="button"
             className="button is-danger is-light"
           >
