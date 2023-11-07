@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import 'bulma/css/bulma.css';
 import { useState } from 'react';
 import './App.scss';
@@ -89,7 +88,7 @@ export const App = () => {
             Reverse
           </button>
 
-          {sortFilter || isReverse ? (
+          {(sortFilter || isReverse) && (
             <button
               type="button"
               className="button is-danger is-light"
@@ -100,13 +99,14 @@ export const App = () => {
             >
               Reset
             </button>
-          ) : null}
+          )}
         </div>
 
         <ul>
           {sortGoods.map(good => (
             <li
               data-cy="Good"
+              key={good}
             >
               {good}
             </li>
