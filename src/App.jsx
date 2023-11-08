@@ -4,6 +4,7 @@ import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { GoodsList } from './components/GoodsList';
+import { ResetButton } from './components/ResetButton';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -60,19 +61,10 @@ export const App = () => {
     sortField,
     isReversed,
   );
-
-  const ResetButton = () => (
-    <button
-      type="button"
-      className="button is-danger is-light"
-      onClick={() => {
-        setSortField('');
-        setIsReversed(false);
-      }}
-    >
-      Reset
-    </button>
-  );
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -107,7 +99,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || isReversed) && <ResetButton />}
+        {(sortField || isReversed) && <ResetButton reset={reset} />}
       </div>
 
       <GoodsList goods={sortedGoodsList} />
