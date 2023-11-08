@@ -1,7 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-// import { setPriority } from 'os';
 import cn from 'classnames';
 
 export const goodsFromServer = [
@@ -96,7 +95,7 @@ export const App = () => {
             type="button"
             className={cn('button', 'is-danger', { 'is-light':
               sortField !== RESET })}
-            onClick={() => reset()}
+            onClick={reset}
           >
             {RESET}
           </button>
