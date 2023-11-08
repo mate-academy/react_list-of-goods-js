@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cn from 'classnames';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -52,10 +53,6 @@ function prepeareGoods(goods, sortName, reverse) {
   return prepearedGoods;
 }
 
-function checkIfChanged(array) {
-  return goodsWithProperty.every((item, i) => (item.id === array[i].id));
-}
-
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState('');
@@ -66,7 +63,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField !== SORT_BY_NAME && 'is-light'}`}
+          className={cn('button is-info', {
+            'is-light': sortField !== SORT_BY_NAME,
+          })}
           onClick={() => setSortField(SORT_BY_NAME)}
         >
           Sort alphabetically
@@ -74,7 +73,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-info ${sortField !== SORT_BY_LENGTH && 'is-light'}`}
+          className={cn('button is-info', {
+            'is-light': sortField !== SORT_BY_LENGTH,
+          })}
           onClick={() => setSortField(SORT_BY_LENGTH)}
         >
           Sort by length
@@ -82,7 +83,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-info${reverse ? '' : ' is-light'}`}
+          className={cn('button is-info', {
+            'is-light': !reverse,
+          })}
           onClick={() => (reverse ? setReverse('') : setReverse(REVERSE))}
         >
           Reverse
@@ -90,7 +93,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-danger is-light${checkIfChanged(sortedGoodsList) ? ' is-hidden' : ''}`}
+          className={cn('button is-danger is-light', {
+            'is-hidden': !sortField && !reverse,
+          })}
           onClick={() => {
             setSortField('');
             setReverse('');
