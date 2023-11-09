@@ -18,20 +18,25 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, sortBy, REVERSED) {
+function getPreparedGoods(goods, sortBy, reversed) {
   let preparedGoods = [...goods];
 
   if (sortBy) {
     preparedGoods.sort((good1, good2) => {
-      if (sortBy === SORT_BY_ALPHABET) {
-        return good1.localeCompare(good2);
-      }
+      switch (sortBy) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
 
-      return good1.length - good2.length;
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
     });
   }
 
-  if (REVERSED) {
+  if (reversed) {
     preparedGoods = preparedGoods.reverse();
   }
 
@@ -74,9 +79,7 @@ export const App = () => {
             ? 'button is-warning'
             : 'button is-warning is-light'
           }
-          onClick={() => (isReversed
-            ? setIsReversed(false)
-            : setIsReversed(true))}
+          onClick={() => setIsReversed(prevIsReversed => !prevIsReversed)}
         >
           Reverse
         </button>
