@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -49,13 +50,20 @@ export const App = () => {
   const [direction, setDirection] = useState('');
   const sortedGoods = getSortedGoods(goodsFromServer, { sortField, direction });
 
+  const reset = () => {
+    setSortField('');
+    setDirection('');
+  };
+
   return (
     <>
       <div className="section content">
         <div className="buttons">
           <button
             type="button"
-            className={`button is-info ${sortField !== SORT_FIELD_ALPH && 'is-light'}`}
+            className={cn({ 'is-light': sortField !== SORT_FIELD_ALPH,
+              button: true,
+              'is-info': true })}
             onClick={() => setSortField(SORT_FIELD_ALPH)}
           >
             Sort alphabetically
@@ -63,7 +71,9 @@ export const App = () => {
 
           <button
             type="button"
-            className={`button is-success ${sortField !== SORT_BY_LENGTH && 'is-light'}`}
+            className={cn({ 'is-light': sortField !== SORT_BY_LENGTH,
+              button: true,
+              'is-success': true })}
             onClick={() => setSortField(SORT_BY_LENGTH)}
           >
             Sort by length
@@ -71,21 +81,20 @@ export const App = () => {
 
           <button
             type="button"
-            className={`button is-warning ${direction !== SORT_REVERSE && 'is-light'}`}
+            className={cn({ 'is-light': direction !== SORT_REVERSE,
+              button: true,
+              'is-warning': true })}
             onClick={() => setDirection(!direction ? SORT_REVERSE : '')}
           >
             Reverse
           </button>
 
-          {(sortField !== '' || direction !== '')
+          {(!!sortField || !!direction)
             && (
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setDirection('');
-              }}
+              onClick={reset}
             >
               Reset
             </button>
