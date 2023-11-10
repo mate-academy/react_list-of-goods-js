@@ -54,6 +54,11 @@ export const App = () => {
     { sortField, reverse: isReversed },
   );
 
+  const handleResetButtonClick = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -94,10 +99,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={handleResetButtonClick}
           >
             Reset
           </button>
