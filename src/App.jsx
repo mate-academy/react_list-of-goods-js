@@ -95,13 +95,12 @@ export const App = () => {
           Reset
         </button>
         )}
-
-        <ul>
-          {goods.map(good => (
-            <li data-cy="Good">{good}</li>
-          ))}
-        </ul>
       </div>
+      <ul>
+        {goods.map(good => (
+          <li data-cy="Good">{good}</li>
+        ))}
+      </ul>
     </div>
   );
 };
