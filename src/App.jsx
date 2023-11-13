@@ -27,7 +27,21 @@ export const App = () => {
   let visibleGoods = [...goodsFromServer];
   const [count, setCount] = useState(0);
   const [sortField, setSortField] = useState('');
-  const hasResetButton = REVERSE === true || sortField !== '';
+  const hasResetButton = REVERSE || sortField;
+
+  const handleSort = field => () => setSortField(field);
+
+  if (sortField === SORT_FIELD_ABC) {
+    LENGTH = false;
+    ABC = true;
+  } else if (sortField === SORT_FIELD_LENGTH) {
+    LENGTH = true;
+    ABC = false;
+  } else if (!sortField && !count) {
+    LENGTH = false;
+    ABC = false;
+    REVERSE = false;
+  }
 
   if (count % 2 !== 0) {
     if (sortField) {
@@ -75,13 +89,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': ABC === false,
+            'is-light': !ABC,
           })}
-          onClick={() => {
-            ABC = true;
-            LENGTH = false;
-            setSortField(SORT_FIELD_ABC);
-          }}
+          onClick={handleSort(SORT_FIELD_ABC)}
         >
           Sort alphabetically
         </button>
@@ -89,13 +99,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': LENGTH === false,
+            'is-light': !LENGTH,
           })}
-          onClick={() => {
-            ABC = false;
-            LENGTH = true;
-            setSortField(SORT_FIELD_LENGTH);
-          }}
+          onClick={handleSort(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -103,7 +109,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': REVERSE === false,
+            'is-light': !REVERSE,
           })}
           onClick={() => {
             REVERSE = !REVERSE;
@@ -120,9 +126,6 @@ export const App = () => {
               type="button"
               className="button is-danger is-light"
               onClick={() => {
-                ABC = false;
-                LENGTH = false;
-                REVERSE = false;
                 setCount(0);
                 setSortField('');
               }
