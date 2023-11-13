@@ -29,49 +29,32 @@ export const App = () => {
 
   const handleSort = field => () => setSortField(field);
   const handleReverse = reversed => () => setReverse(!reversed);
-  const handleReset = (reverseReset, sortReset) => () => {
-    setReverse(reverseReset);
-    setSortField(sortReset);
+  const handleReset = () => {
+    setReverse(false);
+    setSortField(RESET_FIELD);
   };
 
+  if (sortField) {
+    visibleGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ABC:
+          return good1.localeCompare(good2);
+
+        case SORT_FIELD_LENGTH:
+          return good2.length - good1.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (!sortField) {
+    visibleGoods = [...goodsFromServer];
+  }
+
   if (reverse) {
-    if (sortField) {
-      visibleGoods.sort((good1, good2) => {
-        switch (sortField) {
-          case SORT_FIELD_ABC:
-            return good2.localeCompare(good1);
-
-          case SORT_FIELD_LENGTH:
-            return good1.length - good2.length;
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (!sortField) {
-      visibleGoods.reverse();
-    }
-  } else {
-    if (sortField) {
-      visibleGoods.sort((good1, good2) => {
-        switch (sortField) {
-          case SORT_FIELD_ABC:
-            return good1.localeCompare(good2);
-
-          case SORT_FIELD_LENGTH:
-            return good2.length - good1.length;
-
-          default:
-            return 0;
-        }
-      });
-    }
-
-    if (!sortField) {
-      visibleGoods = [...goodsFromServer];
-    }
+    visibleGoods.reverse();
   }
 
   return (
@@ -112,7 +95,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={handleReset(false, RESET_FIELD)}
+              onClick={handleReset}
             >
               Reset
             </button>
