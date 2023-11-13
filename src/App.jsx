@@ -19,31 +19,22 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ABC = 'abc';
 const SORT_FIELD_LENGTH = 'length';
-let REVERSE = false;
-let ABC = false;
-let LENGTH = false;
+const RESET_FIELD = '';
 
 export const App = () => {
   let visibleGoods = [...goodsFromServer];
-  const [count, setCount] = useState(0);
+  const [reverse, setReverse] = useState(false);
   const [sortField, setSortField] = useState('');
-  const hasResetButton = REVERSE || sortField;
+  const hasResetButton = reverse || sortField;
 
   const handleSort = field => () => setSortField(field);
+  const handleReverse = reversed => () => setReverse(!reversed);
+  const handleReset = (reverseReset, sortReset) => () => {
+    setReverse(reverseReset);
+    setSortField(sortReset);
+  };
 
-  if (sortField === SORT_FIELD_ABC) {
-    LENGTH = false;
-    ABC = true;
-  } else if (sortField === SORT_FIELD_LENGTH) {
-    LENGTH = true;
-    ABC = false;
-  } else if (!sortField && !count) {
-    LENGTH = false;
-    ABC = false;
-    REVERSE = false;
-  }
-
-  if (count % 2 !== 0) {
+  if (reverse) {
     if (sortField) {
       visibleGoods.sort((good1, good2) => {
         switch (sortField) {
@@ -89,7 +80,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': !ABC,
+            'is-light': sortField !== SORT_FIELD_ABC,
           })}
           onClick={handleSort(SORT_FIELD_ABC)}
         >
@@ -99,7 +90,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': !LENGTH,
+            'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
           onClick={handleSort(SORT_FIELD_LENGTH)}
         >
@@ -109,13 +100,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': !REVERSE,
+            'is-light': !reverse,
           })}
-          onClick={() => {
-            REVERSE = !REVERSE;
-            setCount(count + 1);
-          }
-          }
+          onClick={handleReverse(reverse)}
         >
           Reverse
         </button>
@@ -125,11 +112,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setCount(0);
-                setSortField('');
-              }
-              }
+              onClick={handleReset(false, RESET_FIELD)}
             >
               Reset
             </button>
