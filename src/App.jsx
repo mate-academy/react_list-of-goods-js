@@ -20,11 +20,11 @@ const SORT_METHOD_ALPHABETICAL = 'alphabetical';
 const SORT_METHOD_LENGTH = 'length';
 
 const getViewGoods = (goods, sortMethod, isReversed) => {
-  let sortedGoods = [...goodsFromServer];
+  let sortedGoods = [...goods];
 
   switch (sortMethod) {
     case SORT_METHOD_ALPHABETICAL:
-      sortedGoods = sortedGoods.sort();
+      sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
 
     case SORT_METHOD_LENGTH:
