@@ -24,18 +24,20 @@ function getPrepareGoods(goods, sortType, isReverse) {
     return prepareGoods;
   }
 
-  prepareGoods = [...goods].sort((good1, good2) => {
-    switch (sortType) {
-      case 'alphabetically':
-        return (good1.localeCompare(good2));
+  if (prepareGoods.length) {
+    prepareGoods = [...goods].sort((good1, good2) => {
+      switch (sortType) {
+        case 'alphabetically':
+          return (good1.localeCompare(good2));
 
-      case 'length':
-        return (good1.length - good2.length);
+        case 'length':
+          return (good1.length - good2.length);
 
-      default:
-        return 0;
-    }
-  });
+        default:
+          return 0;
+      }
+    });
+  }
 
   if (isReverse) {
     prepareGoods = prepareGoods.reverse();
@@ -78,7 +80,7 @@ export function App() {
           className={classNames(
             'button is-warning', { 'is-light': !reverse },
           )}
-          onClick={() => (reverse ? setReverse(false) : setReverse(true))}
+          onClick={() => setReverse(!reverse)}
         >
           Reverse
         </button>
