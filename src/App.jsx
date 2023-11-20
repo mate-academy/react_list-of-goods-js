@@ -44,8 +44,17 @@ function sortBy(goods, sortField, isReverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReverse, checkRev] = useState(false);
-  const sortedGoods = sortBy(goodsFromServer, sortField, isReverse);
+  const [isReversed, setIsReversed] = useState(false);
+  const sortedGoods = sortBy(goodsFromServer, sortField, isReversed);
+
+  const handleReverseClick = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -75,28 +84,21 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            'button', 'is-warning', { 'is-light': !isReverse },
+            'button', 'is-warning', { 'is-light': !isReversed },
           )}
-          onClick={() => checkRev(!isReverse)}
+          onClick={handleReverseClick}
         >
           Reverse
         </button>
-        {sortField || isReverse
-          ? (
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                checkRev(false);
-              }}
-            >
-              Reset
-            </button>
-
-          )
-          : ''
-        }
+        {(sortField || isReversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
       </div>
       <ul>
         {sortedGoods.map(good => (
