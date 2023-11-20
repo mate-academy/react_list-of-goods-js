@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,101 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_BY_LENGTH = 'sortByLength';
+const SORT_ALPHABET = 'SortAlphabetically';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+function sortBy(goods, sortField, rev) {
+  const prepearedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortField === 'sortByLength' && rev % 2 !== 0) {
+    prepearedGoods.sort((curent, next) => curent.length - next.length);
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  if (sortField === 'sortByLength' && rev % 2 === 0) {
+    prepearedGoods.sort((curent, next) => next.length - curent.length);
+  }
+
+  if (sortField === 'SortAlphabetically' && rev % 2 !== 0) {
+    prepearedGoods.sort((curent, next) => curent.localeCompare(next));
+  }
+
+  if (sortField === 'SortAlphabetically' && rev % 2 === 0) {
+    prepearedGoods.sort((curent, next) => next.localeCompare(curent));
+  }
+
+  if (sortField === '' && rev % 2 === 0) {
+    prepearedGoods.reverse();
+  }
+
+  return prepearedGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [rev, checkRev] = useState(1);
+  const sortedGoods = sortBy(goodsFromServer, sortField, rev);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn(
+            'button', 'is-info', { 'is-light': sortField !== SORT_ALPHABET },
+          )}
+          onClick={() => setSortField(SORT_ALPHABET)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_BY_LENGTH },
+          )}
+          onClick={() => setSortField(SORT_BY_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn(
+            'button', 'is-warning', { 'is-light': rev % 2 !== 0 },
+          )}
+          onClick={() => checkRev(rev + 1)}
+        >
+          Reverse
+        </button>
+        {sortField || rev % 2 === 0
+          ? (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={() => {
+                setSortField('');
+                checkRev(1);
+              }}
+            >
+              Reset
+            </button>
+
+          )
+          : ''
+        }
+      </div>
+      <ul>
+        {sortedGoods.map(good => (
+          <li
+            data-cy="Good"
+            key={good}
+          >
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
