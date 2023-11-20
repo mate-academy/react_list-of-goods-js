@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_NAME = 'name';
@@ -28,7 +29,7 @@ function getPreparedGoods(goods, { sortField, reverseStatus }) {
           return good1.length - good2.length;
 
         case SORT_FIELD_NAME:
-          return good1.localeComapare(good2);
+          return good1.localeCompare(good2);
 
         default:
           return 0;
@@ -47,48 +48,64 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseStatus, setReverseStatus] = useState(false);
   const visibleGoods = getPreparedGoods(
-    goodsFromServer, { sortField, reverseStatus },
+    goodsFromServer,
+    { sortField, reverseStatus },
   );
+  const isGoodsChanged = (sortField !== '' || reverseStatus);
 
-  function reset() {
+  const reset = () => {
     setSortField('');
     setReverseStatus(false);
-  }
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className="button is-info is-light"
-          onClick={setSortField(SORT_FIELD_NAME)}
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortField !== SORT_FIELD_NAME },
+          )}
+          onClick={() => setSortField(SORT_FIELD_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className="button is-success is-light"
-          onClick={setSortField(SORT_FIELD_LENGTH)}
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH },
+          )}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className="button is-warning is-light"
-          onClick={setReverseStatus(!reverseStatus)}
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': !reverseStatus },
+          )}
+          onClick={() => setReverseStatus(!reverseStatus)}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={reset()}
-        >
-          Reset
-        </button>
+        {isGoodsChanged && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
