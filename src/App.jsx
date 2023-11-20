@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
-import cn from 'classnames';
 
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_NAME = 'name';
