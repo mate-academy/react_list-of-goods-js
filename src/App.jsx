@@ -20,19 +20,21 @@ const SORT_APHABETICALY = 'alphabetical';
 const SORT_BY_LENGTH = 'length';
 
 function sortGoods(goods, sortMethod, isReversed) {
-  let sortedGoods = [...goods];
+  const sortedGoods = [...goods];
 
-  switch (sortMethod) {
-    case SORT_APHABETICALY:
-      sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
-      break;
+  if (sortMethod) {
+    sortedGoods.sort((good1, good2) => {
+      switch (sortMethod) {
+        case SORT_APHABETICALY:
+          return good1.localeCompare(good2);
 
-    case SORT_BY_LENGTH:
-      sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
-      break;
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
 
-    default:
-      break;
+        default:
+          return 0;
+      }
+    });
   }
 
   if (isReversed) {
@@ -47,7 +49,7 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = sortGoods(goodsFromServer, sortMethod, isReversed);
 
-  const reset = () => {
+  const resetGoods = () => {
     setSortMethod('');
     setIsReversed(false);
   };
@@ -95,7 +97,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={reset}
+            onClick={resetGoods}
           >
             Reset
           </button>
