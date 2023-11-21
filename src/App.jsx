@@ -78,24 +78,23 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          onClick={() => {
-            setSortField('');
-            setReverse(false);
-          }}
-          type="button"
-          className={cn('button', 'is-danger', 'is-light', {
-            active: sortField,
-            'not-active': !sortField && !reverse,
-          })}
-        >
-          Reset
-        </button>
+        {(sortField || reverse) && (
+          <button
+            onClick={() => {
+              setSortField('');
+              setReverse(false);
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={visibleGoods.indexOf(good)} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
