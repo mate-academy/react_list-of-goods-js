@@ -51,7 +51,7 @@ export const App = () => {
     goodsFromServer,
     { sortField, reverseStatus },
   );
-  const isGoodsChanged = (sortField !== '' || reverseStatus);
+  const isGoodsChanged = (sortField || reverseStatus);
 
   const reset = () => {
     setSortField('');
