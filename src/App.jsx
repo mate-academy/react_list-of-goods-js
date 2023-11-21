@@ -20,10 +20,10 @@ export const goodsFromServer = [
 ];
 
 function getPreparedGoods(goods, { sortField, reverseStatus }) {
-  let preparedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
-    preparedGoods = preparedGoods.sort((good1, good2) => {
+    preparedGoods.sort((good1, good2) => {
       switch (sortField) {
         case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
