@@ -20,15 +20,15 @@ const SORT_METHOD_ALPHABETICALLY = 'alphabetically';
 const SORT_METHOD_BY_LENGTH = 'length';
 
 const getViewGoods = (goods, sortMethod, isReversed) => {
-  let sortedGoods = [...goods];
+  const sortedGoods = [...goods];
 
   switch (sortMethod) {
     case SORT_METHOD_ALPHABETICALLY:
-      sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
+      sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
 
     case SORT_METHOD_BY_LENGTH:
-      sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
+      sortedGoods.sort((a, b) => a.length - b.length);
       break;
 
     default:
@@ -36,7 +36,7 @@ const getViewGoods = (goods, sortMethod, isReversed) => {
   }
 
   if (isReversed) {
-    sortedGoods = sortedGoods.reverse();
+    sortedGoods.reverse();
   }
 
   return sortedGoods;
