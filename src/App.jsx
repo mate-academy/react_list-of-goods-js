@@ -27,8 +27,10 @@ const sortProducts = (products, sortField, reversed) => {
       switch (sortField) {
         case SORT_FIELD_TITLE:
           return product1.localeCompare(product2);
+
         case SORT_FIELD_LENGTH:
           return product1.length - product2.length;
+
         default:
           return 0;
       }
@@ -45,9 +47,10 @@ const sortProducts = (products, sortField, reversed) => {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+
   const visibleProducts = sortProducts(goodsFromServer, sortField, isReversed);
 
-  const resetFields = () => {
+  const resetSorting  = () => {
     setSortField('');
     setIsReversed(false);
   };
@@ -85,13 +88,14 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={resetFields}
+            onClick={resetSorting}
           >
             Reset
           </button>
-        ) : null}
-
+        )
+          : null}
       </div>
+
       <ul>
         {visibleProducts.map(product => (
           <li data-cy="Good" key={product}>{product}</li>
