@@ -16,18 +16,18 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_METHOD_ALPHABETICAL = 'alphabetical';
-const SORT_METHOD_LENGTH = 'length';
+const SORT_METHOD_ALPHABETICALLY = 'alphabetically';
+const SORT_METHOD_BY_LENGTH = 'length';
 
 const getViewGoods = (goods, sortMethod, isReversed) => {
   let sortedGoods = [...goods];
 
   switch (sortMethod) {
-    case SORT_METHOD_ALPHABETICAL:
+    case SORT_METHOD_ALPHABETICALLY:
       sortedGoods = sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
 
-    case SORT_METHOD_LENGTH:
+    case SORT_METHOD_BY_LENGTH:
       sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
       break;
 
@@ -60,9 +60,9 @@ export const App = () => {
           className={cn(
             'button',
             'is-info',
-            { 'is-light': sortMethod !== SORT_METHOD_ALPHABETICAL },
+            { 'is-light': sortMethod !== SORT_METHOD_ALPHABETICALLY },
           )}
-          onClick={() => setSortMethod(SORT_METHOD_ALPHABETICAL)}
+          onClick={() => setSortMethod(SORT_METHOD_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
@@ -72,9 +72,9 @@ export const App = () => {
           className={cn(
             'button',
             'is-success',
-            { 'is-light': sortMethod !== SORT_METHOD_LENGTH },
+            { 'is-light': sortMethod !== SORT_METHOD_BY_LENGTH },
           )}
-          onClick={() => setSortMethod(SORT_METHOD_LENGTH)}
+          onClick={() => setSortMethod(SORT_METHOD_BY_LENGTH)}
         >
           Sort by length
         </button>
