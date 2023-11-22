@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
+import { v4 as uuidv4 } from 'uuid';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -19,11 +21,10 @@ const SORT_FIELD_NAME = 'name';
 const SORT_FIELD_LENGTH = 'length';
 
 function getPreperedGoods(goods, { sortField, reverse }) {
-  const preperedGoods = goods.map((good, i) => (
+  const preperedGoods = goods.map(good => (
     {
       name: good,
       length: good.length,
-      id: i + 1,
     }
   ));
 
@@ -62,13 +63,19 @@ export const App = () => {
     setReverse(false);
   };
 
+  const isTrue = sortField || reverse;
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           onClick={() => setSortField(SORT_FIELD_NAME)}
           type="button"
-          className={`button is-info ${sortField !== SORT_FIELD_NAME ? 'is-light' : ''}`}
+          className={
+            cn('button', 'is-info', {
+              'is-light': sortField !== SORT_FIELD_NAME,
+            })
+          }
         >
           Sort alphabetically
         </button>
@@ -76,7 +83,11 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
-          className={`button is-success ${sortField !== SORT_FIELD_LENGTH ? 'is-light' : ''}`}
+          className={
+            cn('button', 'is-info', {
+              'is-light': sortField !== SORT_FIELD_LENGTH,
+            })
+          }
         >
           Sort by length
         </button>
@@ -84,12 +95,12 @@ export const App = () => {
         <button
           onClick={() => setReverse(!reverse)}
           type="button"
-          className={`button is-warning ${!reverse ? 'is-light' : ''}`}
+          className={cn('button', 'is-warning', { 'is-light': !reverse })}
         >
           Reverse
         </button>
 
-        {(sortField || reverse)
+        {isTrue
           && (
             <button
               onClick={handleClickReset}
@@ -103,7 +114,7 @@ export const App = () => {
 
       <ul>
         {localeGoods.map(good => (
-          <li key={good.id} data-cy="Good">{good.name}</li>
+          <li key={uuidv4()} data-cy="Good">{good.name}</li>
         ))}
       </ul>
     </div>
