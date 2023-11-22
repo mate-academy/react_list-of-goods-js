@@ -43,7 +43,7 @@ function getPreperedGoods(goods, { sortField, reverse }) {
   }
 
   if (reverse) {
-    return [...preperedGoods].reverse();
+    preperedGoods.reverse();
   }
 
   return preperedGoods;
