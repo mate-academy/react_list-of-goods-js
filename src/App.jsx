@@ -20,14 +20,31 @@ export const goodsFromServer = [
 const SORT_TYPE_BY_ALPHABET = 'alphabet';
 const SORT_TYPE_BY_LENGTH = 'length';
 
-const changeReverseList = () => {
-  if (isListReversed) {
-    setIsListReversed(false);
+const prepareGoodsToShow = (goodsList, sortType, reverse) => {
+  let goodsToShow = [...goodsList];
 
-    return;
+  if (sortType) {
+    goodsToShow = goodsToShow.sort(
+      (good1, good2) => {
+        switch (sortType || reverse) {
+          case SORT_TYPE_BY_ALPHABET:
+            return good1.localeCompare(good2);
+
+          case SORT_TYPE_BY_LENGTH:
+            return good1.length - good2.length;
+
+          default:
+            return 0;
+        }
+      },
+    );
   }
 
-  setIsListReversed(true);
+  if (reverse) {
+    goodsToShow.reverse();
+  }
+
+  return goodsToShow;
 };
 
 export const App = () => {
@@ -36,36 +53,19 @@ export const App = () => {
 
   const isResetBtnShowed = isListReversed || currentSort;
 
+  const changeReverseList = () => {
+    if (isListReversed) {
+      setIsListReversed(false);
+
+      return;
+    }
+
+    setIsListReversed(true);
+  };
+
   const resetSorting = () => {
     setCurrentSort('');
     setIsListReversed(false);
-  };
-
-  const prepareGoodsToShow = (goodsList, sortType, reverse) => {
-    let goodsToShow = [...goodsList];
-
-    if (sortType) {
-      goodsToShow = goodsToShow.sort(
-        (good1, good2) => {
-          switch (sortType || reverse) {
-            case SORT_TYPE_BY_ALPHABET:
-              return good1.localeCompare(good2);
-
-            case SORT_TYPE_BY_LENGTH:
-              return good1.length - good2.length;
-
-            default:
-              return 0;
-          }
-        },
-      );
-    }
-
-    if (reverse) {
-      goodsToShow.reverse();
-    }
-
-    return goodsToShow;
   };
 
   const goodsToShow = prepareGoodsToShow(
