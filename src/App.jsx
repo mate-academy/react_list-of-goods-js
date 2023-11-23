@@ -20,21 +20,21 @@ export const goodsFromServer = [
 const SORT_TYPE_BY_ALPHABET = 'alphabet';
 const SORT_TYPE_BY_LENGTH = 'length';
 
+const changeReverseList = () => {
+  if (isListReversed) {
+    setIsListReversed(false);
+
+    return;
+  }
+
+  setIsListReversed(true);
+};
+
 export const App = () => {
   const [currentSort, setCurrentSort] = useState('');
   const [isListReversed, setIsListReversed] = useState(false);
 
   const isResetBtnShowed = isListReversed || currentSort;
-
-  const changeReverseList = () => {
-    if (isListReversed) {
-      setIsListReversed(false);
-
-      return;
-    }
-
-    setIsListReversed(true);
-  };
 
   const resetSorting = () => {
     setCurrentSort('');
