@@ -93,7 +93,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {JSON.stringify(visibleGoods) !== JSON.stringify(goodsFromServer) && (
+        {(isReversed || sortField) && (
           <button
             onClick={() => {
               setSortField('');
