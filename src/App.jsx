@@ -24,7 +24,7 @@ const SORT_BY_LENGTH = 'length';
 function getPreparedGoods(goods, sortedBy, isReversed) {
   const preparedGoods = goods.map(good => (
     {
-      id: goods.indexOf(good),
+      id: crypto.randomUUID(),
       name: good,
       length: good.length,
     }
@@ -53,7 +53,7 @@ function getPreparedGoods(goods, sortedBy, isReversed) {
 }
 
 export const App = () => {
-  const [sortedBy, setSortedBy] = useState('');
+  const [sortedBy, setSortedBy] = useState(SORT_BY_INITIAL);
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, sortedBy, isReversed);
 
@@ -91,22 +91,22 @@ export const App = () => {
           type="button"
           className={cn(
             'button is-warning',
-            { 'is-light': isReversed !== true },
+            { 'is-light': !isReversed },
           )}
           onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {sortedBy || isReversed ? (
+        {(sortedBy || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => reset()}
+            onClick={reset}
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
