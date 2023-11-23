@@ -69,8 +69,11 @@ export const App = () => {
         <button
           type="button"
           className={
-            cn('button', 'is-info',
-              { 'is-light': sortField !== SORT_FIELD_ALPHABETICALLY })}
+            cn(
+              'button',
+              'is-info',
+              { 'is-light': sortField !== SORT_FIELD_ALPHABETICALLY },
+            )}
           onClick={handleSortAlphabetically}
         >
           Sort alphabetically
@@ -82,7 +85,7 @@ export const App = () => {
             cn(
               'button',
               'is-success',
-              { 'is-light': sortField !== SORT_FIELD_BY_LENGTH }
+              { 'is-light': sortField !== SORT_FIELD_BY_LENGTH },
             )}
           onClick={handleSortByLength}
         >
@@ -115,7 +118,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {readyGoods.map((good, index) => (
+        {readyGoods.map(good => (
           <li data-cy="Good">
             {good}
           </li>
