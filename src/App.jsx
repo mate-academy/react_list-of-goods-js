@@ -22,17 +22,25 @@ export const App = () => {
   const [sortType, setSortType] = useState(null);
 
   const sortAlphabetically = () => {
-    const orderAbc = [...sortedGoods].sort();
+    if (!isReversed || (isReversed && sortType !== 'alphabetical')) {
+      const orderAbc = isReversed
+        ? [...sortedGoods].sort().reverse()
+        : [...sortedGoods].sort();
 
-    setSortedGoods(orderAbc);
-    setSortType('alphabetical');
+      setSortedGoods(orderAbc);
+      setSortType('alphabetical');
+    }
   };
 
   const sortByLength = () => {
-    const orderLength = [...sortedGoods].sort((a, b) => a.length - b.length);
+    if (!isReversed || (isReversed && sortType !== 'length')) {
+      const orderLength = isReversed
+        ? [...sortedGoods].sort((a, b) => b.length - a.length)
+        : [...sortedGoods].sort((a, b) => a.length - b.length);
 
-    setSortedGoods(orderLength);
-    setSortType('length');
+      setSortedGoods(orderLength);
+      setSortType('length');
+    }
   };
 
   const reverseOrder = () => {
@@ -53,12 +61,11 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={
-            classNames(
-              'button',
-              'is-info',
-              { 'is-light': sortType !== 'alphabetical' },
-            )}
+          className={classNames(
+            'button',
+            'is-info',
+            { 'is-light': sortType !== 'alphabetical' },
+          )}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -73,6 +80,7 @@ export const App = () => {
               { 'is-light': sortType !== 'length' },
             )}
           onClick={sortByLength}
+
         >
           Sort by length
         </button>
