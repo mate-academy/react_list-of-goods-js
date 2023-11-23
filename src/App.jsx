@@ -17,19 +17,24 @@ export const goodsFromServer = [
 ];
 
 const sortMethod = {
-  ALPHABET: 'alphabetical',
-  LENGTH: 'length',
+  Alphabet: 'alphabetical',
+  Length: 'length',
 };
 
 function getSortedList(goods, { sortOrder, isReversed }) {
   const preparedGoods = [...goods];
 
-  if (sortOrder === sortMethod.LENGTH) {
-    preparedGoods.sort((a, b) => a.length - b.length);
-  }
+  switch (sortOrder) {
+    case sortMethod.Length:
+      preparedGoods.sort((a, b) => a.length - b.length);
+      break;
 
-  if (sortOrder === sortMethod.ALPHABET) {
-    preparedGoods.sort((a, b) => a.localeCompare(b));
+    case sortMethod.Alphabet:
+      preparedGoods.sort((a, b) => a.localeCompare(b));
+      break;
+
+    default:
+      break;
   }
 
   if (isReversed) {
@@ -47,6 +52,7 @@ export const App = () => {
   });
 
   const handleToggleReverse = () => setIsReversed(prevValue => !prevValue);
+  const shouldShowResetButton = isReversed || sortOrder;
 
   const handleReset = () => {
     setIsReversed(false);
@@ -59,10 +65,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortOrder !== sortMethod.ALPHABET,
+            'is-light': sortOrder !== sortMethod.Alphabet,
           })}
           onClick={() => (
-            setSortOrder(sortMethod.ALPHABET)
+            setSortOrder(sortMethod.Alphabet)
           )}
         >
           Sort alphabetically
@@ -71,10 +77,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortOrder !== sortMethod.LENGTH,
+            'is-light': sortOrder !== sortMethod.Length,
           })}
           onClick={() => (
-            setSortOrder(sortMethod.LENGTH)
+            setSortOrder(sortMethod.Length)
           )}
         >
           Sort by length
@@ -90,7 +96,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(isReversed || sortOrder) && (
+        {(shouldShowResetButton) && (
           <button
             type="button"
             className="button is-danger is-light"
