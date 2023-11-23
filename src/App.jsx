@@ -20,13 +20,16 @@ export const goodsFromServer = [
 const SORT_FIELD_NAME = 'name';
 const SORT_FIELD_LENGTH = 'length';
 
+const localeGoods = goodsFromServer.map(good => (
+  {
+    name: good,
+    length: good.length,
+    key: uuidv4(),
+  }
+));
+
 function getPreperedGoods(goods, { sortField, reverse }) {
-  const preperedGoods = goods.map(good => (
-    {
-      name: good,
-      length: good.length,
-    }
-  ));
+  const preperedGoods = [...goods];
 
   if (sortField) {
     preperedGoods.sort((good1, good2) => {
@@ -54,8 +57,8 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState(false);
 
-  const localeGoods = getPreperedGoods(
-    goodsFromServer, { sortField, reverse },
+  const visibleGoods = getPreperedGoods(
+    localeGoods, { sortField, reverse },
   );
 
   const handleClickReset = () => {
@@ -63,7 +66,7 @@ export const App = () => {
     setReverse(false);
   };
 
-  const isTrue = sortField || reverse;
+  const isResetButtonVisible = sortField || reverse;
 
   return (
     <div className="section content">
@@ -100,7 +103,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {isTrue
+        {isResetButtonVisible
           && (
             <button
               onClick={handleClickReset}
@@ -113,8 +116,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {localeGoods.map(good => (
-          <li key={uuidv4()} data-cy="Good">{good.name}</li>
+        {visibleGoods.map(good => (
+          <li key={good.key} data-cy="Good">{good.name}</li>
         ))}
       </ul>
     </div>
