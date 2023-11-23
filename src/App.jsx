@@ -19,6 +19,7 @@ export const goodsFromServer = [
 const sortMethod = {
   Alphabet: 'alphabetical',
   Length: 'length',
+  defaultSort: '',
 };
 
 function getSortedList(goods, { sortOrder, isReversed }) {
@@ -45,8 +46,8 @@ function getSortedList(goods, { sortOrder, isReversed }) {
 }
 
 export const App = () => {
-  const [sortOrder, setSortOrder] = useState('');
-  const [isReversed, setIsReversed] = useState('');
+  const [sortOrder, setSortOrder] = useState(sortMethod.defaultSort);
+  const [isReversed, setIsReversed] = useState(false);
   const sortGoodsList = getSortedList(goodsFromServer, {
     sortOrder, isReversed,
   });
@@ -56,7 +57,7 @@ export const App = () => {
 
   const handleReset = () => {
     setIsReversed(false);
-    setSortOrder('');
+    setSortOrder(sortMethod.defaultSort);
   };
 
   return (
