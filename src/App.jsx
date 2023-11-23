@@ -62,7 +62,7 @@ export const App = () => {
     }
 
     if (reverse) {
-      goodsToShow = goodsToShow.reverse();
+      goodsToShow.reverse();
     }
 
     return goodsToShow;
