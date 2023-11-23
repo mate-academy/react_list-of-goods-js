@@ -19,35 +19,36 @@ const SORT_BY_LENGTH = 'length';
 const SORT_BY_ALHPABET = 'alpha';
 const SET_REVERSE = 'reverse';
 
-const sortGoods = (arrayOfGoods, { sortValue, reverseValue }) => {
+const getSortedGoods = (arrayOfGoods, { sortValue, reverseValue }) => {
   const copyOfGoods = [...arrayOfGoods];
 
-  const sortArray = copyOfGoods.sort((goodA, goodB) => {
-    switch (sortValue) {
-      case SORT_BY_ALHPABET:
-        return goodA.localeCompare(goodB);
-      case SORT_BY_LENGTH:
-        return goodA.length - goodB.length;
-      default:
-        return 0;
-    }
-  });
-
-  if (reverseValue) {
-    sortArray.reverse();
+  if (sortValue) {
+    copyOfGoods.sort((goodA, goodB) => {
+      switch (sortValue) {
+        case SORT_BY_ALHPABET:
+          return goodA.localeCompare(goodB);
+        case SORT_BY_LENGTH:
+          return goodA.length - goodB.length;
+        default:
+          return 0;
+      }
+    });
   }
 
-  return sortArray;
+  if (reverseValue) {
+    copyOfGoods.reverse();
+  }
+
+  return copyOfGoods;
 };
 
 export const App = () => {
-  const [arrayOfGoods, setArrayOfGoods] = useState(goodsFromServer);
   const [sortValue, setsortValue] = useState('');
   const [reverseValue, setReverseValue] = useState('');
-  const sortFunction = sortGoods(arrayOfGoods, { sortValue, reverseValue });
+  const goodsForRender = getSortedGoods(goodsFromServer,
+    { sortValue, reverseValue });
 
   const resetButon = () => {
-    setArrayOfGoods(goodsFromServer);
     setsortValue('');
     setReverseValue('');
   };
@@ -95,7 +96,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortFunction.map(good => (
+        {goodsForRender.map(good => (
           <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
