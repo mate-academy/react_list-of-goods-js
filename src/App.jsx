@@ -16,30 +16,31 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const ALPHABETICAL_SORT = 'alphabetical';
+const LENGTH_SORT = 'length';
+
+const sortByAlphabetically = (goods, isReversed) => (
+  isReversed ? [...goods].sort().reverse() : [...goods].sort()
+);
+
+const sortByLength = (goods, isReversed) => (
+  [...goods].sort((a, b) => (
+    isReversed ? b.length - a.length : a.length - b.length))
+);
+
 export const App = () => {
   const [sortedGoods, setSortedGoods] = useState([...goodsFromServer]);
   const [isReversed, setIsReversed] = useState(false);
   const [sortType, setSortType] = useState(null);
 
-  const sortAlphabetically = () => {
-    if (!isReversed || (isReversed && sortType !== 'alphabetical')) {
-      const orderAbc = isReversed
-        ? [...sortedGoods].sort().reverse()
-        : [...sortedGoods].sort();
+  const shouldReset = sortedGoods.join('') !== goodsFromServer.join('');
 
-      setSortedGoods(orderAbc);
-      setSortType('alphabetical');
-    }
-  };
+  const metodSort = (sortingFunction, type) => {
+    if (!isReversed || (isReversed && sortType !== type)) {
+      const sortedGood = sortingFunction(goodsFromServer, isReversed);
 
-  const sortByLength = () => {
-    if (!isReversed || (isReversed && sortType !== 'length')) {
-      const orderLength = isReversed
-        ? [...sortedGoods].sort((a, b) => b.length - a.length)
-        : [...sortedGoods].sort((a, b) => a.length - b.length);
-
-      setSortedGoods(orderLength);
-      setSortType('length');
+      setSortedGoods(sortedGood);
+      setSortType(type);
     }
   };
 
@@ -64,9 +65,9 @@ export const App = () => {
           className={classNames(
             'button',
             'is-info',
-            { 'is-light': sortType !== 'alphabetical' },
+            { 'is-light': sortType !== ALPHABETICAL_SORT },
           )}
-          onClick={sortAlphabetically}
+          onClick={() => metodSort(sortByAlphabetically, ALPHABETICAL_SORT)}
         >
           Sort alphabetically
         </button>
@@ -77,9 +78,9 @@ export const App = () => {
             classNames(
               'button',
               'is-success',
-              { 'is-light': sortType !== 'length' },
+              { 'is-light': sortType !== LENGTH_SORT },
             )}
-          onClick={sortByLength}
+          onClick={() => metodSort(sortByLength, LENGTH_SORT)}
 
         >
           Sort by length
@@ -91,14 +92,14 @@ export const App = () => {
             classNames(
               'button',
               'is-warning',
-              { 'is-light': isReversed === false },
+              { 'is-light': !isReversed },
             )}
           onClick={reverseOrder}
         >
           Reverse
         </button>
 
-        {sortedGoods.join('') !== goodsFromServer.join('') && (
+        {shouldReset && (
           <button
             type="button"
             className="button is-danger is-light"
