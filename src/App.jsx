@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -13,46 +15,141 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+const ALPHABETICAL = 'Alphabetical';
+const BY_LENGTH = 'ByLength';
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const sortGoodsByType = (goods, sortType, isReversed) => {
+  const sortedGoods = [...goods];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  if (ALPHABETICAL === sortType) {
+    return sortedGoods.sort((good1, good2) => (
+      good1.localeCompare(good2)
+    ));
+  }
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (BY_LENGTH === sortType) {
+    return sortedGoods.sort((good1, good2) => (
+      good1.length - good2.length
+    ));
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  // if (isReversed) {
+  //   return sortedGoods.reverse();
+  // }
+
+  return sortedGoods;
+};
+
+export const App = () => {
+  const [goods, setGoods] = useState(goodsFromServer);
+  const [sortType, setSortType] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const reverseGoods = () => {
+    const reversedGoods = isReversed
+      ? [...goods].reverse()
+      : sortGoodsByType(goods, sortType);
+
+    setGoods(reversedGoods);
+    setIsReversed(!isReversed);
+  };
+
+  const resetGoods = () => {
+    setGoods(goodsFromServer);
+    setIsReversed(false);
+    setSortType(null);
+  };
+
+  const preparedGoods = sortGoodsByType(goodsFromServer, sortType);
+
+  const isSomeButtonsActive = sortType || isReversed;
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortType !== ALPHABETICAL },
+          )}
+          onClick={() => {
+            setSortType(ALPHABETICAL);
+            setIsReversed(false);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortType !== BY_LENGTH },
+          )}
+          onClick={() => {
+            setSortType(BY_LENGTH);
+            setIsReversed(false);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          onClick={reverseGoods}
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': !isReversed },
+          )}
+        >
+          Reverse
+        </button>
+
+        {isSomeButtonsActive && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetGoods}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      {preparedGoods.map(good => (
+        <li data-cy="Good" key={good}>
+          {good}
+        </li>
+      ))}
     </div>
+  );
+};
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+// const sortedByAlphabetically = [...goods].sort((good1, good2) => (
+  //   good1.localeCompare(good2)
+  // ));
+
+  // const handleSortGoods = () => {
+  //   setIsSortedByLength(false);
+  //   setIsSortedByAlphabetic(true);
+  //   setGoods(sortedByAlphabetically);
+  // };
+
+  // const sortedByLength = [...goods].sort((good1, good2) => (
+  //   good1.length - good2.length
+  // ));
+
+  // const handleSortByLength = () => {
+  //   setIsSortedByLength(true);
+  //   setIsSortedByAlphabetic(false);
+  //   setGoods(sortedByLength);
+  // };
+
+
+  // const [isSortedByAlphabetic, setIsSortedByAlphabetic] = useState(false);
+  // const [isSortedByLength, setIsSortedByLength] = useState(false);
+
+  
