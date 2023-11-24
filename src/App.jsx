@@ -22,15 +22,29 @@ export const App = () => {
   const [reverseActive, setReverseActive] = useState(true);
 
   const sortAlphabetically = () => {
-    setVisibleGoods([...visibleGoods].sort());
-    setSortBy('alphabet');
+    if (reverseActive) {
+      setVisibleGoods([...visibleGoods].sort());
+      setSortBy('alphabet');
+    } else {
+      setVisibleGoods([...visibleGoods].sort()
+        .reverse());
+      setSortBy('alphabet');
+    }
   };
 
   const sortByLength = () => {
-    setVisibleGoods(
-      [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-    );
-    setSortBy('length');
+    if (reverseActive) {
+      setVisibleGoods(
+        [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
+      );
+      setSortBy('length');
+    } else {
+      setVisibleGoods(
+        [...visibleGoods].sort((good1, good2) => good1.length - good2.length)
+          .reverse(),
+      );
+      setSortBy('length');
+    }
   };
 
   const reverse = () => {
