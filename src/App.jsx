@@ -16,52 +16,44 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_ALPHABET = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+
+function getPreparedGoods(goods, { sortBy, isReversed }) {
+  const preparedGoods = [...goods];
+
+  if (sortBy) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortBy) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
+
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [sortBy, setSortBy] = useState(null);
-  const [reverseActive, setReverseActive] = useState(true);
-
-  const sortAlphabetically = () => {
-    if (reverseActive) {
-      setVisibleGoods([...visibleGoods].sort());
-      setSortBy('alphabet');
-    } else {
-      setVisibleGoods([...visibleGoods].sort()
-        .reverse());
-      setSortBy('alphabet');
-    }
-  };
-
-  const sortByLength = () => {
-    if (reverseActive) {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-      );
-      setSortBy('length');
-    } else {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) => good1.length - good2.length)
-          .reverse(),
-      );
-      setSortBy('length');
-    }
-  };
-
-  const reverse = () => {
-    if (sortBy) {
-      setVisibleGoods([...visibleGoods].reverse());
-      setReverseActive(!reverseActive);
-    } else {
-      setVisibleGoods([...visibleGoods].reverse());
-      setReverseActive(!reverseActive);
-    }
-  };
-
-  const reset = () => {
-    setVisibleGoods(goodsFromServer);
-    setSortBy(null);
-    setReverseActive(true);
-  };
+  const [sortBy, setSortBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    { sortBy, isReversed },
+  );
+  const handleReversedButton = () => (
+    setIsReversed(currentReversed => !currentReversed)
+  );
 
   return (
     <div className="section content">
@@ -69,9 +61,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortBy !== 'alphabet',
+            'is-light': sortBy !== SORT_BY_ALPHABET,
           })}
-          onClick={sortAlphabetically}
+          onClick={() => setSortBy(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -79,9 +71,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortBy !== 'length',
+            'is-light': sortBy !== SORT_BY_LENGTH,
           })}
-          onClick={sortByLength}
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -89,24 +81,26 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': reverseActive,
+            'is-light': !isReversed,
           })}
-          onClick={reverse}
+          onClick={handleReversedButton}
         >
           Reverse
         </button>
 
-        {sortBy !== null || !reverseActive ? (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={reset}
-          >
-            Reset
-          </button>
-        ) : (
-          ''
-        )}
+        {sortBy || isReversed
+          ? (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={() => setSortBy('')}
+            >
+              Reset
+            </button>
+          )
+          : ''
+        }
+
       </div>
 
       <ul>
