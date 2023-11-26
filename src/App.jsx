@@ -19,48 +19,42 @@ const ALPHABETICAL = 'Alphabetical';
 const BY_LENGTH = 'ByLength';
 
 const sortGoodsByType = (goods, sortType, isReversed) => {
-  const sortedGoods = [...goods];
+  let sortedGoods = [...goods];
 
-  if (ALPHABETICAL === sortType) {
-    return sortedGoods.sort((good1, good2) => (
-      good1.localeCompare(good2)
-    ));
+  switch (sortType) {
+    case ALPHABETICAL:
+      sortedGoods.sort((good1, good2) => (
+        good1.localeCompare(good2)
+      ));
+      break;
+
+    case BY_LENGTH:
+      sortedGoods.sort((good1, good2) => (
+        good1.length - good2.length
+      ));
+      break;
+
+    default:
+      break;
   }
 
-  if (BY_LENGTH === sortType) {
-    return sortedGoods.sort((good1, good2) => (
-      good1.length - good2.length
-    ));
+  if (isReversed) {
+    sortedGoods = sortedGoods.reverse();
   }
-
-  // if (isReversed) {
-  //   return sortedGoods.reverse();
-  // }
 
   return sortedGoods;
 };
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const reverseGoods = () => {
-    const reversedGoods = isReversed
-      ? [...goods].reverse()
-      : sortGoodsByType(goods, sortType);
-
-    setGoods(reversedGoods);
-    setIsReversed(!isReversed);
-  };
-
   const resetGoods = () => {
-    setGoods(goodsFromServer);
     setIsReversed(false);
     setSortType(null);
   };
 
-  const preparedGoods = sortGoodsByType(goodsFromServer, sortType);
+  const preparedGoods = sortGoodsByType(goodsFromServer, sortType, isReversed);
 
   const isSomeButtonsActive = sortType || isReversed;
 
@@ -76,7 +70,6 @@ export const App = () => {
           )}
           onClick={() => {
             setSortType(ALPHABETICAL);
-            setIsReversed(false);
           }}
         >
           Sort alphabetically
@@ -91,7 +84,6 @@ export const App = () => {
           )}
           onClick={() => {
             setSortType(BY_LENGTH);
-            setIsReversed(false);
           }}
         >
           Sort by length
@@ -99,7 +91,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={reverseGoods}
+          onClick={() => setIsReversed(!isReversed)}
           className={cn(
             'button',
             'is-warning',
@@ -127,29 +119,3 @@ export const App = () => {
     </div>
   );
 };
-
-// const sortedByAlphabetically = [...goods].sort((good1, good2) => (
-  //   good1.localeCompare(good2)
-  // ));
-
-  // const handleSortGoods = () => {
-  //   setIsSortedByLength(false);
-  //   setIsSortedByAlphabetic(true);
-  //   setGoods(sortedByAlphabetically);
-  // };
-
-  // const sortedByLength = [...goods].sort((good1, good2) => (
-  //   good1.length - good2.length
-  // ));
-
-  // const handleSortByLength = () => {
-  //   setIsSortedByLength(true);
-  //   setIsSortedByAlphabetic(false);
-  //   setGoods(sortedByLength);
-  // };
-
-
-  // const [isSortedByAlphabetic, setIsSortedByAlphabetic] = useState(false);
-  // const [isSortedByLength, setIsSortedByLength] = useState(false);
-
-  
