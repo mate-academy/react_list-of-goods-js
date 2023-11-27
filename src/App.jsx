@@ -47,13 +47,20 @@ function getPreparedGoods(goods, { sortBy, isReversed }) {
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+
   const visibleGoods = getPreparedGoods(
     goodsFromServer,
     { sortBy, isReversed },
   );
-  const handleReversedButton = () => (
+
+  const changeIsReversed = () => (
     setIsReversed(currentReversed => !currentReversed)
   );
+
+  const reset = () => {
+    setSortBy('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -83,26 +90,21 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={handleReversedButton}
+          onClick={changeIsReversed}
         >
           Reverse
         </button>
 
-        {sortBy || isReversed
-          ? (
+        {(sortBy || isReversed)
+          && (
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortBy('');
-                setIsReversed(false);
-              }
-              }
+              onClick={reset}
             >
               Reset
             </button>
           )
-          : ''
         }
 
       </div>
