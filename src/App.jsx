@@ -45,11 +45,15 @@ const getPreperedData = (goods, sortedBy, set) => {
           return 0;
       }
     });
+  }
+
+  if (sortedBy === '') {
+    sortedGoods = [...goodsFromServer];
 
     return sortedGoods;
   }
 
-  return goodsFromServer;
+  return preperedGoods;
 };
 
 export const App = () => {
