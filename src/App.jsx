@@ -20,38 +20,49 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-const SORT_BY_REVERSE = 'reverse';
+const SORT_BY_REVERSE_A = 'reverseA';
+const SORT_BY_REVERSE_B = 'reverseB';
 
-const getPreperedData = (goods, sortedBy) => {
+let sortedGoods = [...goodsFromServer];
+
+const getPreperedData = (goods, sortedBy, set) => {
   const preperedGoods = [...goodsFromServer];
 
-  if (sortedBy === SORT_BY_REVERSE) {
-    return preperedGoods.reverse();
+  if (sortedBy === SORT_BY_REVERSE_A || sortedBy === SORT_BY_REVERSE_B) {
+    return sortedGoods.reverse();
   }
 
-  if (sortedBy === '') {
-    return goodsFromServer;
+  if (sortedBy !== '') {
+    sortedGoods = preperedGoods.sort((good1, good2) => {
+      switch (sortedBy) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
+
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+
+    return sortedGoods;
   }
 
-  const sortedGoods = preperedGoods.sort((good1, good2) => {
-    switch (sortedBy) {
-      case SORT_BY_ALPHABET:
-        return good1.localeCompare(good2);
-
-      case SORT_BY_LENGTH:
-        return good1.length - good2.length;
-
-      default:
-        return 0;
-    }
-  });
-
-  return sortedGoods;
+  return goodsFromServer;
 };
 
 export const App = () => {
   const [sortedBy, setSortedBy] = useState('');
   const goods = getPreperedData(goodsFromServer, sortedBy);
+
+  const reverse = () => {
+    if (sortedBy === SORT_BY_REVERSE_A) {
+      setSortedBy(SORT_BY_REVERSE_B);
+    } else {
+      setSortedBy(SORT_BY_REVERSE_A);
+    }
+  };
 
   return (
     <div className="section content">
@@ -77,9 +88,11 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': sortedBy !== SORT_BY_REVERSE,
+            'is-light': (
+              sortedBy !== SORT_BY_REVERSE_A || sortedBy === SORT_BY_REVERSE_B
+            ),
           })}
-          onClick={() => setSortedBy(SORT_BY_REVERSE)}
+          onClick={reverse}
         >
           Reverse
         </button>
