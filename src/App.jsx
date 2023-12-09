@@ -77,12 +77,11 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortCondition === SORT_LENGTH || sortCondition === SORT_ALPHABET
-        || reverseCondition === true) && (
+        {(sortCondition || reverseCondition) && (
           <button
             type="button"
             onClick={() => {
-              setSortCondition('reset');
+              setSortCondition('');
               setReverseCondition(false);
             }}
             className="button is-danger is-light"
