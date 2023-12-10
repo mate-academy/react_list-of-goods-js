@@ -1,5 +1,10 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
+
 import './App.scss';
+import { SORT_BY } from './constants/sortBy';
+import { ProductList } from './components/ProductList';
+import { Buttons } from './components/Buttons';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +19,61 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+let sortedGoods = [...goodsFromServer];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+const getPreperedData = (goods, sortedBy, set) => {
+  const preperedGoods = [...goodsFromServer];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortedBy === SORT_BY.REVERSE) {
+    return sortedGoods.reverse();
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  if (sortedBy) {
+    sortedGoods = preperedGoods.sort((good1, good2) => {
+      switch (sortedBy) {
+        case SORT_BY.ALPHABET:
+          return good1.localeCompare(good2);
+
+        case SORT_BY.LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (!sortedBy) {
+    sortedGoods = [...goodsFromServer];
+
+    return sortedGoods;
+  }
+
+  return preperedGoods;
+};
+
+export const App = () => {
+  const [sortField, setSortedBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const goods = getPreperedData(goodsFromServer, sortField);
+
+  const getSortField = (field) => {
+    setSortedBy(field);
+
+    if (field === SORT_BY.REVERSE) {
+      setIsReversed(!isReversed);
+    }
+  };
+
+  return (
+    <div className="section content">
+      <Buttons
+        sortField={sortField}
+        sortedBy={field => getSortField(field)}
+      />
+
+      <ProductList goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
