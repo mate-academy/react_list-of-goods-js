@@ -44,13 +44,16 @@ export const App = () => {
   const [direction, setDirection] = useState(DIRECTION.DIRECTLY);
 
   const switchDirection = () => {
-    if (direction === DIRECTION.DIRECTLY) {
-      setDirection(DIRECTION.OPPOSITE);
-    }
+    setDirection(
+      direction === DIRECTION.DIRECTLY
+        ? DIRECTION.OPPOSITE
+        : DIRECTION.DIRECTLY,
+    );
+  };
 
-    if (direction === DIRECTION.OPPOSITE) {
-      setDirection(DIRECTION.DIRECTLY);
-    }
+  const resetSortSettings = () => {
+    setOrder(ORDER.BY_DEFAULT);
+    setDirection(DIRECTION.DIRECTLY);
   };
 
   const preparedGoods = prepareGoods(
@@ -63,10 +66,7 @@ export const App = () => {
         sortAlphabetically={() => setOrder(ORDER.ALPHABETICALLY)}
         sortByLength={() => setOrder(ORDER.BY_LENGTH)}
         reverse={() => switchDirection()}
-        reset={() => {
-          setOrder(ORDER.BY_DEFAULT);
-          setDirection(DIRECTION.DIRECTLY);
-        }}
+        reset={() => resetSortSettings()}
         order={order}
         direction={direction}
       />
