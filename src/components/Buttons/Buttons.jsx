@@ -2,23 +2,17 @@ import cn from 'classnames';
 
 import { SORT_BY } from '../../constants/sortBy';
 
-export const Buttons = ({ sortedBy, setSortedBy }) => {
-  const reverse = () => {
-    if (sortedBy === SORT_BY.REVERSE_A) {
-      setSortedBy(SORT_BY.REVERSE_B);
-    } else {
-      setSortedBy(SORT_BY.REVERSE_A);
-    }
-  };
+export const Buttons = ({ sortField, sortedBy }) => {
+  console.log('');
 
   return (
     <div className="buttons">
       <button
         type="button"
         className={`button is-info ${
-          sortedBy !== SORT_BY.ALPHABET && 'is-light'
+          sortField !== SORT_BY.ALPHABET && 'is-light'
         }`}
-        onClick={() => setSortedBy(SORT_BY.ALPHABET)}
+        onClick={() => sortedBy(SORT_BY.ALPHABET)}
       >
         Sort alphabetically
       </button>
@@ -26,9 +20,9 @@ export const Buttons = ({ sortedBy, setSortedBy }) => {
       <button
         type="button"
         className={cn('button', 'is-success', {
-          'is-light': sortedBy !== SORT_BY.LENGTH,
+          'is-light': sortField !== SORT_BY.LENGTH,
         })}
-        onClick={() => setSortedBy(SORT_BY.LENGTH)}
+        onClick={() => sortedBy(SORT_BY.LENGTH)}
       >
         Sort by length
       </button>
@@ -37,18 +31,18 @@ export const Buttons = ({ sortedBy, setSortedBy }) => {
         type="button"
         className={cn('button', 'is-warning', {
           'is-light':
-            sortedBy !== SORT_BY.REVERSE_A || sortedBy === SORT_BY.REVERSE_B,
+            sortField !== SORT_BY.REVERSE,
         })}
-        onClick={reverse}
+        onClick={() => sortedBy(SORT_BY.REVERSE)}
       >
         Reverse
       </button>
 
-      {sortedBy !== '' && (
+      {sortField !== '' && (
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={() => setSortedBy('')}
+          onClick={() => sortedBy('')}
         >
           Reset
         </button>

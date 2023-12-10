@@ -24,11 +24,11 @@ let sortedGoods = [...goodsFromServer];
 const getPreperedData = (goods, sortedBy, set) => {
   const preperedGoods = [...goodsFromServer];
 
-  if (sortedBy === SORT_BY.REVERSE_A || sortedBy === SORT_BY.REVERSE_B) {
+  if (sortedBy === SORT_BY.REVERSE) {
     return sortedGoods.reverse();
   }
 
-  if (sortedBy !== '') {
+  if (sortedBy) {
     sortedGoods = preperedGoods.sort((good1, good2) => {
       switch (sortedBy) {
         case SORT_BY.ALPHABET:
@@ -43,7 +43,7 @@ const getPreperedData = (goods, sortedBy, set) => {
     });
   }
 
-  if (sortedBy === '') {
+  if (!sortedBy) {
     sortedGoods = [...goodsFromServer];
 
     return sortedGoods;
@@ -53,14 +53,24 @@ const getPreperedData = (goods, sortedBy, set) => {
 };
 
 export const App = () => {
-  const [sortedBy, setSortedBy] = useState('');
-  const goods = getPreperedData(goodsFromServer, sortedBy);
+  const [sortField, setSortedBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const goods = getPreperedData(goodsFromServer, sortField);
+
+  const getSortField = (field) => {
+    setSortedBy(field);
+
+    if (field === SORT_BY.REVERSE) {
+      setIsReversed(!isReversed);
+    }
+  };
 
   return (
     <div className="section content">
       <Buttons
-        sortedBy={sortedBy}
-        setSortedBy={setSortedBy}
+        sortField={sortField}
+        sortedBy={field => getSortField(field)}
       />
 
       <ProductList goods={goods} />
