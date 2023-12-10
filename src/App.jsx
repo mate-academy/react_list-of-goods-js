@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { Buttons } from './components/Buttons';
+import { GoodList } from './components/GoodList';
+import { ORDER, DIRECTION } from './constants';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +18,59 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const prepareGoods = (goods, sortOrder, sortDirection) => {
+  const goodsCopy = [...goods];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  switch (sortOrder) {
+    case ORDER.ALPHABETICALLY:
+      goodsCopy.sort((next, prev) => next.localeCompare(prev));
+      break;
+    case ORDER.BY_LENGTH:
+      goodsCopy.sort((next, prev) => next.length - prev.length);
+      break;
+    default:
+      break;
+  }
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (sortDirection === DIRECTION.OPPOSITE) {
+    goodsCopy.reverse();
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  return goodsCopy;
+};
+
+export const App = () => {
+  const [order, setOrder] = useState(ORDER.BY_DEFAULT);
+  const [direction, setDirection] = useState(DIRECTION.DIRECTLY);
+
+  const switchDirection = () => {
+    setDirection(
+      direction === DIRECTION.DIRECTLY
+        ? DIRECTION.OPPOSITE
+        : DIRECTION.DIRECTLY,
+    );
+  };
+
+  const resetSortSettings = () => {
+    setOrder(ORDER.BY_DEFAULT);
+    setDirection(DIRECTION.DIRECTLY);
+  };
+
+  const preparedGoods = prepareGoods(
+    goodsFromServer, order, direction,
+  );
+
+  return (
+    <div className="section content">
+      <Buttons
+        sortAlphabetically={() => setOrder(ORDER.ALPHABETICALLY)}
+        sortByLength={() => setOrder(ORDER.BY_LENGTH)}
+        reverse={() => switchDirection()}
+        reset={() => resetSortSettings()}
+        order={order}
+        direction={direction}
+      />
+      <GoodList goods={preparedGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
