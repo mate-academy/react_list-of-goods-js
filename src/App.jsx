@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reverse }) {
+function getPreparedGoods(goods, { sortField, reversedField }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -37,7 +37,7 @@ function getPreparedGoods(goods, { sortField, reverse }) {
     });
   }
 
-  if (reverse) {
+  if (reversedField) {
     preparedGoods.reverse();
   }
 
@@ -51,17 +51,12 @@ export const App = () => {
     goodsFromServer, { sortField, reversedField },
   );
 
-  function reset() {
-    setSortField('');
-    setReversedField(false);
-  }
-
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className="button is-success is-light"
+          className={`button is-success${sortField === SORT_FIELD_ALPHABET ? '' : ' is-light'}`}
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
@@ -69,7 +64,7 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-success is-light"
+          className={`button is-success${sortField === SORT_FIELD_LENGTH ? '' : ' is-light'}`}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
@@ -77,19 +72,27 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-warning is-light"
-          onClick={() => setReversedField(true)}
+          className={`button is-success${reversedField ? '' : ' is-light'}`}
+          onClick={() => setReversedField(!reversedField)}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={reset}
-        >
-          Reset
-        </button>
+        {
+          (sortField || reversedField) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReversedField(false);
+            }}
+          >
+            Reset
+          </button>
+          )
+        }
+
       </div>
 
       <ul>
