@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, sortField) {
+function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -38,24 +38,16 @@ function getPreparedGoods(goods, sortField) {
     });
   }
 
-  return preparedGoods;
+  return isReversed ? preparedGoods.reverse() : preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const visibleGoods = isReversed
-    ? [...getPreparedGoods(goodsFromServer, sortField)].reverse()
-    : getPreparedGoods(goodsFromServer, sortField);
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
-  const button = 'button';
-  const isInfo = 'is-info';
-  const isLight = 'is-light';
-  const isSuccess = 'is-success';
-  const isWarning = 'is-warning';
-
-  const isResetVisible = goodsFromServer[0] !== visibleGoods[0];
+  const isResetVisible = sortField !== '' || isReversed;
 
   return (
     <div className="section content">
@@ -63,9 +55,9 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            button,
-            isInfo,
-            { [isLight]: sortField !== SORT_FIELD_ALPHABETICALLY },
+            'button',
+            'is-info',
+            { 'is-light': sortField !== SORT_FIELD_ALPHABETICALLY },
           )}
           onClick={() => setSortField(SORT_FIELD_ALPHABETICALLY)}
         >
@@ -75,9 +67,9 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            button,
-            isSuccess,
-            { [isLight]: sortField !== SORT_FIELD_LENGTH },
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH },
           )}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
@@ -87,9 +79,9 @@ export const App = () => {
         <button
           type="button"
           className={cn(
-            button,
-            isWarning,
-            { [isLight]: !isReversed },
+            'button',
+            'is-warning',
+            { 'is-light': !isReversed },
           )}
           onClick={() => setIsReversed(!isReversed)}
         >
