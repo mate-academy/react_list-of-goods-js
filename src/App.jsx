@@ -55,6 +55,17 @@ export const App = () => {
 
   const visibleGoods = getSortedGoods(goodsFromServer, sortField, isReverse);
 
+  const reset = () => {
+    setIsReverse(false);
+    setSortField('');
+  };
+
+  const reverse = () => (
+    isReverse
+      ? setIsReverse(false)
+      : setIsReverse(true)
+  );
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -82,9 +93,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => (isReverse
-            ? setIsReverse(false)
-            : setIsReverse(true))}
+          onClick={reverse}
           className={cn(
             'button is-warning',
             { 'is-light': !isReverse },
@@ -96,10 +105,7 @@ export const App = () => {
         {isSorted && (
           <button
             type="button"
-            onClick={() => {
-              setIsReverse(false);
-              setSortField('');
-            }}
+            onClick={reset}
             className="button is-danger is-light"
           >
             Reset
