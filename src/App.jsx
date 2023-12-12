@@ -1,6 +1,8 @@
+import { useState } from 'react';
+import cn from 'classnames';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -44,7 +46,7 @@ function getPreparedGoods(goodFromServer, { sortField, directionOrder }) {
 }
 
 export const App = () => {
-  const [sortField, setsortField] = useState('');
+  const [sortField, setSortField] = useState('');
   const [directionOrder, setDirectionOrder] = useState('asc');
 
   const visibleGoods = getPreparedGoods(
@@ -56,21 +58,34 @@ export const App = () => {
     setDirectionOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
 
+  const resetOrder = () => {
+    setSortField('');
+    setDirectionOrder('asc');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setsortField(SORT_FIELD_ABC)}
+          onClick={() => setSortField(SORT_FIELD_ABC)}
           type="button"
-          className="button is-info is-light"
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': sortField !== SORT_FIELD_ABC },
+          )}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setsortField(SORT_FIELD_LENGTH)}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
-          className="button is-success is-light"
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH },
+          )}
         >
           Sort by length
         </button>
@@ -78,13 +93,17 @@ export const App = () => {
         <button
           onClick={reverseOrder}
           type="button"
-          className="button is-warning is-light"
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': directionOrder === 'asc' },
+          )}
         >
           Reverse
         </button>
 
         <button
-          onClick={() => setsortField('')}
+          onClick={resetOrder}
           type="button"
           className="button is-danger is-light"
         >
