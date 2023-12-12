@@ -121,7 +121,7 @@ export const App = () => {
           className={
             cn(
               'button is-warning',
-              { 'is-light': !isReversed === true },
+              { 'is-light': isReversed },
             )
           }
           onClick={() => {
@@ -132,17 +132,15 @@ export const App = () => {
         </button>
 
         {
-          isReset
-            ? (
-              <button
-                type="button"
-                className="button is-danger is-light"
-                onClick={reset}
-              >
-                Reset
-              </button>
-            )
-            : ''
+          isReset && (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={reset}
+            >
+              Reset
+            </button>
+          )
         }
       </div>
 
