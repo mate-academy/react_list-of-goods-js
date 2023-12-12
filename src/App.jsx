@@ -105,7 +105,12 @@ export const App = () => {
         <button
           onClick={resetOrder}
           type="button"
-          className="button is-danger is-light"
+          className={cn(
+            'button',
+            'is-danger',
+            'is-light',
+            { 'hiddenButton': !sortField && directionOrder === 'asc' },
+          )}
         >
           Reset
         </button>
