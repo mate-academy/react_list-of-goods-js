@@ -17,7 +17,6 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERSE = 'reverse';
 
 function getPreparedGoods(goods, { sortField, reversedField }) {
   const preparedGoods = [...goods];
@@ -52,6 +51,11 @@ export const App = () => {
     { sortField, reversedField },
   );
 
+  function reset() {
+    setSortField('');
+    setReversedField(false);
+  }
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -85,7 +89,7 @@ export const App = () => {
           type="button"
           className={`button is-warning
           ${
-            sortField !== SORT_FIELD_REVERSE
+            !reversedField
               ? 'is-light'
               : ''
           }`}
@@ -94,16 +98,18 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => {
-            setSortField('');
-            setReversedField(false);
-          }}
-        >
-          Reset
-        </button>
+        {
+          (sortField || reversedField)
+            && (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={reset}
+            >
+              Reset
+            </button>
+            )
+        }
       </div>
 
       <ul>
