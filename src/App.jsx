@@ -19,7 +19,6 @@ export const goodsFromServer = [
 const sortOptions = {
   alphabetic: 'alphabetic',
   length: 'length',
-  reverse: 'reverse',
   default: '',
 };
 
