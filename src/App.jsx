@@ -44,10 +44,19 @@ function getPreparedGoods(goods, sortField, isReverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverse, setReverse] = useState(false);
-  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, reverse);
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
   const activeBtn = 'button is-success';
   const notActiveBtn = 'button is-success is-light';
+
+  const handleReverseClick = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleSortClick = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -70,26 +79,17 @@ export const App = () => {
 
         <button
           type="button"
-          className={`${!reverse ? notActiveBtn : activeBtn}`}
-          onClick={() => {
-            if (!reverse) {
-              setReverse(true);
-            } else {
-              setReverse(false);
-            }
-          }}
+          className={`${!isReversed ? notActiveBtn : activeBtn}`}
+          onClick={handleReverseClick}
         >
           Reverse
         </button>
 
-        {(sortField !== '' || reverse) && (
+        {(sortField !== '' || isReversed) && (
           <button
             type="button"
             className={notActiveBtn}
-            onClick={() => {
-              setSortField('');
-              setReverse(false);
-            }}
+            onClick={handleSortClick}
           >
             Reset
           </button>
