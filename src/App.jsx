@@ -86,9 +86,7 @@ export const App = () => {
             { 'is-light': isReversed === false },
             'button is-warning'
           )}
-          onClick={() => {
-            setIsReversed((prevIsReversed) => !prevIsReversed);
-          }}
+          onClick={() => {setIsReversed((prevIsReversed) => !prevIsReversed)}}
         >
           Reverse
         </button>
