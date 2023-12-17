@@ -28,7 +28,7 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 
   if (sortField === SORT_LENGTH) {
     preparedGoods.sort(
-      (product1, product2) => product1.length - product2.length,
+      (product1, product2) => product1.length - product2.length
     );
   }
 
@@ -62,11 +62,9 @@ export const App = () => {
           type="button"
           className={cn(
             { 'is-light': sortField !== SORT_NAME },
-            'button is-info',
+            'button is-info'
           )}
-          onClick={() => {
-            setSortField(SORT_NAME);
-          }}
+          onClick={() => {setSortField(SORT_NAME)}}
         >
           Sort alphabetically
         </button>
@@ -75,11 +73,9 @@ export const App = () => {
           type="button"
           className={cn(
             { 'is-light': sortField !== SORT_LENGTH },
-            'button is-success',
+            'button is-success'
           )}
-          onClick={() => {
-            setSortField(SORT_LENGTH);
-          }}
+          onClick={() => {setSortField(SORT_LENGTH)}}
         >
           Sort by length
         </button>
@@ -88,10 +84,10 @@ export const App = () => {
           type="button"
           className={cn(
             { 'is-light': isReversed === false },
-            'button is-warning',
+            'button is-warning'
           )}
           onClick={() => {
-            setIsReversed(!isReversed);
+            setIsReversed((prevIsReversed) => !prevIsReversed);
           }}
         >
           Reverse
@@ -109,7 +105,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(item => (
+        {visibleGoods.map((item) => (
           <li data-cy="Good" key={item}>
             {item}
           </li>
