@@ -44,7 +44,7 @@ export const App = () => {
 
     setGoods(reversedGoods);
     setIsReversed(!isReversed);
-    setResetVisible(false);
+    setResetVisible(goods.join('') !== goodsFromServer.join(''));
     setActiveButton('reverse');
   };
 
