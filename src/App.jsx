@@ -82,18 +82,16 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          style={{
-            visibility: sorting !== '' || reverseFlag
-              ? 'visible'
-              : 'hidden',
-          }}
-          onClick={resetGoods}
-        >
-          Reset
-        </button>
+        {(sorting !== '' || reverseFlag)
+        && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetGoods}
+          >
+            Reset
+          </button>
+        )}
       </div>
       <GoodsList goods={currentGoods} />
     </div>
