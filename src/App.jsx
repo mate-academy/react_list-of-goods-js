@@ -1,5 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
+import { GoodsList } from './Components/GoodsList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +17,83 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const LENGTH = 'length';
+const ALPHABETICAL = 'alphabetical';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+const sortGoods = (goods, sortType, reverseFlag) => {
+  goods.sort((goodA, goodB) => {
+    switch (sortType) {
+      default:
+        return 0;
+      case ALPHABETICAL:
+        return goodA.localeCompare(goodB);
+      case LENGTH:
+        return goodA.length - goodB.length;
+    }
+  });
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (reverseFlag) {
+    goods.reverse();
+  }
+};
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+export const App = () => {
+  const currentGoods = [...goodsFromServer];
+  const [sorting, setSorting] = useState('');
+  const [reverseFlag, setReverseFlag] = useState(false);
+
+  const resetGoods = () => {
+    setSorting('');
+    setReverseFlag(false);
+  };
+
+  sortGoods(currentGoods, sorting, reverseFlag);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button', 'is-info', {
+            'is-light': sorting !== ALPHABETICAL,
+          })}
+          onClick={() => setSorting(ALPHABETICAL)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-success', {
+            'is-light': sorting !== LENGTH,
+          })}
+          onClick={() => setSorting(LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-warning', {
+            'is-light': !reverseFlag,
+          })}
+          onClick={() => setReverseFlag(!reverseFlag)}
+        >
+          Reverse
+        </button>
+
+        {(sorting !== '' || reverseFlag)
+        && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetGoods}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <GoodsList goods={currentGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
