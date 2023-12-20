@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -43,23 +44,27 @@ function getPreparedGoods(goods, { methodSort, reverse }) {
 
 export const App = () => {
   const [methodSort, setMethodSort] = useState('');
-  const [reset, setReset] = useState(false);
   const [reverse, setReverse] = useState(false);
 
-  const visibleGoods = getPreparedGoods(goodsFromServer,
-    { methodSort, reverse });
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    methodSort, reverse,
+  });
+
+  const sortAndReverse = () => {
+    setMethodSort('');
+    setReverse(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={methodSort === ALPHABET
-            ? 'button is-info'
-            : 'button is-info is-light'}
+          className={cn('button is-info', {
+            'is-light': methodSort !== ALPHABET,
+          })}
           onClick={() => {
             setMethodSort(ALPHABET);
-            setReset(true);
           }}
         >
           Sort alphabetically
@@ -67,12 +72,11 @@ export const App = () => {
 
         <button
           type="button"
-          className={methodSort === LENGTH
-            ? 'button is-success'
-            : 'button is-success is-light'}
+          className={cn('button is-success', {
+            'is-light': methodSort !== LENGTH,
+          })}
           onClick={() => {
             setMethodSort(LENGTH);
-            setReset(true);
           }}
         >
           Sort by length
@@ -80,25 +84,22 @@ export const App = () => {
 
         <button
           type="button"
-          className={reverse
-            ? 'button is-warning'
-            : 'button is-warning is-light'}
+          className={cn('button is-warning', {
+            'is-light': !reverse,
+          })}
           onClick={() => {
-            setReset(true);
             setReverse(!reverse);
           }}
         >
           Reverse
         </button>
 
-        {reset && (
+        {(methodSort || reverse) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setReset(false);
-              setMethodSort('');
-              setReverse(false);
+              sortAndReverse();
             }}
           >
             Reset
