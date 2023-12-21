@@ -47,9 +47,14 @@ function getSortedGoods(goods, { sortMethod, reverse }) {
 export const App = () => {
   const [sortMethod, setSortMethod] = useState('');
   const [reverse, setReverse] = useState(false);
+
   const reset = () => {
     setSortMethod('');
     setReverse(false);
+  };
+
+  const reverseSetter = () => {
+    setReverse(!reverse);
   };
 
   const sortedList = getSortedGoods(goodsFromServer, { sortMethod, reverse });
@@ -76,7 +81,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setReverse(!reverse)}
+          onClick={reverseSetter}
           type="button"
           className={cn('button is-warning',
             { 'is-light': !reverse })}
@@ -86,7 +91,7 @@ export const App = () => {
 
         {(sortMethod || reverse) && (
           <button
-            onClick={() => reset()}
+            onClick={reset}
             type="button"
             className="button is-danger is-light"
           >
