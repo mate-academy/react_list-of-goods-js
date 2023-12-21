@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,115 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const defaultState = {
+  alphabetically: false,
+  length: false,
+  reverse: false,
+};
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+export const App = () => {
+  const [sortedProducts, setSortedProducts] = useState(goodsFromServer);
+  const [actionState, setActionState] = useState(defaultState);
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  const sortByAlphabet = () => {
+    const newSortedProducts = [...sortedProducts].sort(
+      (a, b) => a.localeCompare(b),
+    );
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+    setSortedProducts(newSortedProducts);
+    setActionState({
+      alphabetically: true,
+      length: false,
+      reverse: false,
+    });
+  };
+
+  const sortedByLength = () => {
+    const newSortedProducts = [...sortedProducts].sort(
+      (a, b) => a.length - b.length,
+    );
+
+    setSortedProducts(newSortedProducts);
+    setActionState({
+      alphabetically: false,
+      length: true,
+      reverse: false,
+    });
+  };
+
+  const sortByReverse = () => {
+    const newSortedProducts = [...sortedProducts].reverse();
+
+    setSortedProducts(newSortedProducts);
+    setActionState(prevState => ({
+      ...prevState,
+      reverse: !prevState.reverse,
+    }));
+  };
+
+  const handleReset = () => {
+    setSortedProducts(goodsFromServer);
+    setActionState(defaultState);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={sortByAlphabet}
+          type="button"
+          className={cn(
+            'button',
+            'is-info',
+            { 'is-light': !actionState.alphabetically },
+          )}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={sortedByLength}
+          type="button"
+          className={cn(
+            'button',
+            'is-success',
+            { 'is-light': !actionState.length },
+          )}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={sortByReverse}
+          type="button"
+          className={cn(
+            'button',
+            'is-warning',
+            { 'is-light': !actionState.reverse },
+          )}
+        >
+          Reverse
+        </button>
+
+        {(actionState.alphabetically
+          || actionState.length || actionState.reverse) && (
+          <button
+            onClick={handleReset}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {sortedProducts.map(product => (
+          <li key={product} data-cy="Good">
+            {product}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
