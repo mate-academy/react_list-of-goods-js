@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +15,106 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+const SORT_BY_ALPHABET = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+const SORT_REVERSED = 'reversed';
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState(goodsFromServer);
+  const [sortBy, setSortBy] = useState('');
+  const [reversed, setReversed] = useState(false);
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  const sortGoods = (type) => {
+    if (type === SORT_BY_LENGTH) {
+      setSortBy(SORT_BY_LENGTH);
+      const sortedGoods = [...goodsFromServer].sort(
+        (g1, g2) => g1.length - g2.length,
+      );
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+      if (reversed) {
+        const reverseSortedGoods = sortedGoods.reverse();
+
+        setGoods(reverseSortedGoods);
+      } else {
+        setSortBy(SORT_BY_LENGTH);
+        setGoods(sortedGoods);
+      }
+    } else if (type === SORT_BY_ALPHABET) {
+      setSortBy(SORT_BY_ALPHABET);
+      if (reversed) {
+        setGoods([...goods].sort().reverse());
+      } else {
+        setGoods([...goods].sort());
+      }
+    } else if (type === SORT_REVERSED) {
+      setGoods(
+        [...goods].reverse(),
+      );
+    }
+  };
+
+  const reversedSort = () => {
+    setReversed(!reversed);
+    sortGoods(SORT_REVERSED);
+  };
+
+  const reset = () => {
+    setReversed(false);
+    setSortBy('');
+    setGoods(goodsFromServer);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortBy !== SORT_BY_ALPHABET && 'is-light'}`}
+          onClick={() => {
+            sortGoods(SORT_BY_ALPHABET);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${sortBy !== SORT_BY_LENGTH && 'is-light'}`}
+          onClick={() => {
+            sortGoods(SORT_BY_LENGTH);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${!reversed && 'is-light'}`}
+          onClick={() => {
+            reversedSort();
+          }}
+        >
+          Reverse
+        </button>
+
+        {reversed || sortBy !== '' ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              reset();
+            }}
+          >
+            Reset
+          </button>
+        ) : <></>}
+      </div>
+
+      <ul>
+        {goods.map(good => (
+          <li data-cy="Good" key={good}>{good}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
