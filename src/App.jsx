@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -81,7 +82,8 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortBy !== SORT_BY_ALPHABET && 'is-light'}`}
+          className={cn('button is-info',
+            { 'is-light': sortBy !== SORT_BY_ALPHABET })}
           onClick={() => {
             sortGoods(SORT_BY_ALPHABET);
           }}
@@ -91,7 +93,8 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortBy !== SORT_BY_LENGTH && 'is-light'}`}
+          className={cn('button is-success',
+            { 'is-light': sortBy !== SORT_BY_LENGTH })}
           onClick={() => {
             sortGoods(SORT_BY_LENGTH);
           }}
@@ -101,7 +104,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${!reversed && 'is-light'}`}
+          className={cn('button is-warning', { 'is-light': !reversed })}
           onClick={reversedSort}
         >
           Reverse
