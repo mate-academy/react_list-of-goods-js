@@ -41,9 +41,9 @@ export const App = () => {
   const [actionState, setActionState] = useState(defaultState);
 
   const handleSortFieldChange = (sortField) => {
-    setActionState((...prevState) => ({
-      ...prevState,
+    setActionState(prevState => ({
       sortField,
+      isReversed: prevState.isReversed,
     }));
   };
 
@@ -99,7 +99,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(actionState.sortField || actionState.isReversed) && (
+        {(actionState.sortField !== null || actionState.isReversed) && (
           <button
             onClick={handleReset}
             type="button"
