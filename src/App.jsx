@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import cn from 'classnames';
 
 export const goodsFromServer = [
@@ -18,63 +18,48 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-const SORT_REVERSED = 'reversed';
 
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [sortBy, setSortBy] = useState('');
   const [reversed, setReversed] = useState(false);
 
-  function sortGoods(type) {
+  useEffect(() => {
+    sortGoods(sortBy, reversed);
+  }, [reversed, sortBy]);
+
+  function sortGoods(type, isReversed = false) {
+    const sortedGoods = [...goodsFromServer];
+
     switch (type) {
       case SORT_BY_LENGTH: {
-        setSortBy(SORT_BY_LENGTH);
-        const sortedGoods = [...goodsFromServer].sort(
+        sortedGoods.sort(
           (g1, g2) => g1.length - g2.length,
         );
-
-        if (reversed) {
-          const reverseSortedGoods = sortedGoods.reverse();
-
-          setGoods(reverseSortedGoods);
-        } else {
-          setSortBy(SORT_BY_LENGTH);
-          setGoods(sortedGoods);
-        }
 
         break;
       }
 
       case SORT_BY_ALPHABET:
-        setSortBy(SORT_BY_ALPHABET);
-        if (reversed) {
-          setGoods([...goods].sort().reverse());
-        } else {
-          setGoods([...goods].sort());
-        }
-
-        break;
-      case SORT_REVERSED:
-        setGoods(
-          [...goods].reverse(),
-        );
+        sortedGoods.sort((a, b) => a.localeCompare(b));
         break;
       default:
-        return 0;
     }
 
-    return 0;
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
+
+    setGoods(sortedGoods);
   }
 
   const reversedSort = () => {
     setReversed(!reversed);
-    sortGoods(SORT_REVERSED);
   };
 
   const reset = () => {
     setReversed(false);
     setSortBy('');
-    setGoods(goodsFromServer);
   };
 
   return (
@@ -85,7 +70,7 @@ export const App = () => {
           className={cn('button is-info',
             { 'is-light': sortBy !== SORT_BY_ALPHABET })}
           onClick={() => {
-            sortGoods(SORT_BY_ALPHABET);
+            setSortBy(SORT_BY_ALPHABET);
           }}
         >
           Sort alphabetically
@@ -96,7 +81,7 @@ export const App = () => {
           className={cn('button is-success',
             { 'is-light': sortBy !== SORT_BY_LENGTH })}
           onClick={() => {
-            sortGoods(SORT_BY_LENGTH);
+            setSortBy(SORT_BY_LENGTH);
           }}
         >
           Sort by length
