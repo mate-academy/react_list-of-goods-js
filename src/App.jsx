@@ -24,34 +24,46 @@ export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [reversed, setReversed] = useState(false);
 
-  const sortGoods = (type) => {
-    if (type === SORT_BY_LENGTH) {
-      setSortBy(SORT_BY_LENGTH);
-      const sortedGoods = [...goodsFromServer].sort(
-        (g1, g2) => g1.length - g2.length,
-      );
-
-      if (reversed) {
-        const reverseSortedGoods = sortedGoods.reverse();
-
-        setGoods(reverseSortedGoods);
-      } else {
+  function sortGoods(type) {
+    switch (type) {
+      case SORT_BY_LENGTH: {
         setSortBy(SORT_BY_LENGTH);
-        setGoods(sortedGoods);
+        const sortedGoods = [...goodsFromServer].sort(
+          (g1, g2) => g1.length - g2.length,
+        );
+
+        if (reversed) {
+          const reverseSortedGoods = sortedGoods.reverse();
+
+          setGoods(reverseSortedGoods);
+        } else {
+          setSortBy(SORT_BY_LENGTH);
+          setGoods(sortedGoods);
+        }
+
+        break;
       }
-    } else if (type === SORT_BY_ALPHABET) {
-      setSortBy(SORT_BY_ALPHABET);
-      if (reversed) {
-        setGoods([...goods].sort().reverse());
-      } else {
-        setGoods([...goods].sort());
-      }
-    } else if (type === SORT_REVERSED) {
-      setGoods(
-        [...goods].reverse(),
-      );
+
+      case SORT_BY_ALPHABET:
+        setSortBy(SORT_BY_ALPHABET);
+        if (reversed) {
+          setGoods([...goods].sort().reverse());
+        } else {
+          setGoods([...goods].sort());
+        }
+
+        break;
+      case SORT_REVERSED:
+        setGoods(
+          [...goods].reverse(),
+        );
+        break;
+      default:
+        return 0;
     }
-  };
+
+    return 0;
+  }
 
   const reversedSort = () => {
     setReversed(!reversed);
@@ -90,9 +102,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${!reversed && 'is-light'}`}
-          onClick={() => {
-            reversedSort();
-          }}
+          onClick={reversedSort}
         >
           Reverse
         </button>
@@ -101,9 +111,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              reset();
-            }}
+            onClick={reset}
           >
             Reset
           </button>
