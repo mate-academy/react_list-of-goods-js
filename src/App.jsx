@@ -17,97 +17,89 @@ export const goodsFromServer = [
 ];
 
 const defaultState = {
-  alphabetically: false,
-  length: false,
-  reverse: false,
+  sortField: null,
+  isReversed: false,
+};
+
+const getPreparedGoods = (goods, { sortField, isReversed }) => {
+  const preparedGoods = [...goods];
+
+  if (sortField === 'alphabetically') {
+    preparedGoods.sort((a, b) => a.localeCompare(b));
+  } else if (sortField === 'length') {
+    preparedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    return preparedGoods.reverse();
+  }
+
+  return preparedGoods;
 };
 
 export const App = () => {
-  const [sortedProducts, setSortedProducts] = useState(goodsFromServer);
   const [actionState, setActionState] = useState(defaultState);
 
-  const sortByAlphabet = () => {
-    const newSortedProducts = [...sortedProducts].sort(
-      (a, b) => a.localeCompare(b),
-    );
-
-    setSortedProducts(newSortedProducts);
-    setActionState({
-      alphabetically: true,
-      length: false,
-      reverse: false,
-    });
+  const handleSortFieldChange = (sortField) => {
+    setActionState((...prevState) => ({
+      ...prevState,
+      sortField,
+    }));
   };
 
-  const sortedByLength = () => {
-    const newSortedProducts = [...sortedProducts].sort(
-      (a, b) => a.length - b.length,
-    );
-
-    setSortedProducts(newSortedProducts);
-    setActionState({
-      alphabetically: false,
-      length: true,
-      reverse: false,
-    });
-  };
-
-  const sortByReverse = () => {
-    const newSortedProducts = [...sortedProducts].reverse();
-
-    setSortedProducts(newSortedProducts);
+  const handleReverse = () => {
     setActionState(prevState => ({
       ...prevState,
-      reverse: !prevState.reverse,
+      isReversed: !prevState.isReversed,
     }));
   };
 
   const handleReset = () => {
-    setSortedProducts(goodsFromServer);
     setActionState(defaultState);
   };
+
+  const sortedProducts = getPreparedGoods(goodsFromServer, actionState);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={sortByAlphabet}
+          onClick={() => handleSortFieldChange('alphabetically')}
           type="button"
           className={cn(
             'button',
             'is-info',
-            { 'is-light': !actionState.alphabetically },
+            { 'is-light': actionState.sortField !== 'alphabetically' },
           )}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={sortedByLength}
+          onClick={() => handleSortFieldChange('length')}
           type="button"
           className={cn(
             'button',
             'is-success',
-            { 'is-light': !actionState.length },
+            { 'is-light': actionState.sortField !== 'length' },
           )}
         >
           Sort by length
         </button>
 
         <button
-          onClick={sortByReverse}
+          onClick={handleReverse}
           type="button"
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': !actionState.reverse },
+            { 'is-light': !actionState.isReversed },
           )}
         >
           Reverse
         </button>
 
-        {(actionState.alphabetically
-          || actionState.length || actionState.reverse) && (
+        {(actionState.sortField || actionState.isReversed) && (
           <button
             onClick={handleReset}
             type="button"
