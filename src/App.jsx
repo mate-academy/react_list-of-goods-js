@@ -40,17 +40,36 @@ function getPreparedGoods(goods, sortType) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseMode, setReverseMode] = useState('off');
+  const [reverseMode, setReverseMode] = useState('');
 
   let visibleGoods = getPreparedGoods(preparedGoods, sortField);
 
-  if (reverseMode === 'on') {
+  if (reverseMode) {
     visibleGoods.reverse();
-  }
-
-  if (reverseMode === 'off') {
+  } else {
     visibleGoods.reverse();
     visibleGoods = getPreparedGoods(preparedGoods, sortField);
+  }
+
+  function sortBy(sortType) {
+    setSortField(sortType);
+    getPreparedGoods(preparedGoods, sortType);
+  }
+
+  function switchRevers() {
+    if (reverseMode) {
+      setReverseMode('');
+      visibleGoods.reverse();
+    } else {
+      setReverseMode('on');
+      visibleGoods.reverse();
+    }
+  }
+
+  function reset() {
+    setSortField('');
+    setReverseMode('');
+    preparedGoods = [...goodsFromServer];
   }
 
   return (
@@ -62,10 +81,7 @@ export const App = () => {
             ? 'button is-info'
             : 'button is-info is-light'
           }
-          onClick={() => {
-            setSortField(SORT_BY_ALPH);
-            getPreparedGoods(preparedGoods, SORT_BY_ALPH);
-          }}
+          onClick={() => sortBy(SORT_BY_ALPH)}
         >
           Sort alphabetically
         </button>
@@ -76,10 +92,7 @@ export const App = () => {
             ? 'button is-success'
             : 'button is-success is-light'
           }
-          onClick={() => {
-            setSortField(SORT_BY_LENGTH);
-            getPreparedGoods(preparedGoods, SORT_BY_LENGTH);
-          }}
+          onClick={() => sortBy(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
@@ -90,29 +103,17 @@ export const App = () => {
             ? 'button is-warning'
             : 'button is-warning is-light'
           }
-          onClick={() => {
-            if (reverseMode === 'off') {
-              setReverseMode('on');
-            }
-
-            if (reverseMode === 'on') {
-              setReverseMode('off');
-            }
-          }}
+          onClick={() => switchRevers()}
         >
           Reverse
         </button>
 
-        {(sortField || reverseMode === 'on')
+        {(sortField || reverseMode)
           ? (
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => {
-                setSortField('');
-                setReverseMode('');
-                preparedGoods = [...goodsFromServer];
-              }}
+              onClick={() => reset()}
             >
               Reset
             </button>
