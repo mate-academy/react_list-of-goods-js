@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'abc';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reverseDirection }) {
+function getPreparedGoods(goods, { sortField, isReverseDirection }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -37,7 +37,7 @@ function getPreparedGoods(goods, { sortField, reverseDirection }) {
     });
   }
 
-  if (reverseDirection) {
+  if (isReverseDirection) {
     return preparedGoods.reverse();
   }
 
@@ -47,15 +47,20 @@ function getPreparedGoods(goods, { sortField, reverseDirection }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseDirection, setReverseDirection] = useState(false);
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
-    sortField,
-    reverseDirection,
-  });
+
+  const handleReverseDirection = () => {
+    setReverseDirection(prev => !prev);
+  };
 
   const reset = () => {
     setReverseDirection(false);
     setSortField('');
   };
+
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+    isReverseDirection: reverseDirection,
+  });
 
   return (
     <div className="section content">
@@ -85,7 +90,7 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': !reverseDirection,
           })}
-          onClick={() => setReverseDirection(!reverseDirection)}
+          onClick={handleReverseDirection}
         >
           Reverse
         </button>
@@ -101,8 +106,10 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+        {visibleGoods.map((good, index) => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
