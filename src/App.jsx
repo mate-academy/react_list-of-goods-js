@@ -1,5 +1,6 @@
-import 'bulma/css/bulma.css';
 import { useState } from 'react';
+import cn from 'classnames';
+import 'bulma/css/bulma.css';
 import './App.scss';
 
 export const goodsFromServer = [
@@ -51,10 +52,10 @@ export const App = () => {
     { sortField, reversedField },
   );
 
-  function reset() {
+  const reset = () => {
     setSortField('');
     setReversedField(false);
-  }
+  };
 
   return (
     <div className="section content">
@@ -62,12 +63,8 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_ALPHABETICALLY)}
           type="button"
-          className={`button is-info
-          ${
-            sortField !== SORT_FIELD_ALPHABETICALLY
-              ? 'is-light'
-              : ''
-          }`}
+          className={cn('button is-success',
+            { 'is-light': sortField !== SORT_FIELD_ALPHABETICALLY })}
         >
           Sort alphabetically
         </button>
@@ -75,12 +72,8 @@ export const App = () => {
         <button
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
           type="button"
-          className={`button is-success 
-          ${
-            sortField !== SORT_FIELD_LENGTH
-              ? 'is-light'
-              : ''
-          }`}
+          className={cn('button is-success',
+            { 'is-light': sortField !== SORT_FIELD_LENGTH })}
         >
           Sort by length
         </button>
@@ -88,12 +81,8 @@ export const App = () => {
         <button
           onClick={() => setReversedField(!reversedField)}
           type="button"
-          className={`button is-warning
-          ${
-            !reversedField
-              ? 'is-light'
-              : ''
-          }`}
+          className={cn('button is-warning',
+            { 'is-light': !reversedField })}
         >
           Reverse
         </button>
@@ -114,7 +103,12 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li key={good} data-cy="Good">{good}</li>
+          <li
+            key={good}
+            data-cy="Good"
+          >
+            {good}
+          </li>
         ))}
       </ul>
 
