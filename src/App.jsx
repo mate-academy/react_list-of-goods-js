@@ -46,20 +46,20 @@ function getPreparedGoods(goods, { sortField, isReverseDirection }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseDirection, setReverseDirection] = useState(false);
+  const [isReversedDirection, setIsReverseDirection] = useState(false);
 
   const handleReverseDirection = () => {
-    setReverseDirection(prev => !prev);
+    setIsReverseDirection(prev => !prev);
   };
 
   const reset = () => {
-    setReverseDirection(false);
+    setIsReverseDirection(false);
     setSortField('');
   };
 
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
-    isReverseDirection: reverseDirection,
+    isReverseDirection: isReversedDirection,
   });
 
   return (
@@ -88,14 +88,14 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': !reverseDirection,
+            'is-light': !isReversedDirection,
           })}
           onClick={handleReverseDirection}
         >
           Reverse
         </button>
 
-        {(sortField || reverseDirection) && (
+        {(sortField || isReversedDirection) && (
           <button
             type="button"
             className="button is-danger is-light"
