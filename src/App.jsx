@@ -2,6 +2,8 @@ import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
 
+const classNames = require('classnames');
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -23,80 +25,98 @@ const goodsWithId = goodsFromServer.map(good => (
   }
 ));
 
-let renderedGoods;
-
 const SORT_VALUE_NAME = 'name';
 const SORT_VALUE_LENGTH = 'length';
-let SORT_VALUE_REVERSE = 'reverse';
-let isReversed = false;
-let isAlpha = false;
-let isLength = false;
+const SORT_VALUE_REVERSE = 'reverse';
+const SORT_VALUE_REREVERSE = 'reReverse';
+const SORT_VALUE_RESET = 'reset';
 
-function getPreperedGoods(goods = goodsWithId, sortField, reverse) {
-  let preperedGoods = [...goods];
+const activeFields = {
+  name: false,
+  length: false,
+  reverse: false,
+  reset: false,
+  initial: true,
+};
 
-  if (sortField !== SORT_VALUE_REVERSE) {
-    preperedGoods.sort((good, good2) => {
-      if (sortField === 'length') {
-        isLength = true;
-        isAlpha = false;
-        if (!isReversed) {
-          return good.name[sortField] - good2.name[sortField];
-        // eslint-disable-next-line
-        } else {
-          return good2.name[sortField] - good.name[sortField];
-        }
-      }
+let canChangeState = false;
+let previousActivField = '';
 
-      if (sortField === 'name') {
-        isAlpha = true;
-        isLength = false;
+function getPreperedGoods(goods, sortField, reverse) {
+  previousActivField = sortField;
 
-        return good[sortField].localeCompare(good2[sortField]);
-      }
+  // eslint-disable-next-line
+  switch (true) {
+    case sortField === SORT_VALUE_REREVERSE:
+      activeFields.reverse = !activeFields.reverse;
+      break;
 
-      return 0;
-    });
+    case sortField === SORT_VALUE_NAME && !activeFields.name:
+      activeFields.length = false;
+      canChangeState = true;
+      break;
+
+    case sortField === SORT_VALUE_LENGTH && !activeFields.length:
+      activeFields.name = false;
+      canChangeState = true;
+      break;
+
+    case sortField === SORT_VALUE_REVERSE:
+      canChangeState = true;
+      break;
+
+    case sortField === SORT_VALUE_RESET:
+      activeFields.reset = true;
   }
 
-  if ((sortField === SORT_VALUE_REVERSE || isReversed)
-      && sortField !== SORT_VALUE_LENGTH) {
-    if (sortField === SORT_VALUE_REVERSE) {
-      isReversed = !isReversed;
-    }
+  if (canChangeState) {
+    canChangeState = false;
+    activeFields[sortField] = !activeFields[sortField];
+  }
 
-    SORT_VALUE_REVERSE += ' ';
+  // eslint-disable-next-line
+  for (const key in activeFields) {
+    if (activeFields[key] === true) {
+      activeFields.initial = true;
+      break;
+    } else {
+      activeFields.initial = false;
+    }
+  }
+
+  let preperedGoods = [...goods];
+
+  if (activeFields[SORT_VALUE_NAME]) {
+    preperedGoods.sort((good, good2) => (
+      good[SORT_VALUE_NAME].localeCompare(good2[SORT_VALUE_NAME])
+    ));
+  }
+
+  if (activeFields[SORT_VALUE_LENGTH]) {
+    preperedGoods.sort((good, good2) => (
+      good.name[SORT_VALUE_LENGTH] - good2.name[SORT_VALUE_LENGTH]
+    ));
+  }
+
+  if (activeFields[SORT_VALUE_REVERSE]) {
     preperedGoods.reverse();
   }
 
-  if (sortField === 'reset') {
-    isAlpha = false;
-    isReversed = false;
-    isLength = false;
+  if (activeFields[SORT_VALUE_RESET]) {
+    activeFields.name = false;
+    activeFields.length = false;
+    activeFields.reverse = false;
+    activeFields.reset = false;
+    activeFields.initial = false;
     preperedGoods = [...goodsWithId];
   }
-
-  renderedGoods = preperedGoods;
 
   return preperedGoods;
 }
 
 export const App = () => {
-  const [sortValue, setSortValue] = useState('');
-  const [reverseArray, setReverseArray] = useState(false);
-  const visibleGoods = getPreperedGoods(
-    renderedGoods, sortValue, reverseArray,
-  );
-  let isEqualToSourceGoods = false;
-  // eslint-disable-next-line
-  for (let i = 0; i < visibleGoods.length; i++) {
-    if (visibleGoods[i].id === goodsWithId[i].id) {
-      isEqualToSourceGoods = true;
-    } else {
-      isEqualToSourceGoods = false;
-      break;
-    }
-  }
+  const [sortValue, setSortValue] = useState('initial');
+  const visibleGoods = getPreperedGoods(goodsWithId, sortValue);
 
   return (
     <div className="section content">
@@ -120,77 +140,65 @@ export const App = () => {
           setSortValue={setSortValue}
           sortField={SORT_VALUE_REVERSE}
           sortValue={sortValue}
-          reverseArray={reverseArray}
-          setReverseArray={setReverseArray}
         />
 
-        {!isEqualToSourceGoods
+        {activeFields.initial
           && (
             <Button
               text="Reset"
               setSortValue={setSortValue}
-              sortField="reset"
+              sortField={SORT_VALUE_RESET}
               sortValue={sortValue}
             />
           )
         }
       </div>
 
-      <ul>
-        {visibleGoods.map(good => (
-          <Good good={good} key={good.id} />
-        ))}
-      </ul>
+      <GoodsList visibleGoods={visibleGoods} />
     </div>
   );
 };
 
 const Button = ({
-  text, setSortValue, sortField, sortValue, reverseArray, setReverseArray,
+  text,
+  setSortValue,
+  sortField,
+  sortValue,
 }) => {
-  let btnClass = 'button';
-
-  switch (text) {
-    case 'Sort alphabetically':
-      // eslint-disable-next-line
-      isAlpha
-        ? btnClass += ' is-info'
-        : btnClass += ' is-light is-info';
-      break;
-
-    case 'Sort by length':
-      // eslint-disable-next-line
-      isLength
-        ? btnClass += ' is-success'
-        : btnClass += ' is-light is-success';
-      break;
-
-    case 'Reverse':
-      // eslint-disable-next-line
-      isReversed
-        ? btnClass += ' is-warning'
-        : btnClass += ' is-light is-warning';
-      break;
-
-    case 'Reset':
-      // eslint-disable-next-line
-      btnClass += ' is-light is-danger';
-      break;
-
-    default:
-      break;
-  }
+  const buttonClass = classNames({
+    button: true,
+    'is-light': !activeFields[sortField],
+    'is-info': sortField === SORT_VALUE_NAME,
+    'is-success': sortField === SORT_VALUE_LENGTH,
+    'is-warning': sortField === SORT_VALUE_REVERSE,
+    'is-danger': sortField === SORT_VALUE_RESET,
+  });
 
   return (
     <button
       type="button"
-      className={btnClass}
-      onClick={() => setSortValue(sortField)}
+      className={buttonClass}
+      onClick={() => {
+        if (sortField === SORT_VALUE_REVERSE
+          && previousActivField === SORT_VALUE_REVERSE) {
+          setSortValue('reReverse');
+        } else {
+          setSortValue(sortField);
+        }
+      }}
     >
       {text}
     </button>
   );
 };
+
+const GoodsList = ({ visibleGoods }) => (
+  <ul>
+    {visibleGoods.map(good => (
+      <Good good={good} key={good.id} />
+    ))}
+  </ul>
+);
 
 const Good = ({ good }) => (
   <li data-cy="Good">
