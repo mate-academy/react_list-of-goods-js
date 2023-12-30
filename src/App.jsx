@@ -62,7 +62,7 @@ export const App = () => {
   const hendleReset = () => {
     setSortField('');
     setReverseGoods(false);
-  }
+  };
 
   return (
     <div className="section content">
