@@ -108,7 +108,11 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-danger is-light"
+          className={
+            classNames('button is-info is-light', {
+              'is-hidden': (sortMethod === '' && sortDirection === ''),
+            })
+          }
           onClick={
             () => {
               setSortMethod('');
