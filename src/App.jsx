@@ -52,7 +52,7 @@ export const App = () => {
   const visibleGoods = getPreperedGoods(
     goodsFromServer,
     sortMethod,
-    sortDirection
+    sortDirection,
   );
 
   return (
@@ -112,6 +112,7 @@ export const App = () => {
           onClick={
             () => {
               setSortMethod('');
+              setSortDirection('');
             }
           }
         >
