@@ -55,6 +55,11 @@ export const App = () => {
     sortDirection,
   );
 
+  function setResetData() {
+    setSortMethod('');
+    setSortDirection('');
+  }
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -65,11 +70,7 @@ export const App = () => {
               'is-light': sortMethod !== SORT_FIELD_ALPHABET,
             })
           }
-          onClick={
-            () => {
-              setSortMethod(SORT_FIELD_ALPHABET);
-            }
-          }
+          onClick={() => setSortMethod(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -81,11 +82,7 @@ export const App = () => {
               'is-light': sortMethod !== SORT_FIELD_LENGTH,
             })
           }
-          onClick={
-            () => {
-              setSortMethod(SORT_FIELD_LENGTH);
-            }
-          }
+          onClick={() => setSortMethod(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -97,11 +94,7 @@ export const App = () => {
               'is-light': sortDirection !== REVERS_FIELDS,
             })
           }
-          onClick={
-            () => {
-              setSortDirection(sortDirection === '' ? REVERS_FIELDS : '');
-            }
-          }
+          onClick={() => setSortDirection(sortDirection === '' ? REVERS_FIELDS : '')}
         >
           Reverse
         </button>
@@ -113,12 +106,7 @@ export const App = () => {
               'is-hidden': (sortMethod === '' && sortDirection === ''),
             })
           }
-          onClick={
-            () => {
-              setSortMethod('');
-              setSortDirection('');
-            }
-          }
+          onClick={setResetData}
         >
           Reset
         </button>
