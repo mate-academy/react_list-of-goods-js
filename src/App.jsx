@@ -41,22 +41,14 @@ function setOrder(goods, fild, revers) {
   return prepereGoods;
 }
 
-function changRevers(revers) {
-  if (revers) {
-    return false;
-  }
-
-  return true;
-}
-
 const SORT_BY_LENGTH = 'length';
 const SORT_BY_ALPHABET = 'alphabet';
 
 export const App = () => {
   const [fildOrder, setFildOrder] = useState('');
-  const [revers, setRevers] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
 
-  const visiblGoods = setOrder(goodsFromServer, fildOrder, revers);
+  const visiblGoods = setOrder(goodsFromServer, fildOrder, isReversed);
 
   return (
     <div className="section content">
@@ -84,19 +76,19 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': revers !== true,
+            'is-light': isReversed !== true,
           })}
-          onClick={() => setRevers(changRevers(revers))}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(fildOrder || revers) && (
+        {(fildOrder || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setRevers(false);
+              setIsReversed(false);
               setFildOrder('');
             }}
           >
