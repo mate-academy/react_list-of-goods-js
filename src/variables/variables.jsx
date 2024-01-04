@@ -1,4 +1,3 @@
-export const HIDE_BUTTON = { display: 'none' };
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
