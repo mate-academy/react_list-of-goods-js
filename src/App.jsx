@@ -1,5 +1,11 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
+import { useState } from 'react';
+import { GoodsList } from './components/GoodsList';
+
+const SORT_ALPHABET = 'alph';
+const SORT_LENGTH = 'len';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +20,81 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+function formatGoods(goods, sortMethod, isReversed) {
+  const goodsCopy = [...goods];
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+  switch (sortMethod) {
+    case SORT_ALPHABET:
+      goodsCopy.sort((good1, good2) => good1.localeCompare(good2));
+      break;
+    case SORT_LENGTH:
+      goodsCopy.sort((good1, good2) => good1.length - good2.length);
+      break;
+    default:
+      break;
+  }
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+  if (isReversed) {
+    goodsCopy.reverse();
+  }
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+  return goodsCopy;
+}
+
+export const App = () => {
+  const [isReversed, setIsReversed] = useState(false);
+  const [sortMethod, setSortMethod] = useState(null);
+
+  const goods = formatGoods(goodsFromServer, sortMethod, isReversed);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => setSortMethod(SORT_ALPHABET)}
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortMethod !== SORT_ALPHABET,
+          })}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={() => setSortMethod(SORT_LENGTH)}
+          type="button"
+          className={cn('button is-success', {
+            'is-light': sortMethod !== SORT_LENGTH,
+          })}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={() => setIsReversed(!isReversed)}
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': isReversed === false,
+          })}
+        >
+          Reverse
+        </button>
+
+        {(sortMethod || isReversed) && (
+          <button
+            onClick={() => {
+              setIsReversed(false);
+              setSortMethod(null);
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <GoodsList goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
