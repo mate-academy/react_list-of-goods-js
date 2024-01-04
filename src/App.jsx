@@ -52,6 +52,11 @@ export const App = () => {
     setIsReversed(prev => !prev);
   };
 
+  const handleResetClick = () => {
+    setIsReversed(false);
+    setFildOrder('');
+  };
+
   const visiblGoods = setOrder(goodsFromServer, fildOrder, isReversed);
 
   return (
@@ -91,10 +96,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setIsReversed(false);
-              setFildOrder('');
-            }}
+            onClick={handleResetClick}
           >
             Reset
           </button>
