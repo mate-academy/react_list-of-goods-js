@@ -48,6 +48,10 @@ export const App = () => {
   const [fildOrder, setFildOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
+  const handleReverseClick = () => {
+    setIsReversed(prev => !prev);
+  };
+
   const visiblGoods = setOrder(goodsFromServer, fildOrder, isReversed);
 
   return (
@@ -76,9 +80,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': isReversed !== true,
+            'is-light': !isReversed,
           })}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={handleReverseClick}
         >
           Reverse
         </button>
