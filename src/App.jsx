@@ -19,10 +19,10 @@ export const goodsFromServer = [
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [currentSort, setSort] = useState(null);
+  const [revers, setReverse] = useState(null);
 
   const SORT_ABC = 'abc';
   const SORT_LENGTH = 'length';
-  const SORT_REVERSE = 'reverse';
   const SORT_RESET = 'reset';
 
   const sortBy = (sortType) => {
@@ -30,23 +30,46 @@ export const App = () => {
 
     switch (sortType) {
       case SORT_ABC:
-        setGoods([...goods].sort());
+        if (revers) {
+          setGoods([...goods].sort().reverse());
+        } else {
+          setGoods([...goods].sort());
+        }
+
         break;
       case SORT_LENGTH:
-        setGoods([...goods].sort((a, b) => a.length - b.length));
-        break;
-      case SORT_REVERSE:
-        setGoods([...goods].reverse());
+        if (revers) {
+          setGoods([...goods].sort((a, b) => b.length - a.length));
+        } else {
+          setGoods([...goods].sort((a, b) => a.length - b.length));
+        }
+
         break;
       case SORT_RESET:
         setGoods(goodsFromServer);
         setSort(null);
+        setReverse(null);
         break;
       default: return 'unknown sort type';
     }
 
     return true;
   };
+
+  function reverseArr() {
+    if (revers) {
+      if (currentSort) {
+        setGoods([...goods].reverse());
+      } else {
+        setGoods(goodsFromServer);
+      }
+
+      setReverse(null);
+    } else {
+      setGoods([...goods].reverse());
+      setReverse(true);
+    }
+  }
 
   return (
     <div className="section content">
@@ -72,11 +95,11 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => sortBy(SORT_REVERSE)}
+          onClick={() => reverseArr()}
           type="button"
           className={cn(
             'button', 'is-warning',
-            { 'is-light': currentSort !== SORT_REVERSE },
+            { 'is-light': !revers },
           )}
         >
           Reverse
