@@ -49,6 +49,7 @@ export const App = () => {
   const visibleGroceries = getPreparedGroceries(
     goodsFromServer, sortField, reverseMethod,
   );
+  const CHECK_FOR_RESET_BUTTON = sortField !== '' || reverseMethod !== '';
 
   return (
     <div className="section content">
@@ -79,7 +80,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || reverseMethod !== '')
+        {(CHECK_FOR_RESET_BUTTON)
           && (
             <button
               type="button"
