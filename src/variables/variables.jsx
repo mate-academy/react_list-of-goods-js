@@ -11,5 +11,5 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const SORT_FIELD_ALPHABET = 'alphabet';
-export const SORT_FIELD_LENGTH = 'length';
+export const SORT_METHOD_ALPHABET = 'alphabet';
+export const SORT_METHOD_LENGTH = 'length';

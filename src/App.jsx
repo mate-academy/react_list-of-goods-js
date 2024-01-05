@@ -5,9 +5,8 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { GoodsList } from './components/GoodsList/GoodsList';
 import { preparedGoodsFn } from './services/preparetedGoodFn';
-import { reverseGood } from './services/reverseGood';
 import {
-  goodsFromServer, SORT_FIELD_ALPHABET, SORT_FIELD_LENGTH,
+  goodsFromServer, SORT_METHOD_ALPHABET, SORT_METHOD_LENGTH,
 } from './variables/variables';
 
 export const App = () => {
@@ -25,30 +24,30 @@ export const App = () => {
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
+          onClick={() => setSortField(SORT_METHOD_ALPHABET)}
           type="button"
-          className={`button is-success ${cn({ 'is-light': sortField !== SORT_FIELD_ALPHABET })}`}
+          className={`button is-info ${cn({ 'is-light': sortField !== SORT_METHOD_ALPHABET })}`}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          onClick={() => setSortField(SORT_METHOD_LENGTH)}
           type="button"
-          className={`button is-success ${cn({ 'is-light': sortField !== SORT_FIELD_LENGTH })}`}
+          className={`button is-success ${cn({ 'is-light': sortField !== SORT_METHOD_LENGTH })}`}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => setReversed(reverseGood(reversed))}
+          onClick={() => setReversed(!reversed)}
           type="button"
-          className={`button is-success ${cn({ 'is-light': !reversed })}`}
+          className={`button is-warning ${cn({ 'is-light': !reversed })}`}
         >
           Reverse
         </button>
 
-        {sortField !== '' || reversed ? (
+        {(sortField !== '' || reversed) && (
           <button
             onClick={reset}
             type="button"
@@ -56,8 +55,6 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          null
         )}
       </div>
 
