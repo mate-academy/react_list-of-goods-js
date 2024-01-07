@@ -17,20 +17,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_ALPHABET = 'alphabet';
-const SORT_FIELD_LENGTH = 'length';
-const REVERSE = 'reverse';
+const SORT_METHOD_ALPHABET = 'alphabet';
+const SORT_METHOD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reverse }) {
+function getPreparedGoods(goods, sortField, reverse) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_FIELD_ALPHABET:
+        case SORT_METHOD_ALPHABET:
           return good1.localeCompare(good2);
 
-        case SORT_FIELD_LENGTH:
+        case SORT_METHOD_LENGTH:
           return good1.length - good2.length;
         default:
           return 0;
@@ -38,7 +37,7 @@ function getPreparedGoods(goods, { sortField, reverse }) {
     });
   }
 
-  if (reverse !== '') {
+  if (reverse !== false) {
     return preparedGoods.reverse();
   }
 
@@ -47,9 +46,9 @@ function getPreparedGoods(goods, { sortField, reverse }) {
 
 export const App = () => {
   const [sortField, setsortField] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [reverse, setReverse] = useState(false);
   const visibleGoods = getPreparedGoods(
-    goodsFromServer, { sortField, reverse },
+    goodsFromServer, sortField, reverse,
   );
 
   return (
@@ -57,11 +56,11 @@ export const App = () => {
       <div className="buttons">
         <button
           onClick={() => {
-            setsortField(SORT_FIELD_ALPHABET);
+            setsortField(SORT_METHOD_ALPHABET);
           }}
           type="button"
-          className={`button is-success ${cn({
-            'is-light': sortField !== SORT_FIELD_ALPHABET,
+          className={`button is-info ${cn({
+            'is-light': sortField !== SORT_METHOD_ALPHABET,
           })}`}
         >
           Sort alphabetically
@@ -69,11 +68,11 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setsortField(SORT_FIELD_LENGTH);
+            setsortField(SORT_METHOD_LENGTH);
           }}
           type="button"
           className={`button is-success ${cn({
-            'is-light': sortField !== SORT_FIELD_LENGTH,
+            'is-light': sortField !== SORT_METHOD_LENGTH,
           })}`}
         >
           Sort by length
@@ -81,26 +80,22 @@ export const App = () => {
 
         <button
           onClick={() => {
-            if (reverse !== '') {
-              setReverse('');
-            } else {
-              setReverse(REVERSE);
-            }
+            setReverse(!reverse);
           }
         }
           type="button"
-          className={`button is-success ${cn({
-            'is-light': reverse !== REVERSE,
+          className={`button is-warning  ${cn({
+            'is-light': reverse === false,
           })}`}
         >
           Reverse
         </button>
 
-        {(sortField === '' && reverse === '') || (
+        {(sortField || reverse) && (
           <button
             onClick={() => {
               setsortField('');
-              setReverse('');
+              setReverse(false);
             }}
             type="button"
             className="button is-danger is-light"
