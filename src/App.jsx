@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'sortByLength';
-const REVERSE = 'reverse';
 
 function getPreparedGroceries(groceries, sortField, reverseMethod) {
   const preparedGroceries = [...groceries];
@@ -45,11 +44,11 @@ function getPreparedGroceries(groceries, sortField, reverseMethod) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverseMethod, setReverseMethod] = useState('');
+  const [reverseMethod, setReverseMethod] = useState(false);
   const visibleGroceries = getPreparedGroceries(
     goodsFromServer, sortField, reverseMethod,
   );
-  const CHECK_FOR_RESET_BUTTON = sortField !== '' || reverseMethod !== '';
+  const isResetButtonVisible = sortField || reverseMethod;
 
   return (
     <div className="section content">
@@ -72,15 +71,15 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${cn({ 'is-light': reverseMethod !== REVERSE })}`}
-          onClick={() => (reverseMethod !== ''
-            ? setReverseMethod('')
-            : setReverseMethod(REVERSE))}
+          className={`button is-warning ${cn({ 'is-light': reverseMethod !== true })}`}
+          onClick={
+            () => setReverseMethod(prevReverseMethod => !prevReverseMethod)
+          }
         >
           Reverse
         </button>
 
-        {(CHECK_FOR_RESET_BUTTON)
+        {(isResetButtonVisible)
           && (
             <button
               type="button"
@@ -96,7 +95,7 @@ export const App = () => {
       </div>
       <ul>
         {visibleGroceries.map(grocery => (
-          <li data-cy="Good">{grocery}</li>
+          <li data-cy="Good" key={grocery}>{grocery}</li>
         ))}
       </ul>
     </div>
