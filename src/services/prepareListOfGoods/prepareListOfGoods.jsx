@@ -1,7 +1,7 @@
 import { goodsFromServer,
   SORT_METHOD_ALPHABET, SORT_METHOD_LENGTH } from '../../variables/variables';
 
-export function preparedGoodsFn(goods, sortField, reversed) {
+export function prepareListOfGoods(goods, sortField, reversed) {
   const preparedGoods = [...goodsFromServer];
 
   if (sortField) {

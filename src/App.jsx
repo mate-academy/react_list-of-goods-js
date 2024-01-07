@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import { useState } from 'react';
 import { GoodsList } from './components/GoodsList/GoodsList';
-import { preparedGoodsFn } from './services/preparetedGoodFn';
+import { prepareListOfGoods } from './services/prepareListOfGoods';
 import {
   goodsFromServer, SORT_METHOD_ALPHABET, SORT_METHOD_LENGTH,
 } from './variables/variables';
@@ -13,7 +13,7 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
   const visibleGoods
-    = preparedGoodsFn(goodsFromServer, sortField, reversed);
+    = prepareListOfGoods(goodsFromServer, sortField, reversed);
 
   const reset = () => {
     setSortField('');
@@ -47,7 +47,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || reversed) && (
+        {(sortField || reversed) && (
           <button
             onClick={reset}
             type="button"
