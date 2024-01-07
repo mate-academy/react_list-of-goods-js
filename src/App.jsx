@@ -16,86 +16,74 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [currentSort, setSort] = useState(null);
-  const [revers, setReverse] = useState(null);
+const SORT_BY_ABC = 'abc';
+const SORT_BY_LENGTH = 'length';
 
-  const SORT_ABC = 'abc';
-  const SORT_LENGTH = 'length';
-  const SORT_RESET = 'reset';
+const sort = (arr, sortType, isRevers) => {
+  const goodsCopy = [...arr];
 
-  const sortBy = (sortType) => {
-    setSort(sortType);
-
+  if (sortType) {
     switch (sortType) {
-      case SORT_ABC:
-        if (revers) {
-          setGoods([...goods].sort().reverse());
-        } else {
-          setGoods([...goods].sort());
-        }
-
+      case SORT_BY_ABC:
+        goodsCopy.sort();
         break;
-      case SORT_LENGTH:
-        if (revers) {
-          setGoods([...goods].sort((a, b) => b.length - a.length));
-        } else {
-          setGoods([...goods].sort((a, b) => a.length - b.length));
-        }
-
-        break;
-      case SORT_RESET:
-        setGoods(goodsFromServer);
-        setSort(null);
-        setReverse(null);
+      case SORT_BY_LENGTH:
+        goodsCopy.sort((a, b) => a.length - b.length);
         break;
       default: return 'unknown sort type';
     }
+  }
+
+  if (isRevers) {
+    goodsCopy.reverse();
+  }
+
+  return goodsCopy;
+};
+
+export const App = () => {
+  const [currentSort, setSort] = useState(null);
+  const [revers, setReverse] = useState(false);
+
+  const goods = sort(goodsFromServer, currentSort, revers);
+
+  function reset() {
+    setSort(null);
+    setReverse(false);
 
     return true;
-  };
+  }
 
-  function reverseArr() {
-    if (revers) {
-      if (currentSort) {
-        setGoods([...goods].reverse());
-      } else {
-        setGoods(goodsFromServer);
-      }
-
-      setReverse(null);
-    } else {
-      setGoods([...goods].reverse());
-      setReverse(true);
-    }
+  function handleRevers() {
+    setReverse(!revers);
   }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => sortBy(SORT_ABC)}
+          onClick={() => setSort(SORT_BY_ABC)}
           type="button"
           className={cn(
-            'button', 'is-info', { 'is-light': currentSort !== SORT_ABC },
+            'button', 'is-info', { 'is-light': currentSort !== SORT_BY_ABC },
           )}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => sortBy(SORT_LENGTH)}
+          onClick={() => setSort(SORT_BY_LENGTH)}
           type="button"
           className={cn(
-            'button', 'is-success', { 'is-light': currentSort !== SORT_LENGTH },
+            'button', 'is-success',
+            { 'is-light': currentSort !== SORT_BY_LENGTH },
           )}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => reverseArr()}
+          onClick={handleRevers}
           type="button"
           className={cn(
             'button', 'is-warning',
@@ -105,9 +93,9 @@ export const App = () => {
           Reverse
         </button>
 
-        {goods !== goodsFromServer ? (
+        {(revers !== false || currentSort !== null) ? (
           <button
-            onClick={() => (sortBy(SORT_RESET))}
+            onClick={() => reset()}
             type="button"
             className="button is-danger is-light"
           >
@@ -120,8 +108,7 @@ export const App = () => {
       <ul>
         {goods.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
-        ))
-        }
+        ))}
       </ul>
     </div>
   );
