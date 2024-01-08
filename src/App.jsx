@@ -24,17 +24,17 @@ const SORT_BY_DEFAULT = '';
 const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <li data-cy="Good">
+      <li data-cy="Good" key={good}>
         {good}
       </li>
     ))}
   </ul>
 );
 
-export const App = () => {
-  const [sortField, setSortField] = useState('');
-  const [isReversed, setIsReserved] = useState(false);
-  const visibleGoods = [...goodsFromServer].sort((good1, good2) => {
+function getSortedGoods(goods, { sortField, isReversed }) {
+  const preparedGoods = [...goods];
+
+  preparedGoods.sort((good1, good2) => {
     switch (sortField) {
       case SORT_ALPHABETICAL:
         return good1.localeCompare(good2);
@@ -47,9 +47,18 @@ export const App = () => {
     }
   });
 
-  if (isReversed) {
-    visibleGoods.reverse();
-  }
+  return isReversed ? preparedGoods.reverse() : preparedGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getSortedGoods(goodsFromServer,
+    { sortField, isReversed });
+
+  const handleReverseClick = () => {
+    setIsReversed(prev => !prev);
+  };
 
   return (
     <div className="section content">
@@ -79,18 +88,18 @@ export const App = () => {
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => setIsReserved(!isReversed)}
+          onClick={handleReverseClick}
         >
           Reverse
         </button>
 
-        {(sortField !== SORT_BY_DEFAULT || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField(SORT_BY_DEFAULT);
-              setIsReserved(false);
+              setIsReversed(false);
             }}
           >
             Reset
