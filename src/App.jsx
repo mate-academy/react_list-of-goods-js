@@ -16,101 +16,93 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+export const defSorting = {
+  method: '',
+  isReversed: false,
+};
+
+function preparedGoods(goods, { method, isReversed }) {
+  const getGoods = [...goods];
+
+  if (method === 'alphabet') {
+    getGoods.sort((good1, good2) => good1.localeCompare(good2));
+  }
+
+  if (method === 'length') {
+    getGoods.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (isReversed) {
+    getGoods.reverse();
+  }
+
+  return getGoods;
+}
+
 export const App = () => {
-  const [sortedList, setSortedList] = useState(goodsFromServer);
-  const [sortField, setSortField] = useState('');
-  // const [isReversed, setIsReversed] = useState(false);
-  const [isModified, setIsModified] = useState(false);
-
-  const sortByAlphabet = () => {
-    setSortedList([...sortedList]
-      .sort((good1, good2) => good1.localeCompare(good2)));
-    setSortField('alphabet');
-    setIsModified(true);
-  };
-
-  const sortByLength = () => {
-    setSortedList([...sortedList].sort((good1, good2) => {
-      const length1 = good1.length;
-      const length2 = good2.length;
-
-      if (length1 < length2) {
-        return -1;
-      }
-
-      if (length1 > length2) {
-        return 1;
-      }
-
-      return sortedList.indexOf(good1) - sortedList.indexOf(good2);
-    }));
-    setSortField('length');
-    setIsModified(true);
-  };
-
-  const reverseList = () => {
-    const newSortedList = [...sortedList].reverse();
-
-    setSortedList(newSortedList);
-    setSortField(sortField === 'reverse' ? '' : 'reverse');
-    // setIsReversed(!isReversed);
-    setIsModified(true);
-  };
-
-  const resetList = () => {
-    setSortedList([...goodsFromServer]);
-    setSortField('reset');
-    setIsModified(false);
-  };
+  const [sortBy, setSortBy] = useState(defSorting);
+  const goods = preparedGoods(goodsFromServer, sortBy);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={classNames(
-            'button',
-            'is-info',
-            { 'is-light': sortField !== 'alphabet' },
-          )}
-          onClick={sortByAlphabet}
+          onClick={() => setSortBy({ ...sortBy, method: 'alphabet' })}
+          className={
+            classNames(
+              'button',
+              'is-info',
+              {
+                'is-light': sortBy.method !== 'alphabet',
+              },
+            )}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={classNames(
-            'button',
-            'is-success',
-            { 'is-light': sortField !== 'length' },
-          )}
-          onClick={sortByLength}
+          onClick={() => setSortBy({ ...sortBy, method: 'length' })}
+          className={
+            classNames(
+              'button',
+              'is-success',
+              {
+                'is-light': sortBy.method !== 'length',
+              },
+            )
+          }
         >
           Sort by length
         </button>
 
         <button
           type="button"
+          onClick={() => setSortBy(
+            sortBy.isReversed
+              ? { ...sortBy, isReversed: false }
+              : { ...sortBy, isReversed: true },
+          )}
           className={classNames(
             'button',
             'is-warning',
-            { 'is-light': sortField !== 'reverse' },
+            {
+              'is-light': !sortBy.isReversed,
+            },
           )}
-          onClick={reverseList}
         >
           Reverse
         </button>
 
-        {isModified && (
+        {(sortBy.method || sortBy.isReversed) && (
           <button
             type="button"
-            className={classNames(
-              'button',
-              'is-danger',
-              'is-light',
-            )}
-            onClick={resetList}
+            onClick={() => setSortBy({
+              method: '',
+              isReversed: false,
+            })}
+            className="button is-danger is-light"
           >
             Reset
           </button>
@@ -118,8 +110,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortedList.map(good => (
-          <li key={good} data-cy={good}>
+        {goods.map(good => (
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
