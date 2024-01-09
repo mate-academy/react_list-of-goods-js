@@ -1,7 +1,8 @@
 import 'bulma/css/bulma.css';
+import './App.scss';
 import classNames from 'classnames';
 import { useState } from 'react';
-import './App.scss';
+import { GoodsList } from './components/GoodList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -16,32 +17,24 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-// let preparedGoodsList = [...goodsFromServer];
-
 const SORT_TYPE = { length: 'length', alphabet: 'alphabet' };
 
-export const GoodsList = ({ goods }) => (
-  <ul>
-    {goods.map(good => (
-      <li data-cy="Good" key={good}>{good}</li>
-    ))}
-  </ul>
-);
-
-function sortPreparedGoods(arr, sortBy, reverse) {
+function sortPreparedGoods(arr, sortBy, isReverse) {
   let preparedGoodsList = [...arr];
 
   switch (sortBy) {
     case SORT_TYPE.length:
       preparedGoodsList.sort((a, b) => a.length - b.length);
       break;
+
     case SORT_TYPE.alphabet:
       preparedGoodsList.sort((a, b) => a.localeCompare(b));
       break;
+
     default: preparedGoodsList = [...goodsFromServer];
   }
 
-  if (reverse === 'reverse') {
+  if (isReverse) {
     preparedGoodsList.reverse();
   }
 
@@ -50,9 +43,13 @@ function sortPreparedGoods(arr, sortBy, reverse) {
 
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [isReverse, setIsReverse] = useState(false);
 
-  const preparedGoodsList = sortPreparedGoods(goodsFromServer, sortBy, reverse);
+  const preparedGoodsList = sortPreparedGoods(
+    goodsFromServer,
+    sortBy,
+    isReverse,
+  );
 
   return (
     <div className="section content">
@@ -83,25 +80,19 @@ export const App = () => {
           type="button"
           className={classNames(
             'button is-warning',
-            { 'is-light': reverse === '' },
+            { 'is-light': !isReverse },
           )}
-          onClick={() => {
-            if (reverse === '') {
-              setReverse('reverse');
-            } else {
-              setReverse('');
-            }
-          }}
+          onClick={() => setIsReverse(!isReverse)}
         >
           Reverse
         </button>
 
-        {(sortBy !== '' || reverse !== '') && (
+        {(sortBy || isReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setReverse('');
+              setIsReverse(false);
               setSortBy('');
             }}
           >
