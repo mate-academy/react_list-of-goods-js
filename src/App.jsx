@@ -19,28 +19,26 @@ export const goodsFromServer = [
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_ALPHA = 'alphabetically';
 
-let goodsCopy = [...goodsFromServer];
-
-function getPreparedGoods(goods, { sortField, reverse }) {
+function getPreparedGoods(goods, sortField, reverse) {
   let preparedGoods = [...goods];
 
   switch (sortField) {
     case SORT_FIELD_LENGTH:
-      preparedGoods = preparedGoods
+      preparedGoods
         .sort((elem1, elem2) => elem1.length - elem2.length);
       break;
 
     case SORT_FIELD_ALPHA:
-      preparedGoods = preparedGoods
+      preparedGoods
         .sort((elem1, elem2) => elem1.localeCompare(elem2));
       break;
 
     default:
-      preparedGoods = goodsFromServer;
+      preparedGoods = [...goods];
   }
 
-  if (reverse && sortField) {
-    preparedGoods = preparedGoods.reverse();
+  if (reverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -50,7 +48,11 @@ export const App = () => {
   const [sortField, setSortFeild] = useState('');
   const [isReversed, setReverse] = useState(false);
 
-  goodsCopy = getPreparedGoods(goodsCopy, { sortField, reverse: isReversed });
+  const goodsPrepared = getPreparedGoods(
+    goodsFromServer,
+    sortField,
+    isReversed,
+  );
 
   return (
     <div className="section content">
@@ -89,7 +91,10 @@ export const App = () => {
         {(isReversed || sortField !== '') && (
           <button
             type="button"
-            onClick={() => setSortFeild('')}
+            onClick={() => {
+              setSortFeild('');
+              setReverse(false);
+            }}
             className="button is-danger is-light"
           >
             Reset
@@ -98,7 +103,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goodsCopy.map(good => (
+        {goodsPrepared.map(good => (
           <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
