@@ -29,6 +29,7 @@ function getPreparedGoods(goods, { sortField, reverse }) {
       preparedGoods = preparedGoods
         .sort((elem1, elem2) => elem1.length - elem2.length);
       break;
+
     case SORT_FIELD_ALPHA:
       preparedGoods = preparedGoods
         .sort((elem1, elem2) => elem1.localeCompare(elem2));
@@ -79,13 +80,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => {
-            if (sortField === '') {
-              goodsCopy = goodsCopy.reverse();
-            }
-
-            setReverse(prev => !prev);
-          }}
+          onClick={() => setReverse(prev => !prev)}
           className={cn('button is-warning', { 'is-light': !isReversed })}
         >
           Reverse
