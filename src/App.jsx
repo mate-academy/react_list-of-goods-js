@@ -47,7 +47,7 @@ export const App = () => {
   const [sortFormat, setSortFormat] = useState('');
   const [doReverse, setDoReverse] = useState('');
   const visibleGoods = getPreparedGoods(goodsFromServer, sortFormat, doReverse);
-  const HAS_ACTIVE_SORTING = sortFormat !== '' || doReverse !== '';
+  const HAS_ACTIVE_SORTING = sortFormat || doReverse !== '';
 
   return (
     <div className="section content">
