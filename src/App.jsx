@@ -50,6 +50,15 @@ export const App = () => {
   const visibleGoods = getPreparedGoods(goodsFromServer,
     { sortField, reverseField: isReversedField });
 
+  const toggleReverse = () => {
+    setIsReversedField(prev => !prev);
+  };
+
+  const resetAll = () => {
+    setSortField('');
+    setIsReversedField(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -76,9 +85,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReversedField(
-            prev => !prev,
-          )}
+          onClick={toggleReverse}
           type="button"
           className={cn('button', 'is-warning',
             {
@@ -90,10 +97,7 @@ export const App = () => {
 
         {(sortField || isReversedField) && (
           <button
-            onClick={() => {
-              setSortField(prev => '');
-              setIsReversedField(prev => false);
-            }}
+            onClick={resetAll}
             type="button"
             className="button is-danger is-light"
           >
