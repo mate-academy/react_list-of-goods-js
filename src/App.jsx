@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_TYPE = { length: 'length', alphabet: 'alphabet' };
 
 function sortPreparedGoods(arr, sortBy, isReverse) {
-  let preparedGoodsList = [...arr];
+  const preparedGoodsList = [...arr];
 
   switch (sortBy) {
     case SORT_TYPE.length:
@@ -31,7 +31,7 @@ function sortPreparedGoods(arr, sortBy, isReverse) {
       preparedGoodsList.sort((a, b) => a.localeCompare(b));
       break;
 
-    default: preparedGoodsList = [...goodsFromServer];
+    default: ;
   }
 
   if (isReverse) {
