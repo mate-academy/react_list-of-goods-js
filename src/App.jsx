@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-// const REVERSE_ARR = 'doReverse';
 
 export const goodsFromServer = [
   'Dumplings',
