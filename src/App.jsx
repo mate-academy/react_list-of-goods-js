@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -15,79 +16,85 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_FORMAT_ALPHABETICALLY = 'alphabet';
+const SORT_FORMAT_BY_LENGTH = 'sortByLength';
+const REVERSE = 'reverse';
+
+function getPreparedGoods(groceries, sortFormat, doReverse) {
+  const preparedGoods = [...groceries];
+
+  if (sortFormat) {
+    preparedGoods.sort(
+      (good1, good2) => {
+        switch (sortFormat) {
+          case SORT_FORMAT_ALPHABETICALLY:
+            return good1.localeCompare(good2);
+
+          case SORT_FORMAT_BY_LENGTH:
+            return good1.length - good2.length;
+
+          default:
+            return 0;
+        }
+      },
+    );
+  }
+
+  return doReverse ? preparedGoods.reverse() : preparedGoods;
+}
+
 export const App = () => {
-  const [currentOrder, setCurrentOrder] = useState([...goodsFromServer]);
-  const [isOriginalOrder, setIsOriginalOrder] = useState(true);
-
-  const sortAlphabetically = () => {
-    const newOrder = [...currentOrder].sort();
-
-    setCurrentOrder(newOrder);
-    setIsOriginalOrder(false);
-  };
-
-  const sortByLength = () => {
-    const newOrder = [...currentOrder].sort((a, b) => a.length - b.length);
-
-    setCurrentOrder(newOrder);
-    setIsOriginalOrder(false);
-  };
-
-  const reverseOrder = () => {
-    const newOrder = [...currentOrder].reverse();
-
-    setCurrentOrder(newOrder);
-    setIsOriginalOrder(!isOriginalOrder);
-  };
-
-  const resetOrder = () => {
-    if (!isOriginalOrder) {
-      setCurrentOrder([...goodsFromServer]);
-      setIsOriginalOrder(true);
-    }
-  };
+  const [sortFormat, setSortFormat] = useState('');
+  const [doReverse, setDoReverse] = useState('');
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortFormat, doReverse);
+  const HAS_ACTIVE_SORTING = sortFormat !== '' || doReverse !== '';
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${isOriginalOrder ? 'is-light' : ''}`}
-          onClick={sortAlphabetically}
+          className={`button is-info ${cn({ 'is-light': sortFormat !== SORT_FORMAT_ALPHABETICALLY })}`}
+          onClick={() => setSortFormat(SORT_FORMAT_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${isOriginalOrder ? 'is-light' : ''}`}
-          onClick={sortByLength}
+          className={`button is-success ${cn({ 'is-light': sortFormat !== SORT_FORMAT_BY_LENGTH })}`}
+          onClick={() => setSortFormat(SORT_FORMAT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${isOriginalOrder ? 'is-light' : ''}`}
-          onClick={reverseOrder}
+          className={`button is-warning ${cn({ 'is-light': doReverse !== REVERSE })}`}
+          onClick={() => (doReverse !== ''
+            ? setDoReverse('')
+            : setDoReverse(REVERSE))}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className={`button is-danger ${isOriginalOrder ? 'is-light' : ''}`}
-          onClick={resetOrder}
-        >
-          Reset
-        </button>
+        {(HAS_ACTIVE_SORTING) && (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={() => {
+              setSortFormat('');
+              setDoReverse('');
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
-        {currentOrder.map(good => (
-          <li key={good} data-cy="Good">
-            {good}
-          </li>
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
