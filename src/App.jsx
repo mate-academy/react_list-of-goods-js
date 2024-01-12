@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -35,8 +36,9 @@ export default function App() {
   }
 
   function sortByLength() {
-    const sortedVisibleGoods = [...goodsFromServer]
-      .sort((a, b) => a.length - b.length);
+    const sortedVisibleGoods = [...goodsFromServer].sort(
+      (a, b) => a.length - b.length,
+    );
 
     if (state.reverse === REVERSE_FLAG) {
       sortedVisibleGoods.reverse();
@@ -98,14 +100,14 @@ export default function App() {
         <button
           onClick={reverseGoods}
           type="button"
-          className={`button is-warning ${
-            state.reverse !== REVERSE_FLAG ? 'is-light' : ''
-          }`}
+          className={classNames('button', 'is-warning', {
+            'is-light': state.reverse !== REVERSE_FLAG,
+          })}
         >
           Reverse
         </button>
 
-        {state.sortField !== '' || state.reverse !== '' ? (
+        {state.sortField || state.reverse ? (
           <button
             onClick={resetGoods}
             type="button"
