@@ -2,6 +2,7 @@ import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
 import cn from 'classnames';
+import { GoodList } from './components/GoodList';
 
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
@@ -18,14 +19,6 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-
-const GoodList = ({ goods }) => (
-  goods.map(good => (
-    <ul>
-      <li data-cy="Good">{good}</li>
-    </ul>
-  ))
-);
 
 function getPreperedGoods(goods, { sortField, reverseField }) {
   const preparedGoods = [...goods];
