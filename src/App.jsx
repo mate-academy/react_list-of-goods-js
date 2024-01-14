@@ -1,76 +1,76 @@
-import 'bulma/css/bulma.css';
-import './App.scss';
-import { useState } from 'react';
+import "bulma/css/bulma.css";
+import "./App.scss";
+import { useState } from "react";
+import cn from "classnames";
 
 export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
+  "Dumplings",
+  "Carrot",
+  "Eggs",
+  "Ice cream",
+  "Apple",
+  "Bread",
+  "Fish",
+  "Honey",
+  "Jam",
+  "Garlic",
 ];
+
+const ALPHABETICAL = "alphabetical";
+const BYLENGTH = "bylength";
 
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [status, setStatus] = useState({
-    alphabetical: false,
-    bylength: false,
-    reversed: false,
+    sort: "",
+    isReversed: false,
   });
 
-  const isModified = status.alphabetical || status.bylength || status.reversed;
+  const isModified = status.sort || status.isReversed;
 
   function sortAlphabetically() {
     setGoods((prevState) => {
-      if (!status.reversed) {
+      if (!status.isReversed) {
         return [...prevState].sort();
       }
 
       return [...prevState].sort((a, b) => b.localeCompare(a));
     });
 
-    setStatus(prevState => ({
+    setStatus((prevState) => ({
       ...prevState,
-      alphabetical: true,
-      bylength: false,
+      sort: ALPHABETICAL,
     }));
   }
 
   function sortByLength() {
     setGoods((prevState) => {
-      if (!status.reversed) {
+      if (!status.isReversed) {
         return [...prevState].sort((a, b) => a.length - b.length);
       }
 
       return [...prevState].sort((a, b) => b.length - a.length);
     });
 
-    setStatus(prevState => ({
+    setStatus((prevState) => ({
       ...prevState,
-      bylength: true,
-      alphabetical: false,
+      sort: BYLENGTH,
     }));
   }
 
   function reverseGoods() {
-    setGoods(prevState => [...prevState].reverse());
-    setStatus(prevState => ({
+    setGoods((prevState) => [...prevState].reverse());
+    setStatus((prevState) => ({
       ...prevState,
-      reversed: !prevState.reversed,
+      isReversed: !prevState.isReversed,
     }));
   }
 
   function resetGoods() {
     setGoods(goodsFromServer);
     setStatus({
-      alphabetical: false,
-      bylength: false,
-      reversed: false,
+      sort: "",
+      isReversed: false,
     });
   }
 
@@ -79,9 +79,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={
-            status.alphabetical ? 'button is-info' : 'button is-info is-light'
-          }
+          className={cn("button is-info", {
+            "is-light": status.sort !== ALPHABETICAL,
+          })}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -89,9 +89,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={
-            status.bylength ? 'button is-success' : 'button is-success is-light'
-          }
+          className={cn("button is-success", {
+            "is-light": status.sort !== BYLENGTH,
+          })}
           onClick={sortByLength}
         >
           Sort by length
@@ -99,9 +99,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={
-            status.reversed ? 'button is-warning' : 'button is-warning is-light'
-          }
+          className={cn("button is-warning", {
+            "is-light": !status.isReversed,
+          })}
           onClick={reverseGoods}
         >
           Reverse
@@ -119,7 +119,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {goods.map((good) => (
           <li key={good} data-cy="Good">
             {good}
           </li>
