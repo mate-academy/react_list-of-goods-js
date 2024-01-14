@@ -1,57 +1,64 @@
-import "bulma/css/bulma.css";
-import "./App.scss";
-import { useState } from "react";
-import classNames from "classnames";
+import 'bulma/css/bulma.css';
+import './App.scss';
+import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
-  "Dumplings",
-  "Carrot",
-  "Eggs",
-  "Ice cream",
-  "Apple",
-  "Bread",
-  "Fish",
-  "Honey",
-  "Jam",
-  "Garlic",
+  'Dumplings',
+  'Carrot',
+  'Eggs',
+  'Ice cream',
+  'Apple',
+  'Bread',
+  'Fish',
+  'Honey',
+  'Jam',
+  'Garlic',
 ];
 
-function getPreparedGoods(visibleGoods, { sortField }) {
-  const goods = [...visibleGoods];
+const LENGTH = 'length';
+const ALPHABET = 'alphabet';
+
+function getPreparedGoods(goods, { sortField, isReversed }) {
+  const preparedGoods = [...goods];
 
   if (sortField) {
     switch (sortField) {
       case ALPHABET:
-        return goods.sort((good1, good2) => good1.localeCompare(good2));
+        return preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
       case LENGTH:
-        return goods.sort((good1, good2) => good1.length - good2.length);
-      case REVERSE:
-        return goods.reverse();
+        return preparedGoods.sort(
+          (good1, good2) => good1.length - good2.length,
+        );
+
       default:
         return 0;
     }
   }
 
-  return visibleGoods;
+  if (isReversed) {
+    return preparedGoods.reverse();
+  }
+
+  return preparedGoods;
 }
 
-const LENGTH = "length";
-const ALPHABET = "alphabet";
-const REVERSE = "reverse";
-
 export const App = () => {
-  const [isReverse, setReverse] = useState(false);
-  const [sortField, setSortField] = useState("");
+  const [isReversed, setReversed] = useState(false);
+  const [sortField, setSortField] = useState('');
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, { sortField });
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+    isReversed,
+  });
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={classNames("button", "is-info", {
-            "is-light": sortField !== ALPHABET,
+          className={classNames('button', 'is-info', {
+            'is-light': sortField !== ALPHABET,
           })}
           onClick={(event) => {
             setSortField(ALPHABET);
@@ -62,8 +69,8 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames("button", "is-success", {
-            "is-light": sortField !== LENGTH,
+          className={classNames('button', 'is-success', {
+            'is-light': sortField !== LENGTH,
           })}
           onClick={() => {
             setSortField(LENGTH);
@@ -73,29 +80,28 @@ export const App = () => {
         </button>
         <button
           type="button"
-          className={classNames("button", "is-warning", {
-            "is-light": isReverse === false,
+          className={classNames('button', 'is-warning', {
+            'is-light': isReversed === false,
           })}
           onClick={() => {
-            setReverse(!isReverse);
-            setSortField(REVERSE);
+            setReversed(!isReversed);
           }}
         >
           Reverse
         </button>
-        {(sortField || isReverse) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
-            className={classNames("button", "is-danger", "is-light")}
+            className={classNames('button', 'is-danger', 'is-light')}
             onClick={() => {
-              setSortField("");
+              setSortField('');
             }}
           >
             Reset
           </button>
         )}
       </div>
-      {visibleGoods.map((good) => (
+      {visibleGoods.map(good => (
         <ul key={good}>
           <li data-cy="Good">{good}</li>
         </ul>
