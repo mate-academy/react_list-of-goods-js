@@ -82,20 +82,21 @@ export const App = () => {
         </button>
 
         {(sortField !== '' || reverseField) && (
-        <button
-          onClick={() => {
-            setSortField('');
-            setReverseField(false);
-          }}
-          type="button"
-          className="button is-danger is-light"
-        >
-          Reset
-        </button>
+          <button
+            onClick={() => {
+              setSortField('');
+              setReverseField(false);
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
         )}
       </div>
-
-      <GoodList goods={visibleGoods} />
+      <ul>
+        <GoodList goods={visibleGoods} />
+      </ul>
     </div>
   );
 };
