@@ -16,6 +16,9 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_ALPHABETICALLY = 'Sort alphabetically';
+const SORT_BY_LENGTH = 'Sort by length';
+
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [sortGoods, setSortGoods] = useState('');
@@ -30,24 +33,27 @@ export const App = () => {
   };
 
   const sortByAlphabetically = () => {
-    setSortGoods('Sort alphabetically');
+    setSortGoods(SORT_ALPHABETICALLY);
+    const sortedGoods = [...goods];
     if (isReversed) {
-      setGoods([...goods].sort((a, b) => b.localeCompare(a)));
+      setGoods([...sortedGoods].sort((a, b) => b.localeCompare(a)));
 
       return;
     }
 
-    setGoods([...goods].sort((a, b) => a.localeCompare(b)));
+    setGoods([...sortedGoods].sort((a, b) => a.localeCompare(b)));
   };
 
   const sortByLenght = () => {
-    setSortGoods('Sort by length');
+    setSortGoods(SORT_BY_LENGTH);
+    const sortedGoods = [...goods];
     if (isReversed) {
-      setGoods([...goods].sort((a, b) => b.length - a.length));
+      setGoods([...sortedGoods].sort((a, b) => b.length - a.length));
 
       return;
     }
-    setGoods([...goods].sort((a, b) => a.length - b.length));
+
+    setGoods([...sortedGoods].sort((a, b) => a.length - b.length));
   };
 
   const reverseGood = () => {
@@ -62,7 +68,7 @@ export const App = () => {
           type="button"
           className={classNames(
             'button is-info',
-            { 'is-light': sortGoods !== 'Sort alphabetically' },
+            { 'is-light': sortGoods !== SORT_ALPHABETICALLY },
           )}
           onClick={sortByAlphabetically}
         >
@@ -73,7 +79,7 @@ export const App = () => {
           type="button"
           className={classNames(
             'button is-success',
-            { 'is-light': sortGoods !== 'Sort by length' },
+            { 'is-light': sortGoods !== SORT_BY_LENGTH },
           )}
           onClick={sortByLenght}
         >
