@@ -1,18 +1,18 @@
-import "bulma/css/bulma.css";
-import "./App.scss";
-import { useState } from "react";
+import 'bulma/css/bulma.css';
+import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
-  "Dumplings",
-  "Carrot",
-  "Eggs",
-  "Ice cream",
-  "Apple",
-  "Bread",
-  "Fish",
-  "Honey",
-  "Jam",
-  "Garlic",
+  'Dumplings',
+  'Carrot',
+  'Eggs',
+  'Ice cream',
+  'Apple',
+  'Bread',
+  'Fish',
+  'Honey',
+  'Jam',
+  'Garlic',
 ];
 
 export const App = () => {
@@ -34,7 +34,7 @@ export const App = () => {
       return [...prevState].sort((a, b) => b.localeCompare(a));
     });
 
-    setStatus((prevState) => ({
+    setStatus(prevState => ({
       ...prevState,
       alphabetical: true,
       bylength: false,
@@ -50,7 +50,7 @@ export const App = () => {
       return [...prevState].sort((a, b) => b.length - a.length);
     });
 
-    setStatus((prevState) => ({
+    setStatus(prevState => ({
       ...prevState,
       bylength: true,
       alphabetical: false,
@@ -58,8 +58,8 @@ export const App = () => {
   }
 
   function reverseGoods() {
-    setGoods((prevState) => [...prevState].reverse());
-    setStatus((prevState) => ({
+    setGoods(prevState => [...prevState].reverse());
+    setStatus(prevState => ({
       ...prevState,
       reversed: !prevState.reversed,
     }));
@@ -80,7 +80,7 @@ export const App = () => {
         <button
           type="button"
           className={
-            status.alphabetical ? "button is-info" : "button is-info is-light"
+            status.alphabetical ? 'button is-info' : 'button is-info is-light'
           }
           onClick={sortAlphabetically}
         >
@@ -90,7 +90,7 @@ export const App = () => {
         <button
           type="button"
           className={
-            status.bylength ? "button is-success" : "button is-success is-light"
+            status.bylength ? 'button is-success' : 'button is-success is-light'
           }
           onClick={sortByLength}
         >
@@ -100,7 +100,7 @@ export const App = () => {
         <button
           type="button"
           className={
-            status.reversed ? "button is-warning" : "button is-warning is-light"
+            status.reversed ? 'button is-warning' : 'button is-warning is-light'
           }
           onClick={reverseGoods}
         >
@@ -119,7 +119,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map((good) => (
+        {goods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
