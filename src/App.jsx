@@ -22,11 +22,11 @@ const SORT_BY_LENGTH = 'length';
 function getPreparedList(list, sortField, reverseState) {
   let preparedList = [...list];
 
-  if (sortField === '' && reverseState === false) {
+  if (!sortField && !reverseState) {
     return list;
   }
 
-  if (sortField === '' && reverseState === true) {
+  if (!sortField && reverseState) {
     return preparedList.reverse();
   }
 
@@ -95,7 +95,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || reverseState === true) && (
+        {(sortField || reverseState) && (
           <button
             type="button"
             className="button is-danger is-light"
