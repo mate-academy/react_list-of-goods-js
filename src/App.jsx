@@ -25,17 +25,17 @@ function getPreparedGoods(goods, sortField, isReversed) {
   goodsCopy.sort((a, b) => {
     switch (sortField) {
       case SORT_ALPHABETICALLY:
-        return b.localeCompare(a);
+        return a.localeCompare(b);
 
       case SORT_BY_LENGTH:
-        return b.length - a.length;
+        return a.length - b.length;
 
       default:
         return 0;
     }
   });
 
-  if (!isReversed) {
+  if (isReversed) {
     goodsCopy.reverse();
   }
 
