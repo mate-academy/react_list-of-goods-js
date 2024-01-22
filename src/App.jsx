@@ -80,7 +80,7 @@ export const App = () => {
         </button>
 
         {
-          sortField && (
+          (sortField || isReversed) && (
             <button
               onClick={() => setSortField('')}
               type="button"
