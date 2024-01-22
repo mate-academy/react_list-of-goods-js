@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import classNames from 'classnames';
+import { getPreparedGoods } from './services/index';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -18,29 +19,6 @@ export const goodsFromServer = [
 
 const SORT_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_BY_LENGTH = 'Sort by length';
-
-function getPreparedGoods(goods, sortField, isReversed) {
-  const goodsCopy = [...goods];
-
-  goodsCopy.sort((a, b) => {
-    switch (sortField) {
-      case SORT_ALPHABETICALLY:
-        return a.localeCompare(b);
-
-      case SORT_BY_LENGTH:
-        return a.length - b.length;
-
-      default:
-        return 0;
-    }
-  });
-
-  if (isReversed) {
-    goodsCopy.reverse();
-  }
-
-  return goodsCopy;
-}
 
 export const App = () => {
   const [sortGoods, setSortGoods] = useState('');
