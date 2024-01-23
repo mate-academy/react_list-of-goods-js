@@ -14,15 +14,19 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-function sortGoods(curentButton, reverse) {
+
+const SORT_ALPHABETICALLY = 'is-info';
+const SORT_LENGTH = 'is-success';
+
+function sortGoods(sortBy, isReversed) {
   const sortArr = [...goodsFromServer];
 
-  if (curentButton) {
+  if (sortBy) {
     sortArr.sort((good1, good2) => {
-      switch (curentButton) {
-        case 'is-info':
+      switch (sortBy) {
+        case SORT_ALPHABETICALLY:
           return good1.localeCompare(good2);
-        case 'is-success':
+        case SORT_LENGTH:
           return good1.length - good2.length;
         default:
           return null;
@@ -30,7 +34,7 @@ function sortGoods(curentButton, reverse) {
     });
   }
 
-  if (reverse) {
+  if (isReversed) {
     sortArr.reverse();
   }
 
@@ -38,45 +42,50 @@ function sortGoods(curentButton, reverse) {
 }
 
 export const App = () => {
-  const [curentButton, setButton] = useState('');
-  const [reverse, setReverse] = useState(false);
-  const currentGoods = sortGoods(curentButton, reverse);
+  const [sortBy, setSortBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const currentGoods = sortGoods(sortBy, isReversed);
+
+  function reset() {
+    setSortBy('');
+    setIsReversed(false);
+  }
+
+  function changeReversed() {
+    setIsReversed(!isReversed);
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setButton('is-info')}
+          onClick={() => setSortBy(SORT_ALPHABETICALLY)}
           type="button"
-          className={`button is-info ${curentButton !== 'is-info' && 'is-light'}`}
+          className={`button is-info ${sortBy !== SORT_ALPHABETICALLY && 'is-light'}`}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setButton('is-success')}
+          onClick={() => setSortBy(SORT_LENGTH)}
           type="button"
-          className={`button is-success ${curentButton !== 'is-success' && 'is-light'}`}
+          className={`button is-success ${sortBy !== SORT_LENGTH && 'is-light'}`}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => setReverse(!reverse)}
+          onClick={changeReversed}
           type="button"
-          className={`button is-warning ${!reverse && 'is-light'}`}
+          className={`button is-warning ${!isReversed && 'is-light'}`}
         >
           Reverse
         </button>
 
-        {(curentButton || reverse)
+        {(sortBy || isReversed)
           && (
             <button
-              onClick={() => {
-                setButton('');
-                setReverse(false);
-              }
-              }
+              onClick={reset}
               type="button"
               className="button is-danger is-light"
             >
