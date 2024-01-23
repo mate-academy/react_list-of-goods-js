@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import cn from 'classnames';
 
 export const goodsFromServer = [
@@ -16,10 +16,13 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const defaultSortSettings = { sortValue: '', isReversed: false };
 const sortByLength = 'byLength';
 const sortByAlphabet = 'ByAlphabet';
+const sortValueKey = 'sortValue';
+const reverseValueKey = 'isReversed';
 
-function sortGoods(goods, { sortValue, reverse }) {
+function sortGoods(goods, { sortValue, isReversed }) {
   const sortedGoods = [...goods];
 
   if (sortValue) {
@@ -35,29 +38,29 @@ function sortGoods(goods, { sortValue, reverse }) {
     });
   }
 
-  return reverse ? sortedGoods.reverse() : sortedGoods;
+  return isReversed ? sortedGoods.reverse() : sortedGoods;
 }
 
 export const App = () => {
-  const defaultSortSettings = { sortValue: '', reverse: false };
-
   const [sortSettings, setSortSettings] = useState(defaultSortSettings);
 
-  const { sortValue, reverse } = sortSettings;
+  const goods = useMemo(
+    () => sortGoods(goodsFromServer, sortSettings),
+    [goodsFromServer, sortSettings],
+  );
 
-  const goods = sortGoods(goodsFromServer, sortSettings).map(good => (
-    <li data-cy="Good" key={good}>{good}</li>
-  ));
+  const { sortValue, isReversed } = sortSettings;
+
+  const handleSortClick = (key, value) => () => {
+    setSortSettings({ ...sortSettings, [key]: value });
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          onClick={() => setSortSettings({
-            ...sortSettings,
-            sortValue: sortByAlphabet,
-          })}
+          onClick={handleSortClick(sortValueKey, sortByAlphabet)}
           className={cn('button is-info', {
             'is-light': sortValue !== sortByAlphabet,
           })}
@@ -67,10 +70,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortSettings({
-            ...sortSettings,
-            sortValue: sortByLength,
-          })}
+          onClick={handleSortClick(sortValueKey, sortByLength)}
           className={cn('button is-success', {
             'is-light': sortValue !== sortByLength,
           })}
@@ -80,18 +80,15 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortSettings({
-            ...sortSettings,
-            reverse: !reverse,
-          })}
+          onClick={handleSortClick(reverseValueKey, !isReversed)}
           className={cn('button is-warning', {
-            'is-light': !reverse,
+            'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {(sortValue || reverse) && (
+        {(sortValue || isReversed) && (
         <button
           type="button"
           className="button is-danger is-light"
@@ -103,7 +100,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods}
+        {goods.map(good => (<li data-cy="Good" key={good}>{good}</li>))}
       </ul>
     </div>
   );
