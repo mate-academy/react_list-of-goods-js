@@ -23,16 +23,22 @@ function getPreparedGoods(goods, { sortfield, query, reverse }) {
   let preparedGoods = [...goods];
 
   if (query) {
-    preparedGoods = preparedGoods.filter(good => good.name.toLowerCase().includes(query.toLowerCase()));
+    preparedGoods = preparedGoods
+      .filter(good => good.name.toLowerCase()
+        .includes(query.toLowerCase()));
   }
 
   if (sortfield) {
     preparedGoods.sort((good1, good2) => {
       switch (sortfield) {
         case SORT_FIELD_ALPHABET:
-          return reverse ? good2.name.localeCompare(good1.name) : good1.name.localeCompare(good2.name);
+          return reverse
+            ? good2.name.localeCompare(good1.name)
+            : good1.name.localeCompare(good2.name);
         case SORT_FIELD_LENGTH:
-          return reverse ? good2.name.length - good1.name.length : good1.name.length - good2.name.length;
+          return reverse
+            ? good2.name.length - good1.name.length
+            : good1.name.length - good2.name.length;
         default:
           return 0;
       }
@@ -51,18 +57,23 @@ export const App = () => {
   const [originalGoods, setOriginalGoods] = useState([...goodsFromServer]);
 
   const handleSort = (field) => {
-    let newReverse = field === sortfield ? !reverse : reverse; // Keep the current reverse state if the same field is clicked
+    const newReverse = field === sortfield ? !reverse : reverse; // Keep the current reverse state if the same field is clicked
+
     setSortField(field);
 
-    let sortedGoods = [...originalGoods];
+    const sortedGoods = [...originalGoods];
 
     // Sort the goods
     sortedGoods.sort((good1, good2) => {
       switch (field) {
         case SORT_FIELD_ALPHABET:
-          return newReverse ? good2.name.localeCompare(good1.name) : good1.name.localeCompare(good2.name);
+          return newReverse
+            ? good2.name.localeCompare(good1.name)
+            : good1.name.localeCompare(good2.name);
         case SORT_FIELD_LENGTH:
-          return newReverse ? good2.name.length - good1.name.length : good1.name.length - good2.name.length;
+          return newReverse
+            ? good2.name.length - good1.name.length
+            : good1.name.length - good2.name.length;
         default:
           return 0;
       }
@@ -76,6 +87,7 @@ export const App = () => {
     // If it's the initial reverse, reverse the original goods
     if (!sortfield) {
       const reversedGoods = [...originalGoods].reverse();
+
       setOriginalGoods(reversedGoods);
       setReverse(true);
       setSortField('');
@@ -103,7 +115,9 @@ export const App = () => {
           className={cn(
             'button is-info',
             {
-              'is-light': sortfield === SORT_FIELD_ALPHABET || (reverse && sortfield === SORT_FIELD_ALPHABET),
+              'is-light':
+                sortfield !== SORT_FIELD_ALPHABET
+                || (reverse && sortfield !== SORT_FIELD_ALPHABET),
             },
           )}
           onClick={() => handleSort(SORT_FIELD_ALPHABET)}
@@ -116,14 +130,15 @@ export const App = () => {
           className={cn(
             'button is-success',
             {
-              'is-light': sortfield !== SORT_FIELD_LENGTH || (reverse && sortfield === SORT_FIELD_LENGTH),
+              'is-light':
+                sortfield !== SORT_FIELD_LENGTH
+                || (reverse && sortfield !== SORT_FIELD_LENGTH),
             },
           )}
           onClick={() => handleSort(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
-
 
         <button
           type="button"
