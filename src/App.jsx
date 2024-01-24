@@ -24,26 +24,49 @@ function getPreparedGoods(goods, { sortfield, query, reverse }) {
 
   if (query) {
     preparedGoods = preparedGoods
-      .filter(good => good.name.toLowerCase()
+      .filter(good => good.name
+        .toLowerCase()
         .includes(query.toLowerCase()));
   }
 
   if (sortfield) {
     preparedGoods.sort((good1, good2) => {
+      const name1 = good1.name.toLowerCase();
+      const name2 = good2.name.toLowerCase();
+
+      let comparisonResult = 0;
+      let lengthDiff;
+
       switch (sortfield) {
         case SORT_FIELD_ALPHABET:
-          return reverse
-            ? good2.name.localeCompare(good1.name)
-            : good1.name.localeCompare(good2.name);
+          comparisonResult = reverse
+            ? name2.localeCompare(name1)
+            : name1.localeCompare(name2);
+          break;
+
         case SORT_FIELD_LENGTH:
-          return reverse
-            ? good2.name.length - good1.name.length
-            : good1.name.length - good2.name.length;
+          lengthDiff = reverse
+            ? name2.length - name1.length
+            : name1.length - name2.length;
+
+          if (lengthDiff !== 0) {
+            comparisonResult = lengthDiff;
+          } else {
+            comparisonResult = reverse
+              ? name2.localeCompare(name1)
+              : name1.localeCompare(name2);
+          }
+
+          break;
+
         default:
           return 0;
       }
+
+      return comparisonResult;
     });
   } else if (reverse) {
+    // Reverse the goods if there is no sorting but the reverse flag is true
     preparedGoods.reverse();
   }
 
@@ -70,10 +93,23 @@ export const App = () => {
           return newReverse
             ? good2.name.localeCompare(good1.name)
             : good1.name.localeCompare(good2.name);
-        case SORT_FIELD_LENGTH:
-          return newReverse
+        case SORT_FIELD_LENGTH: {
+          const lengthDiff = newReverse
             ? good2.name.length - good1.name.length
             : good1.name.length - good2.name.length;
+          let result;
+
+          if (lengthDiff !== 0) {
+            result = lengthDiff;
+          } else {
+            result = newReverse
+              ? good2.name.localeCompare(good1.name)
+              : good1.name.localeCompare(good2.name);
+          }
+
+          return result;
+        }
+
         default:
           return 0;
       }
@@ -85,7 +121,7 @@ export const App = () => {
 
   const handleReverse = () => {
     // If it's the initial reverse, reverse the original goods
-    if (!sortfield) {
+    if ((!sortfield && !reverse)) {
       const reversedGoods = [...originalGoods].reverse();
 
       setOriginalGoods(reversedGoods);
