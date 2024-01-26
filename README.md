@@ -1,3 +1,4 @@
+[DEMO LINK](https://artemvlasiuk.github.io/react_list-of-goods-js/)
 # React list of goods
 
 Implement the ability to reorder the goods with the given buttons.
@@ -19,4 +20,4 @@ Implement the ability to reorder the goods with the given buttons.
 
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
 - Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_list-of-goods-js/) and add it to the PR description.
+- Replace `<your_account>` with your Github username in the [DEMO LINK](https://artemvlasiuk.github.io/react_list-of-goods-js/) and add it to the PR description.
