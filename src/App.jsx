@@ -18,26 +18,25 @@ export const goodsFromServer = [
 
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_ALPHABETICALLY = 'alphabet';
-const SORT_FIELD_REVERSE = 'reverse';
 
-function getPrepared(goods, sortField) {
-  let preparedGoods = [...goodsFromServer];
+function getPrepared(goods, sortField, isReversed) {
+  let preparedGoods = [...goods];
 
   if (sortField) {
-    if (sortField === SORT_FIELD_REVERSE) {
-      preparedGoods = preparedGoods.reverse();
+    switch (sortField) {
+      case SORT_FIELD_LENGTH:
+        preparedGoods.sort((good1, good2) => good2.length - good1.length);
+        break;
+      case SORT_FIELD_ALPHABETICALLY:
+        preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
+        break;
+      default:
+        break;
     }
+  }
 
-    preparedGoods.sort((good1, good2) => {
-      switch (sortField) {
-        case SORT_FIELD_LENGTH:
-          return good2.length - good1.length;
-        case SORT_FIELD_ALPHABETICALLY:
-          return good1.localeCompare(good2);
-        default:
-          return good1;
-      }
-    });
+  if (isReversed) {
+    preparedGoods = preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -45,9 +44,9 @@ function getPrepared(goods, sortField) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  // const [currentList, setCurrentList] = useState(goodsFromServer);
+  const [isReversed, SetIsReversed] = useState(false);
 
-  const visibleGoods = getPrepared(goodsFromServer, sortField);
+  const visibleGoods = getPrepared(goodsFromServer, sortField, isReversed);
 
   return (
     <div className="section content">
@@ -74,9 +73,10 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${sortField === SORT_FIELD_REVERSE ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={() => {
-            setSortField(SORT_FIELD_REVERSE);
+            SetIsReversed(!isReversed);
+            getPrepared(goodsFromServer, sortField, isReversed);
           }}
         >
           Reverse
