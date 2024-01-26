@@ -52,6 +52,10 @@ export const App = () => {
     sortField,
     reverseField,
   );
+  const reset = () => {
+    setSortField('');
+    setReverseField(false);
+  };
 
   return (
     <div className="section content">
@@ -87,11 +91,7 @@ export const App = () => {
               'is-warning',
               { 'is-light': !reverseField })
           }
-          onClick={
-            () => (reverseField
-              ? setReverseField(false)
-              : setReverseField(true))
-          }
+          onClick={() => setReverseField(currentValue => !currentValue)}
         >
           Reverse
         </button>
@@ -100,10 +100,7 @@ export const App = () => {
         <button
           type="button"
           className="button is-danger is-light"
-          onClick={() => {
-            setSortField('');
-            setReverseField(false);
-          }}
+          onClick={reset}
         >
           Reset
         </button>
