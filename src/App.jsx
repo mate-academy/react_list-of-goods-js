@@ -61,7 +61,7 @@ export const App = () => {
           })}
           onClick={() => (
             sortField.indexOf(SORT_REVERSE) !== -1
-              ? setSortField([SORT_ALPHABETICALLY, ...sortField])
+              ? setSortField([SORT_ALPHABETICALLY, SORT_REVERSE])
               : setSortField([SORT_ALPHABETICALLY])
           )}
         >
@@ -75,7 +75,7 @@ export const App = () => {
           })}
           onClick={() => (
             sortField.indexOf(SORT_REVERSE) !== -1
-              ? setSortField([SORT_LENGTH, ...sortField])
+              ? setSortField([SORT_LENGTH, SORT_REVERSE])
               : setSortField([SORT_LENGTH])
           )}
         >
@@ -85,12 +85,14 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': sortField.indexOf(SORT_REVERSE) === -1
-              || sortField
-                .filter(elem => elem === SORT_REVERSE).length % 2 === 0,
+            'is-light': sortField.indexOf(SORT_REVERSE) === -1,
           })}
           onClick={() => (
-            setSortField([...sortField, SORT_REVERSE])
+            sortField.indexOf(SORT_REVERSE) === -1
+              ? setSortField([...sortField, SORT_REVERSE])
+              : setSortField(
+                [...sortField].filter(elem => elem !== SORT_REVERSE),
+              )
           )}
         >
           Reverse
