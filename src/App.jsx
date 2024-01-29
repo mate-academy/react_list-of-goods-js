@@ -19,37 +19,39 @@ export const goodsFromServer = [
 
 const SORT_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_LENGTH = 'Sort by length';
-const SORT_REVERSE = 'Reverse';
 
 function getPreparedGoods(goods, { sortField }) {
   const preparedGoods = [...goods];
 
-  if (sortField.length > 0) {
-    sortField.forEach((elem) => {
-      switch (elem) {
-        case SORT_ALPHABETICALLY:
+  if (sortField) {
+    switch (sortField) {
+      case SORT_ALPHABETICALLY:
 
-          return preparedGoods
-            .sort((good1, good2) => good1.localeCompare(good2));
-        case SORT_LENGTH:
+        return preparedGoods
+          .sort((good1, good2) => good1.localeCompare(good2));
+      case SORT_LENGTH:
 
-          return preparedGoods
-            .sort((good1, good2) => good1.length - good2.length);
-        case SORT_REVERSE:
-
-          return preparedGoods.reverse();
-        default:
-          return preparedGoods;
-      }
-    });
+        return preparedGoods
+          .sort((good1, good2) => good1.length - good2.length);
+      default:
+        return preparedGoods;
+    }
   }
 
   return preparedGoods;
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState([]);
-  const visibleGoods = getPreparedGoods(goodsFromServer, { sortField });
+  const [sortField, setSortField] = useState('');
+  const [sortReverse, setSortReverse] = useState(false);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    { sortField, sortReverse },
+  );
+
+  if (sortReverse) {
+    visibleGoods.reverse();
+  }
 
   return (
     <div className="section content">
@@ -60,9 +62,7 @@ export const App = () => {
             'is-light': sortField.indexOf(SORT_ALPHABETICALLY) === -1,
           })}
           onClick={() => (
-            sortField.indexOf(SORT_REVERSE) !== -1
-              ? setSortField([SORT_ALPHABETICALLY, SORT_REVERSE])
-              : setSortField([SORT_ALPHABETICALLY])
+            setSortField(SORT_ALPHABETICALLY)
           )}
         >
           Sort alphabetically
@@ -74,9 +74,7 @@ export const App = () => {
             'is-light': sortField.indexOf(SORT_LENGTH) === -1,
           })}
           onClick={() => (
-            sortField.indexOf(SORT_REVERSE) !== -1
-              ? setSortField([SORT_LENGTH, SORT_REVERSE])
-              : setSortField([SORT_LENGTH])
+            setSortField(SORT_LENGTH)
           )}
         >
           Sort by length
@@ -85,14 +83,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': sortField.indexOf(SORT_REVERSE) === -1,
+            'is-light': sortReverse === false,
           })}
           onClick={() => (
-            sortField.indexOf(SORT_REVERSE) === -1
-              ? setSortField([...sortField, SORT_REVERSE])
-              : setSortField(
-                [...sortField].filter(elem => elem !== SORT_REVERSE),
-              )
+            setSortReverse(!sortReverse)
           )}
         >
           Reverse
@@ -103,9 +97,11 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => (
-                setSortField([])
-              )}
+              onClick={() => {
+                setSortField('');
+                setSortReverse(false);
+              }
+              }
             >
               Reset
             </button>
