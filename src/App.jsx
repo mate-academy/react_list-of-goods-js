@@ -20,24 +20,28 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY = 'Sort alphabetically';
 const SORT_LENGTH = 'Sort by length';
 
-function getPreparedGoods(goods, { sortField }) {
+function getPreparedGoods(goods, { sortField, sortReverse }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     switch (sortField) {
       case SORT_ALPHABETICALLY:
-
-        return preparedGoods
+        preparedGoods
           .sort((good1, good2) => good1.localeCompare(good2));
+        break;
 
       case SORT_LENGTH:
-
-        return preparedGoods
+        preparedGoods
           .sort((good1, good2) => good1.length - good2.length);
+        break;
 
       default:
         return preparedGoods;
     }
+  }
+
+  if (sortReverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -46,11 +50,10 @@ function getPreparedGoods(goods, { sortField }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [sortReverse, setSortReverse] = useState(false);
-  const visibleGoods = getPreparedGoods(goodsFromServer, { sortField });
-
-  if (sortReverse) {
-    visibleGoods.reverse();
-  }
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    { sortField, sortReverse },
+  );
 
   const resetFields = () => {
     setSortField('');
@@ -58,7 +61,7 @@ export const App = () => {
   };
 
   const checkChange = () => (
-    visibleGoods.toString() !== goodsFromServer.toString()
+    sortField || sortReverse
   );
 
   return (
@@ -99,7 +102,7 @@ export const App = () => {
             <button
               type="button"
               className="button is-danger is-light"
-              onClick={() => resetFields()}
+              onClick={resetFields}
             >
               Reset
             </button>
