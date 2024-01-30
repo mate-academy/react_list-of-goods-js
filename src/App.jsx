@@ -1,7 +1,9 @@
+
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import { link } from 'fs';
+// import { set } from 'cypress/types/lodash';
+// import { link } from 'fs';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -17,120 +19,68 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [alpLightOff, setalpLightOff] = useState(true);
-  const [lengthLightOff, setlengthLightOff] = useState(true);
-  const [reversLightOff, setreversLightOff] = useState(true);
-  const [isHiden, setisHiden] = useState(true);
 
-  function action(currentArr, revers, initialArr, initiator) {
-    const sortAlphabet
-      = [...currentArr].sort((el1, el2) => el1.localeCompare(el2));
-    const sortLength
-      = [...currentArr].sort((el1, el2) => el1.length - el2.length);
+  function action(initialValue, howToSotr, reverse) {
+    const sortedGoods = [...initialValue];
 
-    switch (initiator) {
-      case 'reset':
-        setIsReversed(false);
-        setVisibleGoods(initialArr);
-        setalpLightOff(true);
-        setlengthLightOff(true);
-        setreversLightOff(true);
-        setisHiden(true);
-        break;
-      case 'reverse':
-        setIsReversed(!isReversed && true);
-        setVisibleGoods(currentArr.reverse());
-        setreversLightOff(!reversLightOff && true);
-        setisHiden(false);
-        break;
-      case 'alphabet':
-        if (!revers) {
-          setVisibleGoods(sortAlphabet);
-        } else {
-          setVisibleGoods(sortAlphabet.reverse());
-        }
+    if (howToSotr === 'sortAlphabet') {
+      sortedGoods.sort((el1, el2) => el1.localeCompare(el2));
+    } else if (howToSotr === 'sortLength') {
+      sortedGoods.sort((el1, el2) => el1.length - el2.length);
+    }
 
-        setisHiden(false);
-        setalpLightOff(false);
-        setlengthLightOff(true);
-        break;
-      case 'length':
-        if (!revers) {
-          setVisibleGoods(sortLength);
-        } else {
-          setVisibleGoods(sortLength.reverse());
-        }
+    if (reverse) {
+      sortedGoods.reverse();
+    }
 
-        setisHiden(false);
-        setalpLightOff(true);
-        setlengthLightOff(false);
-        break;
-
-      default:
-        setVisibleGoods(initialArr);
-    };
+    return sortedGoods;
   }
+
+  const toRender = action(goodsFromServer, sortField, isReversed);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => action(
-            [...visibleGoods],
-            isReversed,
-            goodsFromServer,
-            'alphabet',
-          )}
+          onClick={() => setSortField('sortAlphabet')}
           type="button"
-          className={`button is-info ${alpLightOff && 'is-light'}`}
+          className={`button is-info ${sortField === 'sortAlphabet' ? '' : 'is-light'}`}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => action(
-            [...visibleGoods],
-            isReversed,
-            goodsFromServer,
-            'length',
-          )}
+          onClick={() => setSortField('sortLength')}
           type="button"
-          className={`button is-success ${lengthLightOff && 'is-light'}`}
+          className={`button is-success ${sortField === 'sortLength' ? '' : 'is-light'}`}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => action(
-            [...visibleGoods],
-            isReversed,
-            goodsFromServer,
-            'reverse',
-          )}
+          onClick={() => setIsReversed(!isReversed)}
           type="button"
-          className={`button is-warning ${reversLightOff ? 'is-light' : ''}`}
+          className={`button is-warning ${!isReversed && 'is-light'}`}
         >
           Reverse
         </button>
 
         <button
-          onClick={() => action(
-            [...visibleGoods],
-            isReversed,
-            goodsFromServer,
-            'reset',
-          )}
+          onClick={() => {
+            setSortField('');
+            setIsReversed(false);
+          }}
           type="button"
-          className={`button is-danger is-light ${isHiden && 'hiden'}`}
+          className={`button is-danger is-light ${!(sortField !== '' || isReversed === true) && 'hiden'}`}
         >
           Reset
         </button>
       </div>
 
       <ul>
-        {visibleGoods.map(item => <li key={item}>{item}</li>)}
+        {toRender.map(item => <li key={item}>{item}</li>)}
       </ul>
     </div>
   );
