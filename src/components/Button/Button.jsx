@@ -30,6 +30,7 @@ function getGoodsToRend(goods, field) {
 export const Button = ({ btn, searchField, setSearchField, goodsRender,
   setGoodsRender, goodsFromServerModObj }) => {
   const goodsToSet = getGoodsToRend(goodsFromServerModObj, btn);
+
   const setFieldFunc = () => {
     if (btn !== ACTION_FIELD_RESET) {
       setSearchField(btn);
