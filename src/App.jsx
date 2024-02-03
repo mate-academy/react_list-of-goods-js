@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import { Button } from './components/Button';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,45 +16,47 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className="button is-info is-light"
-      >
-        Sort alphabetically
-      </button>
+export const goodsFromServerModObj = goodsFromServer
+  .map(item => ({ id: goodsFromServer.indexOf(item) + 1, name: item }));
 
-      <button
-        type="button"
-        className="button is-success is-light"
-      >
-        Sort by length
-      </button>
+export const btns = [
+  'Sort alphabetically',
+  'Sort by length',
+  'Reverse',
+  'Reset',
+];
 
-      <button
-        type="button"
-        className="button is-warning is-light"
-      >
-        Reverse
-      </button>
+const buttons = [...btns].map(item => (
+  { id: btns.indexOf(item) + 1, name: item }
+));
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-      >
-        Reset
-      </button>
+export const App = () => {
+  const [searchField, setSearchField] = useState('');
+  const [goodsRender, setGoodsRender] = useState(goodsFromServerModObj);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {buttons.map(btn => (
+          <Button
+            key={btn.id}
+            btn={btn.name}
+            searchField={searchField}
+            setSearchField={setSearchField}
+            goodsRender={goodsRender}
+            setGoodsRender={setGoodsRender}
+            goodsFromServerModObj={goodsFromServerModObj}
+          >
+            { btn }
+          </Button>
+        ))}
+      </div>
+
+      <ul>
+        {goodsRender.map(item => (
+          <li data-cy="Good" key={item.id}>{ item.name }</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
