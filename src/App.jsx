@@ -1,38 +1,27 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './components/Button';
-
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
-
-export const goodsFromServerModObj = goodsFromServer
-  .map(item => ({ id: goodsFromServer.indexOf(item) + 1, name: item }));
-
-export const btns = [
-  'Sort alphabetically',
-  'Sort by length',
-  'Reverse',
-  'Reset',
-];
-
-const buttons = [...btns].map(item => (
-  { id: btns.indexOf(item) + 1, name: item }
-));
+import { goodsFromServerModObj, buttons }
+from './helpersfuncs/getBtnGoodsObjArrs';
+import { getGoodsToRend } from './helpersfuncs/getGoodsToRend';
 
 export const App = () => {
   const [searchField, setSearchField] = useState('');
-  const [goodsRender, setGoodsRender] = useState(goodsFromServerModObj);
+  const [goodsRender, setGoodsRender]
+  = useState(goodsFromServerModObj);
+  const [isReversed, setIsReversed] = useState(false);
+
+  const clearStrSearchField = searchField.replace(/\d/g, '');
+  const goodsToSet = getGoodsToRend(goodsFromServerModObj, clearStrSearchField);
+
+  useEffect(() => {
+    if (!isReversed) {
+      setGoodsRender(goodsToSet);
+    } else {
+      setGoodsRender(prev => [...prev].reverse());
+    }
+  }, [searchField, isReversed]);
 
   return (
     <div className="section content">
@@ -42,10 +31,12 @@ export const App = () => {
             key={btn.id}
             btn={btn.name}
             searchField={searchField}
+            clearStrSearchField={clearStrSearchField}
             setSearchField={setSearchField}
             goodsRender={goodsRender}
             setGoodsRender={setGoodsRender}
-            goodsFromServerModObj={goodsFromServerModObj}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
           >
             { btn }
           </Button>
