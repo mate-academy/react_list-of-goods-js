@@ -12,8 +12,7 @@ export const App = () => {
   = useState(goodsFromServerModObj);
   const [isReversed, setIsReversed] = useState(false);
 
-  const clearStrSearchField = searchField.replace(/\d/g, '');
-  const goodsToSet = getGoodsToRend(goodsFromServerModObj, clearStrSearchField);
+  const goodsToSet = getGoodsToRend(goodsFromServerModObj, searchField.btn);
 
   useEffect(() => {
     if (!isReversed) {
@@ -31,7 +30,6 @@ export const App = () => {
             key={btn.id}
             btn={btn.name}
             searchField={searchField}
-            clearStrSearchField={clearStrSearchField}
             setSearchField={setSearchField}
             goodsRender={goodsRender}
             setGoodsRender={setGoodsRender}

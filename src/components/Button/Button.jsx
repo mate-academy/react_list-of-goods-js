@@ -4,7 +4,7 @@ import cn from 'classnames';
 const ACTION_FIELD_REVERSE = 'Reverse';
 const ACTION_FIELD_RESET = 'Reset';
 
-export const Button = ({ btn, searchField, clearStrSearchField,
+export const Button = ({ btn, searchField,
   setSearchField, goodsRender, isReversed, setIsReversed,
   setGoodsRender }) => {
   const setFieldFunc = () => {
@@ -18,7 +18,7 @@ export const Button = ({ btn, searchField, clearStrSearchField,
         break;
       default:
         setIsReversed(false);
-        setSearchField(btn + Math.round(Math.random() * 100));
+        setSearchField({ btn });
         break;
     }
   };
@@ -32,7 +32,7 @@ export const Button = ({ btn, searchField, clearStrSearchField,
         'is-warning': btn === 'Reverse',
         'is-danger': btn === 'Reset',
         'is-hidden': btn === 'Reset' && searchField === '',
-        'is-light': (btn !== clearStrSearchField && btn !== 'Reverse')
+        'is-light': (btn !== searchField.btn && btn !== 'Reverse')
         || (btn === 'Reverse' && !isReversed),
       })}
       onClick={setFieldFunc}
