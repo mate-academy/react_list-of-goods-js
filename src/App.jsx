@@ -46,10 +46,14 @@ const getPreparedGoods = (goods, sortType, isReverse) => {
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, sortType, isReverse);
-  const showResetBtn = sortType || isReverse;
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortType, isReversed);
+
+  const handleResetClick = () => {
+    setSortType('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -80,21 +84,18 @@ export const App = () => {
           type="button"
           className={
             cn('button', 'is-warning',
-              { 'is-light': !isReverse })
+              { 'is-light': !isReversed })
           }
-          onClick={() => setIsReverse(prevIsReverse => !prevIsReverse)}
+          onClick={() => setIsReversed(prevIsReverse => !prevIsReverse)}
         >
           Reverse
         </button>
 
-        {showResetBtn && (
+        {(sortType || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortType('');
-              setIsReverse(false);
-            }}
+            onClick={handleResetClick}
           >
             Reset
           </button>
@@ -103,7 +104,7 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
