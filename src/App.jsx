@@ -17,7 +17,6 @@ export const goodsFromServer = [
 
 const SORT_ALPHABET = 'Sort alphabetically';
 const SORT_LENGTH = 'Sort by length';
-const REVERSE = 'Reverse';
 
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
@@ -88,7 +87,7 @@ export const App = () => {
         <button
           onClick={reverseGood}
           type="button"
-          className={`button is-warning ${reverse === REVERSE ? '' : 'is-light'}`}
+          className={`button is-warning ${reverse ? '' : 'is-light'}`}
         >
           Reverse
         </button>
