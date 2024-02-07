@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -76,9 +77,10 @@ export const App = () => {
 
         <button
           type="button"
-          className={!reverseField
-            ? 'button is-warning is-light'
-            : 'button is-warning'}
+          className={cn(
+            'button is-warning',
+            { 'button is-warning is-light': !reverseField },
+          )}
           onClick={() => setReverseField(!reverseField)}
         >
           Reverse
@@ -87,7 +89,7 @@ export const App = () => {
         {(sortField || reverseField) && (
         <button
           type="button"
-          className={sortField === '' && 'button is-danger is-light'}
+          className={(sortField || reverseField) && 'button is-danger is-light'}
           onClick={() => {
             setSortField('');
             setReverseField(false);
