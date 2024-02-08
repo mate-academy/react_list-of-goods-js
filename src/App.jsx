@@ -57,9 +57,10 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={sortField === SORT_FIELD_ABC
-            ? 'button is-info'
-            : 'button is-info is-light'}
+          className={cn(
+            'button is-info',
+            { 'button is-info is-light': sortField !== SORT_FIELD_ABC },
+          )}
           onClick={() => setSortField(SORT_FIELD_ABC)}
         >
           Sort alphabetically
@@ -86,7 +87,6 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || reverseField) && (
         <button
           type="button"
           className={(sortField || reverseField) && 'button is-danger is-light'}
@@ -97,7 +97,6 @@ export const App = () => {
         >
           Reset
         </button>
-        )}
       </div>
 
       <ul>
