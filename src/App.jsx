@@ -45,22 +45,6 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
   if (reverseField) {
     preparedGoods = preparedGoods.reverse();
   }
-  // if (reverseField) {
-  //   preparedGoods.sort((sortA, sortB) => {
-  //     switch (sortField) {
-  //       case ACTIVE_ABC:
-  //         return sortB.localeCompare(sortA);
-
-  //       case ACTIVE_LENGTH:
-  //         return sortB[sortField] - sortA[sortField];
-
-  //       default:
-  //         return 0;
-  //     }
-  //   });
-
-  //   // preparedGoods.reverse();
-  // }
 
   return preparedGoods;
 }
@@ -100,27 +84,15 @@ export const App = () => {
           Sort by length
         </button>
 
-        {reverseField === ACTIVE_REVERSE ? (
-          <button
-            type="button"
-            className="button is-warning"
-            onClick={() => {
-              setReverseField(false);
-            }}
-          >
-            Reverse
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="button is-warning is-light"
-            onClick={() => {
-              setReverseField(ACTIVE_REVERSE);
-            }}
-          >
-            Reverse
-          </button>
-        )}
+        <button
+          type="button"
+          className={cn('button is-warning', { 'is-light': !reverseField })}
+          onClick={() => {
+            setReverseField(!reverseField);
+          }}
+        >
+          Reverse
+        </button>
 
         {(sortField || reverseField) && (
           <button
