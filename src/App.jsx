@@ -90,7 +90,7 @@ export const App = () => {
         {(sortField) && (
         <button
           type="button"
-          className={(sortField || reverseField) && 'button is-danger is-light'}
+          className={(sortField) && 'button is-danger is-light'}
           onClick={() => {
             setSortField('');
             setReverseField(false);
