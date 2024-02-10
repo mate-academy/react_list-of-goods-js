@@ -16,24 +16,20 @@ export const goodsFromServer = [
   'Garlic',
 ];
 const SORT_FIELD_BY_LENGTH = 'byLength';
-const REVERSE_SORT_FIELD_BY_LENGTH = 'byLengthReversed';
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
-const REVERSE_SORT_FIELD_ALPHABETICALLY = 'alphabeticallyReversed';
 
-function getPreparedGoods(goods, { sortField }) {
+function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
         case SORT_FIELD_BY_LENGTH:
-          return good2.length - good1.length;
+          return isReversed
+            ? good1.length - good2.length : good2.length - good1.length;
         case SORT_FIELD_ALPHABETICALLY:
-          return good1.localeCompare(good2);
-        case REVERSE_SORT_FIELD_BY_LENGTH:
-          return good1.length - good2.length;
-        case REVERSE_SORT_FIELD_ALPHABETICALLY:
-          return good2.localeCompare(good1);
+          return isReversed
+            ? good2.localeCompare(good1) : good1.localeCompare(good2);
         default:
           return 0;
       }
@@ -45,7 +41,12 @@ function getPreparedGoods(goods, { sortField }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, { sortField });
+
+  const handleReverseClick = () => {
+    setIsReversed(!isReversed);
+  };
 
   return (
 
@@ -56,7 +57,6 @@ export const App = () => {
           onClick={() => setSortField(SORT_FIELD_ALPHABETICALLY)}
           className={cn('button', 'is-info',
             sortField === SORT_FIELD_ALPHABETICALLY
-            || sortField === REVERSE_SORT_FIELD_ALPHABETICALLY
               ? null : 'is-light')}
         >
           Sort alphabetically
@@ -66,28 +66,15 @@ export const App = () => {
           onClick={() => setSortField(SORT_FIELD_BY_LENGTH)}
           type="button"
           className={cn('button', 'is-info',
-            sortField === SORT_FIELD_BY_LENGTH
-            || sortField === REVERSE_SORT_FIELD_BY_LENGTH ? null : 'is-light')}
+            sortField === SORT_FIELD_BY_LENGTH ? null : 'is-light')}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => {
-            if (sortField === SORT_FIELD_ALPHABETICALLY) {
-              setSortField(REVERSE_SORT_FIELD_ALPHABETICALLY);
-            } else if (sortField === SORT_FIELD_BY_LENGTH) {
-              setSortField(REVERSE_SORT_FIELD_BY_LENGTH);
-            } else if (sortField === REVERSE_SORT_FIELD_ALPHABETICALLY) {
-              setSortField(SORT_FIELD_ALPHABETICALLY);
-            } else if (sortField === REVERSE_SORT_FIELD_BY_LENGTH) {
-              setSortField(SORT_FIELD_BY_LENGTH);
-            }
-          }}
-          className={cn('button', 'is-warning',
-            sortField === REVERSE_SORT_FIELD_ALPHABETICALLY
-          || sortField === REVERSE_SORT_FIELD_BY_LENGTH ? null : 'is-light')}
+          onClick={handleReverseClick}
+          className={cn('button', 'is-warning', isReversed ? null : 'is-light')}
         >
           Reverse
         </button>
