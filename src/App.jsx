@@ -26,8 +26,10 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
       switch (sortField) {
         case SORT_FIELD_BY_LENGTH:
           return good1.length - good2.length;
+
         case SORT_FIELD_ALPHABETICALLY:
           return good1.localeCompare(good2);
+
         default:
           return 0;
       }
@@ -63,8 +65,7 @@ export const App = () => {
           type="button"
           onClick={() => setSortField(SORT_FIELD_ALPHABETICALLY)}
           className={cn('button', 'is-info',
-            sortField === SORT_FIELD_ALPHABETICALLY
-              ? null : 'is-light')}
+            { 'is-light': sortField !== SORT_FIELD_ALPHABETICALLY })}
         >
           Sort alphabetically
         </button>
@@ -73,7 +74,7 @@ export const App = () => {
           onClick={() => setSortField(SORT_FIELD_BY_LENGTH)}
           type="button"
           className={cn('button', 'is-info',
-            sortField === SORT_FIELD_BY_LENGTH ? null : 'is-light')}
+            { 'is-light': sortField !== SORT_FIELD_BY_LENGTH })}
         >
           Sort by length
         </button>
@@ -81,7 +82,8 @@ export const App = () => {
         <button
           type="button"
           onClick={handleReverseClick}
-          className={cn('button', 'is-warning', isReversed ? null : 'is-light')}
+          className={cn('button', 'is-warning',
+            { 'is-light': !isReversed })}
         >
           Reverse
         </button>
@@ -98,8 +100,10 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+        {visibleGoods.map((good, index) => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
