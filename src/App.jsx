@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_TYPE_ALPHABET = 'Sort alphabetically';
 const SORT_TYPE_LENGTH = 'Sort by length';
-const SORT_TYPE_REVERSE = 'Reverse';
 
 function getPreparedGoods(goods, { sortType, isReverse }) {
   let preparedGoods = [...goods];
@@ -83,15 +82,13 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'button is-warning is-light': sortType !== SORT_TYPE_REVERSE,
+            'button is-warning is-light': isReverse !== 1,
           })}
           onClick={() => {
             if (isReverse === 0) {
               setIsReverse(1);
-              setSortType(SORT_TYPE_REVERSE);
             } else {
               setIsReverse(0);
-              setSortType('');
             }
           }}
         >
