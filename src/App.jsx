@@ -38,8 +38,13 @@ function getPreparedGoods(goods, { sortType, isReverse }) {
         return good2.localeCompare(good1);
       }
 
-      case SORT_TYPE_LENGTH:
-        return good1.length - good2.length;
+      case SORT_TYPE_LENGTH: {
+        if (isReverse === 0) {
+          return good1.length - good2.length;
+        }
+
+        return good2.length - good1.length;
+      }
 
       default:
         return 0;
