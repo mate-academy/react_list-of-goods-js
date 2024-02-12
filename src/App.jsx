@@ -94,7 +94,7 @@ export const App = () => {
         >
           Reverse
         </button>
-        {sortType && (
+        {sortType || isReverse ? (
           <button
             type="button"
             className="button is-danger is-light"
@@ -105,7 +105,7 @@ export const App = () => {
           >
             Reset
           </button>
-        )}
+        ) : null}
 
       </div>
 
