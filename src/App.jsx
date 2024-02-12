@@ -88,11 +88,11 @@ export const App = () => {
           onClick={() => {
             if (isReverse === 0) {
               setIsReverse(1);
+              setSortType(SORT_TYPE_REVERSE);
             } else {
               setIsReverse(0);
+              setSortType('');
             }
-
-            setSortType(SORT_TYPE_REVERSE);
           }}
         >
           Reverse
