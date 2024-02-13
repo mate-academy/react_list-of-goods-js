@@ -20,42 +20,30 @@ const SORT_TYPE_ALPHABET = 'Sort alphabetically';
 const SORT_TYPE_LENGTH = 'Sort by length';
 
 function getPreparedGoods(goods, { sortType, isReverse }) {
-  let preparedGoods = [...goods];
-
-  if (isReverse === 1) {
-    preparedGoods = preparedGoods
-      .sort((good1, good2) => preparedGoods.indexOf(good2)
-        - preparedGoods.indexOf(good1));
-  }
+  const preparedGoods = [...goods];
 
   preparedGoods.sort((good1, good2) => {
     switch (sortType) {
-      case SORT_TYPE_ALPHABET: {
-        if (isReverse === 0) {
-          return good1.localeCompare(good2);
-        }
+      case SORT_TYPE_ALPHABET:
+        return good1.localeCompare(good2);
 
-        return good2.localeCompare(good1);
-      }
-
-      case SORT_TYPE_LENGTH: {
-        if (isReverse === 0) {
-          return good1.length - good2.length;
-        }
-
-        return good2.length - good1.length;
-      }
+      case SORT_TYPE_LENGTH:
+        return good1.length - good2.length;
 
       default:
         return 0;
     }
   });
 
+  if (isReverse) {
+    preparedGoods.reverse();
+  }
+
   return preparedGoods;
 }
 
 export const App = () => {
-  const [isReverse, setIsReverse] = useState(0);
+  const [isReverse, setIsReverse] = useState(false);
   const [sortType, setSortType] = useState('');
   const sortedGoods = getPreparedGoods(
     goodsFromServer, { sortType, isReverse },
@@ -67,7 +55,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'button is-info is-light': sortType !== SORT_TYPE_ALPHABET,
+            'is-light': sortType !== SORT_TYPE_ALPHABET,
           })}
           onClick={() => setSortType(SORT_TYPE_ALPHABET)}
         >
@@ -77,7 +65,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'button is-success is-light': sortType !== SORT_TYPE_LENGTH,
+            'is-light': sortType !== SORT_TYPE_LENGTH,
           })}
           onClick={() => setSortType(SORT_TYPE_LENGTH)}
         >
@@ -87,30 +75,26 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'button is-warning is-light': isReverse !== 1,
+            'is-light': !isReverse,
           })}
           onClick={() => {
-            if (isReverse === 0) {
-              setIsReverse(1);
-            } else {
-              setIsReverse(0);
-            }
+            setIsReverse(!isReverse);
           }}
         >
           Reverse
         </button>
-        {sortType || isReverse ? (
+        {(sortType || isReverse) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortType('');
-              setIsReverse(0);
+              setIsReverse(false);
             }}
           >
             Reset
           </button>
-        ) : null}
+        )}
 
       </div>
 
