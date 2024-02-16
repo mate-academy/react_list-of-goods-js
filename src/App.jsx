@@ -89,7 +89,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortBy || reversed ? (
+        {(sortBy || reversed) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -97,7 +97,7 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
