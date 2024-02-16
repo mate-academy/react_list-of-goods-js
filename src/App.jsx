@@ -8,19 +8,19 @@ import { getGoodsToRend } from './helpersfuncs/getGoodsToRend';
 
 export const App = () => {
   const [searchField, setSearchField] = useState('');
+  const searchFieldActive = searchField;
+
   const [goodsRender, setGoodsRender]
   = useState(goodsFromServerModObj);
   const [isReversed, setIsReversed] = useState(false);
+  const isReversedBtnState = isReversed;
 
-  const goodsToSet = getGoodsToRend(goodsFromServerModObj, searchField.btn);
+  const goodsToSet = getGoodsToRend(goodsFromServerModObj,
+    searchFieldActive, isReversedBtnState);
 
   useEffect(() => {
-    if (!isReversed) {
-      setGoodsRender(goodsToSet);
-    } else {
-      setGoodsRender(prev => [...prev].reverse());
-    }
-  }, [searchField, isReversed]);
+    setGoodsRender(goodsToSet);
+  }, [searchFieldActive, isReversed]);
 
   return (
     <div className="section content">
@@ -31,8 +31,6 @@ export const App = () => {
             btn={btn.name}
             searchField={searchField}
             setSearchField={setSearchField}
-            goodsRender={goodsRender}
-            setGoodsRender={setGoodsRender}
             isReversed={isReversed}
             setIsReversed={setIsReversed}
           >

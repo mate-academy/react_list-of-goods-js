@@ -1,5 +1,5 @@
 
-export function getGoodsToRend(goods, field) {
+export function getGoodsToRend(goods, field, reverseState) {
   const goodsToRend = [...goods];
   const ACTION_FIELD_ALPHABET = 'Sort alphabetically';
   const ACTION_FIELD_LENGTH = 'Sort by length';
@@ -17,6 +17,10 @@ export function getGoodsToRend(goods, field) {
           return 0;
       }
     });
+  }
+
+  if (reverseState) {
+    goodsToRend.reverse();
   }
 
   return goodsToRend;

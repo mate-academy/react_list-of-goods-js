@@ -5,8 +5,7 @@ const ACTION_FIELD_REVERSE = 'Reverse';
 const ACTION_FIELD_RESET = 'Reset';
 
 export const Button = ({ btn, searchField,
-  setSearchField, goodsRender, isReversed, setIsReversed,
-  setGoodsRender }) => {
+  setSearchField, isReversed, setIsReversed }) => {
   const setFieldFunc = () => {
     switch (btn) {
       case ACTION_FIELD_REVERSE:
@@ -17,8 +16,7 @@ export const Button = ({ btn, searchField,
         setSearchField('');
         break;
       default:
-        setIsReversed(false);
-        setSearchField({ btn });
+        setSearchField(btn);
         break;
     }
   };
@@ -32,7 +30,7 @@ export const Button = ({ btn, searchField,
         'is-warning': btn === 'Reverse',
         'is-danger': btn === 'Reset',
         'is-hidden': btn === 'Reset' && searchField === '',
-        'is-light': (btn !== searchField.btn && btn !== 'Reverse')
+        'is-light': (btn !== searchField && btn !== 'Reverse')
         || (btn === 'Reverse' && !isReversed),
       })}
       onClick={setFieldFunc}
