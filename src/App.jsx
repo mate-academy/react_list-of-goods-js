@@ -53,13 +53,15 @@ export const App = () => {
     setIsReversed(false);
   };
 
+  const isSortTypeChecked = sortType => sortBy === sortType;
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           onClick={() => setSortBy(SORT_ALPHABETICALLY)}
           type="button"
-          className={`button is-info ${!(sortBy === SORT_ALPHABETICALLY) && 'is-light'}`}
+          className={`button is-info ${!isSortTypeChecked(SORT_ALPHABETICALLY) && 'is-light'}`}
         >
           Sort alphabetically
         </button>
@@ -67,7 +69,7 @@ export const App = () => {
         <button
           onClick={() => setSortBy(SORT_BY_LENGTH)}
           type="button"
-          className={`button is-success ${!(sortBy === SORT_BY_LENGTH) && 'is-light'}`}
+          className={`button is-success ${!isSortTypeChecked(SORT_BY_LENGTH) && 'is-light'}`}
         >
           Sort by length
         </button>
