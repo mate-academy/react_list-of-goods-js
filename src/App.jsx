@@ -19,40 +19,41 @@ export const goodsFromServer = [
 const ALPHABET = 'alphabet';
 const LENGTH = 'length';
 
-const prepareGoods = (sortMethod, reverseList) => {
-  const copyGoods = [...goodsFromServer];
+const prepareGoods = (sortMethod, isListReversed) => {
+  const goodsCopy = [...goodsFromServer];
 
   if (sortMethod) {
-    copyGoods.sort((a, b) => {
-      if (sortMethod === ALPHABET) {
-        return a.localeCompare(b);
+    goodsCopy.sort((a, b) => {
+      switch (sortMethod) {
+        case ALPHABET:
+          return a.localeCompare(b);
+        case LENGTH:
+          return a.length - b.length;
+        default:
+          return 0;
       }
-
-      if (sortMethod === LENGTH) {
-        return a.length - b.length;
-      }
-
-      return 0;
     });
   }
 
-  if (reverseList) {
-    copyGoods.reverse();
+  if (isListReversed) {
+    goodsCopy.reverse();
   }
 
-  return copyGoods;
+  return goodsCopy;
 };
 
 export const App = () => {
   const [sortMethod, setSortMethod] = useState('');
-  const [reverseList, setReverseList] = useState(false);
+  const [isListReversed, setIsListReversed] = useState(false);
 
   const resetAll = () => {
     setSortMethod('');
-    setReverseList(false);
+    setIsListReversed(false);
   };
 
-  const goodsList = prepareGoods(sortMethod, reverseList);
+  const isResetButtonVisible = sortMethod || isListReversed;
+
+  const goodsList = prepareGoods(sortMethod, isListReversed);
 
   return (
     <div className="section content">
@@ -74,14 +75,14 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setReverseList(!reverseList)}
+          onClick={() => setIsListReversed(!isListReversed)}
           type="button"
-          className={`button is-warning ${!reverseList && 'is-light'}`}
+          className={`button is-warning ${!isListReversed && 'is-light'}`}
         >
           Reverse
         </button>
 
-        {(sortMethod || reverseList) && (
+        {isResetButtonVisible && (
           <button
             onClick={resetAll}
             type="button"
