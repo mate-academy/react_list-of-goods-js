@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'Alphabet';
 const SORT_FIELD_LENGTH = 'Length';
 
-function prepareGoods(goods, { type, reverse }) {
+function prepareGoods(goods, type, reverse) {
   const preparedGoods = [...goods];
 
   preparedGoods.sort((good1, good2) => {
@@ -28,9 +28,9 @@ function prepareGoods(goods, { type, reverse }) {
         return good1.localeCompare(good2);
       case SORT_FIELD_LENGTH:
         return good1.length - good2.length;
+      default:
+        return 0;
     }
-
-    return preparedGoods;
   });
 
   if (reverse) {
@@ -41,26 +41,16 @@ function prepareGoods(goods, { type, reverse }) {
 }
 
 export const App = () => {
-  const [sortQuery, setSortQuery] = useState({
-    type: '',
-    reverse: false,
-  });
-  const sortedGoods = prepareGoods(goodsFromServer, sortQuery);
+  const [sortQuery, setSortQuery] = useState('');
+  const [reversed, setReversed] = useState(false);
 
-  const setQueryValue = (queryType, queryValue) => {
-    if (queryValue) {
-      setSortQuery(prev => ({ ...prev, [queryType]: queryValue }));
-    } else {
-      setSortQuery(prev => ({ ...prev, [queryType]: !prev[queryType] }));
-    }
-  };
+  const sortedGoods = prepareGoods(goodsFromServer, sortQuery, reversed);
 
-  const checkSortQuery = (query, value) => {
-    if (value) {
-      return sortQuery[query] === value;
-    }
+  const isChanged = sortQuery || reversed;
 
-    return sortQuery[query];
+  const resetFilter = () => {
+    setSortQuery('');
+    setReversed(false);
   };
 
   return (
@@ -68,33 +58,33 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${checkSortQuery('type', SORT_FIELD_ALPHABET) || 'is-light'}`}
-          onClick={() => setQueryValue('type', SORT_FIELD_ALPHABET)}
+          className={`button is-info ${sortQuery === SORT_FIELD_ALPHABET || 'is-light'}`}
+          onClick={() => setSortQuery(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${checkSortQuery('type', SORT_FIELD_LENGTH) || 'is-light'}`}
-          onClick={() => setQueryValue('type', SORT_FIELD_LENGTH)}
+          className={`button is-success ${sortQuery === SORT_FIELD_LENGTH || 'is-light'}`}
+          onClick={() => setSortQuery(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${checkSortQuery('reverse') || 'is-light'}`}
-          onClick={() => setQueryValue('reverse')}
+          className={`button is-warning ${reversed || 'is-light'}`}
+          onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
 
-        {(sortQuery.type || sortQuery.reverse) && (
+        {isChanged && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => setSortQuery(() => ({ type: '', reverse: false }))}
+            onClick={resetFilter}
           >
             Reset
           </button>
