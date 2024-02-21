@@ -19,61 +19,69 @@ export const goodsFromServer = [
 const ALPHABET = 'alphabet';
 const LENGTH = 'length';
 
+const prepareGoods = (sortMethod, reverseList) => {
+  const copyGoods = [...goodsFromServer];
+
+  if (sortMethod) {
+    copyGoods.sort((a, b) => {
+      if (sortMethod === ALPHABET) {
+        return a.localeCompare(b);
+      }
+
+      if (sortMethod === LENGTH) {
+        return a.length - b.length;
+      }
+
+      return 0;
+    });
+  }
+
+  if (reverseList) {
+    copyGoods.reverse();
+  }
+
+  return copyGoods;
+};
+
 export const App = () => {
-  const [sort, setSort] = useState('');
-  const [reverse, setReverse] = useState(false);
-
-  const prepareGoods = () => {
-    const copyGoods = [...goodsFromServer];
-
-    if (sort === ALPHABET) {
-      copyGoods.sort((a, b) => a.localeCompare(b));
-    } else if (sort === LENGTH) {
-      copyGoods.sort((a, b) => a.length - b.length);
-    }
-
-    if (reverse) {
-      copyGoods.reverse();
-    }
-
-    return copyGoods;
-  };
+  const [sortMethod, setSortMethod] = useState('');
+  const [reverseList, setReverseList] = useState(false);
 
   const resetAll = () => {
-    setSort('');
-    setReverse(false);
+    setSortMethod('');
+    setReverseList(false);
   };
 
-  const goodsList = prepareGoods();
+  const goodsList = prepareGoods(sortMethod, reverseList);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSort(ALPHABET)}
+          onClick={() => setSortMethod(ALPHABET)}
           type="button"
-          className={`button is-info ${sort !== ALPHABET && 'is-light'}`}
+          className={`button is-info ${sortMethod !== ALPHABET && 'is-light'}`}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={() => setSort(LENGTH)}
+          onClick={() => setSortMethod(LENGTH)}
           type="button"
-          className={`button is-success ${sort !== LENGTH && 'is-light'}`}
+          className={`button is-success ${sortMethod !== LENGTH && 'is-light'}`}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => setReverse(!reverse)}
+          onClick={() => setReverseList(!reverseList)}
           type="button"
-          className={`button is-warning ${!reverse && 'is-light'}`}
+          className={`button is-warning ${!reverseList && 'is-light'}`}
         >
           Reverse
         </button>
 
-        {(sort || reverse) && (
+        {(sortMethod || reverseList) && (
           <button
             onClick={resetAll}
             type="button"
