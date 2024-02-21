@@ -68,7 +68,7 @@ export const App = () => {
         <button
           onClick={() => setReverse(!reverse)}
           type="button"
-          className={`button is-warning ${reverse !== true && 'is-light'}`}
+          className={`button is-warning ${!reverse && 'is-light'}`}
         >
           Reverse
         </button>
