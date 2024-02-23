@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -15,97 +16,97 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_ALPHABET = 'Sort alphabetically';
-const SORT_LENGTH = 'Sort by length';
+const SORT_BY_ALFA = 'sortByAlfa';
+const SORT_BY_LENGTH = 'sortByLength';
+
+function getSortGoods(goods, { sortField, isReversed }) {
+  const sortGoods = [...goods];
+
+  if (sortField) {
+    sortGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_BY_ALFA:
+          return good1.localeCompare(good2);
+
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    sortGoods.reverse();
+  }
+
+  return sortGoods;
+}
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [sortField, setSortField] = useState(null);
-  const [reverse, setReverse] = useState(false);
+  const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGood = getSortGoods(goodsFromServer, { sortField, isReversed });
 
-  const sortByAlphabet = () => {
-    if (reverse) {
-      setVisibleGoods([...visibleGoods].sort().reverse());
-    } else {
-      setVisibleGoods([...visibleGoods].sort());
-    }
-
-    setSortField(SORT_ALPHABET);
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
   };
 
-  const sortByLength = () => {
-    if (reverse) {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) => good2.length - good1.length),
-      );
-    } else {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-      );
-    }
-
-    setSortField(SORT_LENGTH);
-  };
-
-  const reverseGood = () => {
-    const reversedGoods = [...visibleGoods].reverse();
-
-    setVisibleGoods(reversedGoods);
-
-    setReverse(!reverse);
-  };
-
-  const resetGood = () => {
-    setVisibleGoods(goodsFromServer);
-    setSortField(null);
-    setReverse(false);
+  const reverse = () => {
+    setIsReversed(!isReversed);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={sortByAlphabet}
           type="button"
-          className={`button is-info ${sortField === SORT_ALPHABET ? '' : 'is-light'}`}
+          className={cn('button is-info', {
+            'is-light': sortField !== SORT_BY_ALFA,
+          })}
+          onClick={() => setSortField(SORT_BY_ALFA)}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={sortByLength}
           type="button"
-          className={`button is-success ${sortField === SORT_LENGTH ? '' : 'is-light'}`}
+          className={cn('button is-success', {
+            'is-light': sortField !== SORT_BY_LENGTH,
+          })}
+          onClick={() => setSortField(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
-          onClick={reverseGood}
           type="button"
-          className={`button is-warning ${reverse ? '' : 'is-light'}`}
+          className={cn('button is-warning', {
+            'is-light': isReversed !== true,
+          })}
+          onClick={reverse}
         >
           Reverse
         </button>
 
-        {(sortField || reverse) && (
+        {(sortField !== '' || isReversed === true) && (
           <button
-            onClick={resetGood}
             type="button"
             className="button is-danger is-light"
+            onClick={reset}
           >
             Reset
           </button>
         )}
       </div>
 
-      <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good" key={good}>
-            {good}
-          </li>
-        ))}
-      </ul>
+      {visibleGood.map(good => (
+        <li data-cy="Good" key={good}>
+          {good}
+        </li>
+      ))}
     </div>
   );
 };
