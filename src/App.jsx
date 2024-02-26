@@ -20,25 +20,20 @@ const SORT_BY_ALPHABET = 'alph';
 const SORT_BY_LENGTH = 'len';
 
 function sortGoods(array, objOfRules) {
-  let result;
-
   switch (objOfRules.sortField) {
     case SORT_BY_ALPHABET:
-      result = array.sort((a, b) => a.localeCompare(b));
+      array.sort((a, b) => a.localeCompare(b));
       break;
     case SORT_BY_LENGTH:
-      result = array.sort((a, b) => a.length - b.length);
+      array.sort((a, b) => a.length - b.length);
       break;
     default:
-      result = array;
       break;
   }
 
   if (objOfRules.isReversed) {
-    return result.reverse();
+    array.reverse();
   }
-
-  return result;
 }
 
 export const App = () => {
