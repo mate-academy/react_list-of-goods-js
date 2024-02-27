@@ -55,7 +55,7 @@ function getPreparedGoods(goods, { sortField, reverse }) {
 export const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <GoodItem good={good} />
+      <GoodItem good={good} key={good.id} />
     ))}
   </ul>
 );
@@ -71,13 +71,15 @@ export const App = () => {
   });
 
   function showReset() {
+    const reset = () => {
+      setSortField('');
+      setReverse(false);
+    };
+
     if (sortField || reverse) {
       return (
         <button
-          onClick={() => {
-            setSortField('');
-            setReverse(false);
-          }}
+          onClick={reset}
           type="button"
           className="button is-danger is-light"
         >
@@ -118,7 +120,7 @@ export const App = () => {
         {showReset()}
       </div>
 
-      <GoodList key={visibleGoods.id} goods={visibleGoods} />
+      <GoodList goods={visibleGoods} />
     </div>
   );
 };
