@@ -2,8 +2,8 @@ import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
 import { Buttons } from './components/Buttons/Buttons';
-import { CONST } from './components/const';
 import { FUNCTIONS } from './components/functions';
+import { CONST } from './components/const';
 
 export const goodsFromServer = [
   'Dumplings',
