@@ -32,22 +32,16 @@ function getPreparedGoods(goods, { sortfield, query, reverse }) {
 
       switch (sortfield) {
         case SORT_FIELD_ALPHABET:
-          comparisonResult = reverse
-            ? name2.localeCompare(name1)
-            : name1.localeCompare(name2);
+          comparisonResult = name1.localeCompare(name2);
           break;
 
         case SORT_FIELD_LENGTH:
-          lengthDiff = reverse
-            ? name2.length - name1.length
-            : name1.length - name2.length;
+          lengthDiff = name1.length - name2.length;
 
           if (lengthDiff !== 0) {
             comparisonResult = lengthDiff;
           } else {
-            comparisonResult = reverse
-              ? name2.localeCompare(name1)
-              : name1.localeCompare(name2);
+            comparisonResult = name1.localeCompare(name2);
           }
 
           break;
@@ -58,7 +52,9 @@ function getPreparedGoods(goods, { sortfield, query, reverse }) {
 
       return comparisonResult;
     });
-  } else if (reverse) {
+  }
+
+  if (reverse) {
     preparedGoods.reverse();
   }
 
@@ -104,7 +100,7 @@ export const App = () => {
           className={cn('button is-info', {
             'is-light':
               sortfield !== SORT_FIELD_ALPHABET
-              || (reverse && sortfield !== SORT_FIELD_ALPHABET),
+               || (reverse && sortfield !== SORT_FIELD_ALPHABET),
           })}
           onClick={() => handleSort(SORT_FIELD_ALPHABET)}
         >
