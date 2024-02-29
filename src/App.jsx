@@ -3,7 +3,6 @@ import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
