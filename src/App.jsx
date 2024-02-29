@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import cn from 'classnames';
-import 'bulma/css/bulma.css';
+import { useState } from 'react';
 import './App.scss';
 
 export const goodsFromServer = [
