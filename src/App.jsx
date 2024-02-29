@@ -25,9 +25,12 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_ALPHABET: return good1.localeCompare(good2);
-        case SORT_BY_LENGTH: return good1.length - good2.length;
-        default: return 0;
+        case SORT_ALPHABET:
+          return good1.localeCompare(good2);
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
       }
     });
   }
@@ -45,6 +48,11 @@ export const App = () => {
   const goodsToGo = getPreparedGoods(goodsFromServer, {
     sortField, isReversed,
   });
+  const reversed = isReversed || sortField;
+  const handleReset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -75,24 +83,21 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setIsReversed(!isReversed);
+            setIsReversed(prev => !prev);
           }}
           type="button"
           className={cn(
             'button',
             'is-warning',
-            { 'is-light': isReversed === false },
+            { 'is-light': !isReversed },
           )}
         >
           Reverse
         </button>
 
-        {(isReversed === true || sortField !== '') && (
+        {reversed && (
           <button
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={handleReset}
             type="button"
             className="button is-danger is-light"
           >
