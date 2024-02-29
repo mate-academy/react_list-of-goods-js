@@ -45,10 +45,10 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const goodsToGo = getPreparedGoods(goodsFromServer, {
+  const preparedGoods = getPreparedGoods(goodsFromServer, {
     sortField, isReversed,
   });
-  const reversed = isReversed || sortField;
+  const isResetButtonVisible = isReversed || sortField;
   const handleReset = () => {
     setSortField('');
     setIsReversed(false);
@@ -95,7 +95,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {reversed && (
+        {isResetButtonVisible && (
           <button
             onClick={handleReset}
             type="button"
@@ -107,7 +107,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goodsToGo.map(good => (
+        {preparedGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
