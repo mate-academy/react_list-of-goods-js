@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,128 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_ALPHABET = 'alphabet';
+const SORT_LENGTH = 'length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function sortByParameter(goods, { param = '', reverse }) {
+  let goodsArr = goods;
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  switch (param) {
+    case SORT_ALPHABET: {
+      goodsArr = goods.sort((good1, good2) => {
+        return good1.localeCompare(good2);
+      });
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+      break;
+    }
+
+    case SORT_LENGTH: {
+      goodsArr = goods.sort((good1, good2) => {
+        return good1.length - good2.length;
+      });
+
+      break;
+    }
+
+    default: {
+      break;
+    }
+  }
+
+  if (reverse) {
+    const temp = [];
+
+    for (let i = goodsArr.length - 1; i >= 0; i -= 1) {
+      temp.push(goodsArr[i]);
+    }
+
+    return temp;
+  }
+
+  return goodsArr;
+}
+
+export const App = () => {
+  const [sort, setSort] = useState('');
+  let goods = [...goodsFromServer];
+
+  const clickBtn = param => {
+    setSort(param);
+  };
+
+  if (sort) {
+    const ind = sort.search(' ');
+    const param = ind === -1 ? sort : sort.slice(0, ind + 1).trim();
+    const reverse = ind === -1 ? '' : sort.slice(ind + 1, sort.length).trim();
+
+    const obj = {
+      param,
+    };
+
+    if (reverse) {
+      obj.reverse = reverse;
+    }
+
+    goods = sortByParameter(goods, obj);
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={classNames('button', 'is-info', {
+            'is-light': !sort.startsWith(SORT_ALPHABET),
+          })}
+          onClick={() => clickBtn(SORT_ALPHABET)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={classNames('button', 'is-info', {
+            'is-light': !sort.startsWith(SORT_LENGTH),
+          })}
+          onClick={() => clickBtn(SORT_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={classNames('button', 'is-info', {
+            'is-light': !sort.includes('reverse'),
+          })}
+          onClick={() =>
+            clickBtn(
+              sort.includes('reverse')
+                ? sort.slice(0, sort.search(' '))
+                : `${sort} reverse`,
+            )
+          }
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className="button is-info is-light"
+          onClick={() => clickBtn('')}
+        >
+          Reset
+        </button>
+      </div>
+
+      <ul>
+        {goods.map(good => {
+          return (
+            <li key={good} data-cy="Good">
+              {good}
+            </li>
+          );
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
