@@ -89,7 +89,13 @@ export const App = () => {
           className={classNames('button', 'is-info', {
             'is-light': !sort.startsWith(SORT_ALPHABET),
           })}
-          onClick={() => clickBtn(SORT_ALPHABET)}
+          onClick={() => {
+            const query = sort.includes('reverse')
+              ? `${SORT_ALPHABET} reverse`
+              : SORT_ALPHABET;
+
+            clickBtn(query);
+          }}
         >
           Sort alphabetically
         </button>
@@ -99,7 +105,13 @@ export const App = () => {
           className={classNames('button', 'is-info', {
             'is-light': !sort.startsWith(SORT_LENGTH),
           })}
-          onClick={() => clickBtn(SORT_LENGTH)}
+          onClick={() => {
+            const query = sort.includes('reverse')
+              ? `${SORT_LENGTH} reverse`
+              : SORT_LENGTH;
+
+            clickBtn(query);
+          }}
         >
           Sort by length
         </button>
@@ -120,13 +132,15 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-info is-light"
-          onClick={() => clickBtn('')}
-        >
-          Reset
-        </button>
+        {sort !== '' && (
+          <button
+            type="button"
+            className="button is-info is-light"
+            onClick={() => clickBtn('')}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
