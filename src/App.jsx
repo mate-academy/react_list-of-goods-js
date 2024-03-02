@@ -16,14 +16,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_ALPHABET = 'alphabet';
-const SORT_LENGTH = 'length';
-
-function sortByParameter(goods, { param = '', reverse }) {
+function sortByParameter(goods, { param = '' }) {
   let goodsArr = goods;
 
   switch (param) {
-    case SORT_ALPHABET: {
+    case 'alphabetically': {
       goodsArr = goods.sort((good1, good2) => {
         return good1.localeCompare(good2);
       });
@@ -31,7 +28,7 @@ function sortByParameter(goods, { param = '', reverse }) {
       break;
     }
 
-    case SORT_LENGTH: {
+    case 'length': {
       goodsArr = goods.sort((good1, good2) => {
         return good1.length - good2.length;
       });
@@ -44,42 +41,30 @@ function sortByParameter(goods, { param = '', reverse }) {
     }
   }
 
-  if (reverse) {
-    const temp = [];
-
-    for (let i = goodsArr.length - 1; i >= 0; i -= 1) {
-      temp.push(goodsArr[i]);
-    }
-
-    return temp;
-  }
-
   return goodsArr;
 }
 
-export const App = () => {
-  const [sort, setSort] = useState('');
-  let goods = [...goodsFromServer];
+function getGoodsFormatted(goods, reversed) {
+  if (reversed) {
+    return goods.reverse();
+  }
 
-  const clickBtn = param => {
-    setSort(param);
+  return goods;
+}
+
+export const App = () => {
+  const [sortBy, setSortBy] = useState('');
+  const [isReversed, setReversed] = useState(false);
+
+  const handleClick = param => {
+    setSortBy(param);
   };
 
-  if (sort) {
-    const ind = sort.search(' ');
-    const param = ind === -1 ? sort : sort.slice(0, ind + 1).trim();
-    const reverse = ind === -1 ? '' : sort.slice(ind + 1, sort.length).trim();
+  const obj = {
+    param: sortBy,
+  };
 
-    const obj = {
-      param,
-    };
-
-    if (reverse) {
-      obj.reverse = reverse;
-    }
-
-    goods = sortByParameter(goods, obj);
-  }
+  const goods = sortByParameter([...goodsFromServer], obj);
 
   return (
     <div className="section content">
@@ -87,15 +72,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': !sort.startsWith(SORT_ALPHABET),
+            'is-light': !sortBy.startsWith('alphabetically'),
           })}
-          onClick={() => {
-            const query = sort.includes('reverse')
-              ? `${SORT_ALPHABET} reverse`
-              : SORT_ALPHABET;
-
-            clickBtn(query);
-          }}
+          onClick={() => handleClick('alphabetically')}
         >
           Sort alphabetically
         </button>
@@ -103,15 +82,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': !sort.startsWith(SORT_LENGTH),
+            'is-light': !sortBy.startsWith('length'),
           })}
-          onClick={() => {
-            const query = sort.includes('reverse')
-              ? `${SORT_LENGTH} reverse`
-              : SORT_LENGTH;
-
-            clickBtn(query);
-          }}
+          onClick={() => handleClick('length')}
         >
           Sort by length
         </button>
@@ -119,24 +92,21 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': !sort.includes('reverse'),
+            'is-light': !isReversed,
           })}
-          onClick={() =>
-            clickBtn(
-              sort.includes('reverse')
-                ? sort.slice(0, sort.search(' '))
-                : `${sort} reverse`,
-            )
-          }
+          onClick={() => setReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {sort !== '' && (
+        {sortBy !== '' && (
           <button
             type="button"
             className="button is-info is-light"
-            onClick={() => clickBtn('')}
+            onClick={() => {
+              handleClick('');
+              setReversed(false);
+            }}
           >
             Reset
           </button>
@@ -144,7 +114,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => {
+        {getGoodsFormatted(goods, isReversed).map(good => {
           return (
             <li key={good} data-cy="Good">
               {good}
