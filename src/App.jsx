@@ -20,20 +20,24 @@ const SORT_BY_ALPHABET = 'alph';
 const SORT_BY_LENGTH = 'len';
 
 function sortGoods(array, objOfRules) {
+  const result = [...array];
+
   switch (objOfRules.sortField) {
     case SORT_BY_ALPHABET:
-      array.sort((a, b) => a.localeCompare(b));
+      result.sort((a, b) => a.localeCompare(b));
       break;
     case SORT_BY_LENGTH:
-      array.sort((a, b) => a.length - b.length);
+      result.sort((a, b) => a.length - b.length);
       break;
     default:
       break;
   }
 
   if (objOfRules.isReversed) {
-    array.reverse();
+    result.reverse();
   }
+
+  return result;
 }
 
 export const App = () => {
@@ -41,9 +45,9 @@ export const App = () => {
     sortField: '',
     isReversed: false,
   });
-  const goods = [...goodsFromServer];
+  let goods = [...goodsFromServer];
 
-  sortGoods(goods, objOfRules);
+  goods = sortGoods(goods, objOfRules);
 
   return (
     <div className="section content">
@@ -57,8 +61,8 @@ export const App = () => {
             'is-light': objOfRules.sortField !== SORT_BY_ALPHABET,
           })}
           onClick={() => setObjOfRules({
+            ...objOfRules,
             sortField: SORT_BY_ALPHABET,
-            isReversed: objOfRules.isReversed,
           })}
         >
           Sort alphabetically
@@ -73,8 +77,8 @@ export const App = () => {
               'is-light': objOfRules.sortField !== SORT_BY_LENGTH,
             })}
           onClick={() => setObjOfRules({
+            ...objOfRules,
             sortField: SORT_BY_LENGTH,
-            isReversed: objOfRules.isReversed,
           })}
         >
           Sort by length
@@ -90,29 +94,27 @@ export const App = () => {
             })}
           onClick={() => (objOfRules.isReversed
             ? setObjOfRules({
-              sortField: objOfRules.sortField,
+              ...objOfRules,
               isReversed: false,
             }) : setObjOfRules({
-              sortField: objOfRules.sortField,
+              ...objOfRules,
               isReversed: true,
             }))}
         >
           Reverse
         </button>
-        {
-          objOfRules.sortField || objOfRules.isReversed ? (
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={() => setObjOfRules({
-                sortField: '',
-                isReversed: false,
-              })}
-            >
-              Reset
-            </button>
-          ) : ''
-        }
+        {(objOfRules.sortField || objOfRules.isReversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => setObjOfRules({
+              sortField: '',
+              isReversed: false,
+            })}
+          >
+            Reset
+          </button>
+        )}
 
       </div>
 
