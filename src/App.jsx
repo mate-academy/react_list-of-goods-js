@@ -16,6 +16,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+
 const SORT_BY_ALPHABET = 'alph';
 const SORT_BY_LENGTH = 'len';
 
