@@ -20,7 +20,7 @@ const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
 const getSortedGoods = (goods, sortType) => {
-  let prepearedGoods = [...goods];
+  const prepearedGoods = [...goods];
 
   if (sortType) {
     prepearedGoods.sort((good1, good2) => {
@@ -41,7 +41,7 @@ const getSortedGoods = (goods, sortType) => {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  let visibleGoods = getSortedGoods(goodsFromServer, sortField);
+  const visibleGoods = getSortedGoods(goodsFromServer, sortField);
 
   if (isReversed) {
     visibleGoods.reverse();
@@ -80,7 +80,7 @@ export const App = () => {
             'is-light': !isReversed,
           })}
           onClick={() => {
-            !isReversed ? setIsReversed(true) : setIsReversed(false);
+            setIsReversed(!isReversed);
           }}
         >
           Reverse
