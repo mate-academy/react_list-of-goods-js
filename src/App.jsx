@@ -48,6 +48,8 @@ export const App = () => {
     isReversed: false,
   });
 
+  const shouldDisplayResetButton = sortField.isReversed || sortField.sortType;
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -96,7 +98,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField.isReversed || sortField.sortType) && (
+        {shouldDisplayResetButton && (
           <button
             type="button"
             className="button is-danger is-light"
