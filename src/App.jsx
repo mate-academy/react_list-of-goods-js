@@ -31,8 +31,10 @@ function getPreparedGoods(goods, sortField, isReversedField) {
       switch (sortField) {
         case SortType.ALPHA:
           return a.localeCompare(b);
+
         case SortType.LENGTH:
           return a.length - b.length;
+
         default:
           return 0;
       }
@@ -62,8 +64,7 @@ export const App = () => {
         <button
           onClick={() => setSortField(SortType.ALPHA)}
           type="button"
-          className={cn('button', {
-            'is-info': true,
+          className={cn('button', 'is-info', {
             'is-light': sortField !== SortType.ALPHA,
           })}
         >
@@ -94,7 +95,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => resetStates()}
+            onClick={resetStates}
           >
             Reset
           </button>
