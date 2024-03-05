@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_BY_LENGTH = 'length';
 const SORT_ALPHABETICALLY = 'alphabetically';
 
-function getPreparedGoods(goods, sortField) {
+function getPreparedGoods(goods, sortField, reverse) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -36,6 +36,10 @@ function getPreparedGoods(goods, sortField) {
           return 0;
       }
     });
+  }
+
+  if (reverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -58,9 +62,8 @@ export const App = () => {
     setReverse(!reverse);
   };
 
-  const visibleGoods = reverse
-    ? getPreparedGoods(goodsFromServer, sortField).reverse()
-    : getPreparedGoods(goodsFromServer, sortField);
+  const isSortOrReverseActive = sortField || reverse;
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, reverse);
 
   return (
     <div className="section content">
@@ -95,7 +98,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || reverse) && (
+        {isSortOrReverseActive && (
           <button
             type="button"
             className="button is-danger is-light"
