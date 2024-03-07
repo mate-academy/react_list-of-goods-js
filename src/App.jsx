@@ -37,7 +37,7 @@ function getPreparedGoods(goods, options) {
   }
 
   if (isReversed) {
-    preparedGoods = [...preparedGoods].reverse();
+    preparedGoods = preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -61,7 +61,7 @@ export const App = () => {
   };
 
   const isSortOrReverseActive = sortedField || isReversed;
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
+  const preparedGoods = getPreparedGoods(goodsFromServer, {
     sortedField,
     isReversed,
   });
@@ -111,7 +111,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {preparedGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
