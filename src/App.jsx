@@ -44,6 +44,7 @@ export const App = () => {
         });
         break;
       case REVERSE:
+        sortedItems.reverse();
         setIsReversed(!isReversed);
         break;
       default:
