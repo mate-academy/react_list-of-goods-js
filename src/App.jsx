@@ -50,7 +50,7 @@ export const App = () => {
   };
 
   const toggleIsReversed = () => {
-    setIsReversed(!isReversed);
+    setIsReversed(reverse => !reverse);
   };
 
   return (
