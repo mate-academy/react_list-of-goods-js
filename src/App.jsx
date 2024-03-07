@@ -16,45 +16,41 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+const SORT_ALPHABETICAL = 'alphabical';
+const SORT_LENGTH = 'length';
+
+function getPrepareGoods(goods, sortField, reversed) {
+  let prepareGoods = [...goods];
+
+  if (sortField) {
+    prepareGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_ALPHABETICAL:
+          return good1.localeCompare(good2);
+
+        case SORT_LENGTH:
+          return good1[sortField] - good2[sortField];
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (reversed) {
+    prepareGoods = prepareGoods.reverse();
+  }
+
+  return prepareGoods;
+}
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [isAlphabetical, setIsAlphabetical] = useState(false);
-  const [isByLength, setIsByLength] = useState(false);
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-
-  const sortAlphabetically = () => {
-    if (isReversed) {
-      setGoods([...goods].sort((good1, good2) => good2.localeCompare(good1)));
-    } else {
-      setGoods([...goods].sort((good1, good2) => good1.localeCompare(good2)));
-    }
-    setIsAlphabetical(true);
-    setIsByLength(false);
-  };
-
-  const sortByLength = () => {
-    if (isReversed) {
-      setGoods([...goods].sort((good1, good2) => good2.length - good1.length));
-    } else {
-      setGoods([...goods].sort((good1, good2) => good1.length - good2.length));
-    }
-
-    setIsAlphabetical(false);
-    setIsByLength(true);
-  };
-
-  const reverseGoods = () => {
-    setGoods([...goods].reverse());
-    setIsReversed(!isReversed);
-    setIsAlphabetical(isAlphabetical);
-    setIsByLength(isByLength);
-  };
+  const goods = getPrepareGoods(goodsFromServer, sortField, isReversed);
 
   const resetGoodsOrder = () => {
-    setGoods(goodsFromServer);
-    setIsAlphabetical(false);
-    setIsByLength(false);
+    setSortField('');
     setIsReversed(false);
   };
 
@@ -64,9 +60,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': !isAlphabetical,
+            'is-light': sortField !== SORT_ALPHABETICAL,
           })}
-          onClick={sortAlphabetically}
+          onClick={() => setSortField(SORT_ALPHABETICAL)}
         >
           Sort alphabetically
         </button>
@@ -74,9 +70,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': !isByLength,
+            'is-light': sortField !== SORT_LENGTH,
           })}
-          onClick={sortByLength}
+          onClick={() => setSortField(SORT_LENGTH)}
         >
           Sort by length
         </button>
@@ -86,17 +82,15 @@ export const App = () => {
           className={classNames('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={reverseGoods}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(isAlphabetical || isByLength || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
-            className={classNames('button', 'is-danger', {
-              'is-light': !isReversed,
-            })}
+            className="button is-danger is-light"
             onClick={resetGoodsOrder}
           >
             Reset
