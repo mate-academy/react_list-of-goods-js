@@ -24,17 +24,24 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
 
   const sortAlphabetically = () => {
-    setGoods([...goods].sort((good1, good2) => good2.localeCompare(good1)));
+    if (isReversed) {
+      setGoods([...goods].sort((good1, good2) => good2.localeCompare(good1)));
+    } else {
+      setGoods([...goods].sort((good1, good2) => good1.localeCompare(good2)));
+    }
     setIsAlphabetical(true);
     setIsByLength(false);
-    setIsReversed(false);
   };
 
   const sortByLength = () => {
-    setGoods([...goods].sort((good1, good2) => good1.length - good2.length));
+    if (isReversed) {
+      setGoods([...goods].sort((good1, good2) => good2.length - good1.length));
+    } else {
+      setGoods([...goods].sort((good1, good2) => good1.length - good2.length));
+    }
+
     setIsAlphabetical(false);
     setIsByLength(true);
-    setIsReversed(false);
   };
 
   const reverseGoods = () => {
