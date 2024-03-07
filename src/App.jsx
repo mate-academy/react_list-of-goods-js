@@ -15,13 +15,27 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+function arraysAreEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i += 1) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 const SORT_ALPHABETICALLY = 'alphabetically';
 const SORT_LENGTH = 'length';
 const REVERSE = 'reverse';
 
 export const App = () => {
   const [sortedGoods, setSortedGoods] = useState([...goodsFromServer]);
-  const [currentSortField, setCurrentSortField] = useState('');
+  const [selectedSortField, setSelectedSortField] = useState('');
   const [showResetButton, setShowResetButton] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
 
@@ -30,6 +44,7 @@ export const App = () => {
 
     switch (sortField) {
       case SORT_ALPHABETICALLY:
+        setSelectedSortField(sortField);
         sortedItems.sort((a, b) => {
           const result = a.localeCompare(b);
 
@@ -37,6 +52,7 @@ export const App = () => {
         });
         break;
       case SORT_LENGTH:
+        setSelectedSortField(sortField);
         sortedItems.sort((a, b) => {
           const result = a.length - b.length;
 
@@ -53,23 +69,24 @@ export const App = () => {
     }
 
     setSortedGoods(sortedItems);
-    setCurrentSortField(sortField);
     setShowResetButton(true);
   };
 
   const handleReset = () => {
     setSortedGoods([...goodsFromServer]);
-    setCurrentSortField('');
     setShowResetButton(false);
     setIsReversed(false);
+    setSelectedSortField('');
   };
+
+  const isDefaultState = arraysAreEqual(sortedGoods, goodsFromServer);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${currentSortField !== SORT_ALPHABETICALLY && 'is-light'}`}
+          className={`button is-info ${selectedSortField === SORT_ALPHABETICALLY ? '' : 'is-light'}`}
           onClick={() => handleSort(SORT_ALPHABETICALLY)}
         >
           Sort alphabetically
@@ -77,7 +94,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${currentSortField !== SORT_LENGTH && 'is-light'}`}
+          className={`button is-success ${selectedSortField === SORT_LENGTH ? '' : 'is-light'}`}
           onClick={() => handleSort(SORT_LENGTH)}
         >
           Sort by length
@@ -85,13 +102,13 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${currentSortField === REVERSE && isReversed ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={() => handleSort(REVERSE)}
         >
           Reverse
         </button>
 
-        {showResetButton && (
+        {showResetButton && !isDefaultState && (
           <button
             type="button"
             className="button is-danger"
