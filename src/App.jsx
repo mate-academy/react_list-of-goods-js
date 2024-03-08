@@ -49,6 +49,7 @@ export const App = () => {
   const [isReverseAdded, setIsReverseAdded] = useState(false);
 
   const visibleGoods = getSortedGoods(goodsFromServer, sortBy, isReverseAdded);
+  const isResetButtonVisible = isReverseAdded || sortBy;
 
   return (
     <div className="section content">
@@ -83,7 +84,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {isReverseAdded || sortBy ? (
+        {isResetButtonVisible && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -94,7 +95,7 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
