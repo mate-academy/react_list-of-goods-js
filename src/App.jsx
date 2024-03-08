@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const SORT_ALPHABET = 'alphabet';
 const SORT_LENGHT = 'lenght';
 
-const preparedGoods = (sortMethod, isReverse) => {
+const getPreparedGoods = (sortMethod, isReverse) => {
   const gooods = [...goodsFromServer];
 
   gooods.sort((a, b) => {
@@ -41,7 +41,7 @@ const preparedGoods = (sortMethod, isReverse) => {
 };
 
 export const App = () => {
-  const [isGoodSort, setGoodSort] = useState('');
+  const [goodSort, setGoodSort] = useState('');
   const [isSortReverse, setSortIsReverse] = useState(false);
 
   const reset = () => {
@@ -49,7 +49,11 @@ export const App = () => {
     setSortIsReverse(false);
   };
 
-  const sorts = preparedGoods(isGoodSort, isSortReverse);
+  const SortReverss = () => {
+    return goodSort || isSortReverse;
+  };
+
+  const sorts = getPreparedGoods(goodSort, isSortReverse);
 
   return (
     <div className="section content">
@@ -58,7 +62,7 @@ export const App = () => {
           onClick={() => setGoodSort(SORT_ALPHABET)}
           type="button"
           className={cn('button is-info', {
-            'is-light': isGoodSort !== SORT_ALPHABET,
+            'is-light': goodSort !== SORT_ALPHABET,
           })}
         >
           Sort alphabetically
@@ -67,7 +71,7 @@ export const App = () => {
           onClick={() => setGoodSort(SORT_LENGHT)}
           type="button"
           className={cn('button is-success', {
-            'is-light': isGoodSort !== SORT_LENGHT,
+            'is-light': goodSort !== SORT_LENGHT,
           })}
         >
           Sort by length
@@ -81,7 +85,7 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(isGoodSort || isSortReverse) && (
+        {SortReverss() && (
           <button
             onClick={reset}
             type="button"
