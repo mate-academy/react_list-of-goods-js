@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -49,6 +48,12 @@ export const App = () => {
   const [isReverse, setIsReverse] = useState(false);
 
   const sortedGoods = getSortedGoods(goodsFromServer, { sortField, isReverse });
+  const isChanged = isReverse || sortField;
+
+  const resetOnClick = () => {
+    setSortField('');
+    setIsReverse(false);
+  };
 
   return (
     <div className="section content">
@@ -70,9 +75,7 @@ export const App = () => {
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
-          onClick={() => {
-            setSortField(SORT_FIELD_LENGTH);
-          }}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -82,26 +85,19 @@ export const App = () => {
           className={cn('button', 'is-warning', {
             'is-light': !isReverse,
           })}
-          onClick={() => {
-            setIsReverse(!isReverse);
-          }}
+          onClick={() => setIsReverse(!isReverse)}
         >
           Reverse
         </button>
-        {
-          (isReverse || sortField) && (
+        {isChanged && (
           <button
             type="button"
-            className='button is-danger is-light'
-            onClick={() => {
-              setSortField('');
-              setIsReverse(false);
-            }}
-        >
-          Reset
-        </button>
-          )
-        }
+            className="button is-danger is-light"
+            onClick={() => resetOnClick()}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
