@@ -44,8 +44,10 @@ function getPreparedGoods(goods, sortFild, reversed) {
 export const App = () => {
   const [sortFild, setSortFild] = useState('');
   const [reversed, setReversed] = useState(false);
+
   const visibleGoods = getPreparedGoods(goodsFromServer, sortFild, reversed);
-  const isChoice = sortFild || reversed;
+
+  const isSelectionActive = sortFild || reversed;
 
   const resetFild = () => {
     setSortFild('');
@@ -57,11 +59,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          // className="button is-info is-light"
-          className={cn(
-            `button is-info
-            ${sortFild === SORT_GOODS_ALPHABET || 'is-light'} `,
-          )}
+          className={cn('button is-info', {
+            'is-light': sortFild !== SORT_GOODS_ALPHABET,
+          })}
           onClick={() => setSortFild(SORT_GOODS_ALPHABET)}
         >
           Sort alphabetically
@@ -69,11 +69,9 @@ export const App = () => {
 
         <button
           type="button"
-          // className="button is-success is-light"
-          className={cn(
-            `button is-success
-            ${sortFild === SORT_GOODS_LENGTH || 'is-light'} `,
-          )}
+          className={cn('button is-success', {
+            'is-light': sortFild !== SORT_GOODS_LENGTH,
+          })}
           onClick={() => setSortFild(SORT_GOODS_LENGTH)}
         >
           Sort by length
@@ -81,21 +79,19 @@ export const App = () => {
 
         <button
           type="button"
-          // className="button is-warning is-light"
-          className={cn(
-            `button is-warning
-            ${reversed === true || 'is-light'} `,
-          )}
+          className={cn('button is-warning ', {
+            'is-light': !reversed,
+          })}
           onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
 
-        {isChoice && (
+        {isSelectionActive && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => resetFild()}
+            onClick={resetFild}
           >
             Reset
           </button>
