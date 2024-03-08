@@ -55,9 +55,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={cn({
-            'button': true,
-            'is-info': true,
+          className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
           onClick={() => {
@@ -69,9 +67,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn({
-            'button': true,
-            'is-success': true,
+          className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
           onClick={() => {
@@ -83,9 +79,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn({
-            'button': true,
-            'is-warning': true,
+          className={cn('button', 'is-warning', {
             'is-light': !isReverse,
           })}
           onClick={() => {
@@ -112,7 +106,9 @@ export const App = () => {
 
       <ul>
         {sortedGoods.map(good => (
-          <li data-cy="Good" key={good}>{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
