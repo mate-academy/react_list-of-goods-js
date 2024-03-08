@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
+import cn from 'classnames';
 import './App.scss';
 
 export const goodsFromServer = [
@@ -14,33 +16,94 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_BY_NAME = 'sort by name';
+const SORT_BY_LENGTH = 'sort by length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+const getSortedGoods = (goods, sortBy, isReverseAdded) => {
+  const sortedGoods = [...goods];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (sortBy) {
+    sortedGoods.sort((good1, good2) => {
+      switch (sortBy) {
+        case SORT_BY_NAME:
+          return good1.localeCompare(good2);
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReverseAdded) {
+    return sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
+export const App = () => {
+  const [sortBy, setSortBy] = useState(null);
+  const [isReverseAdded, setIsReverseAdded] = useState(false);
+
+  const visibleGoods = getSortedGoods(goodsFromServer, sortBy, isReverseAdded);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button', 'is-info', {
+            'is-light': sortBy !== SORT_BY_NAME,
+          })}
+          onClick={() => setSortBy(SORT_BY_NAME)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-info', {
+            'is-light': sortBy !== SORT_BY_LENGTH,
+          })}
+          onClick={() => setSortBy(SORT_BY_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-warning', {
+            'is-light': !isReverseAdded,
+          })}
+          onClick={() => setIsReverseAdded(isReverseAdded !== true)}
+        >
+          Reverse
+        </button>
+
+        {isReverseAdded || sortBy ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortBy(null);
+              setIsReverseAdded(false);
+            }}
+          >
+            Reset
+          </button>
+        ) : null}
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
