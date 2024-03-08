@@ -19,7 +19,6 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-const SORT_REVERSE = 'reverse';
 
 function getPreparedGoods(goods, { sortCase, reverseCase }) {
   const preparedGoods = [...goods];
@@ -48,7 +47,7 @@ function getPreparedGoods(goods, { sortCase, reverseCase }) {
 
 export const App = () => {
   const [sortCase, setSortCase] = useState('');
-  const [reverseCase, setReverseCase] = useState('');
+  const [reverseCase, setReverseCase] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortCase,
     reverseCase,
@@ -81,15 +80,10 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn(
-            { 'is-light': SORT_REVERSE !== reverseCase },
-            'button is-warning',
-          )}
+          className={cn({ 'is-light': !reverseCase }, 'button is-warning')}
           onClick={() => {
             // eslint-disable-next-line no-unused-expressions
-            SORT_REVERSE !== reverseCase
-              ? setReverseCase(SORT_REVERSE)
-              : setReverseCase('');
+            setReverseCase(!reverseCase);
           }}
         >
           Reverse
