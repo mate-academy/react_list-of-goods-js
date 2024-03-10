@@ -16,46 +16,48 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [sortType, setSortType] = useState(0);
-  const [isReseted, setIsReseted] = useState(true);
-  const [isReversed, setIsReversed] = useState(false);
+const IS_SORT_BY_ALPHABET = 'alphabet';
+const IS_SORT_BY_LENGTH = 'length';
 
-  const sortByAlphabet = () => {
-    const sortAlphabet = [...goods].sort((a, b) => a.localeCompare(b));
+const getGoods = (goods, sortType, isReversed, isReseted) => {
+  let visibleGoods = [...goods];
 
-    setGoods(isReversed ? sortAlphabet.reverse() : sortAlphabet);
-    setSortType('alphabet');
-    setIsReseted(false);
-  };
+  if (isReseted) {
+    return visibleGoods;
+  }
 
-  const sortByLength = () => {
-    const sortLength = [...goods].sort((good1, good2) => {
+  if (sortType === IS_SORT_BY_ALPHABET) {
+    visibleGoods = visibleGoods.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (sortType === IS_SORT_BY_LENGTH) {
+    visibleGoods = visibleGoods.sort((good1, good2) => {
       if (good1.length === good2.length) {
         return good1.localeCompare(good2);
       }
 
       return good1.length - good2.length;
     });
+  }
 
-    setGoods(isReversed ? sortLength.reverse() : sortLength);
-    setSortType('length');
-    setIsReseted(false);
-  };
+  if (isReversed) {
+    visibleGoods = visibleGoods.reverse();
+  }
 
-  const reverseSort = () => {
-    setGoods([...goods].reverse());
-    setIsReseted(isReversed);
-    setIsReversed(!isReversed);
-  };
+  return visibleGoods;
+};
 
-  const reset = () => {
-    setGoods(goodsFromServer);
-    setSortType('');
-    setIsReseted(true);
-    setIsReversed(false);
-  };
+export const App = () => {
+  const [sortType, setSortType] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const [isReseted, setIsReseted] = useState(true);
+
+  const visibleGoods = getGoods(
+    goodsFromServer,
+    sortType,
+    isReversed,
+    isReseted,
+  );
 
   return (
     <div className="section content">
@@ -63,35 +65,48 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': sortType !== 'alphabet',
+            'is-light': sortType !== IS_SORT_BY_ALPHABET,
           })}
-          onClick={sortByAlphabet}
+          onClick={() => {
+            setSortType(IS_SORT_BY_ALPHABET);
+            setIsReseted(false);
+          }}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': sortType !== 'length',
+            'is-light': sortType !== IS_SORT_BY_LENGTH,
           })}
-          onClick={sortByLength}
+          onClick={() => {
+            setSortType(IS_SORT_BY_LENGTH);
+            setIsReseted(false);
+          }}
         >
           Sort by length
         </button>
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': !isReversed, //
+            'is-light': !isReversed,
           })}
-          onClick={reverseSort}
+          onClick={() => {
+            setIsReversed(!isReversed);
+            setIsReseted(isReversed && sortType === '');
+          }}
         >
           Reverse
         </button>
-        {!isReseted && (
+        {(!isReseted || sortType !== '' || isReversed) && (
           <button
             type="button"
             className={cn('button', 'is-danger')}
-            onClick={reset}
+            onClick={() => {
+              setSortType('');
+              setIsReversed(false);
+              setIsReseted(true);
+            }}
           >
             Reset
           </button>
@@ -99,7 +114,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => {
+        {visibleGoods.map(good => {
           return (
             <li key={good} data-cy="Good">
               {good}
