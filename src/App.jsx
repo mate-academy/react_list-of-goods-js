@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const IS_SORT_BY_ALPHABET = 'alphabet';
 const IS_SORT_BY_LENGTH = 'length';
 
-const getGoods = (goods, sortType, isReversed, isReseted) => {
+const getGoods = (goods, sortType, isReversed) => {
   const visibleGoods = [...goods];
 
   switch (sortType) {
@@ -43,20 +43,19 @@ const getGoods = (goods, sortType, isReversed, isReseted) => {
     visibleGoods.reverse();
   }
 
-  return isReseted ? [...goods] : visibleGoods;
+  return visibleGoods;
 };
 
 export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [isReseted, setIsReseted] = useState(true);
 
-  const visibleGoods = getGoods(
-    goodsFromServer,
-    sortType,
-    isReversed,
-    isReseted,
-  );
+  const resetState = () => {
+    setSortType('');
+    setIsReversed(false);
+  };
+
+  const visibleGoods = getGoods(goodsFromServer, sortType, isReversed);
 
   const shouldReset = sortType || isReversed;
 
@@ -70,7 +69,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortType(IS_SORT_BY_ALPHABET);
-            setIsReseted(false);
           }}
         >
           Sort alphabetically
@@ -82,7 +80,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortType(IS_SORT_BY_LENGTH);
-            setIsReseted(false);
           }}
         >
           Sort by length
@@ -94,7 +91,6 @@ export const App = () => {
           })}
           onClick={() => {
             setIsReversed(!isReversed);
-            setIsReseted(isReversed && sortType === '');
           }}
         >
           Reverse
@@ -103,11 +99,7 @@ export const App = () => {
           <button
             type="button"
             className={cn('button', 'is-danger')}
-            onClick={() => {
-              setSortType('');
-              setIsReversed(false);
-              setIsReseted(true);
-            }}
+            onClick={resetState}
           >
             Reset
           </button>
