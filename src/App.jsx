@@ -57,11 +57,7 @@ export const App = () => {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
           onClick={() => {
-            if (sortField === SORT_FIELD_ALPHABET) {
-              setSortField('');
-            } else {
-              setSortField(SORT_FIELD_ALPHABET);
-            }
+            setSortField(SORT_FIELD_ALPHABET);
           }}
         >
           Sort alphabetically
@@ -72,11 +68,7 @@ export const App = () => {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
           onClick={() => {
-            if (sortField === SORT_FIELD_LENGTH) {
-              setSortField('');
-            } else {
-              setSortField(SORT_FIELD_LENGTH);
-            }
+            setSortField(SORT_FIELD_LENGTH);
           }}
         >
           Sort by length
