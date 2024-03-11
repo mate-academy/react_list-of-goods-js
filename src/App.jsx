@@ -27,7 +27,7 @@ const prepareGoods = (goods, sortField, isReverse) => {
         case SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
         case SORT_FIELD_LENGTH:
-          return good1.SORT_FIELD_LENGTH - good2.SORT_FIELD_LENGTH;
+          return good1.length - good2.length;
         default:
           return 0;
       }
