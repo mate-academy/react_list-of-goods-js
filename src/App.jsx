@@ -18,8 +18,8 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
-const prepareGoods = (sortField, isReverse) => {
-  const sortedGoods = [...goodsFromServer];
+const prepareGoods = (goods, sortField, isReverse) => {
+  const sortedGoods = [...goods];
 
   if (sortField) {
     sortedGoods.sort((good1, good2) => {
@@ -50,9 +50,9 @@ export const App = () => {
     setIsReverse(false);
   };
 
-  const isResetButtonVisible = isReverse || sortField;
+  const isResetButtonVisible = sortField || isReverse;
 
-  const goodsList = prepareGoods(sortField, isReverse);
+  const goodsList = prepareGoods(goodsFromServer, sortField, isReverse);
 
   return (
     <div className="section content">
