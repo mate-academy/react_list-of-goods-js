@@ -51,6 +51,11 @@ export const App = () => {
   const visibleGoods = getSortedGoods(goodsFromServer, sortBy, isReverseAdded);
   const isResetButtonVisible = isReverseAdded || sortBy;
 
+  const resetSort = () => {
+    setSortBy(null);
+    setIsReverseAdded(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -88,10 +93,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortBy(null);
-              setIsReverseAdded(false);
-            }}
+            onClick={resetSort}
           >
             Reset
           </button>
