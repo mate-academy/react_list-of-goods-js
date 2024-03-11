@@ -16,39 +16,50 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const NOT_SORTED = 'not sorted';
-const SORT_ALPHABETICALLY = 'sort alphabetically';
-const SORT_BY_LENGTH = 'sort by length';
+const sortStatus = {
+  alphabetically: 'alphabetically',
+  length: 'length',
+  default: '',
+};
 
-function getUpdatedList(statusOfCurrentList, isReversed) {
-  const goods = [...goodsFromServer];
+function getUpdatedList(goods, statusOfCurrentList, isReversed) {
+  let preparedGoods = [...goodsFromServer];
 
-  // eslint-disable-next-line max-len, prettier/prettier
-  const rev = whatReverse => (isReversed ? whatReverse.reverse() : whatReverse);
-
-  switch (statusOfCurrentList) {
-    case SORT_ALPHABETICALLY:
-      goods.sort(
-        (good1, good2) => good1.localeCompare(good2),
-        // eslint-disable-next-line function-paren-newline
-      );
-
-      return rev(goods);
-    case SORT_BY_LENGTH:
-      goods.sort((good1, good2) => good1.length - good2.length);
-
-      return rev(goods);
-    case NOT_SORTED:
-      return rev(goods);
-    default:
-      return goodsFromServer;
+  if (statusOfCurrentList) {
+    preparedGoods = preparedGoods.sort((good1, good2) => {
+      switch (statusOfCurrentList) {
+        case sortStatus.alphabetically:
+          return good1.localeCompare(good2);
+        case sortStatus.length:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
   }
+
+  if (isReversed) {
+    return preparedGoods.reverse();
+  }
+
+  return preparedGoods;
 }
 
 export const App = () => {
-  const [statusOfCurrentList, setStatusOfCurrentList] = useState(NOT_SORTED);
+  const [statusOfCurrentList, setStatusOfCurrentList] = useState(
+    sortStatus.default,
+  );
   const [isReversed, setIsReversed] = useState(false);
-  const showReset = statusOfCurrentList !== NOT_SORTED || isReversed;
+  const showReset = statusOfCurrentList !== sortStatus.default || isReversed;
+  const visibleGood = getUpdatedList(
+    goodsFromServer,
+    statusOfCurrentList,
+    isReversed,
+  );
+  const reset = () => {
+    setStatusOfCurrentList(sortStatus.default);
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -56,12 +67,11 @@ export const App = () => {
         <button
           type="button"
           className={cn({
-            button: true,
-            'is-info': true,
-            'is-light': statusOfCurrentList !== SORT_ALPHABETICALLY,
+            'button is-info': true,
+            'is-light': statusOfCurrentList !== sortStatus.alphabetically,
           })}
           onClick={() => {
-            setStatusOfCurrentList(SORT_ALPHABETICALLY);
+            setStatusOfCurrentList(sortStatus.alphabetically);
           }}
         >
           Sort alphabetically
@@ -70,12 +80,11 @@ export const App = () => {
         <button
           type="button"
           className={cn({
-            button: true,
-            'is-success': true,
-            'is-light': statusOfCurrentList !== SORT_BY_LENGTH,
+            'button is-success': true,
+            'is-light': statusOfCurrentList !== sortStatus.length,
           })}
           onClick={() => {
-            setStatusOfCurrentList(SORT_BY_LENGTH);
+            setStatusOfCurrentList(sortStatus.length);
           }}
         >
           Sort by length
@@ -84,8 +93,7 @@ export const App = () => {
         <button
           type="button"
           className={cn({
-            button: true,
-            'is-warning': true,
+            'button is-warning': true,
             'is-light': !isReversed,
           })}
           onClick={() => {
@@ -99,10 +107,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setStatusOfCurrentList(NOT_SORTED);
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
@@ -110,7 +115,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {getUpdatedList(statusOfCurrentList, isReversed).map(good => (
+        {visibleGood.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
