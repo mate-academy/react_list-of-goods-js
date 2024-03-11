@@ -28,7 +28,6 @@ const prepareGoods = (sortField, isReverse) => {
           return good1.localeCompare(good2);
         case SORT_FIELD_LENGTH:
           return good1.SORT_FIELD_LENGTH - good2.SORT_FIELD_LENGTH;
-
         default:
           return 0;
       }
@@ -46,14 +45,14 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReverse, setIsReverse] = useState(false);
 
-  const goodsList = prepareGoods(sortField, isReverse);
-
-  const isResetButtonVisible = isReverse || sortField;
-
   const resetAll = () => {
     setSortField('');
     setIsReverse(false);
   };
+
+  const isResetButtonVisible = isReverse || sortField;
+
+  const goodsList = prepareGoods(sortField, isReverse);
 
   return (
     <div className="section content">
