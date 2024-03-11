@@ -46,7 +46,6 @@ export const App = () => {
 
   const sortChange = field => {
     setSortField(field);
-    setReverseSort(false);
   };
 
   const reverseChange = () => {
