@@ -20,31 +20,30 @@ const IS_SORT_BY_ALPHABET = 'alphabet';
 const IS_SORT_BY_LENGTH = 'length';
 
 const getGoods = (goods, sortType, isReversed, isReseted) => {
-  let visibleGoods = [...goods];
+  const visibleGoods = [...goods];
 
-  if (isReseted) {
-    return visibleGoods;
-  }
+  switch (sortType) {
+    case IS_SORT_BY_ALPHABET:
+      visibleGoods.sort((a, b) => a.localeCompare(b));
+      break;
+    case IS_SORT_BY_LENGTH:
+      visibleGoods.sort((good1, good2) => {
+        if (good1.length === good2.length) {
+          return good1.localeCompare(good2);
+        }
 
-  if (sortType === IS_SORT_BY_ALPHABET) {
-    visibleGoods = visibleGoods.sort((a, b) => a.localeCompare(b));
-  }
-
-  if (sortType === IS_SORT_BY_LENGTH) {
-    visibleGoods = visibleGoods.sort((good1, good2) => {
-      if (good1.length === good2.length) {
-        return good1.localeCompare(good2);
-      }
-
-      return good1.length - good2.length;
-    });
+        return good1.length - good2.length;
+      });
+      break;
+    default:
+      break;
   }
 
   if (isReversed) {
-    visibleGoods = visibleGoods.reverse();
+    visibleGoods.reverse();
   }
 
-  return visibleGoods;
+  return isReseted ? [...goods] : visibleGoods;
 };
 
 export const App = () => {
@@ -58,6 +57,8 @@ export const App = () => {
     isReversed,
     isReseted,
   );
+
+  const shouldReset = sortType || isReversed;
 
   return (
     <div className="section content">
@@ -98,7 +99,7 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(!isReseted || sortType !== '' || isReversed) && (
+        {shouldReset && (
           <button
             type="button"
             className={cn('button', 'is-danger')}
@@ -114,13 +115,11 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => {
-          return (
-            <li key={good} data-cy="Good">
-              {good}
-            </li>
-          );
-        })}
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
       </ul>
     </div>
   );
