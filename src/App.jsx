@@ -25,12 +25,12 @@ function getPreparedGoods(goods, sortField, isReversedActive) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        default:
-          return 0;
         case SORT_BY_NAME:
           return good1.localeCompare(good2);
         case SORT_BY_LENGTH:
           return good1.length - good2.length;
+        default:
+          return 0;
       }
     });
   }
@@ -44,16 +44,17 @@ function getPreparedGoods(goods, sortField, isReversedActive) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReversedActive, setisReversedActive] = useState(false);
+  const [isReversedActive, setIsReversedActive] = useState(false);
   const visibleGoods = getPreparedGoods(
     goodsFromServer,
     sortField,
     isReversedActive,
   );
+  const isResetVisible = sortField || isReversedActive;
 
   const reset = () => {
     setSortField('');
-    setisReversedActive(false);
+    setIsReversedActive(false);
   };
 
   return (
@@ -84,24 +85,20 @@ export const App = () => {
           className={classNames('button', 'is-warning', {
             'is-light': !isReversedActive,
           })}
-          onClick={() =>
-            isReversedActive
-              ? setisReversedActive(false)
-              : setisReversedActive(true)
-          }
+          onClick={() => setIsReversedActive(!isReversedActive)}
         >
           Reverse
         </button>
 
-        {sortField || isReversedActive ? (
+        {isResetVisible && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => reset()}
+            onClick={reset}
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
