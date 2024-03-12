@@ -47,7 +47,7 @@ function getPreparedGoods(goods, { sortField, sortReverse }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [sortReverse, setSortReverse] = useState('');
+  const [sortReverse, setSortReverse] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
     sortReverse,
@@ -78,7 +78,7 @@ export const App = () => {
 
         <button
           onClick={() =>
-            sortReverse ? setSortReverse('') : setSortReverse(SORT_REVERSE)
+            sortReverse ? setSortReverse(false) : setSortReverse(SORT_REVERSE)
           }
           type="button"
           className={cn('button is-warning', {
@@ -92,7 +92,7 @@ export const App = () => {
           <button
             onClick={() => {
               setSortField('');
-              setSortReverse('');
+              setSortReverse(false);
             }}
             type="button"
             className="button is-danger is-light"
@@ -104,7 +104,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
