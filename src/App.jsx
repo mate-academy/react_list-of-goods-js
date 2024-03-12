@@ -7,6 +7,12 @@ import { Goods } from './components/Goods/Goods';
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
+const sortType = {
+  alphabet: 'alphabet',
+  length: 'length',
+  default: '',
+};
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -42,7 +48,7 @@ const filteringGoods = (goods, { sortField, isReversed }) => {
 };
 
 export const App = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(sortType.default);
   const [isReversed, setIsReversed] = useState(false);
 
   const visibleGoods = filteringGoods(goodsFromServer, {
@@ -51,7 +57,7 @@ export const App = () => {
   });
 
   const reverseState = () => {
-    setIsReversed(!isReversed);
+    setIsReversed(prev => !prev);
   };
 
   const resetStates = () => {
@@ -63,15 +69,15 @@ export const App = () => {
     <div className="section content">
       <div className="buttons">
         <Button
-          click={() => setSortField(SORT_BY_ALPHABET)}
+          click={() => setSortField(sortType.alphabet)}
           mainClass="is-info"
-          condition={sortField !== SORT_BY_ALPHABET}
+          condition={sortField !== sortType.alphabet}
           title="Sort alphabetically"
         />
         <Button
-          click={() => setSortField(SORT_BY_LENGTH)}
+          click={() => setSortField(sortType.length)}
           mainClass="is-success"
-          condition={sortField !== SORT_BY_LENGTH}
+          condition={sortField !== sortType.length}
           title="Sort by length"
         />
         <Button
@@ -92,9 +98,9 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => {
-          return <Goods key={good} good={good} />;
-        })}
+        {visibleGoods.map(good => (
+          <Goods key={good} good={good} />
+        ))}
       </ul>
     </div>
   );
