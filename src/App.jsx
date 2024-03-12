@@ -1,5 +1,11 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-plusplus */
+/* eslint-disable default-case */
+import cn from 'classnames';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +20,104 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortMethod, setSortMethod] = useState('');
+  const [reverse, setReverse] = useState('');
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const copyOfGoods = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const SORT_ALPHABETICALY = 'alphabet';
+  const SORT_BY_LENGTH = 'length';
+  const REVERSED_SORT = 'reversed';
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const checkForSecondClick = (current, setMethod, sortParameter) => {
+    if (sortParameter === current) {
+      setMethod('');
+    } else {
+      setMethod(sortParameter);
+    }
+  };
+
+  const changeList = () => {
+    switch (sortMethod) {
+      case SORT_ALPHABETICALY:
+        copyOfGoods.sort((obj1, obj2) => obj1.localeCompare(obj2));
+        break;
+
+      case SORT_BY_LENGTH:
+        copyOfGoods.sort((obj1, obj2) => obj1.length - obj2.length);
+        break;
+    }
+  };
+
+  changeList();
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': SORT_ALPHABETICALY !== sortMethod,
+          })}
+          onClick={() => {
+            checkForSecondClick(sortMethod, setSortMethod, SORT_ALPHABETICALY);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': SORT_BY_LENGTH !== sortMethod,
+          })}
+          onClick={() => {
+            checkForSecondClick(sortMethod, setSortMethod, SORT_BY_LENGTH);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': REVERSED_SORT !== reverse,
+          })}
+          onClick={() => {
+            checkForSecondClick(reverse, setReverse, REVERSED_SORT);
+          }}
+        >
+          Reverse
+        </button>
+        <button
+          type="button"
+          className="button is-danger is-light"
+          style={{
+            display: reverse === '' && sortMethod === '' ? 'none' : 'block',
+          }}
+          onClick={() => {
+            setReverse('');
+            setSortMethod('');
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <ul>
+        {reverse === REVERSED_SORT
+          ? copyOfGoods.reverse().map(good => (
+              <li data-cy="Good" key={good}>
+                {good}
+              </li>
+          ))
+          : copyOfGoods.map(good => (
+              <li data-cy="Good" key={good}>
+                {good}
+              </li>
+          ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
