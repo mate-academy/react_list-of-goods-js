@@ -2,7 +2,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable default-case */
 import cn from 'classnames';
-
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -30,6 +29,11 @@ export const App = () => {
   const SORT_BY_LENGTH = 'length';
   const REVERSED_SORT = 'reversed';
 
+  const resetFunction = () => {
+    setReverse('');
+    setSortMethod('');
+  };
+
   const checkForSecondClick = (current, setMethod, sortParameter) => {
     if (sortParameter === current) {
       setMethod('');
@@ -47,6 +51,10 @@ export const App = () => {
       case SORT_BY_LENGTH:
         copyOfGoods.sort((obj1, obj2) => obj1.length - obj2.length);
         break;
+    }
+
+    if (reverse === REVERSED_SORT) {
+      copyOfGoods.reverse();
     }
   };
 
@@ -96,27 +104,18 @@ export const App = () => {
           style={{
             display: reverse === '' && sortMethod === '' ? 'none' : 'block',
           }}
-          onClick={() => {
-            setReverse('');
-            setSortMethod('');
-          }}
+          onClick={() => resetFunction()}
         >
           Reset
         </button>
       </div>
 
       <ul>
-        {reverse === REVERSED_SORT
-          ? copyOfGoods.reverse().map(good => (
-              <li data-cy="Good" key={good}>
-                {good}
-              </li>
-          ))
-          : copyOfGoods.map(good => (
-              <li data-cy="Good" key={good}>
-                {good}
-              </li>
-          ))}
+        {copyOfGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
       </ul>
     </div>
   );
