@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-plusplus */
-/* eslint-disable default-case */
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -21,39 +18,26 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [sortMethod, setSortMethod] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [reverse, setReverse] = useState(false);
 
   const copyOfGoods = [...goodsFromServer];
 
   const SORT_ALPHABETICALY = 'alphabet';
   const SORT_BY_LENGTH = 'length';
-  const REVERSED_SORT = 'reversed';
 
   const resetFunction = () => {
-    setReverse('');
+    setReverse(false);
     setSortMethod('');
   };
 
-  const checkForSecondClick = (current, setMethod, sortParameter) => {
-    if (sortParameter === current) {
-      setMethod('');
-    } else {
-      setMethod(sortParameter);
-    }
-  };
-
   const changeList = () => {
-    switch (sortMethod) {
-      case SORT_ALPHABETICALY:
-        copyOfGoods.sort((obj1, obj2) => obj1.localeCompare(obj2));
-        break;
-
-      case SORT_BY_LENGTH:
-        copyOfGoods.sort((obj1, obj2) => obj1.length - obj2.length);
-        break;
+    if (sortMethod === SORT_ALPHABETICALY) {
+      copyOfGoods.sort((obj1, obj2) => obj1.localeCompare(obj2));
+    } else if (sortMethod === SORT_BY_LENGTH) {
+      copyOfGoods.sort((obj1, obj2) => obj1.length - obj2.length);
     }
 
-    if (reverse === REVERSED_SORT) {
+    if (reverse) {
       copyOfGoods.reverse();
     }
   };
@@ -69,7 +53,7 @@ export const App = () => {
             'is-light': SORT_ALPHABETICALY !== sortMethod,
           })}
           onClick={() => {
-            checkForSecondClick(sortMethod, setSortMethod, SORT_ALPHABETICALY);
+            setSortMethod(SORT_ALPHABETICALY);
           }}
         >
           Sort alphabetically
@@ -81,7 +65,7 @@ export const App = () => {
             'is-light': SORT_BY_LENGTH !== sortMethod,
           })}
           onClick={() => {
-            checkForSecondClick(sortMethod, setSortMethod, SORT_BY_LENGTH);
+            setSortMethod(SORT_BY_LENGTH);
           }}
         >
           Sort by length
@@ -90,10 +74,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': REVERSED_SORT !== reverse,
+            'is-light': !reverse,
           })}
           onClick={() => {
-            checkForSecondClick(reverse, setReverse, REVERSED_SORT);
+            setReverse(!reverse);
           }}
         >
           Reverse
