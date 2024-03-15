@@ -1,8 +1,7 @@
-import uuid from 'react-uuid';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -17,93 +16,96 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_DEFAULT = '';
+const SORT_FIELD_NAME = 'name';
+const SORT_FIELD_LENGTH = 'length';
+
+function getPreparedGoods(goods, { sortField, order }) {
+  let sorting = null;
+  const newGoods = [...goods];
+
+  if (sortField) {
+    switch (sortField) {
+      case SORT_FIELD_NAME:
+        sorting = (good1, good2) => good1.localeCompare(good2);
+        break;
+      case SORT_FIELD_LENGTH:
+        sorting = (good1, good2) => good1.length - good2.length;
+
+        break;
+
+      default:
+        break;
+    }
+
+    newGoods.sort(sorting);
+  }
+
+  if (order) {
+    newGoods.reverse();
+  }
+
+  return newGoods;
+}
+
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [sortedBy, setSortedBy] = useState('');
-  const [isAscending, setIsAscending] = useState(true);
-
-  const sortAlphabetically = () => {
-    const newOrder = isAscending ? 'asc' : 'desc';
-    const sortedGoods = [...visibleGoods].sort(
-      (a, b) =>
-        a.localeCompare(b, 'en', { sensitivity: 'base' }) *
-        (newOrder === 'asc' ? 1 : -1),
-    );
-
-    setVisibleGoods(sortedGoods);
-    setSortedBy('is-info');
-    setIsAscending(!isAscending);
-  };
-
-  const sortByLength = () => {
-    const newOrder = isAscending ? 'asc' : 'desc';
-    const sortedGoods = [...visibleGoods].sort(
-      (a, b) => (a.length - b.length) * (newOrder === 'asc' ? 1 : -1),
-    );
-
-    setVisibleGoods(sortedGoods);
-    setSortedBy('is-success');
-    setIsAscending(!isAscending);
-  };
-
-  const reverse = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    setSortedBy('is-warning');
-  };
-
-  const reset = () => {
-    setVisibleGoods(goodsFromServer);
-    setSortedBy('');
-  };
-
-  const isSorted = visibleGoods.toString() !== goodsFromServer.toString();
+  const [sortField, setSortField] = useState(SORT_DEFAULT);
+  const [order, setOrder] = useState(false);
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+    order,
+  });
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={sortAlphabetically}
           type="button"
-          className={cn('button is-info', {
-            'is-light': sortedBy !== 'is-info',
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== SORT_FIELD_NAME,
           })}
+          onClick={() => setSortField(SORT_FIELD_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
-          onClick={sortByLength}
           type="button"
-          className={cn('button is-success', {
-            'is-light': sortedBy !== 'is-success',
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
-          onClick={reverse}
           type="button"
-          className={cn('button is-warning', {
-            'is-light': sortedBy !== 'is-warning',
+          className={cn('button', 'is-warning', {
+            'is-light': !order,
           })}
+          onClick={() => setOrder(!order)}
         >
           Reverse
         </button>
-        {isSorted ? (
+
+        {(sortField || order) && (
           <button
-            onClick={reset}
             type="button"
             className="button is-danger is-light"
+            onClick={() => {
+              setSortField(SORT_DEFAULT);
+              setOrder(false);
+            }}
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
         {visibleGoods.map(good => (
-          <li key={uuid()} data-cy="Good">
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
