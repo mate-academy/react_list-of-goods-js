@@ -71,7 +71,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-info', {
+          className={cn('button', 'is-success', {
             'is-light': sortBy !== SORT_BY_LENGTH,
           })}
           onClick={() => setSortBy(SORT_BY_LENGTH)}
