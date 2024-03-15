@@ -17,37 +17,40 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const sortByAlphabet = data => {
+  return data.sort((a, b) => a.localeCompare(b));
+};
+
+const sortByLength = data => {
+  return data.sort((a, b) => a.length - b.length || a.localeCompare(b));
+};
+
+const ALPHABET = 'alphabet';
+const LENGTH = 'length';
+
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [showReversed, setShowReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const [sortedBy, setSortedBy] = useState('');
 
-  const applyReverse = data => (showReversed ? data.reverse() : data);
-
-  const processData = (data, sort) => {
-    setVisibleGoods(applyReverse(data));
-    setSortedBy(sort);
-  };
-
-  const sortByAlphabet = () => {
-    processData(
-      [...goodsFromServer].sort((a, b) => a.localeCompare(b)),
-      'alphabet',
-    );
-  };
-
-  const sortByLength = () => {
-    processData(
-      [...goodsFromServer].sort(
-        (a, b) => a.length - b.length || a.localeCompare(b),
-      ),
-      'length',
-    );
-  };
-
   const toggleReverse = () => {
-    setShowReversed(!showReversed);
-    setVisibleGoods([...visibleGoods].reverse());
+    setIsReversed(prev => !prev);
+  };
+
+  const isResetButtonVisible = sortedBy || isReversed;
+
+  const getPreparedData = () => {
+    let result = [...goodsFromServer];
+
+    if (sortedBy) {
+      result =
+        sortedBy === ALPHABET ? sortByAlphabet(result) : sortByLength(result);
+    }
+
+    if (isReversed) {
+      result.reverse();
+    }
+
+    return result;
   };
 
   return (
@@ -56,10 +59,10 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortedBy !== 'alphabet',
+            'is-light': sortedBy !== ALPHABET,
           })}
           onClick={() => {
-            sortByAlphabet();
+            setSortedBy(ALPHABET);
           }}
         >
           Sort alphabetically
@@ -68,10 +71,10 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortedBy !== 'length',
+            'is-light': sortedBy !== LENGTH,
           })}
           onClick={() => {
-            sortByLength();
+            setSortedBy(LENGTH);
           }}
         >
           Sort by length
@@ -80,21 +83,20 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-warning', {
-            'is-light': !showReversed,
+            'is-light': !isReversed,
           })}
           onClick={toggleReverse}
         >
           Reverse
         </button>
 
-        {sortedBy === '' && showReversed === false ? null : (
+        {isResetButtonVisible && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortedBy('');
-              setShowReversed(false);
-              setVisibleGoods([...goodsFromServer]);
+              setIsReversed(false);
             }}
           >
             Reset
@@ -103,7 +105,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {getPreparedData().map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
