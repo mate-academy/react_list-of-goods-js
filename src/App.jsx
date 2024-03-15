@@ -52,7 +52,13 @@ function getPreparedGood(goods, { sortBy, order }) {
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [order, setOrder] = useState(false);
-  const resGoods = getPreparedGood([...goodsFromServer], { sortBy, order });
+
+  const reverse = () => {
+    setSortBy('');
+    setOrder(false);
+  };
+
+  const goods = getPreparedGood([...goodsFromServer], { sortBy, order });
 
   return (
     <div className="section content">
@@ -89,10 +95,7 @@ export const App = () => {
 
         {(sortBy || order) && (
           <button
-            onClick={() => {
-              setSortBy('');
-              setOrder(false);
-            }}
+            onClick={reverse}
             type="button"
             className="button is-danger is-light"
           >
@@ -102,7 +105,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {resGoods.map(good => (
+        {goods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
