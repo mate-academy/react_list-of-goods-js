@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_FIELD_BY_LENGTH = 'length';
 const SORT_FIELD_BY_ALPHABET = 'alpha';
 
-function getPreperedGoods(goods, typeSort, secondSort) {
+function getPreperedGoods(goods, typeSort, isReverse) {
   const copyGoods = [...goods];
 
   if (typeSort) {
@@ -38,13 +38,25 @@ function getPreperedGoods(goods, typeSort, secondSort) {
     });
   }
 
-  return secondSort ? copyGoods.reverse() : copyGoods;
+  return isReverse ? copyGoods.reverse() : copyGoods;
 }
 
 export const App = () => {
   const [onReverse, setOnReverse] = useState(false);
   const [sortField, setSortField] = useState('');
   const visibleGoods = getPreperedGoods(goodsFromServer, sortField, onReverse);
+
+  function handleSort(field) {
+    if (field === !onReverse) {
+      return setOnReverse(field);
+    }
+
+    if (field === '') {
+      return setSortField('') || setOnReverse('');
+    }
+
+    return setSortField(field);
+  }
 
   return (
     <div className="section content">
@@ -54,7 +66,7 @@ export const App = () => {
             'is-light': sortField !== SORT_FIELD_BY_ALPHABET,
           })}
           onClick={() => {
-            setSortField(SORT_FIELD_BY_ALPHABET);
+            handleSort(SORT_FIELD_BY_ALPHABET);
           }}
           type="button"
         >
@@ -66,7 +78,7 @@ export const App = () => {
             'is-light': sortField !== SORT_FIELD_BY_LENGTH,
           })}
           onClick={() => {
-            setSortField(SORT_FIELD_BY_LENGTH);
+            handleSort(SORT_FIELD_BY_LENGTH);
           }}
           type="button"
         >
@@ -78,7 +90,7 @@ export const App = () => {
             'is-light': !onReverse,
           })}
           onClick={() => {
-            setOnReverse(!onReverse);
+            handleSort(!onReverse);
           }}
           type="button"
         >
@@ -88,8 +100,7 @@ export const App = () => {
         {(sortField || onReverse) && (
           <button
             onClick={() => {
-              setSortField('');
-              setOnReverse('');
+              handleSort('');
             }}
             type="button"
             className="button is-danger is-light"
