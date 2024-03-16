@@ -4,6 +4,8 @@ import './App.scss';
 import cn from 'classnames';
 import { useState } from 'react';
 
+// add fix
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
