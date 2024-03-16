@@ -4,8 +4,6 @@ import './App.scss';
 import cn from 'classnames';
 import { useState } from 'react';
 
-// add fix
-
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -21,7 +19,6 @@ export const goodsFromServer = [
 
 const SORT_FIELD_BY_LENGTH = 'length';
 const SORT_FIELD_BY_ALPHABET = 'alpha';
-const REVERSE = 'reverse';
 
 function getPreperedGoods(goods, typeSort, secondSort) {
   const copyGoods = [...goods];
@@ -45,7 +42,7 @@ function getPreperedGoods(goods, typeSort, secondSort) {
 }
 
 export const App = () => {
-  const [onReverse, setOnReverse] = useState('');
+  const [onReverse, setOnReverse] = useState(false);
   const [sortField, setSortField] = useState('');
   const visibleGoods = getPreperedGoods(goodsFromServer, sortField, onReverse);
 
@@ -78,11 +75,10 @@ export const App = () => {
 
         <button
           className={cn('button is-warning ', {
-            'is-light': onReverse !== REVERSE,
+            'is-light': !onReverse,
           })}
           onClick={() => {
-            // eslint-disable-next-line no-unused-expressions
-            onReverse ? setOnReverse('') : setOnReverse(REVERSE);
+            setOnReverse(!onReverse);
           }}
           type="button"
         >
