@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,15 +16,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const alphabet = 'alphabet';
+const length = 'length';
+
 function getListOfGoods(goods, { sortField, checkReverse }) {
   const listOfGoods = [...goods];
 
   if (sortField) {
     listOfGoods.sort((good1, good2) => {
       switch (sortField) {
-        case 'alphabet':
+        case alphabet:
           return good1.localeCompare(good2);
-        case 'length':
+
+        case length:
           return good1.length - good2.length;
 
         default:
@@ -52,20 +57,24 @@ export const App = () => {
       <div className="buttons">
         <button
           onClick={() => {
-            setSortField('alphabet');
+            setSortField(alphabet);
           }}
           type="button"
-          className={`button is-info ${sortField === 'alphabet' ? '' : 'is-light'}`}
+          className={cn('button is-info', {
+            'is-light': sortField !== alphabet,
+          })}
         >
           Sort alphabetically
         </button>
 
         <button
           onClick={() => {
-            setSortField('length');
+            setSortField(length);
           }}
           type="button"
-          className={`button is-success ${sortField === 'length' ? '' : 'is-light'}`}
+          className={cn('button is-success', {
+            'is-light': sortField !== length,
+          })}
         >
           Sort by length
         </button>
@@ -75,7 +84,9 @@ export const App = () => {
             checkReverse ? setCheckReverse(false) : setCheckReverse(true)
           }
           type="button"
-          className={`button is-warning ${checkReverse ? '' : 'is-light'}`}
+          className={cn('button is-warning', {
+            'is-light': checkReverse === false,
+          })}
         >
           Reverse
         </button>
@@ -95,9 +106,9 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(product => (
-          <li data-cy="Good" key={product}>
-            {product}
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
           </li>
         ))}
       </ul>
