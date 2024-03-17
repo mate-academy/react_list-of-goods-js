@@ -49,6 +49,8 @@ export const App = () => {
     setIsReverse(false);
   };
 
+  const sortField = sort || isReverse;
+
   const sortedGoods = preparedGoods(sort, isReverse);
 
   return (
@@ -84,7 +86,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sort || isReverse) && (
+        {sortField && (
           <button
             onClick={reset}
             type="button"
