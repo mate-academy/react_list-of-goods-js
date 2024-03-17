@@ -1,6 +1,5 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import cn from 'classnames';
 import { useState } from 'react';
 
 export const goodsFromServer = [
@@ -17,7 +16,7 @@ export const goodsFromServer = [
 ];
 
 function getListOfGoods(goods, { sortField, checkReverse }) {
-  let listOfGoods = [...goods];
+  const listOfGoods = [...goods];
 
   if (sortField) {
     listOfGoods.sort((good1, good2) => {
@@ -26,7 +25,7 @@ function getListOfGoods(goods, { sortField, checkReverse }) {
           return good1.localeCompare(good2);
         case 'length':
           return good1.length - good2.length;
-        
+
         default:
           return 0;
       }
@@ -34,7 +33,7 @@ function getListOfGoods(goods, { sortField, checkReverse }) {
   }
 
   if (checkReverse) {
-    listOfGoods.reverse()
+    listOfGoods.reverse();
   }
 
   return listOfGoods;
@@ -72,9 +71,9 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => {
-            checkReverse ? setCheckReverse(false) : setCheckReverse(true);
-          }}
+          onClick={() =>
+            checkReverse ? setCheckReverse(false) : setCheckReverse(true)
+          }
           type="button"
           className={`button is-warning ${checkReverse ? '' : 'is-light'}`}
         >
