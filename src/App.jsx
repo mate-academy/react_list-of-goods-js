@@ -4,7 +4,6 @@ import './App.scss';
 
 const SORT_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'byLength';
-const SORT_REVERSE = 'reverse';
 const EMPTY = '';
 
 export const goodsFromServer = [
@@ -36,7 +35,7 @@ function sortGoods(goods, sortType) {
     }
   });
 
-  if (sortType.direction === SORT_REVERSE) {
+  if (sortType.reversed) {
     sortedGoods.reverse();
   }
 
@@ -46,7 +45,7 @@ function sortGoods(goods, sortType) {
 export const App = () => {
   const [sortType, setSortType] = useState({
     sortedBy: EMPTY,
-    direction: EMPTY,
+    reversed: false,
   });
 
   return (
@@ -80,25 +79,18 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${sortType.direction === SORT_REVERSE ? '' : 'is-light'}`}
+          className={`button is-warning ${sortType.reversed ? '' : 'is-light'}`}
           onClick={() => {
-            if (sortType.direction !== SORT_REVERSE) {
-              setSortType({
-                ...sortType,
-                direction: SORT_REVERSE,
-              });
-            } else {
-              setSortType({
-                ...sortType,
-                direction: EMPTY,
-              });
-            }
+            setSortType({
+              ...sortType,
+              reversed: !sortType.reversed,
+            });
           }}
         >
           Reverse
         </button>
 
-        {(sortType.direction !== EMPTY || sortType.sortedBy !== EMPTY) && (
+        {(sortType.reversed || sortType.sortedBy !== EMPTY) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -106,7 +98,7 @@ export const App = () => {
               setSortType({
                 ...sortType,
                 sortedBy: EMPTY,
-                direction: EMPTY,
+                reversed: false,
               });
             }}
           >
