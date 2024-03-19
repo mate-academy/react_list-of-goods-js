@@ -16,11 +16,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-enum SortBy {
-  ALPHABET = 'alphabet',
-  LENGTH = 'length',
-  DEFAULT = ''
-}
+const SortBy = {
+  ALPHABET: 'alphabet',
+  LENGTH: 'length',
+  DEFAULT: '',
+};
 
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
