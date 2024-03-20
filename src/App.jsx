@@ -19,20 +19,29 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortBy, setSortBy] = useState(null);
   const [isReverseSort, setIsReverseSort] = useState(false);
-  const [goods, setGoods] = useState([...goodsFromServer]);
+  const goods = getPreparedGoods(goodsFromServer, sortBy);
 
-  function doSort(sortType, goodsSort, isReverse) {
-    if (isReverse) {
-      setIsReverseSort(!isReverseSort);
-      setGoods(goods.reverse());
-    } else {
-      setSortBy(sortType);
-      setGoods(goodsSort);
+  function getPreparedGoods(currentGoods, sortType, isReverse) {
+    const visibleGoods = [...currentGoods];
 
-      if (isReverseSort) {
-        setGoods(goods.reverse());
-      }
+    if (sortType) {
+      visibleGoods.sort((good1, good2) => {
+        switch (sortType) {
+          case 'alphabetically':
+            return good1.localeCompare(good2);
+          case 'length':
+            return good1.length - good2.length;
+          default:
+            return 0;
+        }
+      });
     }
+
+    if (isReverse) {
+      visibleGoods.reverse();
+    }
+
+    return visibleGoods;
   }
 
   return (
@@ -40,10 +49,8 @@ export const App = () => {
       <div className="buttons">
         <button
           onClick={() => {
-            doSort(
-              'alphabetically',
-              [...goodsFromServer].sort((a, b) => a.localeCompare(b)),
-            );
+            setSortBy('alphabetically');
+            getPreparedGoods(goods, sortBy, isReverseSort);
           }}
           type="button"
           className={classNames('button is-info', {
@@ -55,10 +62,8 @@ export const App = () => {
 
         <button
           onClick={() => {
-            doSort(
-              'length',
-              [...goodsFromServer].sort((a, b) => a.length - b.length),
-            );
+            setSortBy('length');
+            getPreparedGoods(goods, sortBy, isReverseSort);
           }}
           type="button"
           className={classNames('button is-success', {
@@ -70,7 +75,8 @@ export const App = () => {
 
         <button
           onClick={() => {
-            doSort(null, null, true);
+            setIsReverseSort(!isReverseSort);
+            getPreparedGoods(goods, sortBy, isReverseSort);
           }}
           type="button"
           className={classNames('button is-warning', {
@@ -85,7 +91,7 @@ export const App = () => {
             onClick={() => {
               setSortBy(null);
               setIsReverseSort(false);
-              setGoods([...goodsFromServer]);
+              getPreparedGoods(goods, sortBy, true);
             }}
             type="button"
             className="button is-danger is-light"
