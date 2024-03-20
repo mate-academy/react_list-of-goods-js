@@ -25,19 +25,17 @@ const conditions = {
 function sorted(food, sortParam, other) {
   const preparedFood = [...food];
 
-  if (sortParam) {
-    switch (sortParam) {
-      case conditions.alphabetically:
-        preparedFood.sort((good1, good2) => good1.localeCompare(good2));
-        break;
+  switch (sortParam) {
+    case conditions.alphabetically:
+      preparedFood.sort((good1, good2) => good1.localeCompare(good2));
+      break;
 
-      case conditions.longer:
-        preparedFood.sort((good1, good2) => good1.length - good2.length);
-        break;
+    case conditions.longer:
+      preparedFood.sort((good1, good2) => good1.length - good2.length);
+      break;
 
-      default:
-        break;
-    }
+    default:
+      break;
   }
 
   if (other) {
@@ -49,7 +47,7 @@ function sorted(food, sortParam, other) {
 
 export const App = () => {
   const [selectedGood, setSelected] = useState('');
-  const [IsReverse, setReverse] = useState(false);
+  const [IsReverse, setIsReverse] = useState(false);
   const visibleGoods = sorted(goodsFromServer, selectedGood, IsReverse);
 
   return (
@@ -80,7 +78,7 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': IsReverse !== true,
           })}
-          onClick={() => setReverse(!IsReverse)}
+          onClick={() => setIsReverse(!IsReverse)}
         >
           Reverse
         </button>
@@ -90,7 +88,7 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setReverse(false);
+              setIsReverse(false);
               setSelected('');
             }}
           >
