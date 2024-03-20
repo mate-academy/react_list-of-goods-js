@@ -18,16 +18,32 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [sortBy, setSortBy] = useState(null);
-  const [reverseSort, setReverseSort] = useState(false);
+  const [isReverseSort, setIsReverseSort] = useState(false);
   const [goods, setGoods] = useState([...goodsFromServer]);
+
+  function doSort(sortType, goodsSort) {
+    if (sortType === 'reverse') {
+      setIsReverseSort(!isReverseSort);
+      setGoods(goods.reverse());
+    } else {
+      setSortBy(sortType);
+      setGoods(goodsSort);
+
+      if (isReverseSort) {
+        setGoods(goods.reverse());
+      }
+    }
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           onClick={() => {
-            setSortBy('alphabetically');
-            setGoods(goods.sort((a, b) => a.localeCompare(b)));
+            doSort(
+              'alphabetically',
+              goods.sort((a, b) => a.localeCompare(b)),
+            );
           }}
           type="button"
           className={classNames('button is-info', {
@@ -39,8 +55,10 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setSortBy('length');
-            setGoods(goods.sort((a, b) => a.length - b.length));
+            doSort(
+              'length',
+              goods.sort((a, b) => a.length - b.length),
+            );
           }}
           type="button"
           className={classNames('button is-success', {
@@ -52,27 +70,21 @@ export const App = () => {
 
         <button
           onClick={() => {
-            if (reverseSort === false) {
-              setReverseSort(true);
-            } else {
-              setReverseSort(false);
-            }
-
-            setGoods(goods.reverse());
+            doSort('reverse');
           }}
           type="button"
           className={classNames('button is-warning', {
-            'is-light': reverseSort !== true,
+            'is-light': isReverseSort !== true,
           })}
         >
           Reverse
         </button>
 
-        {(sortBy || reverseSort) && (
+        {(sortBy || isReverseSort) && (
           <button
             onClick={() => {
               setSortBy(null);
-              setReverseSort(false);
+              setIsReverseSort(false);
               setGoods([...goodsFromServer]);
             }}
             type="button"
