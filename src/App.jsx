@@ -19,7 +19,7 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortBy, setSortBy] = useState(null);
   const [isReverseSort, setIsReverseSort] = useState(false);
-  const goods = getPreparedGoods(goodsFromServer, sortBy);
+  const goods = getPreparedGoods(goodsFromServer, sortBy, isReverseSort);
 
   function getPreparedGoods(currentGoods, sortType, isReverse) {
     const visibleGoods = [...currentGoods];
