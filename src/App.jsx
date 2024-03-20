@@ -21,8 +21,8 @@ export const App = () => {
   const [isReverseSort, setIsReverseSort] = useState(false);
   const [goods, setGoods] = useState([...goodsFromServer]);
 
-  function doSort(sortType, goodsSort) {
-    if (sortType === 'reverse') {
+  function doSort(sortType, goodsSort, isReverse) {
+    if (isReverse) {
       setIsReverseSort(!isReverseSort);
       setGoods(goods.reverse());
     } else {
@@ -42,7 +42,7 @@ export const App = () => {
           onClick={() => {
             doSort(
               'alphabetically',
-              goods.sort((a, b) => a.localeCompare(b)),
+              [...goodsFromServer].sort((a, b) => a.localeCompare(b)),
             );
           }}
           type="button"
@@ -57,7 +57,7 @@ export const App = () => {
           onClick={() => {
             doSort(
               'length',
-              goods.sort((a, b) => a.length - b.length),
+              [...goodsFromServer].sort((a, b) => a.length - b.length),
             );
           }}
           type="button"
@@ -70,7 +70,7 @@ export const App = () => {
 
         <button
           onClick={() => {
-            doSort('reverse');
+            doSort(null, null, true);
           }}
           type="button"
           className={classNames('button is-warning', {
