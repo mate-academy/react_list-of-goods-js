@@ -18,7 +18,6 @@ export const goodsFromServer = [
 const SORT_FIELD = {
   ALFAB: 'alfab',
   LENGTH: 'length',
-  REVERSE: 'reverse',
 };
 
 function getPrepearedGoods(goods, { sortField, sortReverse }) {
