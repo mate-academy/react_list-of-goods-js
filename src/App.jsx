@@ -20,16 +20,16 @@ const SORT_BY_NAME = 'name';
 const SORT_BY_LENGTH = 'length';
 
 export const App = () => {
-  const objModifier = (goods, { sortBy, reversed }) => {
+  const getVisibleGoods = (goods, { sortBy, reversed }) => {
     const modified = [...goods];
 
-    if (sortBy === 'name') {
+    if (sortBy === SORT_BY_NAME) {
       modified.sort((g1, g2) => {
         return g1.localeCompare(g2);
       });
     }
 
-    if (sortBy === 'length') {
+    if (sortBy === SORT_BY_LENGTH) {
       modified.sort((g1, g2) => {
         return g1.length - g2.length;
       });
@@ -44,7 +44,7 @@ export const App = () => {
 
   const [sortBy, setSortBy] = useState('');
   const [reversed, setReversed] = useState(false);
-  const prepareForRend = objModifier(goodsFromServer, { sortBy, reversed });
+  const prepareGoods = getVisibleGoods(goodsFromServer, { sortBy, reversed });
 
   return (
     <div className="section content">
@@ -85,7 +85,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortBy !== '' || reversed) && (
+        {(sortBy || reversed) && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -100,7 +100,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {prepareForRend.map(good => {
+        {prepareGoods.map(good => {
           return <li data-cy="Good">{good}</li>;
         })}
       </ul>
