@@ -20,27 +20,21 @@ const SORT_DEFAULT = '';
 const SORT_FIELD_NAME = 'name';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, order }) {
-  let sorting = null;
-  const newGoods = [...goods];
+function getPreparedGoods(goods, { sortField, isReversed }) {
+  let newGoods = [...goods];
 
-  if (sortField) {
+  newGoods = newGoods.sort((good1, good2) => {
     switch (sortField) {
       case SORT_FIELD_NAME:
-        sorting = (good1, good2) => good1.localeCompare(good2);
-        break;
+        return good1.localeCompare(good2);
       case SORT_FIELD_LENGTH:
-        sorting = (good1, good2) => good1.length - good2.length;
-        break;
-
+        return good1.length - good2.length;
       default:
-        break;
+        return 0;
     }
+  });
 
-    newGoods.sort(sorting);
-  }
-
-  if (order) {
+  if (isReversed) {
     newGoods.reverse();
   }
 
@@ -49,11 +43,16 @@ function getPreparedGoods(goods, { sortField, order }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState(SORT_DEFAULT);
-  const [order, setOrder] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
-    order,
+    isReversed,
   });
+
+  const handleReset = () => {
+    setSortField(SORT_DEFAULT);
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -81,21 +80,18 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': !order,
+            'is-light': !isReversed,
           })}
-          onClick={() => setOrder(!order)}
+          onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
         </button>
 
-        {(sortField || order) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField(SORT_DEFAULT);
-              setOrder(false);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
