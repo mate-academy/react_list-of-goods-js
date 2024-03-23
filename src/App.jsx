@@ -30,8 +30,10 @@ function getPreparedGoods(goods, { sortField, query }) {
     switch (sortField) {
       case SORT_ALPHABETICALLY:
         return good1.localeCompare(good2);
+
       case SORT_BY_LENGTH:
         return good1.length - good2.length;
+
       default:
         return 0;
     }
@@ -52,6 +54,12 @@ export const App = () => {
   if (isReversed) {
     visibleGoods = [...visibleGoods].reverse();
   }
+
+  const resetAll = () => {
+    setSortField(RESET);
+    setQuery(false);
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -90,11 +98,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField(RESET);
-              setQuery(false);
-              setIsReversed(false);
-            }}
+            onClick={resetAll}
           >
             Reset
           </button>
