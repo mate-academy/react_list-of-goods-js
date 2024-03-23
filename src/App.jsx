@@ -19,12 +19,8 @@ const RESET = '';
 const SORT_ALPHABETICALLY = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, query }) {
+function getPreparedGoods(goods, { sortField, isReversed }) {
   let preparedGoods = [...goods];
-
-  if (query) {
-    preparedGoods = preparedGoods.reverse();
-  }
 
   preparedGoods.sort((good1, good2) => {
     switch (sortField) {
@@ -39,25 +35,23 @@ function getPreparedGoods(goods, { sortField, query }) {
     }
   });
 
+  if (isReversed) {
+    preparedGoods = preparedGoods.reverse();
+  }
+
   return preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [query, setQuery] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  let visibleGoods = getPreparedGoods(goodsFromServer, {
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
-    query,
+    isReversed,
   });
-
-  if (isReversed) {
-    visibleGoods = [...visibleGoods].reverse();
-  }
 
   const resetAll = () => {
     setSortField(RESET);
-    setQuery(false);
     setIsReversed(false);
   };
 
@@ -89,12 +83,12 @@ export const App = () => {
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
         </button>
 
-        {(sortField || query || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
