@@ -40,8 +40,6 @@ function getPreperedGoods(goods, { sortField }) {
   return preperedGoods;
 }
 
-// setSelectedGood(selectedGood === currentGood ? null : currentGood)
-
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState(false);
