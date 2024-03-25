@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -55,7 +56,10 @@ export const App = () => {
         <button
           type="button"
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
-          className={`button ${sortField === SORT_FIELD_ALPHABET ? 'is-info' : 'is-info is-light'}`}
+          className={cn('button', {
+            'is-info': sortField === SORT_FIELD_ALPHABET,
+            'is-info is-light': sortField !== SORT_FIELD_ALPHABET,
+          })}
         >
           Sort alphabetically
         </button>
@@ -63,23 +67,21 @@ export const App = () => {
         <button
           type="button"
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
-          className={`button ${sortField === SORT_FIELD_LENGTH ? 'is-success' : 'is-success is-light'}`}
+          className={cn('button', {
+            'is-success': sortField === SORT_FIELD_LENGTH,
+            'is-success is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => {
-            if (reverse === true) {
-              visibleGoods.reverse();
-              setReverse(false);
-            } else {
-              visibleGoods.reverse();
-              setReverse(true);
-            }
-          }}
-          className={`button ${reverse ? 'is-warning' : 'is-warning is-light'}`}
+          onClick={() => setReverse(!reverse)}
+          className={cn('button', {
+            'is-warning': reverse,
+            'is-warning is-light': !reverse,
+          })}
         >
           Reverse
         </button>
@@ -99,8 +101,10 @@ export const App = () => {
       </div>
       <div>
         <ul>
-          {visibleGoods.map(good => (
-            <li data-cy="Good">{good}</li>
+          {visibleGoods.map((good, index) => (
+            <li key={good} data-cy="Good">
+              {good}
+            </li>
           ))}
         </ul>
       </div>
