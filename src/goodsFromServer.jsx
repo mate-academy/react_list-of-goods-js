@@ -1,4 +1,3 @@
-
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',

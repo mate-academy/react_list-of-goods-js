@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,17 +16,20 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_ALPHABETICALLY = 'alphabetically';
+const SORT_BY_LENGTH = 'length';
+
 export const App = () => {
   const [sortBy, setSortBy] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
 
   const handleSortAlphabetically = () => {
-    setSortBy('alphabetically');
+    setSortBy(SORT_ALPHABETICALLY);
     setIsReversed(false);
   };
 
   const handleSortByLength = () => {
-    setSortBy('length');
+    setSortBy(SORT_BY_LENGTH);
     setIsReversed(false);
   };
 
@@ -40,9 +44,9 @@ export const App = () => {
 
   const sortedGoods = [...goodsFromServer];
 
-  if (sortBy === 'alphabetically') {
+  if (sortBy === SORT_ALPHABETICALLY) {
     sortedGoods.sort();
-  } else if (sortBy === 'length') {
+  } else if (sortBy === SORT_BY_LENGTH) {
     sortedGoods.sort((a, b) => a.length - b.length);
   }
 
@@ -55,7 +59,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortBy === 'alphabetically' ? '' : 'is-light'}`}
+          className={classNames('button', 'is-info', {
+            'is-light': sortBy !== SORT_ALPHABETICALLY,
+          })}
           onClick={handleSortAlphabetically}
         >
           Sort alphabetically
@@ -63,7 +69,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortBy === 'length' ? '' : 'is-light'}`}
+          className={classNames('button', 'is-success', {
+            'is-light': sortBy !== SORT_BY_LENGTH,
+          })}
           onClick={handleSortByLength}
         >
           Sort by length
@@ -71,7 +79,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={classNames('button', 'is-warning', {
+            'is-light': !isReversed,
+          })}
           onClick={handleReverseOrder}
         >
           Reverse
@@ -89,9 +99,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {sortedGoods.map((good, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <li key={index} data-cy="Good">
+        {sortedGoods.map(good => (
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
