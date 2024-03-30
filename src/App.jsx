@@ -99,13 +99,13 @@ export const App = () => {
         )}
       </div>
 
-    <ul>
-      {visibleGoods.map(good => (
-        <li key={good} data-cy="Good">
-          {good}
-        </li>
-      ))}
-    </ul>
-  </div>
+      <ul>
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
