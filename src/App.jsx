@@ -22,8 +22,9 @@ export const App = () => {
   const [showReset, setShowReset] = useState(false);
   const [reverse, setReverse] = useState(false);
 
-  const toSort = (field) => {
+  const toSort = field => {
     let sortedGoods = [...goods];
+
     switch (field) {
       case 'Sort alphabetically':
         sortedGoods.sort((good1, good2) => good1.localeCompare(good2));
@@ -33,7 +34,7 @@ export const App = () => {
         break;
       case 'Reverse':
         sortedGoods.reverse();
-        setReverse(!reverse)
+        setReverse(!reverse);
         break;
       case 'Reset':
         sortedGoods = [...goodsFromServer];
@@ -41,14 +42,17 @@ export const App = () => {
       default:
         break;
     }
+
     setGoods(sortedGoods);
   };
 
-  const handleSort = (field) => {
+  const handleSort = field => {
     setSortField(field);
     toSort(field);
+
     if (field === 'Reset') {
       setShowReset(false);
+      setReverse(false);
     } else {
       setShowReset(true);
     }
@@ -57,28 +61,36 @@ export const App = () => {
   return (
     <div className="section content">
       <div className="buttons">
-        {['Sort alphabetically', 'Sort by length', 'Reverse'].map(field => (
+        {['Sort alphabetically', 'Sort by length'].map(field => (
           <button
+            type="button"
             key={field}
-            className={classNames(
-              'button',
-              {
-                'is-info': field === 'Sort alphabetically',
-                'is-success': field === 'Sort by length',
-                'is-warning': field === 'Reverse',
-                'is-light': sortField !== field
-              }
-            )}
+            className={classNames('button', {
+              'is-info': field === 'Sort alphabetically',
+              'is-success': field === 'Sort by length',
+              'is-light': sortField !== field,
+            })}
             onClick={() => handleSort(field)}
           >
             {field}
           </button>
         ))}
+        <button
+          type="button"
+          className={classNames('button is-warning', {
+            'is-light': !reverse,
+          })}
+          onClick={() => {
+            toSort('Reverse');
+            setShowReset(true);
+          }}
+        >
+          Reverse
+        </button>
         {showReset && (
           <button
-            className={classNames(
-              'button is-danger is-light'
-            )}
+            type="button"
+            className={classNames('button is-danger is-light')}
             onClick={() => handleSort('Reset')}
           >
             Reset
@@ -88,7 +100,9 @@ export const App = () => {
 
       <ul>
         {goods.map(good => (
-          <li data-cy="Good" key={good}>{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
