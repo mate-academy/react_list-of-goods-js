@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_ALPHABET = 'alphabet';
 const SORT_LENGTH = 'length';
-const SORT_REVERSE = 'reverse';
 
 function sortGoods(goods, isLight, isReverse) {
   let preparedGoods = [...goods];
@@ -46,15 +45,11 @@ function sortGoods(goods, isLight, isReverse) {
 
 export const App = () => {
   const [isLight, setIsLight] = useState('');
-  const [isReverse, setIsReverse] = useState('');
+  const [isReverse, setIsReverse] = useState(false);
   const visibleGoods = sortGoods(goodsFromServer, isLight, isReverse);
 
   const reverse = () => {
-    if (isReverse) {
-      setIsReverse('');
-    } else {
-      setIsReverse(SORT_REVERSE);
-    }
+    setIsReverse(!isReverse);
   };
 
   const reset = () => {
@@ -88,7 +83,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': isReverse !== SORT_REVERSE,
+            'is-light': isReverse ? '' : 'is-light',
           })}
           onClick={reverse}
         >
