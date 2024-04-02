@@ -16,82 +16,89 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const sortFieldsArray = [
+  {
+    text: 'Sort alphabetically',
+    value: 'alphabetically'
+  },
+  {
+    text: 'Sort by length',
+    value: 'length'
+  }
+];
+
+function getSortGoods(goods, sortField, isReversed) {
+  const preparedGoods = [...goods];
+
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case 'length':
+          return good1.length - good2.length;
+        case 'alphabetically':
+          return good1.localeCompare(good2);
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
   const [sortField, setSortField] = useState('');
-  const [showReset, setShowReset] = useState(false);
-  const [reverse, setReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getSortGoods(goodsFromServer, sortField, isReversed);
 
-  const toSort = field => {
-    let sortedGoods = [...goods];
-
-    switch (field) {
-      case 'Sort alphabetically':
-        sortedGoods.sort((good1, good2) => good1.localeCompare(good2));
-        break;
-      case 'Sort by length':
-        sortedGoods.sort((good1, good2) => good1.length - good2.length);
-        break;
-      case 'Reverse':
-        sortedGoods.reverse();
-        setReverse(!reverse);
-        break;
-      case 'Reset':
-        sortedGoods = [...goodsFromServer];
-        break;
-      default:
-        break;
+  const handleSort = (value) => {
+    if (value === 'reverse') {
+      setIsReversed(!isReversed);
+    } else {
+      setSortField(value);
     }
-
-    setGoods(sortedGoods);
   };
 
-  const handleSort = field => {
-    setSortField(field);
-    toSort(field);
-
-    if (field === 'Reset') {
-      setShowReset(false);
-      setReverse(false);
-    } else {
-      setShowReset(true);
-    }
+  const handleReset = () => {
+    setSortField('');
+    setIsReversed(false);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
-        {['Sort alphabetically', 'Sort by length'].map(field => (
+        {sortFieldsArray.map(({ text, value }) => (
           <button
             type="button"
-            key={field}
+            key={value}
             className={classNames('button', {
-              'is-info': field === 'Sort alphabetically',
-              'is-success': field === 'Sort by length',
-              'is-light': sortField !== field,
+              'is-info': value === 'alphabetically',
+              'is-success': value === 'length',
+              'is-light': value !== sortField,
             })}
-            onClick={() => handleSort(field)}
+            onClick={() => handleSort(value)}
           >
-            {field}
+            {text}
           </button>
         ))}
         <button
           type="button"
           className={classNames('button is-warning', {
-            'is-light': !reverse,
+            'is-light': !isReversed,
           })}
-          onClick={() => {
-            toSort('Reverse');
-            setShowReset(true);
-          }}
+          onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
         </button>
-        {showReset && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className={classNames('button is-danger is-light')}
-            onClick={() => handleSort('Reset')}
+            onClick={handleReset}
           >
             Reset
           </button>
@@ -99,7 +106,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
