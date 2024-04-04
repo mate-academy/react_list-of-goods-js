@@ -47,10 +47,8 @@ function getPreparedGoods(goods, sort, reverseGoods) {
 export const App = () => {
   const [sort, setSort] = useState('');
   const [reverse, setRevers] = useState(false);
-  const [reset, setReset] = useState(false);
 
   const goodslist = getPreparedGoods(goodsFromServer, sort, reverse);
-  const btnReset = reset || reverse || sort;
 
   return (
     <div className="section content">
@@ -59,7 +57,6 @@ export const App = () => {
           type="button"
           onClick={() => {
             setSort(SORT_BY_AlPHABETICALLY);
-            setReset(!reset);
           }}
           className={classNames('button is-info', {
             'is-light': sort !== `${SORT_BY_AlPHABETICALLY}`,
@@ -72,7 +69,6 @@ export const App = () => {
           type="button"
           onClick={() => {
             setSort(SORT_BY_LENGTH_WORDS);
-            setReset(!reset);
           }}
           className={classNames('button is-success', {
             'is-light': sort !== `${SORT_BY_LENGTH_WORDS}`,
@@ -85,20 +81,18 @@ export const App = () => {
           type="button"
           onClick={() => {
             setRevers(!reverse);
-            setReset(!reset);
           }}
           className={classNames('button is-warning', { 'is-light': !reverse })}
         >
           Reverse
         </button>
 
-        {btnReset && (
+        {(sort || reverse) && (
           <button
             type="button"
             onClick={() => {
               setSort('');
               setRevers(false);
-              setReset(false);
             }}
             className="button is-danger is-light"
           >
