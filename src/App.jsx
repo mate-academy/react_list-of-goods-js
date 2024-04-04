@@ -20,7 +20,7 @@ const SORT_FIELD_LENGTH = 'length';
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [resetToggle, setResetToogle] = useState(false);
+  const [reverseToogle, setReverseToogle] = useState(false);
 
   let goods = [...goodsFromServer].sort((goods1, goods2) => {
     switch (sortField) {
@@ -33,19 +33,19 @@ export const App = () => {
     }
   });
 
-  if (resetToggle) {
+  if (reverseToogle) {
     goods = goods.reverse();
   }
 
   // reverse
   const reverse = () => {
-    setResetToogle(!resetToggle);
+    setReverseToogle(!reverseToogle);
   };
 
   // reset
   const reset = () => {
     setSortField('');
-    setResetToogle('');
+    setReverseToogle('');
   };
 
   return (
@@ -70,12 +70,12 @@ export const App = () => {
         <button
           onClick={reverse}
           type="button"
-          className={`button is-warning ${!resetToggle && 'is-light'}`}
+          className={`button is-warning ${!reverseToogle && 'is-light'}`}
         >
           Reverse
         </button>
 
-        {sortField !== '' && (
+        {sortField !== '' || reverseToogle ? (
           <button
             onClick={reset}
             type="button"
@@ -83,6 +83,8 @@ export const App = () => {
           >
             Reset
           </button>
+        ) : (
+          ''
         )}
       </div>
 
