@@ -46,18 +46,21 @@ function getPreparedGoods(goods, sort, reverseGoods) {
 
 export const App = () => {
   const [sort, setSort] = useState('');
-  const [reverse, setRevers] = useState(false);
+  const [reverse, setReverse] = useState(false);
 
   const goodslist = getPreparedGoods(goodsFromServer, sort, reverse);
+
+  const actionBtnReset = () => {
+    setSort('');
+    setReverse(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          onClick={() => {
-            setSort(SORT_BY_AlPHABETICALLY);
-          }}
+          onClick={() => setSort(SORT_BY_AlPHABETICALLY)}
           className={classNames('button is-info', {
             'is-light': sort !== `${SORT_BY_AlPHABETICALLY}`,
           })}
@@ -67,9 +70,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => {
-            setSort(SORT_BY_LENGTH_WORDS);
-          }}
+          onClick={() => setSort(SORT_BY_LENGTH_WORDS)}
           className={classNames('button is-success', {
             'is-light': sort !== `${SORT_BY_LENGTH_WORDS}`,
           })}
@@ -79,9 +80,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => {
-            setRevers(!reverse);
-          }}
+          onClick={() => setReverse(!reverse)}
           className={classNames('button is-warning', { 'is-light': !reverse })}
         >
           Reverse
@@ -90,10 +89,7 @@ export const App = () => {
         {(sort || reverse) && (
           <button
             type="button"
-            onClick={() => {
-              setSort('');
-              setRevers(false);
-            }}
+            onClick={actionBtnReset}
             className="button is-danger is-light"
           >
             Reset
