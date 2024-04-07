@@ -15,59 +15,35 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function sortByAlphabetically(copyAlphabeticallyArray) {
-  const sortAlphabeticallyArray = [...copyAlphabeticallyArray];
+function sortArray(array, method) {
+  const newArray = [...array];
 
-  return sortAlphabeticallyArray.sort((good1, good2) =>
-    good1.localeCompare(good2),
-  );
-}
-
-function sortByLength(copyLengthArray) {
-  const sortLengthArray = [...copyLengthArray];
-
-  return sortLengthArray.sort((good1, good2) => good1.length - good2.length);
-}
-
-function reverseCopyArray(copyReverseArray) {
-  const arrayReverse = [...copyReverseArray];
-
-  return arrayReverse.reverse();
+  switch (method) {
+    case 'alphabetically':
+      return newArray.sort((good1, good2) => good1.localeCompare(good2));
+    case 'length':
+      return newArray.sort((good1, good2) => good1.length - good2.length);
+    case 'reverse':
+      return newArray.reverse();
+    default:
+      return newArray;
+  }
 }
 
 export function App() {
   const [goodValue, setGoodValue] = useState([...goodsFromServer]);
-  const [flag, setFlag] = useState(false);
   const [activeMethod, setActiveMethod] = useState(null);
 
-  const sortAlphabetically = () => {
-    const sortedGoods = sortByAlphabetically(goodValue);
+  const sortMethods = method => {
+    const sortedGoods = sortArray(goodValue, method);
 
     setGoodValue(sortedGoods);
-    setActiveMethod('alphabetically');
-    setFlag(true);
+    setActiveMethod(method);
   };
 
-  const sortLength = () => {
-    const sortedGoods = sortByLength(goodValue);
-
-    setGoodValue(sortedGoods);
-    setActiveMethod('length');
-    setFlag(true);
-  };
-
-  const reverseArr = () => {
-    const reverseArray = reverseCopyArray(goodValue);
-
-    setGoodValue(reverseArray);
-    setActiveMethod('reverse');
-    setFlag(true);
-  };
-
-  const resetOrder = () => {
+  const resetSort = () => {
     setGoodValue([...goodsFromServer]);
     setActiveMethod(null);
-    setFlag(false);
   };
 
   return (
@@ -75,8 +51,8 @@ export function App() {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeMethod === 'alphabetical' ? '' : 'is-light'}`}
-          onClick={sortAlphabetically}
+          className={`button is-info ${activeMethod === 'alphabetically' ? '' : 'is-light'}`}
+          onClick={() => sortMethods('alphabetically')}
         >
           Sort alphabetically
         </button>
@@ -84,7 +60,7 @@ export function App() {
         <button
           type="button"
           className={`button is-success ${activeMethod === 'length' ? '' : 'is-light'}`}
-          onClick={sortLength}
+          onClick={() => sortMethods('length')}
         >
           Sort by length
         </button>
@@ -92,16 +68,16 @@ export function App() {
         <button
           type="button"
           className={`button is-warning ${activeMethod === 'reverse' ? '' : 'is-light'}`}
-          onClick={reverseArr}
+          onClick={() => sortMethods('reverse')}
         >
           Reverse
         </button>
 
-        {flag && (
+        {activeMethod && (
           <button
             type="button"
-            className={`button is-danger ${activeMethod === null ? '' : 'is-light'}`}
-            onClick={resetOrder}
+            className="button is-danger"
+            onClick={resetSort}
           >
             Reset
           </button>
