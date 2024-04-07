@@ -53,7 +53,7 @@ export const App = () => {
   });
 
   function reset() {
-    setReversed(false);
+    setIsReversed(false);
     setSortField('');
   }
 
