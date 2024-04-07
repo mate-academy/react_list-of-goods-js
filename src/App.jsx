@@ -49,7 +49,7 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
-    reversed,
+    isReversed,
   });
 
   function reset() {
