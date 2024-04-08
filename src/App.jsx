@@ -29,7 +29,6 @@ function getVisibleGoods(goods, sortType, isReversed) {
       break;
   }
 
-  // Перевертаємо масив, якщо потрібно
   if (isReversed) {
     visibleGoods.reverse();
   }
@@ -40,17 +39,16 @@ function getVisibleGoods(goods, sortType, isReversed) {
 export function App() {
   const [sortType, setSortType] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
-
-  const handleSort = type => {
-    
-  };
+  const visible = getVisibleGoods(goodsFromServer, sortType, isReversed);
 
   const resetSort = () => {
     setSortType(null);
     setIsReversed(false);
   };
 
-  const visibleGoods = getVisibleGoods(goodsFromServer, sortType, isReversed);
+  const toggleReverse = () => {
+    setIsReversed(!isReversed);
+  };
 
   return (
     <div className="section content">
@@ -58,7 +56,7 @@ export function App() {
         <button
           type="button"
           className={`button is-info ${sortType === 'alphabetically' ? '' : 'is-light'}`}
-          onClick={() => handleSort('alphabetically')}
+          onClick={() => setSortType('alphabetically')}
         >
           Sort alphabetically
         </button>
@@ -66,15 +64,15 @@ export function App() {
         <button
           type="button"
           className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
-          onClick={() => handleSort('length')}
+          onClick={() => setSortType('length')}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${sortType === 'reverse' ? '' : 'is-light'}`}
-          onClick={() => handleSort('reverse')}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
@@ -91,7 +89,7 @@ export function App() {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {visible.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
