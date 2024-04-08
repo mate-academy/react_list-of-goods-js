@@ -23,21 +23,34 @@ function sortArray(array, method) {
       return newArray.sort((good1, good2) => good1.localeCompare(good2));
     case 'length':
       return newArray.sort((good1, good2) => good1.length - good2.length);
-    case 'reverse':
-      return newArray.reverse();
     default:
       return newArray;
   }
 }
 
+function reverseArray(array, method) {
+
+  array.reverse();
+
+  return array;
+}
+
 export function App() {
   const [goodValue, setGoodValue] = useState([...goodsFromServer]);
   const [activeMethod, setActiveMethod] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
 
   const sortMethods = method => {
     const sortedGoods = sortArray(goodValue, method);
 
     setGoodValue(sortedGoods);
+    setActiveMethod(method);
+  };
+
+  const reverseArr = method => {
+    const reversArr = reverseArray(isReversed, method);
+
+    setIsReversed(reversArr);
     setActiveMethod(method);
   };
 
@@ -68,7 +81,7 @@ export function App() {
         <button
           type="button"
           className={`button is-warning ${activeMethod === 'reverse' ? '' : 'is-light'}`}
-          onClick={() => sortMethods('reverse')}
+          onClick={() => reverseArr('reverse')}
         >
           Reverse
         </button>
@@ -76,7 +89,7 @@ export function App() {
         {activeMethod && (
           <button
             type="button"
-            className="button is-danger"
+            className="button is-danger is-light"
             onClick={resetSort}
           >
             Reset
