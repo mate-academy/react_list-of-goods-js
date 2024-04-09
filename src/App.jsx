@@ -28,8 +28,10 @@ const getPreperdGoods = (goods, sortField, reversed) => {
     switch (sortField) {
       case SORT_FIELD_ALPHABETICALLY:
         return goodOne.localeCompare(goodSecend);
+
       case SORT_FIELD_LENGTH:
         return goodOne.length - goodSecend.length;
+
       default:
         return 0;
     }
@@ -44,6 +46,10 @@ export const App = () => {
   const [sortField, setSortField] = useState(null);
   const [reversed, setReversed] = useState(null);
   const visibleGoods = getPreperdGoods(goodsFromServer, sortField, reversed);
+  const resetGoods = () => {
+    setReversed(null);
+    setSortField(null);
+  };
 
   return (
     <div className="section content">
@@ -81,10 +87,7 @@ export const App = () => {
         {(sortField || reversed) && (
           <button
             type="button"
-            onClick={() => {
-              setReversed(null);
-              setSortField(null);
-            }}
+            onClick={() => resetGoods()}
             className="button is-danger is-light"
           >
             Reset
