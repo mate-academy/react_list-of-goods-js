@@ -2,7 +2,7 @@ import { GoodCard } from '../GoodCard';
 
 export const GoodList = ({ goods }) => (
   <ul>
-    {goods.map((good, index) => (
+    {goods.map((good) => (
       <GoodCard good={good} />
     ))}
   </ul>
