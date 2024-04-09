@@ -44,7 +44,6 @@ export const App = () => {
   const [sortField, setSortField] = useState(null);
   const [reversed, setReversed] = useState(null);
   const visibleGoods = getPreperdGoods(goodsFromServer, sortField, reversed);
-  const resetButton = visibleGoods.toString() === goodsFromServer.toString();
 
   return (
     <div className="section content">
@@ -79,10 +78,13 @@ export const App = () => {
           Reverse
         </button>
 
-        {!resetButton && (
+        {(sortField || reversed) && (
           <button
             type="button"
-            onClick={() => [setReversed(null), setSortField(null)]}
+            onClick={() => {
+              setReversed(null);
+              setSortField(null);
+            }}
             className="button is-danger is-light"
           >
             Reset
