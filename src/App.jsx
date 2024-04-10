@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,76 +16,85 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_NAME = 'name';
+const SORT_BY_LENGTH = 'length';
+
+function getPreparedGoods(goods, sortType, isReversedActive) {
+  const preparedGoods = [...goods];
+
+  if (sortType) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortType) {
+        case SORT_BY_NAME:
+          return good1.localeCompare(good2);
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversedActive) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
 export const App = () => {
-  const [list, setList] = useState(goodsFromServer);
-  const [isReversed, setIsReversed] = useState(false);
-  const [sortedState, setSortedState] = useState(0);
+  const [sortType, setSortType] = useState('');
+  const [isReversedActive, setIsReversedActive] = useState(false);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    sortType,
+    isReversedActive,
+  );
+  const isResetVisible = sortType || isReversedActive;
 
-  function reset() {
-    setList(goodsFromServer);
-    setIsReversed(false);
-    setSortedState(0);
-  }
-
-  function sortedGoodsbyAlphabet(goods) {
-    setSortedState(1);
-
-    const result = [...goods].sort((a, b) => a.localeCompare(b));
-
-    if (isReversed) {
-      return result.reverse();
-    }
-
-    return result;
-  }
-
-  function sortedGoodsbyLength(goods) {
-    setSortedState(2);
-    if (isReversed) {
-      return [...goods].sort((a, b) => b.length - a.length);
-    }
-
-    return [...goods].sort((a, b) => a.length - b.length);
-  }
-
-  function reversedGoods(goods) {
-    setIsReversed(!isReversed);
-
-    return [...goods].reverse();
-  }
+  const reset = () => {
+    setSortType('');
+    setIsReversedActive(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortedState === 1 ? '' : 'is-light'}`}
-          onClick={() => setList(sortedGoodsbyAlphabet(list))}
+          className={classNames('button', ' is-info', {
+            'is-light': sortType !== SORT_BY_NAME,
+          })}
+          onClick={() => setSortType(SORT_BY_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortedState === 2 ? '' : 'is-light'}`}
-          onClick={() => setList(sortedGoodsbyLength(list))}
+          className={classNames('button', 'is-success', {
+            'is-light': sortType !== SORT_BY_LENGTH,
+          })}
+          onClick={() => setSortType(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={() => setList(reversedGoods(list))}
+          className={classNames('button', 'is-warning', {
+            'is-light': !isReversedActive,
+          })}
+          onClick={() => setIsReversedActive(!isReversedActive)}
         >
           Reverse
         </button>
 
-        {(sortedState !== 0 || isReversed) && (
+        {isResetVisible && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => reset()}
+            onClick={reset}
           >
             Reset
           </button>
@@ -92,9 +102,13 @@ export const App = () => {
       </div>
 
       <ul>
-        {list.map(good => (
-          <li data-cy="Good">{good}</li>
-        ))}
+        {visibleGoods.map(good => {
+          return (
+            <li key={good} data-cy="Good">
+              {good}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
