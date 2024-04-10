@@ -19,7 +19,7 @@ export const goodsFromServer = [
 const ALPHABET = 'alphabet';
 const LENGHT = 'lenght';
 
-const preparedGoods = (sortMethod, isReverse) => {
+const getPreparedGoods = (sortMethod, isReverse) => {
   const products = [...goodsFromServer];
 
   products.sort((a, b) => {
@@ -41,23 +41,23 @@ const preparedGoods = (sortMethod, isReverse) => {
 };
 
 export const App = () => {
-  const [sort, setSort] = useState('');
-  const [isReverse, setIsReverse] = useState(false);
+  const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-  const reset = () => {
-    setSort('');
-    setIsReverse(false);
+  const handleResetButtonClick = () => {
+    setSortField('');
+    setIsReversed(false);
   };
 
-  const sortField = sort || isReverse;
+  const sort = sortField || isReversed;
 
-  const sortedGoods = preparedGoods(sort, isReverse);
+  const sortedGoods = getPreparedGoods(sort, isReversed);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSort(ALPHABET)}
+          onClick={() => setSortField(ALPHABET)}
           type="button"
           className={cn('button is-info', {
             'is-light': sort !== ALPHABET,
@@ -67,7 +67,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSort(LENGHT)}
+          onClick={() => setSortField(LENGHT)}
           type="button"
           className={cn('button is-success', {
             'is-light': sort !== LENGHT,
@@ -77,18 +77,18 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReverse(!isReverse)}
+          onClick={() => setIsReversed(!isReversed)}
           type="button"
           className={cn('button is-warning ', {
-            'is-light': !isReverse,
+            'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {sortField && (
+        {sort && (
           <button
-            onClick={reset}
+            onClick={handleResetButtonClick}
             type="button"
             className="button is-danger is-light"
           >
