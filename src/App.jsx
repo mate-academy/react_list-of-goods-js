@@ -17,9 +17,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORTER_ALPHABET = 'alphabetically';
-const SORTER_LENGTH = 'length';
-const SORTER_RESET = 'reset';
+const sort = {
+  alphabet: 'alphabetically',
+  length: 'length',
+  reset: 'reset',
+};
 
 function getPreparedGoods(goods, { sortField }, reversed) {
   const preparedGoods = [...goods];
@@ -27,11 +29,11 @@ function getPreparedGoods(goods, { sortField }, reversed) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORTER_ALPHABET:
+        case sort.alphabet:
           return good1.localeCompare(good2);
-        case SORTER_LENGTH:
+        case sort.length:
           return good1.length - good2.length;
-        case SORTER_RESET:
+        case sort.reset:
           return [...goodsFromServer];
         default:
           return 0;
@@ -57,12 +59,13 @@ export const App = () => {
   );
 
   function isNotClicked(sorter) {
-    if (sortField !== sorter) {
-      return true;
-    }
-
-    return false;
+    return sortField !== sorter;
   }
+
+  const reset = () => {
+    setSortField('');
+    setReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -70,9 +73,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': isNotClicked(SORTER_ALPHABET),
+            'is-light': isNotClicked(sort.alphabet),
           })}
-          onClick={() => setSortField(SORTER_ALPHABET)}
+          onClick={() => setSortField(sort.alphabet)}
         >
           Sort alphabetically
         </button>
@@ -80,9 +83,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': isNotClicked(SORTER_LENGTH),
+            'is-light': isNotClicked(sort.length),
           })}
-          onClick={() => setSortField(SORTER_LENGTH)}
+          onClick={() => setSortField(sort.length)}
         >
           Sort by length
         </button>
@@ -101,10 +104,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
