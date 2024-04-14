@@ -48,6 +48,10 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState(false);
   const visibleGoods = getPreparedGood(goodsFromServer, { sortField }, reverse);
+  const resetSort = () => {
+    setReverse('');
+    setSortField(false);
+  };
 
   return (
     <div className="section content">
@@ -88,10 +92,7 @@ export const App = () => {
             className={cn('button is-danger', {
               'is-light': sortField || reverse,
             })}
-            onClick={() => {
-              setReverse(false);
-              setSortField('');
-            }}
+            onClick={() => resetSort()}
           >
             Reset
           </button>
