@@ -86,7 +86,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField || reverse ? (
+        {(sortField || reverse) && (
           <button
             type="button"
             className={cn('button is-danger', {
@@ -96,8 +96,6 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
