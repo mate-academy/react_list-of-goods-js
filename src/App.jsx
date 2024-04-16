@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -15,14 +16,17 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPrepareGoods(goods, { sortByAlphabet, reverse, sortByLength }) {
+const SORT_FIELD_ALPHABET = 'alphabet';
+const SORT_FIELD_LENGTH = 'length';
+
+function getPrepareGoods(goods, { sortType, reverse }) {
   const preparedGoods = [...goods];
 
-  if (sortByAlphabet) {
+  if (sortType === SORT_FIELD_ALPHABET) {
     preparedGoods.sort((a, b) => a.localeCompare(b));
   }
 
-  if (sortByLength) {
+  if (sortType === SORT_FIELD_LENGTH) {
     preparedGoods.sort((a, b) => a.length - b.length);
   }
 
@@ -34,45 +38,48 @@ function getPrepareGoods(goods, { sortByAlphabet, reverse, sortByLength }) {
 }
 
 export const App = () => {
-  const [sortByAlphabet, setSortByAlphabet] = useState(false);
-  const [sortByLength, setSortByLength] = useState(false);
+  const [sortType, setSortType] = useState('');
   const [reverse, setReverse] = useState(false);
 
   const visibleGoods = getPrepareGoods(goodsFromServer, {
-    sortByAlphabet,
-    sortByLength,
+    sortType,
     reverse,
   });
 
-  const handleSort = setField => {
-    setField(prev => !prev);
+  const handleSort = type => {
+    setSortType(type);
   };
 
-  const isSorted = sortByAlphabet || sortByLength || reverse;
+  const reset = () => {
+    setSortType('');
+    setReverse(false);
+  };
+
+  const isSorted = sortType !== '' || reverse;
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortByAlphabet ? '' : 'is-light'}`}
-          onClick={() => handleSort(setSortByAlphabet)}
+          className={`button is-info ${cn({ 'is-light': sortType !== SORT_FIELD_ALPHABET })}`}
+          onClick={() => handleSort(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-info ${sortByLength ? '' : 'is-light'}`}
-          onClick={() => handleSort(setSortByLength)}
+          className={`button is-info ${cn({ 'is-light': sortType !== SORT_FIELD_LENGTH })}`}
+          onClick={() => handleSort(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-info ${reverse ? '' : 'is-light'}`}
-          onClick={() => handleSort(setReverse)}
+          className={`button is-info ${cn({ 'is-light': !reverse })}`}
+          onClick={() => setReverse(prev => !prev)}
         >
           Reverse
         </button>
@@ -81,11 +88,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortByAlphabet(false);
-              setSortByLength(false);
-              setReverse(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
