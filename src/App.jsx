@@ -19,8 +19,6 @@ export const goodsFromServer = [
 export const App = () => {
   const [state, setState] = useState({
     sortedGoods: [...goodsFromServer],
-    sortedAlpha: [...goodsFromServer].sort((a, b) => a.localeCompare(b)),
-    sortedLength: [...goodsFromServer].sort((a, b) => a.length - b.length),
     buttonSortAplha: { 'is-light': true, 'button is-info': true },
     buttonSortLength: {
       'is-light': true,
@@ -38,17 +36,29 @@ export const App = () => {
           type="button"
           className={cn(state.buttonSortAplha)}
           onClick={() => {
-            const sorted = state.buttonReverse['is-light']
-              ? [...state.sortedAlpha]
-              : [...state.sortedAlpha].reverse();
+            if (state.buttonSortAplha['is-light']) {
+              const sorted = state.buttonReverse['is-light']
+                ? [...state.sortedGoods].sort((a, b) => a.localeCompare(b))
+                : [...state.sortedGoods]
+                    .sort((a, b) => a.localeCompare(b))
+                    .reverse();
 
-            return setState({
-              ...state,
-              sortedGoods: sorted,
-              buttonSortAplha: { ...state.buttonSortAplha, 'is-light': false },
-              buttonSortLength: { ...state.buttonSortLength, 'is-light': true },
-              buttonRestart: true,
-            });
+              return setState({
+                ...state,
+                sortedGoods: [...sorted],
+                buttonSortAplha: {
+                  ...state.buttonSortAplha,
+                  'is-light': false,
+                },
+                buttonSortLength: {
+                  ...state.buttonSortLength,
+                  'is-light': true,
+                },
+                buttonRestart: true,
+              });
+            }
+
+            return setState(state);
           }}
         >
           Sort alphabetically
@@ -58,20 +68,30 @@ export const App = () => {
           type="button"
           className={cn(state.buttonSortLength)}
           onClick={() => {
-            const sorted = state.buttonReverse['is-light']
-              ? [...state.sortedLength]
-              : [...state.sortedLength].reverse();
+            if (state.buttonSortLength['is-light']) {
+              let sorted = [...state.sortedGoods].sort(
+                (a, b) => a.length - b.length,
+              );
 
-            return setState({
-              ...state,
-              sortedGoods: sorted,
-              buttonSortAplha: { ...state.buttonSortAplha, 'is-light': true },
-              buttonSortLength: {
-                ...state.buttonSortLength,
-                'is-light': false,
-              },
-              buttonRestart: true,
-            });
+              if (!state.buttonReverse['is-light']) {
+                sorted = [...state.sortedGoods].sort(
+                  (a, b) => b.length - a.length,
+                );
+              }
+
+              return setState({
+                ...state,
+                sortedGoods: [...sorted],
+                buttonSortAplha: { ...state.buttonSortAplha, 'is-light': true },
+                buttonSortLength: {
+                  ...state.buttonSortLength,
+                  'is-light': false,
+                },
+                buttonRestart: true,
+              });
+            }
+
+            return setState(state);
           }}
         >
           Sort by length
@@ -83,7 +103,7 @@ export const App = () => {
           onClick={() => {
             return setState({
               ...state,
-              sortedGoods: state.sortedGoods.reverse(),
+              sortedGoods: [...state.sortedGoods.reverse()],
               buttonReverse: {
                 button: true,
                 'is-warning': true,
@@ -104,14 +124,8 @@ export const App = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              return setState({
+              const newState = {
                 sortedGoods: [...goodsFromServer],
-                sortedAlpha: [...goodsFromServer].sort((a, b) =>
-                  a.localeCompare(b),
-                ),
-                sortedLength: [...goodsFromServer].sort(
-                  (a, b) => a.length - b.length,
-                ),
                 buttonSortAplha: { 'is-light': true, 'button is-info': true },
                 buttonSortLength: {
                   'is-light': true,
@@ -124,7 +138,9 @@ export const App = () => {
                   'is-light': true,
                 },
                 buttonRestart: false,
-              });
+              };
+
+              return setState(newState);
             }}
           >
             Reset
