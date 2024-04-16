@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+// import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,63 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+// let SORT_ALPHA;
+// let SORT_LENGTH;
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+// function getPreparedGoods(goods, sortField) {
+//   const preparedGoods = [...goodsFromServer];
+//
+//   if (sortField) {
+//     preparedGoods.sort((good1, good2) => {
+//       switch (sortField) {
+//         case SORT_ALPHA:
+//           return good1[sortField].localeCompare(good2[sortField]);
+//         case SORT_LENGTH:
+//           return good1[sortField] - good2[sortField];
+//
+//         default:
+//           return 0;
+//       }
+//     });
+//   }
+//
+//   return preparedGoods;
+// }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+export const App = () => {
+  // const [sortField, setSortField] = useState('');
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => {
+            // setSortField(SORT_ALPHA);
+          }}
+          type="button"
+          className="button is-info is-light"
+        >
+          Sort alphabetically
+        </button>
+
+        <button type="button" className="button is-success is-light">
+          Sort by length
+        </button>
+
+        <button type="button" className="button is-warning is-light">
+          Reverse
+        </button>
+
+        <button type="button" className="button is-danger is-light">
+          Reset
+        </button>
+      </div>
+
+      <ul>
+        {goodsFromServer.map(good => {
+          return <li data-cy="Good">{good}</li>;
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
