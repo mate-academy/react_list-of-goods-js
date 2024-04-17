@@ -18,28 +18,25 @@ export const goodsFromServer = [
 
 const SORT_FILD_ALPHABET = 'alphabet';
 const SORT_FILD_LENGTH = 'length';
-const SORT_FILD_REVERSE = 'reverse';
 
-function getPreparedGoods(goods, { sortField, query }) {
+function getPreparedGoods(goods, { sortField, reverse }) {
   let preparedGoods = [...goods];
 
-  if (query) {
-    preparedGoods = preparedGoods.filter(good => good.includes(query));
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FILD_ALPHABET:
+          return good1.localeCompare(good2);
+        case SORT_FILD_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
   }
 
-  if (sortField) {
-    switch (sortField) {
-      case SORT_FILD_ALPHABET:
-        return preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
-      case SORT_FILD_LENGTH:
-        return preparedGoods.sort(
-          (good1, good2) => good1.length - good2.length,
-        );
-      case SORT_FILD_REVERSE:
-        return preparedGoods.reverse();
-      default:
-        return 0;
-    }
+  if (reverse) {
+    preparedGoods = preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -47,10 +44,21 @@ function getPreparedGoods(goods, { sortField, query }) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
+  const [reverse, setReverse] = useState(false);
+
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
-    query: null,
+    reverse,
   });
+
+  const toggleReverse = () => {
+    setReverse(!reverse);
+  };
+
+  const reset = () => {
+    setSortField('');
+    setReverse(false);
+  };
 
   return (
     <div className="section content">
@@ -73,17 +81,17 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${sortField !== SORT_FILD_REVERSE && 'is-light'}`}
-          onClick={() => setSortField(SORT_FILD_REVERSE)}
+          className={`button is-warning ${!reverse && 'is-light'}`}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
 
-        {sortField !== '' ? (
+        {sortField || reverse ? (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => setSortField('')}
+            onClick={reset}
           >
             Reset
           </button>
