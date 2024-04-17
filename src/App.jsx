@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,96 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_BY_ALPHABET = {
+  id: 1,
+  title: 'Sort alphabetically',
+  class: 'is-info',
+};
+const SORT_BY_LENGTH = {
+  id: 2,
+  title: 'Sort by length',
+  class: 'is-success',
+};
+const REVERSE = {
+  id: 3,
+  title: 'Reverse',
+  class: 'is-warning',
+};
+const RESET = {
+  id: 4,
+  title: 'Reset',
+  class: 'is-danger',
+};
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [sortBtn, setSortBtn] = useState('');
+  const [sortedGoods, setSortedGoods] = useState([...goodsFromServer]);
+  const [onReverse, setOnReverse] = useState('none');
+  const sortOnClick = sort => {
+    let newSortedGoods = [...sortedGoods];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    switch (sort) {
+      case SORT_BY_ALPHABET:
+        newSortedGoods = [...goodsFromServer].sort((a, b) =>
+          a.localeCompare(b),
+        );
+        break;
+      case SORT_BY_LENGTH:
+        newSortedGoods = [...goodsFromServer].sort(
+          (a, b) => a.length - b.length,
+        );
+        break;
+      case REVERSE:
+        newSortedGoods.reverse();
+        break;
+      case RESET:
+        newSortedGoods = [...goodsFromServer];
+        break;
+      default:
+        break;
+    }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    const sortedGoodsString = newSortedGoods.join('');
+    const goodsFromServerString = goodsFromServer.join('');
+
+    if (sortedGoodsString !== goodsFromServerString) {
+      setOnReverse('block');
+    } else {
+      setOnReverse('none');
+    }
+
+    setSortedGoods(newSortedGoods);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {[SORT_BY_ALPHABET, SORT_BY_LENGTH, REVERSE, RESET].map(type => (
+          <button
+            key={type.id}
+            type="button"
+            className={
+              sortBtn === type
+                ? `button ${type.class}`
+                : `button ${type.class} is-light`
+            }
+            onClick={() => {
+              setSortBtn(type);
+              sortOnClick(type);
+            }}
+            style={type === RESET ? { display: onReverse } : {}}
+          >
+            {type.title}
+          </button>
+        ))}
+      </div>
+      <ul>
+        {sortedGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
