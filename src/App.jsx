@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,90 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const CONDITION_LENGTH = 'length';
+const CONDITION_ALPHABET = 'alphabet';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function prepareGoods(condition, reversed) {
+  const preparedGoods = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (condition === CONDITION_ALPHABET) {
+    preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (condition === CONDITION_LENGTH) {
+    preparedGoods.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (reversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+}
+
+export const App = () => {
+  const [condition, setCondition] = useState('');
+  const [reversed, setReversed] = useState(false);
+  const goods = prepareGoods(condition, reversed);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': condition !== CONDITION_ALPHABET,
+          })}
+          onClick={() => {
+            setCondition(CONDITION_ALPHABET);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': condition !== CONDITION_LENGTH,
+          })}
+          onClick={() => {
+            setCondition(CONDITION_LENGTH);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', { 'is-light': !reversed })}
+          onClick={() => {
+            setReversed(!reversed);
+          }}
+        >
+          Reverse
+        </button>
+
+        {condition || reversed ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setCondition('');
+              setReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        ) : (
+          ''
+        )}
+      </div>
+
+      <ul>
+        {goods.map(good => (
+          <li data-cy="Good">{good}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
