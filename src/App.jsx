@@ -41,7 +41,17 @@ function prepareGoods(condition, reversed) {
 export const App = () => {
   const [condition, setCondition] = useState('');
   const [reversed, setReversed] = useState(false);
+
   const goods = prepareGoods(condition, reversed);
+
+  const isAlphabetSelected = condition === CONDITION_ALPHABET;
+  const isLengthSelected = condition === CONDITION_LENGTH;
+  const isAnythingSelected = condition || reversed;
+
+  const handleResetClick = () => {
+    setCondition('');
+    setReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -49,11 +59,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': condition !== CONDITION_ALPHABET,
+            'is-light': !isAlphabetSelected,
           })}
-          onClick={() => {
-            setCondition(CONDITION_ALPHABET);
-          }}
+          onClick={() => setCondition(CONDITION_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -61,11 +69,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': condition !== CONDITION_LENGTH,
+            'is-light': !isLengthSelected,
           })}
-          onClick={() => {
-            setCondition(CONDITION_LENGTH);
-          }}
+          onClick={() => setCondition(CONDITION_LENGTH)}
         >
           Sort by length
         </button>
@@ -73,26 +79,19 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', { 'is-light': !reversed })}
-          onClick={() => {
-            setReversed(!reversed);
-          }}
+          onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
 
-        {condition || reversed ? (
+        {isAnythingSelected && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setCondition('');
-              setReversed(false);
-            }}
+            onClick={handleResetClick}
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
