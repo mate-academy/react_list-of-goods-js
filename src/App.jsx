@@ -17,7 +17,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const sortingFunctions = {
+const SORTING_FUNCTIONS = {
   alpha: (a, b) => a.localeCompare(b),
   length: (a, b) => a.length - b.length,
 };
@@ -31,7 +31,7 @@ export const App = () => {
     const newGoods = [...goodsFromServer];
 
     if (sortField !== '') {
-      newGoods.sort(sortingFunctions[sortField]);
+      newGoods.sort(SORTING_FUNCTIONS[sortField]);
     }
 
     return isReversed
