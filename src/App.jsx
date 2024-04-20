@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import cn from 'classnames';
-
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -17,63 +16,46 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const goods = goodsFromServer.map((name, id) => ({ name, id }));
-const goodsCopy = [...goods];
+const goods = goodsFromServer.map((name, id) => ({
+  name,
+  id,
+}));
 
-// CONSTANTS FOR SORTS //
-const byAlphabet = 'byAlphabet';
-const byLength = 'byLength';
-// CONSTANTS FOR SORTS //
+const SORT_FIELD_ALPHABETIC = 'Alphabetically';
+const SORT_FIELD_BYLENGTH = 'ByLength';
+
+function getPreparedGood(allGoods, { sortField, isReversed }) {
+  const visibleGoods = [...allGoods];
+
+  if (sortField) {
+    visibleGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ALPHABETIC:
+          return good1.name.localeCompare(good2.name);
+
+        case SORT_FIELD_BYLENGTH:
+          return good1.name.length - good2.name.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isReversed) {
+    visibleGoods.reverse();
+  }
+
+  return visibleGoods;
+}
 
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsCopy);
-  const [sortField, setSortField] = useState(null);
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-
-  const handleSortByAlphabet = () => {
-    if (!isReversed) {
-      setVisibleGoods(
-        visibleGoods.sort((good1, good2) =>
-          good1.name.localeCompare(good2.name),
-        ),
-      );
-    } else {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) =>
-          good2.name.localeCompare(good1.name),
-        ),
-      );
-    }
-
-    setSortField(byAlphabet);
-  };
-
-  const handleSortByLength = () => {
-    if (!isReversed) {
-      setVisibleGoods(
-        visibleGoods.sort(
-          (good1, good2) => good1.name.length - good2.name.length,
-        ),
-      );
-    } else {
-      setVisibleGoods(
-        [...visibleGoods].sort(
-          (good1, good2) => good2.name.length - good1.name.length,
-        ),
-      );
-    }
-
-    setSortField(byLength);
-  };
-
-  const handleReverse = () => {
-    setVisibleGoods(visibleGoods.reverse());
-    setIsReversed(!isReversed);
-  };
+  const visibleGoods = getPreparedGood(goods, { sortField, isReversed });
 
   const handleReset = () => {
-    setVisibleGoods(goods);
-    setSortField(null);
+    setSortField('');
     setIsReversed(false);
   };
 
@@ -83,9 +65,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortField !== byAlphabet,
+            'is-light': sortField !== SORT_FIELD_ALPHABETIC,
           })}
-          onClick={handleSortByAlphabet}
+          onClick={() => setSortField(SORT_FIELD_ALPHABETIC)}
         >
           Sort alphabetically
         </button>
@@ -93,9 +75,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortField !== byLength,
+            'is-light': sortField !== SORT_FIELD_BYLENGTH,
           })}
-          onClick={handleSortByLength}
+          onClick={() => setSortField(SORT_FIELD_BYLENGTH)}
         >
           Sort by length
         </button>
@@ -105,12 +87,12 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={handleReverse}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {sortField !== null || isReversed ? (
+        {sortField || isReversed ? (
           <button
             type="button"
             className="button is-danger is-light"
