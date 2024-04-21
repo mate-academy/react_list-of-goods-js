@@ -2,6 +2,7 @@ import { useState } from 'react';
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { getSortedGoods } from './components/getSortedGoods/getSortedGoods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -19,34 +20,10 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
-const sorted = (goods, sortBy, isReverse) => {
-  let prepearedGoods = [...goods];
-
-  if (sortBy) {
-    prepearedGoods.sort((good1, good2) => {
-      switch (sortBy) {
-        case SORT_BY_ALPHABET:
-          return good1.localeCompare(good2);
-        case SORT_BY_LENGTH:
-          return good1.length - good2.length;
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (isReverse) {
-    prepearedGoods = prepearedGoods.reverse();
-  }
-
-  return prepearedGoods;
-};
-
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [goodsReverse, setGoodsReverse] = useState(false);
-  const visibleGoods = sorted(goodsFromServer, sortField, goodsReverse);
+  const visibleGoods = getSortedGoods(goodsFromServer, sortField, goodsReverse);
 
   const handleReset = () => {
     setSortField('');
@@ -86,7 +63,7 @@ export const App = () => {
 
         {(sortField || goodsReverse) && (
           <button
-            onClick={() => handleReset()}
+            onClick={handleReset}
             type="button"
             className="button is-danger is-light"
           >
