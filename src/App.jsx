@@ -19,8 +19,8 @@ export const goodsFromServer = [
 const SORTED_BY_ALFABET = 'Sort alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reset, reverse }) {
-  let preperedGoods = [...goods];
+function getPreparedGoods(goods, { sortField, reverse }) {
+  const preperedGoods = [...goods];
 
   if (sortField) {
     preperedGoods.sort((good1, good2) => {
@@ -39,10 +39,6 @@ function getPreparedGoods(goods, { sortField, reset, reverse }) {
 
   if (reverse) {
     preperedGoods.reverse();
-  }
-
-  if (reset) {
-    preperedGoods = goods;
   }
 
   return preperedGoods;
