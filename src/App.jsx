@@ -1,46 +1,78 @@
+import { useState } from 'react';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { GoodsList } from './components/GoodsList/GoodsList';
+import { goodsFromServer } from './api/goodsList';
+import { buttons } from './helpers/buttons';
+import { ALPHABET, lENGTH } from './constants/constants';
 
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
+export const App = () => {
+  const [goods, setGoods] = useState(goodsFromServer);
+  const [sortField, setSortField] = useState('');
+  const [reversed, setReversed] = useState(false);
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+  const isStateChanged = sortField || reversed;
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const onSortByAlphabetClick = () => {
+    const sortedGoods = [...goods].sort((a, b) =>
+      !reversed ? a.localeCompare(b) : b.localeCompare(a),
+    );
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    setGoods(sortedGoods);
+    setSortField(ALPHABET);
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const onResetClick = () => {
+    setGoods(goodsFromServer);
+    setSortField('');
+    setReversed(false);
+  };
+
+  const onSortByLengthClick = () => {
+    const sortedGoods = [...goods].sort((a, b) =>
+      !reversed ? a.length - b.length : b.length - a.length,
+    );
+
+    setGoods(sortedGoods);
+    setSortField(lENGTH);
+  };
+
+  const onReverseClick = () => {
+    setGoods([...goods].reverse());
+
+    setReversed(!reversed);
+  };
+
+  const buttonList = buttons(
+    sortField,
+    onSortByAlphabetClick,
+    onSortByLengthClick,
+    onReverseClick,
+    onResetClick,
+    isStateChanged,
+    reversed,
+  );
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {buttonList.map(
+          button =>
+            button.condition !== false && (
+              <button
+                key={button.text}
+                onClick={button.onClick}
+                type="button"
+                className={button.classNames}
+              >
+                {button.text}
+              </button>
+            ),
+        )}
+      </div>
+
+      <GoodsList goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
