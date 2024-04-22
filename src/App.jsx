@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
-import './App.scss';
-import { useState } from 'react';
 import classNames from 'classnames';
+import { useState } from 'react';
+import './App.scss';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -25,12 +25,10 @@ export const App = () => {
 
   const handleSortAlphabetically = () => {
     setSortBy(SORT_ALPHABETICALLY);
-    setIsReversed(false);
   };
 
   const handleSortByLength = () => {
     setSortBy(SORT_BY_LENGTH);
-    setIsReversed(false);
   };
 
   const handleReverseOrder = () => {
