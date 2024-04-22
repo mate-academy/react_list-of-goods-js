@@ -52,6 +52,11 @@ export const App = () => {
     reversed,
   });
 
+  const reset = () => {
+    setSortField('');
+    setReversed(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -85,24 +90,20 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField || reversed ? (
+        {(sortField || reversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
         {visibleGoods.map(good => (
-          // we don't have any id's in this task, so for example we can use Math.random()
-          <li data-cy="Good" key={Math.random()}>
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
