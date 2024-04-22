@@ -19,20 +19,35 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_BY_LENGTH = 'by length';
 
-export const App = () => {
-  const visibleGoods = [...goodsFromServer];
-  const [sortField, setSortField] = useState('');
-  const [orderStraight, setOrderStraight] = useState(true);
+function getPreparedGoods(goods, sortField, orderStraight) {
+  const preparedGoods = [...goods];
 
-  if (sortField === SORT_FIELD_ALPHABETICALLY) {
-    visibleGoods.sort();
-  } else if (sortField === SORT_FIELD_BY_LENGTH) {
-    visibleGoods.sort((good1, good2) => good1.length - good2.length);
+  switch (sortField) {
+    case SORT_FIELD_ALPHABETICALLY:
+      preparedGoods.sort();
+      break;
+    case SORT_FIELD_BY_LENGTH:
+      preparedGoods.sort((good1, good2) => good1.length - good2.length);
+      break;
+    default:
+      break;
   }
 
   if (!orderStraight) {
-    visibleGoods.reverse();
+    preparedGoods.reverse();
   }
+
+  return preparedGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [orderStraight, setOrderStraight] = useState(true);
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    sortField,
+    orderStraight,
+  );
 
   return (
     <div className="section content">
