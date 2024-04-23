@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import { sortByField } from './Utils/Utils';
+import { SORT_FIELD } from './constants';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,28 +17,12 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELD_ABC = 'abc';
-const SORT_FIELD_LENGTH = 'length';
-
 export const App = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(SORT_FIELD.DEFAULT);
   const [reverse, setReverse] = useState(false);
   const sortedGoods = [...goodsFromServer];
 
-  if (sortField) {
-    sortedGoods.sort((a, b) => {
-      switch (sortField) {
-        case SORT_FIELD_ABC:
-          return a.localeCompare(b);
-
-        case SORT_FIELD_LENGTH:
-          return a.length - b.length;
-
-        default:
-          return 0;
-      }
-    });
-  }
+  sortByField(sortField, sortedGoods);
 
   if (reverse) {
     sortedGoods.reverse();
@@ -47,9 +33,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField !== SORT_FIELD_ABC && 'is-light'}`}
+          className={`button is-info ${sortField !== SORT_FIELD.ABC && 'is-light'}`}
           onClick={() => {
-            setSortField(SORT_FIELD_ABC);
+            setSortField(SORT_FIELD.ABC);
           }}
         >
           Sort alphabetically
@@ -57,9 +43,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortField !== SORT_FIELD_LENGTH && 'is-light'}`}
+          className={`button is-success ${sortField !== SORT_FIELD.LENGTH && 'is-light'}`}
           onClick={() => {
-            setSortField(SORT_FIELD_LENGTH);
+            setSortField(SORT_FIELD.LENGTH);
           }}
         >
           Sort by length
