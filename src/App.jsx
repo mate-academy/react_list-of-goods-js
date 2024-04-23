@@ -52,6 +52,11 @@ export const App = () => {
     reverseMethod,
   });
 
+  const resetSort = () => {
+    setSortField('');
+    setReverseMethod(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -95,10 +100,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setReverseMethod(false);
-            }}
+            onClick={resetSort}
           >
             Reset
           </button>
@@ -106,7 +108,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map((good, i) => (
+        {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
