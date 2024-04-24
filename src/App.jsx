@@ -1,22 +1,28 @@
 import { useState } from 'react';
 
 import 'bulma/css/bulma.css';
-import './App.scss';
-import { GoodsList } from './components/GoodsList/GoodsList';
-import { goodsFromServer } from './api/goodsList';
-import { buttons } from './helpers/buttons';
+
 import { ALPHABET, lENGTH } from './constants/constants';
+
+import { GoodsList } from './components/GoodsList/GoodsList';
+
+import { getButtonsList } from './helpers/buttons';
+
+import { goodsFromServer } from './api/goodsList';
+
+import './App.scss';
+
 
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
 
-  const isStateChanged = sortField || reversed;
+  const isResetBtnVisible = sortField || reversed;
 
   const onSortByAlphabetClick = () => {
     const sortedGoods = [...goods].sort((a, b) =>
-      !reversed ? a.localeCompare(b) : b.localeCompare(a),
+      reversed ? b.localeCompare(a) : a.localeCompare(b),
     );
 
     setGoods(sortedGoods);
@@ -31,7 +37,7 @@ export const App = () => {
 
   const onSortByLengthClick = () => {
     const sortedGoods = [...goods].sort((a, b) =>
-      !reversed ? a.length - b.length : b.length - a.length,
+      reversed ? b.length - a.length : a.length - b.length,
     );
 
     setGoods(sortedGoods);
@@ -44,13 +50,13 @@ export const App = () => {
     setReversed(!reversed);
   };
 
-  const buttonList = buttons(
+  const buttonList = getButtonsList(
     sortField,
     onSortByAlphabetClick,
     onSortByLengthClick,
     onReverseClick,
     onResetClick,
-    isStateChanged,
+    isResetBtnVisible,
     reversed,
   );
 

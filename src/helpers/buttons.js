@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { ALPHABET, lENGTH } from '../constants/constants';
 
-export const buttons = (
+export const getButtonsList = (
   sortField,
   onSortByAlphabetClick,
   onSortByLengthClick,
