@@ -4,6 +4,9 @@ import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+import { CONDITION } from './constants';
+import { prepareGoods } from './utils/prepareGoods';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -17,35 +20,14 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const CONDITION_LENGTH = 'length';
-const CONDITION_ALPHABET = 'alphabet';
-
-function prepareGoods(condition, reversed) {
-  const preparedGoods = [...goodsFromServer];
-
-  if (condition === CONDITION_ALPHABET) {
-    preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
-  }
-
-  if (condition === CONDITION_LENGTH) {
-    preparedGoods.sort((good1, good2) => good1.length - good2.length);
-  }
-
-  if (reversed) {
-    preparedGoods.reverse();
-  }
-
-  return preparedGoods;
-}
-
 export const App = () => {
   const [condition, setCondition] = useState('');
   const [reversed, setReversed] = useState(false);
 
-  const goods = prepareGoods(condition, reversed);
+  const goods = prepareGoods(goodsFromServer, condition, reversed);
 
-  const isAlphabetSelected = condition === CONDITION_ALPHABET;
-  const isLengthSelected = condition === CONDITION_LENGTH;
+  const isAlphabetSelected = condition === CONDITION.ALPHABET;
+  const isLengthSelected = condition === CONDITION.LENGTH;
   const isAnythingSelected = condition || reversed;
 
   const handleResetClick = () => {
@@ -61,7 +43,7 @@ export const App = () => {
           className={cn('button is-info', {
             'is-light': !isAlphabetSelected,
           })}
-          onClick={() => setCondition(CONDITION_ALPHABET)}
+          onClick={() => setCondition(CONDITION.ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -71,7 +53,7 @@ export const App = () => {
           className={cn('button is-success', {
             'is-light': !isLengthSelected,
           })}
-          onClick={() => setCondition(CONDITION_LENGTH)}
+          onClick={() => setCondition(CONDITION.LENGTH)}
         >
           Sort by length
         </button>
@@ -97,7 +79,9 @@ export const App = () => {
 
       <ul>
         {goods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
