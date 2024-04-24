@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import { SORTED_BY, REVERS_STATUS } from './utils/constants';
+import { getPreparedGoods } from './utils/getPreparedGoods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,40 +17,11 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const NOT_SORTED = '';
-const SORTED_BY_NAME = 'name';
-const SORTED_BY_LENGTH = 'length';
-const REVERSED = 'reversed';
-const NOT_REVERSED = 'not reversed';
-
-function getPreparedGoods(goodsFrom, sort, revStatus) {
-  const goods = [...goodsFrom];
-
-  if (sort) {
-    goods.sort((good1, good2) => {
-      switch (sort) {
-        case SORTED_BY_NAME:
-          return good1.localeCompare(good2);
-
-        case SORTED_BY_LENGTH:
-          return good1.length - good2.length;
-
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (revStatus === REVERSED) {
-    return goods.reverse();
-  }
-
-  return goods;
-}
-
 export const App = () => {
-  const [sortBy, setSortBy] = useState(NOT_SORTED);
-  const [reverseStatus, setReverseStatus] = useState(NOT_REVERSED);
+  const [sortBy, setSortBy] = useState(SORTED_BY.DEFAULT);
+  const [reverseStatus, setReverseStatus] = useState(
+    REVERS_STATUS.NOT_REVERSED,
+  );
 
   const sortedGoods = getPreparedGoods(goodsFromServer, sortBy, reverseStatus);
 
@@ -56,43 +29,42 @@ export const App = () => {
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortBy(SORTED_BY_NAME)}
+          onClick={() => setSortBy(SORTED_BY.NAME)}
           type="button"
-          className={`button is-info ${sortBy !== SORTED_BY_NAME ? 'is-light' : ''}`}
+          className={`button is-info ${sortBy !== SORTED_BY.NAME ? 'is-light' : ''}`}
         >
           Sort alphabetically
         </button>
         <button
-          onClick={() => setSortBy(SORTED_BY_LENGTH)}
+          onClick={() => setSortBy(SORTED_BY.LENGTH)}
           type="button"
-          className={`button is-success ${sortBy !== SORTED_BY_LENGTH ? 'is-light' : ''}`}
+          className={`button is-success ${sortBy !== SORTED_BY.LENGTH ? 'is-light' : ''}`}
         >
           Sort by length
         </button>
         <button
           onClick={() =>
-            reverseStatus === REVERSED
-              ? setReverseStatus(NOT_REVERSED)
-              : setReverseStatus(REVERSED)
+            reverseStatus === REVERS_STATUS.REVERSED
+              ? setReverseStatus(REVERS_STATUS.NOT_REVERSED)
+              : setReverseStatus(REVERS_STATUS.REVERSED)
           }
           type="button"
-          className={`button is-warning ${reverseStatus !== REVERSED ? 'is-light' : ''}`}
+          className={`button is-warning ${reverseStatus !== REVERS_STATUS.REVERSED ? 'is-light' : ''}`}
         >
           Reverse
         </button>
-        {reverseStatus !== NOT_REVERSED || sortBy !== NOT_SORTED ? (
+        {(reverseStatus !== REVERS_STATUS.NOT_REVERSED ||
+          sortBy !== SORTED_BY.DEFAULT) && (
           <button
             onClick={() => {
-              setReverseStatus(NOT_REVERSED);
-              setSortBy(NOT_SORTED);
+              setReverseStatus(REVERS_STATUS.NOT_REVERSED);
+              setSortBy(SORTED_BY.DEFAULT);
             }}
             type="button"
             className="button is-danger is-light"
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
