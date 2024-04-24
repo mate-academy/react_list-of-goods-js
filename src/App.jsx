@@ -19,9 +19,28 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALLY_ID = 'alphabetically';
 const SORT_LENGTH_ID = 'by_length';
 const SORT_REVERSE_ID = 'reverse';
+const DEFAULT = 'default';
+
+const getPreparedGoods = (goods, currentField, isReverse) => {
+  let preparedGoods = [...goods];
+
+  if (currentField === SORT_ALPHABETICALLY_ID) {
+    preparedGoods = preparedGoods.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (currentField === SORT_LENGTH_ID) {
+    preparedGoods = preparedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReverse) {
+    preparedGoods = preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+};
 
 export const App = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(DEFAULT);
   const [isReverse, setIsReverse] = useState(false);
 
   const handleSortClick = newSortField => {
@@ -32,25 +51,7 @@ export const App = () => {
     }
   };
 
-  const getPreparedGoods = (goods, currentField) => {
-    let preparedGoods = [...goods];
-
-    if (currentField === SORT_ALPHABETICALLY_ID) {
-      preparedGoods = preparedGoods.sort((a, b) => a.localeCompare(b));
-    }
-
-    if (currentField === SORT_LENGTH_ID) {
-      preparedGoods = preparedGoods.sort((a, b) => a.length - b.length);
-    }
-
-    if (isReverse) {
-      preparedGoods = preparedGoods.reverse();
-    }
-
-    return preparedGoods;
-  };
-
-  const preparedGoods = getPreparedGoods(goodsFromServer, sortField);
+  const preparedGoods = getPreparedGoods(goodsFromServer, sortField, isReverse);
 
   return (
     <div className="section content">
@@ -84,10 +85,10 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(sortField || isReverse) && (
+        {(sortField !== DEFAULT || isReverse) && (
           <button
             onClick={() => {
-              setSortField('');
+              setSortField(DEFAULT);
               setIsReverse(false);
             }}
             type="button"
