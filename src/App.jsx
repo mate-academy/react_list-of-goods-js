@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -19,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-// const SORT_BY_REVERSE = 'reverse';
 
 function getPreparedGoods(goods, { sortField, reverse }) {
   const preparedGoods = [...goods];
