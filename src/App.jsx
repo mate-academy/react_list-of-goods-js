@@ -24,13 +24,14 @@ export const App = () => {
   const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false);
   const [isSortedByLength, setIsSortedByLength] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
-  const [hasClickedButton, setHasClickedButton] = useState(false);
+  const [hasChanged, setHasChanged] = useState(false);
 
   const sortAlphabetically = () => {
     setGoods([...goods].sort());
     setIsSortedAlphabetically(true);
     setIsSortedByLength(false);
     setIsReversed(false);
+    setHasChanged(true);
   };
 
   const sortByLength = () => {
@@ -38,7 +39,7 @@ export const App = () => {
     setIsSortedAlphabetically(false);
     setIsSortedByLength(true);
     setIsReversed(false);
-    setHasClickedButton(true);
+    setHasChanged(true);
   };
 
   const reverseOrder = () => {
@@ -46,6 +47,7 @@ export const App = () => {
     setIsReversed(!isReversed);
     setIsSortedAlphabetically(false);
     setIsSortedByLength(false);
+    setHasChanged(true);
   };
 
   const resetOrder = () => {
@@ -53,7 +55,7 @@ export const App = () => {
     setIsSortedAlphabetically(false);
     setIsSortedByLength(false);
     setIsReversed(false);
-    setHasClickedButton(false);
+    setHasChanged(false);
   };
 
   return (
@@ -83,7 +85,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {hasClickedButton && (
+        {hasChanged && (
           <button
             type="button"
             className="button is-danger is-light"
