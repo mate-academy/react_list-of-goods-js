@@ -3,6 +3,7 @@ import cn from 'classnames';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { getPreparedGoods } from './utils/getPreparedGoods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -19,38 +20,21 @@ export const goodsFromServer = [
 
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
-
-function getPreparedGoods(goods, { sortField, reverseMethod }) {
-  const preparedGoods = [...goods];
-
-  if (sortField) {
-    preparedGoods.sort((good1, good2) => {
-      switch (sortField) {
-        case SORT_FIELD_LENGTH:
-          return good1[sortField] - good2[sortField];
-        case SORT_FIELD_ALPHABETICALLY:
-          return good1.localeCompare(good2);
-        default:
-          return 0;
-      }
-    });
-  }
-
-  if (reverseMethod) {
-    return preparedGoods.reverse();
-  }
-
-  return preparedGoods;
-}
+const SORT_FIELD_DEFAULT = '';
 
 export const App = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(SORT_FIELD_DEFAULT);
   const [reverseMethod, setReverseMethod] = useState(false);
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
-    sortField,
-    reverseMethod,
-  });
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    {
+      sortField,
+      reverseMethod,
+    },
+    SORT_FIELD_LENGTH,
+    SORT_FIELD_ALPHABETICALLY,
+  );
 
   const resetSort = () => {
     setSortField('');
