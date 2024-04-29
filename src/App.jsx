@@ -42,13 +42,14 @@ function getPreparedGoods(goods, { sortField }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
+
   let visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
     reversed,
   });
 
   if (reversed) {
-    visibleGoods = visibleGoods.toReversed();
+    visibleGoods = visibleGoods.reverse();
   }
 
   return (
@@ -88,9 +89,12 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField ? (
+        {sortField || reversed ? (
           <button
-            onClick={() => setSortField('')}
+            onClick={() => {
+              setSortField('');
+              setReversed(false);
+            }}
             type="button"
             className="button is-danger is-light"
           >

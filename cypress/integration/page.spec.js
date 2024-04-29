@@ -9,21 +9,21 @@ const page = {
     page.goods().eq(0).should('have.text', first);
     page.goods().eq(1).should('have.text', second);
     page.goods().eq(2).should('have.text', third);
-  }
+  },
 };
 
 const NOT_ACTIVE_CLASS = 'is-light';
 
 let failed = false;
 
-Cypress.on('fail', (e) => {
+Cypress.on('fail', e => {
   failed = true;
   throw e;
 });
 
 describe('Page', () => {
   beforeEach(() => {
-    // if (failed) Cypress.runner.stop();
+    if (failed) Cypress.runner.stop();
 
     cy.visit('/');
   });
@@ -93,7 +93,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -156,7 +156,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -199,7 +199,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -235,7 +235,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
@@ -278,7 +278,7 @@ describe('Page', () => {
     });
 
     it('should allow to reset', () => {
-      page.resetButton().click()
+      page.resetButton().click();
 
       page.assertFirstGoods('Dumplings', 'Carrot', 'Eggs');
       page.sortAlphButton().should('have.class', NOT_ACTIVE_CLASS);
