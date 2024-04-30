@@ -17,8 +17,8 @@ export const goodsFromServer = [
 const SortAlphabetically = 'Sort alphabetically';
 const SortByLength = 'Sort by length';
 
-function sortGoods(goods, { sortField }) {
-  const prepareGoods = [...goods];
+function sortGoods(goods, { sortField, reversed }) {
+  let prepareGoods = [...goods];
 
   if (sortField) {
     prepareGoods.sort((good1, good2) => {
@@ -33,21 +33,29 @@ function sortGoods(goods, { sortField }) {
     });
   }
 
+  if (reversed) {
+    prepareGoods = prepareGoods.toReversed();
+  }
+
   return prepareGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
+  const reset = () => {
+    setSortField('');
+    setReversed(false);
+  };
 
-  let visibleGoods = sortGoods(goodsFromServer, {
+  const visibleGoods = sortGoods(goodsFromServer, {
     sortField,
     reversed,
   });
 
-  if (reversed) {
-    visibleGoods = visibleGoods.toReversed();
-  }
+  // if (reversed) {
+  //   visibleGoods = visibleGoods.toReversed();
+  // }
 
   return (
     <div className="section content">
@@ -86,10 +94,7 @@ export const App = () => {
 
         {(sortField || reversed) && (
           <button
-            onClick={() => {
-              setSortField('');
-              setReversed(false);
-            }}
+            onClick={reset}
             type="button"
             className="button is-danger is-light"
           >
