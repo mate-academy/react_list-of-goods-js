@@ -16,36 +16,40 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const ALPHABET_SORT_CONDITION = 'alphabet';
-  const LENGTH_SORT_CONDITION = 'length';
+const sortGoods = (goods, sortCondition) => {
+  switch (sortCondition) {
+    case 'alphabet':
+      return goods.slice().sort((a, b) => a.localeCompare(b));
+    case 'length':
+      return goods.slice().sort((a, b) => a.length - b.length);
+    default:
+      return goods;
+  }
+};
 
+export const App = () => {
   const [sortCondition, setSortCondition] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
 
   useEffect(() => {
-    let sortedGoods = [...visibleGoods];
+    let sortedGoods = sortGoods(goodsFromServer, sortCondition);
 
-    switch (sortCondition) {
-      case ALPHABET_SORT_CONDITION:
-        sortedGoods.sort((a, b) => a.localeCompare(b));
-        break;
-      case LENGTH_SORT_CONDITION:
-        sortedGoods.sort((a, b) => a.length - b.length);
-        break;
-      case 'reverse':
-        sortedGoods = sortedGoods.reverse();
-        break;
-      default:
-        break;
+    if (isReversed) {
+      sortedGoods = sortedGoods.reverse();
     }
 
     setVisibleGoods(sortedGoods);
-  }, [sortCondition, visibleGoods]);
+  }, [sortCondition, isReversed]);
 
   const handleReset = () => {
     setVisibleGoods(goodsFromServer);
     setSortCondition('');
+    setIsReversed(false);
+  };
+
+  const handleReverse = () => {
+    setIsReversed(!isReversed);
   };
 
   return (
@@ -54,9 +58,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': sortCondition !== ALPHABET_SORT_CONDITION,
+            'is-light': sortCondition !== 'alphabet',
           })}
-          onClick={() => setSortCondition(ALPHABET_SORT_CONDITION)}
+          onClick={() => setSortCondition('alphabet')}
         >
           Sort alphabetically
         </button>
@@ -64,24 +68,22 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': sortCondition !== LENGTH_SORT_CONDITION,
+            'is-light': sortCondition !== 'length',
           })}
-          onClick={() => setSortCondition(LENGTH_SORT_CONDITION)}
+          onClick={() => setSortCondition('length')}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={cn('button', 'is-warning', {
-            'is-light': sortCondition !== 'reverse',
-          })}
-          onClick={() => setSortCondition('reverse')}
+          className={cn('button', 'is-warning', { 'is-light': !isReversed })}
+          onClick={handleReverse}
         >
           Reverse
         </button>
 
-        {sortCondition && sortCondition !== 'reverse' ? (
+        {sortCondition || isReversed ? (
           <button
             type="button"
             className="button is-danger"
