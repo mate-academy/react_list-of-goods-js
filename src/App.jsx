@@ -57,8 +57,8 @@ export const App = () => {
           type="button"
           className={
             sortField === SortAlphabetically
-              ? 'button is-info is-light'
-              : 'button is-info'
+              ? 'button is-info'
+              : 'button is-info is-light'
           }
         >
           Sort alphabetically
@@ -69,8 +69,8 @@ export const App = () => {
           type="button"
           className={
             sortField === SortByLength
-              ? 'button is-info is-light'
-              : 'button is-info'
+              ? 'button is-info'
+              : 'button is-info  is-light'
           }
         >
           Sort by length
@@ -79,7 +79,7 @@ export const App = () => {
         <button
           onClick={() => setReversed(!reversed)}
           type="button"
-          className={reversed ? 'button is-info is-light' : 'button is-info'}
+          className={reversed ? 'button is-info' : 'button is-info is-light'}
         >
           Reverse
         </button>
