@@ -83,18 +83,22 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
+        {sortCondition || isReversed ? (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        ) : null}
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+        {visibleGoods.map((good, index) => (
+          <li key={index} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
