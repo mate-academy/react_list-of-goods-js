@@ -34,7 +34,7 @@ function sortGoods(goods, { sortField, reversed }) {
   }
 
   if (reversed) {
-    prepareGoods = prepareGoods.toReversed();
+    prepareGoods = prepareGoods.reverse();
   }
 
   return prepareGoods;
@@ -52,10 +52,6 @@ export const App = () => {
     sortField,
     reversed,
   });
-
-  // if (reversed) {
-  //   visibleGoods = visibleGoods.toReversed();
-  // }
 
   return (
     <div className="section content">
@@ -104,9 +100,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map((good, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <li key={index} data-cy="Good">
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
