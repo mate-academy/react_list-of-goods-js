@@ -22,10 +22,9 @@ export const App = () => {
 
   const [sortCondition, setSortCondition] = useState('');
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
-  const [isReversed, setIsReversed] = useState(false);
 
   useEffect(() => {
-    const sortedGoods = [...visibleGoods];
+    let sortedGoods = [...visibleGoods];
 
     switch (sortCondition) {
       case ALPHABET_SORT_CONDITION:
@@ -33,6 +32,9 @@ export const App = () => {
         break;
       case LENGTH_SORT_CONDITION:
         sortedGoods.sort((a, b) => a.length - b.length);
+        break;
+      case 'reverse':
+        sortedGoods = sortedGoods.reverse();
         break;
       default:
         break;
@@ -44,12 +46,6 @@ export const App = () => {
   const handleReset = () => {
     setVisibleGoods(goodsFromServer);
     setSortCondition('');
-    setIsReversed(false);
-  };
-
-  const handleReverse = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    setIsReversed(!isReversed);
   };
 
   return (
@@ -77,13 +73,15 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-warning', { 'is-light': !isReversed })}
-          onClick={handleReverse}
+          className={cn('button', 'is-warning', {
+            'is-light': sortCondition !== 'reverse',
+          })}
+          onClick={() => setSortCondition('reverse')}
         >
           Reverse
         </button>
 
-        {sortCondition || isReversed ? (
+        {sortCondition && sortCondition !== 'reverse' ? (
           <button
             type="button"
             className="button is-danger"
@@ -95,8 +93,8 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map((good, index) => (
-          <li key={index} data-cy="Good">
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
