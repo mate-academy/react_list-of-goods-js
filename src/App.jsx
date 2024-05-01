@@ -36,6 +36,7 @@ function getPrepearedGoods(goods, { sortField, reverseField }) {
       }
     });
   }
+
   if (reverseField) {
     prepearedGoods.reverse();
   }
