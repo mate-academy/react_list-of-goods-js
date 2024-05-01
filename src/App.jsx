@@ -21,10 +21,6 @@ const SORT_BY_LENGTH = 'length';
 function getPreparedGoods(goods, { sortGoods, reversed }) {
   const preparedGoods = [...goods];
 
-  if (reversed) {
-    preparedGoods.reverse();
-  }
-
   if (sortGoods) {
     preparedGoods.sort((good1, good2) => {
       switch (sortGoods) {
@@ -38,6 +34,10 @@ function getPreparedGoods(goods, { sortGoods, reversed }) {
           return 0;
       }
     });
+  }
+
+  if (reversed) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
