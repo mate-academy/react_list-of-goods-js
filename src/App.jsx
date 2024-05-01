@@ -14,18 +14,20 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+const SORT_BY_ALPHABET = 'Sort alphabetically';
+const SORT_BY_LENGTH = 'Sort by length';
+const REVERSE = 'Reverse';
+const RESET = 'Reset';
+
 function getVisibleGoods(goods, sortType, reverse = false) {
   const sortedGoods = [...goods];
 
   switch (sortType) {
-    case 'alphabetical':
+    case SORT_BY_ALPHABET:
       sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
-    case 'length':
+    case SORT_BY_LENGTH:
       sortedGoods.sort((a, b) => a.length - b.length);
-      break;
-    case 'reverse':
-      sortedGoods.reverse();
       break;
     default:
       break;
@@ -61,18 +63,18 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info  ${sortField !== 'alphabetical' && 'is-light'}`}
-          onClick={() => handleSort('alphabetical')}
+          className={`button is-info  ${sortField !== SORT_BY_ALPHABET && 'is-light'}`}
+          onClick={() => handleSort(SORT_BY_ALPHABET)}
         >
-          Sort alphabetically
+          {SORT_BY_ALPHABET}
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortField !== 'length' && 'is-light'}`}
-          onClick={() => handleSort('length')}
+          className={`button is-success ${sortField !== SORT_BY_LENGTH && 'is-light'}`}
+          onClick={() => handleSort(SORT_BY_LENGTH)}
         >
-          Sort by length
+          {SORT_BY_LENGTH}
         </button>
 
         <button
@@ -80,12 +82,12 @@ export const App = () => {
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={handleRevers}
         >
-          Reverse
+          {REVERSE}
         </button>
 
         {visibleGoods.join() !== goodsFromServer.join() && (
           <button type="button" className="button" onClick={handleReset}>
-            Reset
+            {RESET}
           </button>
         )}
       </div>
