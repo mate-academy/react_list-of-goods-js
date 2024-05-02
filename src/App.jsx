@@ -71,7 +71,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField(SORT_FIELD_NAME);
-            setReverse(NO);
           }}
         >
           Sort alphabetically
@@ -84,7 +83,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField(SORT_FIELD_LENGTH);
-            setReverse(NO);
           }}
         >
           Sort by length
@@ -96,7 +94,7 @@ export const App = () => {
             'is-light': reverse !== YES,
           })}
           onClick={() => {
-            if (reverse === NO || sortField === INITIAL) {
+            if (reverse === NO) {
               setReverse(YES);
             }
 
@@ -107,25 +105,27 @@ export const App = () => {
         >
           Reverse
         </button>
-
-        <button
-          style={{
-            display: sortField === INITIAL && reverse === NO ? 'none' : 'block',
-          }}
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => {
-            setSortField(INITIAL);
-            setReverse(NO);
-          }}
-        >
-          Reset
-        </button>
+        {(sortField === INITIAL && reverse === YES) || sortField !== INITIAL ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField(INITIAL);
+              setReverse(NO);
+            }}
+          >
+            Reset
+          </button>
+        ) : (
+          ''
+        )}
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+        {visibleGoods.map((good, index) => (
+          <li data-cy="Good" key={index}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
