@@ -50,7 +50,6 @@ export const App = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [reversed, setReversed] = useState(false);
   const [sortField, setSortField] = useState('');
-  const [showReset, setShowReset] = useState(false);
 
   let visibleGoods = goodsFromServer;
 
@@ -62,14 +61,12 @@ export const App = () => {
 
   const handleReverseClick = () => {
     setReversed(!reversed);
-    setShowReset(true);
   };
 
   const handleResetClick = () => {
     setSelectedColor('');
     setReversed(false);
     setSortField('');
-    setShowReset(false);
   };
 
   return (
@@ -82,7 +79,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField('alphabetically');
-            setShowReset(true);
           }}
         >
           Sort alphabetically
@@ -95,7 +91,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField('byLength');
-            setShowReset(true);
           }}
         >
           Sort by length
@@ -111,12 +106,10 @@ export const App = () => {
           Reverse
         </button>
 
-        {showReset && (
+        {(sortField || reversed) && (
           <button
             type="button"
-            className={classNames('button', 'is-danger', {
-              'is-light': !showReset,
-            })}
+            className={classNames('button', 'is-danger')}
             onClick={handleResetClick}
           >
             Reset
