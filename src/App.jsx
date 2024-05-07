@@ -20,11 +20,31 @@ const GoodCard = ({ good }) => <li data-cy="Good">{good}</li>;
 
 const Goodlist = ({ goods }) => (
   <ul>
-    {goods.map((good, index) => (
-      <GoodCard good={good} />
+    {goods.map(good => (
+      <GoodCard good={good} key={good} />
     ))}
   </ul>
 );
+
+const sortAndReverseGoods = (goods, sortField, reversed) => {
+  const sortedGoods = [...goods];
+
+  switch (sortField) {
+    case 'alphabetically':
+      sortedGoods.sort((a, b) => a.localeCompare(b));
+      break;
+    case 'byLength':
+      sortedGoods.sort((a, b) => a.length - b.length);
+      break;
+    default:
+  }
+
+  if (reversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
 
 export const App = () => {
   const [selectedColor, setSelectedColor] = useState('');
@@ -38,15 +58,7 @@ export const App = () => {
     visibleGoods = visibleGoods.filter(good => good.color === selectedColor);
   }
 
-  if (sortField === 'alphabetically') {
-    visibleGoods = [...visibleGoods].sort((a, b) => a.localeCompare(b));
-  } else if (sortField === 'byLength') {
-    visibleGoods = [...visibleGoods].sort((a, b) => a.length - b.length);
-  }
-
-  if (reversed) {
-    visibleGoods = visibleGoods.reverse();
-  }
+  visibleGoods = sortAndReverseGoods(visibleGoods, sortField, reversed);
 
   const handleReverseClick = () => {
     setReversed(!reversed);
@@ -103,7 +115,7 @@ export const App = () => {
           <button
             type="button"
             className={classNames('button', 'is-danger', {
-              'is-light': !'',
+              'is-light': !showReset,
             })}
             onClick={handleResetClick}
           >
