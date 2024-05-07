@@ -105,19 +105,19 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(sortField === INITIAL && reverse === YES) ||
-          (sortField !== INITIAL && (
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={() => {
-                setSortField(INITIAL);
-                setReverse(NO);
-              }}
-            >
-              Reset
-            </button>
-          ))}
+        {((sortField === INITIAL && reverse === YES) ||
+          sortField !== INITIAL) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField(INITIAL);
+              setReverse(NO);
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
