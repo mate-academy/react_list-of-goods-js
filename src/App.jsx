@@ -47,24 +47,16 @@ const sortAndReverseGoods = (goods, sortField, reversed) => {
 };
 
 export const App = () => {
-  const [selectedColor, setSelectedColor] = useState('');
   const [reversed, setReversed] = useState(false);
   const [sortField, setSortField] = useState('');
 
-  let visibleGoods = goodsFromServer;
-
-  if (selectedColor) {
-    visibleGoods = visibleGoods.filter(good => good.color === selectedColor);
-  }
-
-  visibleGoods = sortAndReverseGoods(visibleGoods, sortField, reversed);
+  const visibleGoods = goodsFromServer;
 
   const handleReverseClick = () => {
     setReversed(!reversed);
   };
 
   const handleResetClick = () => {
-    setSelectedColor('');
     setReversed(false);
     setSortField('');
   };
@@ -117,7 +109,9 @@ export const App = () => {
         )}
       </div>
 
-      <Goodlist goods={visibleGoods} />
+      <Goodlist
+        goods={sortAndReverseGoods(visibleGoods, sortField, reversed)}
+      />
     </div>
   );
 };
