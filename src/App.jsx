@@ -53,8 +53,8 @@ export const App = () => {
     reverse,
   });
 
-  const isAlphabetSelected = sortField !== SORT_LENGTH_FIELD;
-  const isLengthSelected = sortField !== SORT_ALPHABET_FIELD;
+  const isAlphabetSelected = sortField === SORT_LENGTH_FIELD;
+  const isLengthSelected = sortField === SORT_ALPHABET_FIELD;
   const isResetBtnVisible = reverse || sortField;
   const handleResetClick = () => {
     setReverse(false);
