@@ -22,9 +22,8 @@ const REVERSE_SORT = 'reverse';
 
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
-  const [reversed, setReversed] = useState('');
-  const [lightlyClass, setLightlyClass] = useState('');
-  const [lightlyClassReversed, setlightlyClassReversed] = useState(false);
+  const [reversed, setReversed] = useState(false);
+
   let [...visibleGoods] = goodsFromServer;
 
   visibleGoods = visibleGoods.sort((good1, good2) => {
@@ -40,18 +39,8 @@ export const App = () => {
     }
   });
 
-  if (reversed === REVERSE_SORT) {
+  if (reversed) {
     visibleGoods.reverse();
-  }
-
-  function toggleReverse() {
-    if (reversed === REVERSE_SORT) {
-      setReversed('');
-      setlightlyClassReversed(false);
-    } else {
-      setReversed(REVERSE_SORT);
-      setlightlyClassReversed(true);
-    }
   }
 
   return (
@@ -61,11 +50,10 @@ export const App = () => {
           type="button"
           className={classNames('button is-info', {
             'is-active': sortBy === SORT_BY_ALPHABET,
-            'is-light': lightlyClass !== SORT_BY_ALPHABET,
+            'is-light': sortBy !== SORT_BY_ALPHABET,
           })}
           onClick={() => {
             setSortBy(SORT_BY_ALPHABET);
-            setLightlyClass(SORT_BY_ALPHABET);
           }}
         >
           Sort alphabetically
@@ -75,11 +63,10 @@ export const App = () => {
           type="button"
           className={classNames('button is-success', {
             'is-active': sortBy === SORT_BY_LENGTH,
-            'is-light': lightlyClass !== SORT_BY_LENGTH,
+            'is-light': sortBy !== SORT_BY_LENGTH,
           })}
           onClick={() => {
             setSortBy(SORT_BY_LENGTH);
-            setLightlyClass(SORT_BY_LENGTH);
           }}
         >
           Sort by length
@@ -89,10 +76,10 @@ export const App = () => {
           type="button"
           className={classNames('button is-warning', {
             'is-active': sortBy === REVERSE_SORT,
-            'is-light': lightlyClassReversed !== true,
+            'is-light': reversed !== true,
           })}
           onClick={() => {
-            toggleReverse();
+            setReversed(prev => !prev);
           }}
         >
           Reverse
@@ -104,9 +91,7 @@ export const App = () => {
             className="button is-danger is-light"
             onClick={() => {
               setSortBy('');
-              setReversed('');
-              setLightlyClass('');
-              setlightlyClassReversed(false);
+              setReversed(false);
             }}
           >
             Reset
