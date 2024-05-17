@@ -20,24 +20,29 @@ export const goodsFromServer = [
 const ALPHABET = 'alphabetically';
 const LENGTH = 'by-length';
 const REVERSE = 'reverse';
-const RESET = 'reset';
 
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
+
   const visibleGoods = () => {
     switch (sortBy) {
       case ALPHABET:
         return [...goodsFromServer].sort((good1, good2) =>
           good1.localeCompare(good2),
         );
+
       case LENGTH:
         return [...goodsFromServer].sort((a, b) => a.length - b.length);
+
       case REVERSE:
         return [...goodsFromServer].reverse();
+
       default:
         return [...goodsFromServer];
     }
   };
+
+  const sorted = visibleGoods();
 
   return (
     <div className="section content">
@@ -72,18 +77,19 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className={classNames('button is-danger', {
-            'is-light': sortBy !== RESET,
-          })}
-          onClick={() => setSortBy(RESET)}
-        >
-          Reset
-        </button>
+        {sortBy !== '' && (
+          <button
+            type="button"
+            className={classNames('button is-danger', {
+              'is-light': sortBy !== '',
+            })}
+            onClick={() => setSortBy('')}
+          >
+            Reset
+          </button>
+        )}
       </div>
-
-      <GoodList goods={visibleGoods()} />
+      <GoodList goods={sorted} />
     </div>
   );
 };

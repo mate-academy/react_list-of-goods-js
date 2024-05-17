@@ -5,7 +5,7 @@ export const GoodList = ({ goods }) => {
     <section className="TodoList">
       <ul>
         {goods.map(good => (
-          <GoodCard good={good} />
+          <GoodCard good={good} key={good} />
         ))}
       </ul>
     </section>
