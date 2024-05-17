@@ -19,10 +19,10 @@ export const goodsFromServer = [
 
 const ALPHABET = 'alphabetically';
 const LENGTH = 'by-length';
-const REVERSE = 'reverse';
 
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
+  const [reverse, setReverse] = useState(false);
 
   const visibleGoods = () => {
     switch (sortBy) {
@@ -34,15 +34,16 @@ export const App = () => {
       case LENGTH:
         return [...goodsFromServer].sort((a, b) => a.length - b.length);
 
-      case REVERSE:
-        return [...goodsFromServer].reverse();
-
       default:
         return [...goodsFromServer];
     }
   };
 
   const sorted = visibleGoods();
+
+  if (reverse) {
+    sorted.reverse();
+  }
 
   return (
     <div className="section content">
@@ -70,20 +71,21 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-warning', {
-            'is-light': sortBy !== REVERSE,
+            'is-light': !reverse,
           })}
-          onClick={() => setSortBy(REVERSE)}
+          onClick={() => (!reverse ? setReverse(true) : setReverse(false))}
         >
           Reverse
         </button>
 
-        {sortBy !== '' && (
+        {(sortBy !== '' || reverse) && (
           <button
             type="button"
-            className={classNames('button is-danger', {
-              'is-light': sortBy !== '',
-            })}
-            onClick={() => setSortBy('')}
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortBy('');
+              setReverse(false);
+            }}
           >
             Reset
           </button>
