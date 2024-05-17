@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import classNames from 'classnames';
+import { GoodList } from './components/goodList/goodList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,81 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const ALPHABET = 'alphabetically';
+const LENGTH = 'by-length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [sortBy, setSortBy] = useState('');
+  const [reverse, setReverse] = useState(false);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const visibleGoods = () => {
+    switch (sortBy) {
+      case ALPHABET:
+        return [...goodsFromServer].sort((good1, good2) =>
+          good1.localeCompare(good2),
+        );
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+      case LENGTH:
+        return [...goodsFromServer].sort((a, b) => a.length - b.length);
+
+      default:
+        return [...goodsFromServer];
+    }
+  };
+
+  const sorted = visibleGoods();
+
+  if (reverse) {
+    sorted.reverse();
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={classNames('button is-info', {
+            'is-light': sortBy !== ALPHABET,
+          })}
+          onClick={() => setSortBy(ALPHABET)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={classNames('button is-success', {
+            'is-light': sortBy !== LENGTH,
+          })}
+          onClick={() => setSortBy(LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={classNames('button is-warning', {
+            'is-light': !reverse,
+          })}
+          onClick={() => (!reverse ? setReverse(true) : setReverse(false))}
+        >
+          Reverse
+        </button>
+
+        {(sortBy !== '' || reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortBy('');
+              setReverse(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <GoodList goods={sorted} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
