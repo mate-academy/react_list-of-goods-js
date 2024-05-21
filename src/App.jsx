@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
+import { useReducer } from 'react';
 import cn from 'classnames';
 
 export const goodsFromServer = [
@@ -16,18 +16,114 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const [state, setState] = useState({
-    sortedGoods: [...goodsFromServer],
-    buttonSortAplha: { 'is-light': true, 'button is-info': true },
-    buttonSortLength: {
-      'is-light': true,
-      'button is-info': true,
-      'is-success': true,
+const initialState = {
+  sortedGoods: [...goodsFromServer],
+  buttonSortAplha: { 'is-light': true, 'button is-info': true },
+  buttonSortLength: {
+    'is-light': true,
+    'button is-info': true,
+    'is-success': true,
+  },
+  buttonReverse: {
+    button: true,
+    'is-warning': true,
+    'is-light': true,
+  },
+  buttonRestart: false,
+};
+
+const reducer = (prevState, action) => {
+  const functions = {
+    alpha: () => {
+      if (prevState.buttonSortAplha['is-light']) {
+        const sorted = prevState.buttonReverse['is-light']
+          ? [...prevState.sortedGoods].sort((a, b) => a.localeCompare(b))
+          : [...prevState.sortedGoods]
+              .sort((a, b) => a.localeCompare(b))
+              .reverse();
+
+        return {
+          ...prevState,
+          sortedGoods: [...sorted],
+          buttonSortAplha: {
+            ...prevState.buttonSortAplha,
+            'is-light': false,
+          },
+          buttonSortLength: {
+            ...prevState.buttonSortLength,
+            'is-light': true,
+          },
+          buttonRestart: true,
+        };
+      }
+
+      return prevState;
     },
-    buttonReverse: { button: true, 'is-warning': true, 'is-light': true },
-    buttonRestart: false,
-  });
+    length: () => {
+      if (prevState.buttonSortLength['is-light']) {
+        let sorted = [...prevState.sortedGoods].sort(
+          (a, b) => a.length - b.length,
+        );
+
+        if (!prevState.buttonReverse['is-light']) {
+          sorted = [...prevState.sortedGoods].sort(
+            (a, b) => b.length - a.length,
+          );
+        }
+
+        return {
+          ...prevState,
+          sortedGoods: [...sorted],
+          buttonSortAplha: { ...prevState.buttonSortAplha, 'is-light': true },
+          buttonSortLength: {
+            ...prevState.buttonSortLength,
+            'is-light': false,
+          },
+          buttonRestart: true,
+        };
+      }
+
+      return prevState;
+    },
+    reverse: () => {
+      return {
+        ...prevState,
+        sortedGoods: [...prevState.sortedGoods.reverse()],
+        buttonReverse: {
+          button: true,
+          'is-warning': true,
+          'is-light': !prevState.buttonReverse['is-light'],
+        },
+        buttonRestart:
+          !prevState.buttonSortAplha['is-light'] ||
+          !prevState.buttonSortLength['is-light'] ||
+          !prevState.buttonRestart,
+      };
+    },
+    reset: () => {
+      return {
+        sortedGoods: [...goodsFromServer],
+        buttonSortAplha: { 'is-light': true, 'button is-info': true },
+        buttonSortLength: {
+          'is-light': true,
+          'button is-info': true,
+          'is-success': true,
+        },
+        buttonReverse: {
+          button: true,
+          'is-warning': true,
+          'is-light': true,
+        },
+        buttonRestart: false,
+      };
+    },
+  };
+
+  return functions[action]();
+};
+
+export const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <div className="section content">
@@ -35,31 +131,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(state.buttonSortAplha)}
-          onClick={() => {
-            if (state.buttonSortAplha['is-light']) {
-              const sorted = state.buttonReverse['is-light']
-                ? [...state.sortedGoods].sort((a, b) => a.localeCompare(b))
-                : [...state.sortedGoods]
-                    .sort((a, b) => a.localeCompare(b))
-                    .reverse();
-
-              return setState({
-                ...state,
-                sortedGoods: [...sorted],
-                buttonSortAplha: {
-                  ...state.buttonSortAplha,
-                  'is-light': false,
-                },
-                buttonSortLength: {
-                  ...state.buttonSortLength,
-                  'is-light': true,
-                },
-                buttonRestart: true,
-              });
-            }
-
-            return setState(state);
-          }}
+          onClick={() => dispatch('alpha')}
         >
           Sort alphabetically
         </button>
@@ -67,32 +139,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(state.buttonSortLength)}
-          onClick={() => {
-            if (state.buttonSortLength['is-light']) {
-              let sorted = [...state.sortedGoods].sort(
-                (a, b) => a.length - b.length,
-              );
-
-              if (!state.buttonReverse['is-light']) {
-                sorted = [...state.sortedGoods].sort(
-                  (a, b) => b.length - a.length,
-                );
-              }
-
-              return setState({
-                ...state,
-                sortedGoods: [...sorted],
-                buttonSortAplha: { ...state.buttonSortAplha, 'is-light': true },
-                buttonSortLength: {
-                  ...state.buttonSortLength,
-                  'is-light': false,
-                },
-                buttonRestart: true,
-              });
-            }
-
-            return setState(state);
-          }}
+          onClick={() => dispatch('length')}
         >
           Sort by length
         </button>
@@ -100,21 +147,7 @@ export const App = () => {
         <button
           type="button"
           className={cn(state.buttonReverse)}
-          onClick={() => {
-            return setState({
-              ...state,
-              sortedGoods: [...state.sortedGoods.reverse()],
-              buttonReverse: {
-                button: true,
-                'is-warning': true,
-                'is-light': !state.buttonReverse['is-light'],
-              },
-              buttonRestart:
-                !state.buttonSortAplha['is-light'] ||
-                !state.buttonSortLength['is-light'] ||
-                !state.buttonRestart,
-            });
-          }}
+          onClick={() => dispatch('reverse')}
         >
           Reverse
         </button>
@@ -123,25 +156,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              const newState = {
-                sortedGoods: [...goodsFromServer],
-                buttonSortAplha: { 'is-light': true, 'button is-info': true },
-                buttonSortLength: {
-                  'is-light': true,
-                  'button is-info': true,
-                  'is-success': true,
-                },
-                buttonReverse: {
-                  button: true,
-                  'is-warning': true,
-                  'is-light': true,
-                },
-                buttonRestart: false,
-              };
-
-              return setState(newState);
-            }}
+            onClick={() => dispatch('reset')}
           >
             Reset
           </button>
