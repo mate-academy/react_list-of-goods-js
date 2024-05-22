@@ -51,7 +51,6 @@ export const App = () => {
 
   const handleSortAlphabetically = () => {
     setSortField(SORT_FIELD_NAME);
-    // setIsReversed(false);
   };
 
   const handleSortByLength = () => {
