@@ -87,7 +87,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField !== '' || reversed ? (
+        {(sortField !== '' || reversed) && (
           <button
             type="button"
             className={classNames('button is-success', {
@@ -97,12 +97,12 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
         {preparedGoods.map(good => (
-          <li data-cy="Good" key={crypto.randomUUID()}>
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
