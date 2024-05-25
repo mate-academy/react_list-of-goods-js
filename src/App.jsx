@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import cn from 'classnames';
@@ -28,7 +28,7 @@ function getPreparedGoodsFromServer(goods, buttonId) {
     case SORT_BY_LENGTH:
       return [...goods].sort((good1, good2) => good1.length - good2.length);
     case REVERSE_LIST:
-      return [...goods].reverse();
+      return [...goodsFromServer].reverse();
     case RESET:
       return [...goodsFromServer];
     default:
@@ -50,10 +50,9 @@ export const App = () => {
   );
   const [buttonClassReset, setButtonClassReset] =
     useState('is-danger is-light');
-  const [isResetVisible, setIsResetVisible] = useState(false);
 
   const buttonClick = buttonId => {
-    const sortedGoods = getPreparedGoodsFromServer(goodsFromServer, buttonId);
+    const sortedGoods = getPreparedGoodsFromServer(visibleVegetables, buttonId);
 
     setVisibleVegetables(sortedGoods);
 
@@ -69,14 +68,16 @@ export const App = () => {
     setButtonClassReset(
       buttonId === RESET ? 'is-danger' : 'is-danger is-light',
     );
-    setIsResetVisible(
-      !sortedGoods.every((item, index) => item === goodsFromServer[index]),
-    );
   };
 
   const resetGoods = () => {
     setVisibleVegetables([...goodsFromServer]);
-    setIsResetVisible(false);
+  };
+
+  const isDifferent = () => {
+    return !visibleVegetables.every(
+      (item, index) => item === goodsFromServer[index],
+    );
   };
 
   return (
@@ -106,7 +107,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {isResetVisible && (
+        {isDifferent() && (
           <button
             onClick={resetGoods}
             type="button"
