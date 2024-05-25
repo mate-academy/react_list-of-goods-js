@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 
-export const goodsFromServer = [
+const goodsFromServer = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -14,33 +16,114 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_BY_LENGTH = 'sortByLength';
+const SORT_ALPHABETICALLY = 'sortAlphabetically';
+const REVERSE_LIST = 'reverseList';
+const RESET = 'reset';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function getPreparedGoodsFromServer(goods, buttonId) {
+  switch (buttonId) {
+    case SORT_ALPHABETICALLY:
+      return [...goods].sort((good1, good2) => good1.localeCompare(good2));
+    case SORT_BY_LENGTH:
+      return [...goods].sort((good1, good2) => good1.length - good2.length);
+    case REVERSE_LIST:
+      return [...goods].reverse();
+    case RESET:
+      return [...goodsFromServer];
+    default:
+      return goods;
+  }
+}
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+export const App = () => {
+  const [visibleVegetables, setVisibleVegetables] = useState([
+    ...goodsFromServer,
+  ]);
+  const [buttonClassSortAlpha, setButtonClassSortAlpha] =
+    useState('is-info is-light');
+  const [buttonClassSortByLength, setButtonClassSortByLength] = useState(
+    'is-success is-light',
+  );
+  const [buttonClassReverse, setButtonClassReverse] = useState(
+    'is-warning is-light',
+  );
+  const [buttonClassReset, setButtonClassReset] =
+    useState('is-danger is-light');
+  const [isResetVisible, setIsResetVisible] = useState(false);
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const buttonClick = buttonId => {
+    const sortedGoods = getPreparedGoodsFromServer(goodsFromServer, buttonId);
+
+    setVisibleVegetables(sortedGoods);
+
+    setButtonClassSortAlpha(
+      buttonId === SORT_ALPHABETICALLY ? 'is-info' : 'is-info is-light',
+    );
+    setButtonClassSortByLength(
+      buttonId === SORT_BY_LENGTH ? 'is-success' : 'is-success is-light',
+    );
+    setButtonClassReverse(
+      buttonId === REVERSE_LIST ? 'is-warning' : 'is-warning is-light',
+    );
+    setButtonClassReset(
+      buttonId === RESET ? 'is-danger' : 'is-danger is-light',
+    );
+    setIsResetVisible(
+      !sortedGoods.every((item, index) => item === goodsFromServer[index]),
+    );
+  };
+
+  const resetGoods = () => {
+    setVisibleVegetables([...goodsFromServer]);
+    setIsResetVisible(false);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => buttonClick(SORT_ALPHABETICALLY)}
+          type="button"
+          className={cn('button', buttonClassSortAlpha)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={() => buttonClick(SORT_BY_LENGTH)}
+          type="button"
+          className={cn('button', buttonClassSortByLength)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={() => buttonClick(REVERSE_LIST)}
+          type="button"
+          className={cn('button', buttonClassReverse)}
+        >
+          Reverse
+        </button>
+
+        {isResetVisible && (
+          <button
+            onClick={resetGoods}
+            type="button"
+            className={cn('button', buttonClassReset)}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleVegetables.map(vegetable => (
+          <li key={vegetable} data-cy="Good">
+            {vegetable}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
