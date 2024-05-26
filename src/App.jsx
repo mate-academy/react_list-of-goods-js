@@ -13,42 +13,56 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const getPreparedGoods = (goods, activeButton, isReversed) => {
+  const preparedGoods = [...goods];
+
+  if (activeButton === 'alphabetical') {
+    preparedGoods.sort((a, b) => a.localeCompare(b));
+  } else if (activeButton === 'length') {
+    preparedGoods.sort((a, b) => a.length - b.length);
+  } else if (activeButton === null) {
+    return preparedGoods;
+  }
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+};
+
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
+  const [goods, setGoods] = useState([...goodsFromServer]);
   const [originalOrder] = useState([...goodsFromServer]);
   const [isReversed, setIsReversed] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
+  const [isModified, setIsModified] = useState(false);
 
   const sortAlphabetically = () => {
-    const sortedGoods = [...goods].sort();
-
-    setGoods(sortedGoods);
     setActiveButton('alphabetical');
+    setIsReversed(false);
+    setIsModified(true);
   };
 
   const sortByLength = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
-
-    setGoods(sortedGoods);
     setActiveButton('length');
+    setIsReversed(false);
+    setIsModified(true);
   };
 
   const reverseOrder = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
     setIsReversed(!isReversed);
-    setActiveButton('reverse');
+    setIsModified(true);
   };
 
   const resetOrder = () => {
-    setGoods(originalOrder);
+    setGoods([...originalOrder]);
     setIsReversed(false);
-    setActiveButton(null);
+    setActiveButton('alphabetical');
+    setIsModified(false);
   };
 
-  const showResetButton =
-    JSON.stringify(goods) !== JSON.stringify(originalOrder);
+  const visibleGoods = getPreparedGoods(goods, activeButton, isReversed);
 
   return (
     <div className="section content">
@@ -71,13 +85,13 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${activeButton === 'reverse' ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={reverseOrder}
         >
           Reverse
         </button>
 
-        {showResetButton && (
+        {isModified && (
           <button
             type="button"
             className="button is-danger"
@@ -89,7 +103,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map((good, index) => (
+        {visibleGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
