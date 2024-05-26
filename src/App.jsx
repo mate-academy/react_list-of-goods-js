@@ -51,6 +51,9 @@ export const App = () => {
   };
 
   const reverseOrder = () => {
+    const newOrder = [...goods].reverse();
+
+    setGoods(newOrder);
     setIsReversed(!isReversed);
     setIsModified(true);
   };
