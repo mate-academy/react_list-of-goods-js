@@ -33,7 +33,6 @@ const getPreparedGoods = (goods, activeButton, isReversed) => {
 
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
-  const [originalOrder] = useState([...goodsFromServer]);
   const [isReversed, setIsReversed] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
   const [isModified, setIsModified] = useState(false);
@@ -51,17 +50,15 @@ export const App = () => {
   };
 
   const reverseOrder = () => {
-    const newOrder = [...goods].reverse();
-
-    setGoods(newOrder);
+    setGoods(prevGoods => [...prevGoods].reverse());
     setIsReversed(!isReversed);
     setIsModified(true);
   };
 
   const resetOrder = () => {
-    setGoods([...originalOrder]);
+    setGoods([...goodsFromServer]);
     setIsReversed(false);
-    setActiveButton('alphabetical');
+    setActiveButton('');
     setIsModified(false);
   };
 
@@ -77,7 +74,6 @@ export const App = () => {
         >
           Sort alphabetically
         </button>
-
         <button
           type="button"
           className={`button is-success ${activeButton === 'length' && !isReversed ? '' : 'is-light'}`}
@@ -85,7 +81,6 @@ export const App = () => {
         >
           Sort by length
         </button>
-
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
@@ -93,7 +88,6 @@ export const App = () => {
         >
           Reverse
         </button>
-
         {isModified && (
           <button
             type="button"
@@ -104,7 +98,6 @@ export const App = () => {
           </button>
         )}
       </div>
-
       <ul>
         {visibleGoods.map(good => (
           <li key={good} data-cy="Good">
