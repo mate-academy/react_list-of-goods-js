@@ -54,11 +54,9 @@ export const App = () => {
     switch (buttonId) {
       case SORT_ALPHABETICALLY:
         setSortingType(SORT_ALPHABETICALLY);
-        setIsReversed(false);
         break;
       case SORT_BY_LENGTH:
         setSortingType(SORT_BY_LENGTH);
-        setIsReversed(false);
         break;
       case REVERSE_LIST:
         setIsReversed(!isReversed);
@@ -77,19 +75,14 @@ export const App = () => {
     setIsReversed(false);
   };
 
-  const isDifferent = () => {
-    return !visibleVegetables.every(
-      (item, index) => item === goodsFromServer[index],
-    );
-  };
-
-  const visibleVegetables = isReversed
-    ? [...goodsFromServer].reverse()
-    : [...goodsFromServer];
-
-  const preparedGoods = sortingType
-    ? getPreparedGoodsFromServer(visibleVegetables, sortingType, isReversed)
-    : visibleVegetables;
+  const preparedGoods =
+    sortingType || isReversed
+      ? getPreparedGoodsFromServer(
+          [...goodsFromServer],
+          sortingType,
+          isReversed,
+        )
+      : [...goodsFromServer];
 
   return (
     <div className="section content">
@@ -127,7 +120,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(isDifferent() || isReversed || sortingType) && (
+        {(isReversed || sortingType) && (
           <button
             onClick={resetGoods}
             type="button"
