@@ -1,5 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
+import { GoodList } from './components/GoodList/GoodList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,91 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const BY_ALPHABETICALLY = 'alphabetically';
+export const BY_LENGTH = 'length';
+export const BY_REVERSE = 'reverse';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export function getSortList(goods, sortField, reverse) {
+  const sortGoods = [...goods];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  switch (sortField) {
+    case BY_ALPHABETICALLY:
+      sortGoods.sort();
+      break;
+    case BY_LENGTH:
+      sortGoods.sort((good1, good2) => good1.length - good2.length);
+      break;
+    default:
+      break;
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (reverse) {
+    sortGoods.reverse();
+  }
+
+  return sortGoods;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState(null);
+  const [reverse, setReverse] = useState(false);
+
+  const handleSort = field => {
+    if (field === BY_REVERSE) {
+      setReverse(prevReverse => !prevReverse);
+    } else {
+      setSortField(field);
+    }
+  };
+
+  const handleReset = () => {
+    setSortField(null);
+    setReverse(false);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== BY_ALPHABETICALLY,
+          })}
+          onClick={() => handleSort(BY_ALPHABETICALLY)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== BY_LENGTH,
+          })}
+          onClick={() => handleSort(BY_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-warning', { 'is-light': !reverse })}
+          onClick={() => handleSort(BY_REVERSE)}
+        >
+          Reverse
+        </button>
+
+        {(sortField || reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <GoodList goods={getSortList(goodsFromServer, sortField, reverse)} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
