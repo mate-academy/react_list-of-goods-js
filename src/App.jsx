@@ -59,7 +59,7 @@ export const App = () => {
           }}
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': SORT_BY_NAME === sortValue,
+            'is-light': SORT_BY_NAME !== sortValue,
           })}
         >
           Sort alphabetically
@@ -71,7 +71,7 @@ export const App = () => {
           }}
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': SORT_BY_LENGTH === sortValue,
+            'is-light': SORT_BY_LENGTH !== sortValue,
           })}
         >
           Sort by length
@@ -81,7 +81,7 @@ export const App = () => {
           onClick={() => setIsReversed(prev => !prev)}
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReversed,
+            'is-light': !isReversed,
           })}
         >
           Reverse
@@ -91,10 +91,11 @@ export const App = () => {
           <button
             onClick={() => {
               setSortValue('');
+              setIsReversed(false);
             }}
             type="button"
             className={cn('button', 'is-danger', {
-              'is-light': sortValue === '' && !isReversed,
+              'is-light': sortValue !== '',
             })}
           >
             Reset
