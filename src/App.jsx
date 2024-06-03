@@ -87,7 +87,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortValue !== '' || isReversed) && (
+        {(!!sortValue || isReversed) && (
           <button
             onClick={() => {
               setSortValue('');
@@ -95,7 +95,7 @@ export const App = () => {
             }}
             type="button"
             className={cn('button', 'is-danger', {
-              'is-light': sortValue !== '',
+              'is-light': !!sortValue,
             })}
           >
             Reset
