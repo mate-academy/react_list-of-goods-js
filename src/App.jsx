@@ -27,8 +27,10 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
       switch (sortField) {
         case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
+
         case SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
+
         default:
           return 0;
       }
@@ -45,6 +47,11 @@ function getPreparedGoods(goods, { sortField, reverseField }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState(false);
+
+  const reset = () => {
+    setReverseField(false);
+    setSortField('');
+  };
 
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
@@ -83,10 +90,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setReverseField(false);
-              setSortField('');
-            }}
+            onClick={reset}
           >
             Reset
           </button>
