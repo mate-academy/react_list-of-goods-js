@@ -26,8 +26,10 @@ export const App = () => {
       switch (sortField) {
         case 'Sort alphabetically':
           return good1.localeCompare(good2);
+
         case 'Sort by length':
           return good1.length - good2.length;
+          
         default:
           return 0;
       }
