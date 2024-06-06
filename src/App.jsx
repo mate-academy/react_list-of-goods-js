@@ -29,7 +29,7 @@ export const App = () => {
 
         case 'Sort by length':
           return good1.length - good2.length;
-          
+
         default:
           return 0;
       }
