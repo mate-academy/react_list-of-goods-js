@@ -21,7 +21,7 @@ const SORT_ALPH = 'alphabetically';
 const SORT_LENGTH = 'length';
 
 export const App = () => {
-  const [filteredGoods, setFilteredGoods] = useState(goodsFromServer);
+  const [filteredGoods] = useState(goodsFromServer);
   const [corectSortField, setCorectSortField] = useState('');
   const [corectReverse, setCorectReverse] = useState(false);
 
@@ -61,7 +61,6 @@ export const App = () => {
           })}
           onClick={() => {
             setCorectSortField(SORT_ALPH);
-            setCorectReverse(false);
           }}
         >
           Sort alphabetically
@@ -74,7 +73,6 @@ export const App = () => {
           })}
           onClick={() => {
             setCorectSortField(SORT_LENGTH);
-            setCorectReverse(false);
           }}
         >
           Sort by length
@@ -95,7 +93,6 @@ export const App = () => {
             onClick={() => {
               setCorectSortField('');
               setCorectReverse(false);
-              setFilteredGoods(goodsFromServer);
             }}
           >
             Reset
