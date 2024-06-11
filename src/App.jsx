@@ -18,45 +18,48 @@ export const goodsFromServer = [
 export const App = () => {
   const classname = condition => (!condition ? 'is-light' : '');
 
-  const [visiblegoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortAlphaber, setSortAlphabet] = useState(false);
-  //
-  const [sortLength, setSortLength] = useState(visiblegoods);
-  //
   const [checkSortLength, setCheckSortLength] = useState(false);
   const [checkReverse, setCheckReverse] = useState(false);
-  //
 
-  //
-  // const [reversGoods, setReverseGoods] = useState(visiblegoods);
-  // console.log(visiblegoods);
+  let showBtn = false;
+  const visiblegoods = [...goodsFromServer];
+
+  if (sortAlphaber) {
+    visiblegoods.sort();
+    showBtn = true;
+  }
+
+  if (checkSortLength) {
+    visiblegoods.sort((goods1, goods2) => goods1.length - goods2.length);
+    showBtn = true;
+  }
+
+  if (checkReverse) {
+    visiblegoods.reverse();
+    showBtn = true;
+  }
+
   const sortByAlphabet = () => {
-    setVisibleGoods([...visiblegoods].sort());
-    // (a, b) => a.localeCompare(b)
     setSortAlphabet(true);
 
     setCheckSortLength(false);
   };
 
   const sortByLength = () => {
-    setSortLength(
-      sortLength.sort((goods1, goods2) => goods1.length - goods2.length),
-    );
-    setVisibleGoods(sortLength);
     setSortAlphabet(false);
     setCheckSortLength(true);
   };
 
   const reversedGoods = () => {
-    setVisibleGoods([...visiblegoods].reverse());
     setCheckReverse(!checkReverse);
   };
 
   const removeState = () => {
-    setVisibleGoods(goodsFromServer);
     setSortAlphabet(false);
     setCheckSortLength(false);
     setCheckReverse(false);
+    showBtn = false;
   };
 
   return (
@@ -85,14 +88,15 @@ export const App = () => {
         >
           Reverse
         </button>
-
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={removeState}
-        >
-          Reset
-        </button>
+        {showBtn && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={removeState}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
