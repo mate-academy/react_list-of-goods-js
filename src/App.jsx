@@ -26,35 +26,26 @@ export const App = () => {
 
   const sortAlphabetically = () => {
     setSortField(SORT_FIELD_ALPHABET);
+    setVisibleGoods([...visibleGoods].sort());
     if (isReversed) {
-      setVisibleGoods([...visibleGoods].sort().reverse());
-    } else {
-      setVisibleGoods([...visibleGoods].sort());
+      setVisibleGoods([...visibleGoods].reverse());
     }
   };
 
   const sortLength = () => {
     setSortField(SORT_FIELD_LENGTH);
+    setVisibleGoods(
+      [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
+    );
     if (isReversed) {
-      setVisibleGoods(
-        [...visibleGoods]
-          .sort((good1, good2) => good1.length - good2.length)
-          .reverse(),
-      );
-    } else {
-      setVisibleGoods(
-        [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-      );
+      setVisibleGoods([...visibleGoods].reverse());
     }
   };
 
   const reverse = () => {
+    setIsReversed(!isReversed);
     if (isReversed) {
       setVisibleGoods([...visibleGoods].reverse());
-      setIsReversed(false);
-    } else {
-      setVisibleGoods([...visibleGoods].reverse());
-      setIsReversed(true);
     }
   };
 
@@ -103,23 +94,33 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          onClick={reset}
-          className={cn({
-            button: true,
-            'is-danger': true,
-            'is-light': true,
-            'is-hidden': visibleGoods === goodsFromServer,
-          })}
-        >
-          Reset
-        </button>
+        {visibleGoods !== goodsFromServer ? (
+          <>
+            <button
+              type="button"
+              onClick={reset}
+              className={cn({
+                button: true,
+                'is-danger': true,
+                'is-light': true,
+                'is-invisible': visibleGoods === goodsFromServer,
+              })}
+            >
+              Reset
+            </button>
+          </>
+        ) : (
+          false
+        )}
       </div>
 
       <ul>
         {visibleGoods.map(good => {
-          return <li key={good}>{good}</li>;
+          return (
+            <li key={good} data-cy="Good">
+              {good}
+            </li>
+          );
         })}
       </ul>
     </div>
