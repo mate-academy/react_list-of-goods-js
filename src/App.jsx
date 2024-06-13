@@ -24,35 +24,58 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const sortAlphabetically = () => {
-    setSortField(SORT_FIELD_ALPHABET);
-    setVisibleGoods([...visibleGoods].sort());
-    if (isReversed) {
-      setVisibleGoods([...visibleGoods].reverse());
-    }
-  };
-
-  const sortLength = () => {
-    setSortField(SORT_FIELD_LENGTH);
-    setVisibleGoods(
-      [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
-    );
-    if (isReversed) {
-      setVisibleGoods([...visibleGoods].reverse());
-    }
-  };
-
-  const reverse = () => {
-    setIsReversed(!isReversed);
-    if (isReversed) {
-      setVisibleGoods([...visibleGoods].reverse());
-    }
-  };
-
   const reset = () => {
     setVisibleGoods(goodsFromServer);
     setSortField('');
     setIsReversed(false);
+  };
+
+  const sortBy = parameter => {
+    if (!parameter) {
+      setVisibleGoods([...visibleGoods].reverse());
+
+      return false;
+    }
+
+    if (isReversed) {
+      setVisibleGoods(
+        [...goodsFromServer]
+          .sort((good1, good2) => {
+            switch (parameter) {
+              case SORT_FIELD_ALPHABET:
+                setSortField(parameter);
+
+                return good1.localeCompare(good2);
+              case SORT_FIELD_LENGTH:
+                setSortField(parameter);
+
+                return good1.length - good2.length;
+              default:
+                return false;
+            }
+          })
+          .reverse(),
+      );
+    } else {
+      setVisibleGoods(
+        [...goodsFromServer].sort((good1, good2) => {
+          switch (parameter) {
+            case SORT_FIELD_ALPHABET:
+              setSortField(parameter);
+
+              return good1.localeCompare(good2);
+            case SORT_FIELD_LENGTH:
+              setSortField(parameter);
+
+              return good1.length - good2.length;
+            default:
+              return false;
+          }
+        }),
+      );
+    }
+
+    return false;
   };
 
   return (
@@ -60,10 +83,10 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          onClick={sortAlphabetically}
-          className={cn({
-            button: true,
-            'is-info': true,
+          onClick={() => {
+            sortBy(SORT_FIELD_ALPHABET);
+          }}
+          className={cn('button is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
         >
@@ -72,10 +95,10 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={sortLength}
-          className={cn({
-            button: true,
-            'is-success': true,
+          onClick={() => {
+            sortBy(SORT_FIELD_LENGTH);
+          }}
+          className={cn('button is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
         >
@@ -84,44 +107,36 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={reverse}
-          className={cn({
-            button: true,
-            'is-warning': true,
+          onClick={() => {
+            setIsReversed(!isReversed);
+            sortBy();
+          }}
+          className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {visibleGoods !== goodsFromServer ? (
-          <>
-            <button
-              type="button"
-              onClick={reset}
-              className={cn({
-                button: true,
-                'is-danger': true,
-                'is-light': true,
-                'is-invisible': visibleGoods === goodsFromServer,
-              })}
-            >
-              Reset
-            </button>
-          </>
+        {isReversed || sortField !== '' ? (
+          <button
+            type="button"
+            onClick={reset}
+            className={cn('button is-danger is-light')}
+          >
+            Reset
+          </button>
         ) : (
           false
         )}
       </div>
 
       <ul>
-        {visibleGoods.map(good => {
-          return (
-            <li key={good} data-cy="Good">
-              {good}
-            </li>
-          );
-        })}
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
       </ul>
     </div>
   );
