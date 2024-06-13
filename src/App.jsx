@@ -16,50 +16,32 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const classname = condition => (!condition ? 'is-light' : '');
+  const [sortType, setSortType] = useState(null);
+  const [checkRevers, setCheckReverse] = useState(false);
 
-  const [sortAlphaber, setSortAlphabet] = useState(false);
-  const [checkSortLength, setCheckSortLength] = useState(false);
-  const [checkReverse, setCheckReverse] = useState(false);
-
-  let showBtn = false;
-  const visiblegoods = [...goodsFromServer];
-
-  if (sortAlphaber) {
-    visiblegoods.sort();
-    showBtn = true;
-  }
-
-  if (checkSortLength) {
-    visiblegoods.sort((goods1, goods2) => goods1.length - goods2.length);
-    showBtn = true;
-  }
-
-  if (checkReverse) {
-    visiblegoods.reverse();
-    showBtn = true;
-  }
-
-  const sortByAlphabet = () => {
-    setSortAlphabet(true);
-
-    setCheckSortLength(false);
+  const handleSort = type => {
+    setSortType(type);
   };
 
-  const sortByLength = () => {
-    setSortAlphabet(false);
-    setCheckSortLength(true);
-  };
+  const visibleGoods = [...goodsFromServer];
+
+  if (sortType === 'alphabetical') {
+    visibleGoods.sort();
+  } else if (sortType === 'length') {
+    visibleGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (checkRevers) {
+    visibleGoods.reverse();
+  }
 
   const reversedGoods = () => {
-    setCheckReverse(!checkReverse);
+    setCheckReverse(!checkRevers);
   };
 
-  const removeState = () => {
-    setSortAlphabet(false);
-    setCheckSortLength(false);
+  const resetState = () => {
+    setSortType(null);
     setCheckReverse(false);
-    showBtn = false;
   };
 
   return (
@@ -67,32 +49,33 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${classname(sortAlphaber)} `}
-          onClick={sortByAlphabet}
+          className={`button is-info ${sortType === 'alphabetical' ? '' : 'is-light'}`}
+          onClick={() => handleSort('alphabetical')}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${classname(checkSortLength)}`}
-          onClick={sortByLength}
+          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+          onClick={() => handleSort('length')}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${classname(checkReverse)}`}
+          className={`button is-warning ${checkRevers ? '' : 'is-light'}`}
           onClick={reversedGoods}
         >
           Reverse
         </button>
-        {showBtn && (
+
+        {(sortType || checkRevers) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={removeState}
+            onClick={resetState}
           >
             Reset
           </button>
@@ -100,7 +83,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visiblegoods.map((good, index) => {
+        {visibleGoods.map((good, index) => {
           const uniqueKey = `${index} - ${Math.floor(Math.random * goodsFromServer.length)}`;
 
           return (
