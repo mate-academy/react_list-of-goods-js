@@ -47,6 +47,11 @@ export const App = () => {
     isReversed,
   });
 
+  const reset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -73,7 +78,7 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-warning', {
-            'is-light': isReversed !== true,
+            'is-light': !isReversed,
           })}
           onClick={() => setIsReversed(!isReversed)}
         >
@@ -84,10 +89,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
@@ -95,11 +97,15 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
-          <li data-cy="Good" key={`${good}-${visibleGoods.indexOf(good)}`}>
-            {good}
-          </li>
-        ))}
+        {visibleGoods.map((good, index) => {
+          const uniqueKey = `${index}-${good}`;
+
+          return (
+            <li data-cy="Good" key={uniqueKey}>
+              {good}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
