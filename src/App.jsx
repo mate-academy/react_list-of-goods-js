@@ -39,11 +39,7 @@ export const App = () => {
   const displayedGoods = isReversed ? [...sortedGoods].reverse() : sortedGoods;
 
   const handleSort = field => {
-    if (sortField === field) {
-      setIsReversed(!isReversed);
-    } else {
-      setSortField(field);
-    }
+    setSortField(field);
   };
 
   const handleReverse = () => {
