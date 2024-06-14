@@ -98,11 +98,15 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(goods => (
-          <li data-cy="Good" key={goods}>
-            {goods}
-          </li>
-        ))}
+        {visibleGoods.map((goods, index) => {
+          const uniqueKey = `${index}-${goods}`;
+
+          return (
+            <li data-cy="Good" key={uniqueKey}>
+              {goods}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
