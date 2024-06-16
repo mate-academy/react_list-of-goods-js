@@ -23,6 +23,7 @@ const REVERSE = 'reverse';
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState('');
+
   const visibleGoods = [...goodsFromServer].sort((good1, good2) => {
     switch (sortField) {
       case SORT_ALPHABET:
@@ -43,30 +44,30 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
+          onClick={() => setSortField(SORT_ALPHABET)}
           className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_ALPHABET,
           })}
-          onClick={() => setSortField(SORT_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
+          onClick={() => setSortField(SORT_LENGTH)}
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_LENGTH,
           })}
-          onClick={() => setSortField(SORT_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
+          onClick={() => setReverseField(reverseField === '' ? REVERSE : '')}
           className={cn('button', 'is-warning', {
             'is-light': reverseField !== REVERSE,
           })}
-          onClick={() => setReverseField(reverseField === '' ? REVERSE : '')}
         >
           Reverse
         </button>
@@ -74,11 +75,11 @@ export const App = () => {
         {(reverseField || sortField) && (
           <button
             type="button"
-            className="button is-danger is-light"
             onClick={() => {
               setSortField('');
               setReverseField('');
             }}
+            className="button is-danger is-light"
           >
             Reset
           </button>
@@ -87,7 +88,7 @@ export const App = () => {
       {}
       <ul>
         {visibleGoods.map(good => (
-          <li key={good} data-cy="GOOD">
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
