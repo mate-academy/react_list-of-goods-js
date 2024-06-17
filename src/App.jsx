@@ -17,11 +17,11 @@ export const goodsFromServer = [
 
 export const App = () => {
   const copyOfGoods = [...goodsFromServer];
-  const [value, setState] = useState('');
-  const [reserve, setReserve] = useState(false);
+  const [sortType, setState] = useState('');
+  const [isReversed, setReserve] = useState(false);
 
   copyOfGoods.sort((good1, good2) => {
-    switch (value) {
+    switch (sortType) {
       case 'Sort by length':
         return good1.length - good2.length;
       case 'Sort alphabetically':
@@ -30,12 +30,12 @@ export const App = () => {
         return 0;
     }
   });
-  if (reserve) {
+  if (isReversed) {
     copyOfGoods.reverse();
   }
 
-  const isLight = item => {
-    return value === item ? '' : 'is-light';
+  const getButtonClass = buttonType => {
+    return sortType === buttonType ? '' : 'is-light';
   };
 
   return (
@@ -44,7 +44,7 @@ export const App = () => {
         <button
           onClick={() => setState('Sort alphabetically')}
           type="button"
-          className={`button is-info ${isLight('Sort alphabetically')}`}
+          className={`button is-info ${getButtonClass('Sort alphabetically')}`}
         >
           Sort alphabetically
         </button>
@@ -52,27 +52,27 @@ export const App = () => {
         <button
           onClick={() => setState('Sort by length')}
           type="button"
-          className={`button is-success ${isLight('Sort by length')}`}
+          className={`button is-success ${getButtonClass('Sort by length')}`}
         >
           Sort by length
         </button>
 
         <button
-          onClick={() => setReserve(!reserve)}
+          onClick={() => setReserve(!isReversed)}
           type="button"
-          className={`button is-warning ${reserve ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
         >
           Reverse
         </button>
 
-        {value || reserve ? (
+        {sortType || isReversed ? (
           <button
             onClick={() => {
               setReserve(false);
               setState('');
             }}
             type="button"
-            className={`button is-danger ${isLight('Reset')}`}
+            className={`button is-danger ${getButtonClass('Reset')}`}
           >
             Reset
           </button>
