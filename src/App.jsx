@@ -20,10 +20,10 @@ export const App = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  let GoodsCopy = [...goodsFromServer];
+  let goodsCopy = [...goodsFromServer];
 
   if (sortOrder) {
-    GoodsCopy = [...goodsFromServer].sort((a, b) => {
+    goodsCopy = [...goodsFromServer].sort((a, b) => {
       switch (sortOrder) {
         case 'alphabetically':
           return a.localeCompare(b);
@@ -36,7 +36,7 @@ export const App = () => {
   }
 
   if (isReversed) {
-    GoodsCopy = [...GoodsCopy].reverse();
+    goodsCopy = [...goodsCopy].reverse();
   }
 
   const GoodList = ({ goodsList }) => {
@@ -52,7 +52,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortOrder === 'alphabetically' ? '' : 'is-light'}`}
+          className={`button is-info ${sortOrder === 'alphabetically' && 'is-light'}`}
           onClick={() => setSortOrder('alphabetically')}
         >
           Sort alphabetically
@@ -60,7 +60,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortOrder === 'length' ? '' : 'is-light'}`}
+          className={`button is-success ${sortOrder === 'length' && 'is-light'}`}
           onClick={() => setSortOrder('length')}
         >
           Sort by length
@@ -68,7 +68,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed && 'is-light'}`}
           onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
@@ -89,7 +89,7 @@ export const App = () => {
       </div>
 
       <ul>
-        <GoodList goodsList={GoodsCopy} />
+        <GoodList goodsList={goodsCopy} />
       </ul>
     </div>
   );
