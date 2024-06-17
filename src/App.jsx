@@ -17,8 +17,8 @@ export const goodsFromServer = [
 
 export const App = () => {
   const copyOfGoods = [...goodsFromServer];
-  const [sortType, setState] = useState('');
-  const [isReversed, setReserve] = useState(false);
+  const [sortType, setSortState] = useState('');
+  const [isReversed, setIsReserve] = useState(false);
 
   copyOfGoods.sort((good1, good2) => {
     switch (sortType) {
@@ -38,11 +38,16 @@ export const App = () => {
     return sortType === buttonType ? '' : 'is-light';
   };
 
+  const reset = () => {
+    setIsReserve(false);
+    setSortState('');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setState('Sort alphabetically')}
+          onClick={() => setSortState('Sort alphabetically')}
           type="button"
           className={`button is-info ${getButtonClass('Sort alphabetically')}`}
         >
@@ -50,7 +55,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setState('Sort by length')}
+          onClick={() => setSortState('Sort by length')}
           type="button"
           className={`button is-success ${getButtonClass('Sort by length')}`}
         >
@@ -58,26 +63,23 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setReserve(!isReversed)}
+          onClick={() => setIsReserve(!isReversed)}
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
         >
           Reverse
         </button>
 
-        {sortType || isReversed ? (
+        {(sortType || isReversed) && (
           <button
             onClick={() => {
-              setReserve(false);
-              setState('');
+              reset();
             }}
             type="button"
             className={`button is-danger ${getButtonClass('Reset')}`}
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
