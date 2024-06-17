@@ -17,9 +17,8 @@ export const goodsFromServer = [
 ];
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-const REVERSE_SORT = 'reverse';
 
-function getPrepareGoods(goods, sortBy, reverse) {
+function getPrepareGoods(goods, sortBy, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortBy) {
@@ -29,14 +28,13 @@ function getPrepareGoods(goods, sortBy, reverse) {
           return good1.localeCompare(good2);
         case SORT_BY_LENGTH:
           return good1.length - good2.length;
-        case REVERSE_SORT:
         default:
           return 0;
       }
     });
   }
 
-  if (reverse === REVERSE_SORT) {
+  if (isReversed) {
     return preparedGoods.reverse();
   }
 
@@ -45,15 +43,12 @@ function getPrepareGoods(goods, sortBy, reverse) {
 
 export const App = () => {
   const [typeSort, setTypeSort] = useState('');
-  const [reverse, setReverse] = useState('');
-  const sortedGoods = getPrepareGoods(goodsFromServer, typeSort, reverse);
+  const [isReversed, setReverse] = useState(false);
+  const sortedGoods = getPrepareGoods(goodsFromServer, typeSort, isReversed);
 
-  const clearSort = () => {
+  const reset = () => {
     setTypeSort('');
-  };
-
-  const clearReverse = () => {
-    setReverse('');
+    setReverse(false);
   };
 
   return (
@@ -82,24 +77,17 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': reverse !== REVERSE_SORT,
+            'is-light': !isReversed,
           })}
-          onClick={
-            reverse === REVERSE_SORT
-              ? () => clearReverse()
-              : () => setReverse(REVERSE_SORT)
-          }
+          onClick={() => setReverse(!isReversed)}
         >
           Reverse
         </button>
-        {(typeSort !== '' || reverse !== '') && (
+        {(typeSort || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              clearSort();
-              clearReverse();
-            }}
+            onClick={reset}
           >
             Reset
           </button>
