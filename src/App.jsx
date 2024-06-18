@@ -39,6 +39,11 @@ export const App = () => {
     visibleGoods.reverse();
   }
 
+  const handleReset = () => {
+    setSortField('');
+    setReverseField('');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -75,10 +80,7 @@ export const App = () => {
         {(reverseField || sortField) && (
           <button
             type="button"
-            onClick={() => {
-              setSortField('');
-              setReverseField('');
-            }}
+            onClick={handleReset}
             className="button is-danger is-light"
           >
             Reset
