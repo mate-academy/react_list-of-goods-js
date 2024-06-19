@@ -17,7 +17,7 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [isReverse, setIsReverse] = useState('');
+  const [isReverse, setIsReverse] = useState(false);
 
   const visibleGoods = [...goodsFromServer].sort((good1, good2) => {
     switch (sortField) {
@@ -32,13 +32,14 @@ export const App = () => {
 
   const reset = () => {
     setSortField('');
+    setIsReverse(false);
   };
 
-  const isDefaultOrder = sortField === '' && !isReverse;
+  // const isDefaultOrder = sortField === '' && !isReverse;
 
-  const reverseGoods = () => {
-    setIsReverse(!isReverse);
-  };
+  // const reverseGoods = () => {
+  //   setIsReverse(!isReverse);
+  // };
 
   if (isReverse) {
     visibleGoods.reverse();
@@ -64,18 +65,18 @@ export const App = () => {
         </button>
 
         <button
-          onClick={reverseGoods}
+          onClick={() => setIsReverse(prevReverse => !prevReverse)}
           type="button"
           className={`button is-warning ${isReverse ? '' : 'is-light'}`}
         >
           Reverse
         </button>
 
-        {!isDefaultOrder && ( // если не дефолт то показываем кнопку
+        {(isReverse || sortField) && ( // если не дефолт показываем эту кнопку
           <button
-            onClick={reset}
             type="button"
             className="button is-danger is-light"
+            onClick={reset}
           >
             Reset
           </button>
