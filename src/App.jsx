@@ -17,11 +17,11 @@ export const goodsFromServer = [
 
 export const App = () => {
   const copyGoods = [...goodsFromServer];
-  const [sortType, setSort] = useState('');
-  const [isReversed, setReversed] = useState(false);
+  const [sortOrder, serSortOrder] = useState('');
+  const [isReversed, setSortReversed] = useState(false);
 
   copyGoods.sort((good1, good2) => {
-    switch (sortType) {
+    switch (sortOrder) {
       case 'Sort by length':
         return good1.length - good2.length;
       case 'Sort alphabetically':
@@ -35,19 +35,19 @@ export const App = () => {
   }
 
   const getButtonClass = buttonType => {
-    return sortType === buttonType ? '' : 'is-light';
+    return sortOrder === buttonType ? '' : 'is-light';
   };
 
   const reset = () => {
-    setReversed(false);
-    setSort('');
+    setSortReversed(false);
+    serSortOrder('');
   };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSort('Sort alphabetically')}
+          onClick={() => serSortOrder('Sort alphabetically')}
           type="button"
           className={`button is-info ${getButtonClass('Sort alphabetically')}`}
         >
@@ -55,7 +55,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSort('Sort by length')}
+          onClick={() => serSortOrder('Sort by length')}
           type="button"
           className={`button is-success ${getButtonClass('Sort by length')}`}
         >
@@ -63,18 +63,16 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setReversed(!isReversed)}
+          onClick={() => setSortReversed(!isReversed)}
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
         >
           Reverse
         </button>
 
-        {(sortType || isReversed) && (
+        {(sortOrder || isReversed) && (
           <button
-            onClick={() => {
-              reset();
-            }}
+            onClick={reset}
             type="button"
             className={`button is-danger ${getButtonClass('Reset')}`}
           >
