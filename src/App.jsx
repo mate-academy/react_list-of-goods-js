@@ -47,27 +47,22 @@ function getPreparedGoods(goods, { sortType, isReverse }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReverse, setIsReverse] = useState(false);
-  // const [resetVisible, setResetVisible] = useState(false);
 
   const handleReset = () => {
     setSortField('');
     setIsReverse(false);
-    // setResetVisible(false);
   };
 
   const handleSortByAlphabet = () => {
     setSortField(SORT_FIELD_ALPH);
-    // setResetVisible(true);
   };
 
   const handleSortByLength = () => {
     setSortField(SORT_FIELD_LENGTH);
-    // setResetVisible(true);
   };
 
   const handleReverse = () => {
     setIsReverse(prevState => !prevState);
-    // setResetVisible(true);
   };
 
   const visibleGoods = getPreparedGoods(goodsFromServer, {
@@ -121,7 +116,7 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
