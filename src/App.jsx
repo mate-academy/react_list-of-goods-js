@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -17,7 +16,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const sortByABC = 'alphabetically';
+const sortByAlphabet = 'alphabetically';
 const sortByLength = 'length';
 
 function getPreparedGoods(goods, { sortField, reverseGood }) {
@@ -26,7 +25,7 @@ function getPreparedGoods(goods, { sortField, reverseGood }) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case sortByABC:
+        case sortByAlphabet:
           return good1.localeCompare(good2);
         case sortByLength:
           return good1.length - good2.length;
@@ -51,15 +50,22 @@ export const App = () => {
     reverseGood,
   });
 
+  const reset = () => {
+    setSortField('');
+    setReverse(false);
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortField !== sortByABC,
+            'is-light': sortField !== sortByAlphabet,
           })}
-          onClick={sortByAlphabet}
+          onClick={() => {
+            setSortField(sortByAlphabet);
+          }}
         >
           Sort alphabetically
         </button>
@@ -68,7 +74,9 @@ export const App = () => {
           className={cn('button is-success', {
             'is-light': sortField !== sortByLength,
           })}
-          onClick={sortByLength}
+          onClick={() => {
+            setSortField(sortByLength);
+          }}
         >
           Sort by length
         </button>
@@ -96,7 +104,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map((good, index) => (
+        {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
