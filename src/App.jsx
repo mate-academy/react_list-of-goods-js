@@ -59,7 +59,6 @@ export const App = () => {
           }
           onClick={() => {
             setSortField(SORT_FIELD_ALPHABET);
-            setReverseField(false);
           }}
         >
           Sort alphabetically
@@ -74,7 +73,6 @@ export const App = () => {
           }
           onClick={() => {
             setSortField(SORT_FIELD_LENGTH);
-            setReverseField(false);
           }}
         >
           Sort by length
