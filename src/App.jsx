@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-const goodsFromServer = [
+export const goodsFromServer = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -15,85 +16,91 @@ const goodsFromServer = [
   'Garlic',
 ];
 
-const generateKey = () => {
-  return `_${Math.random().toString(36).substr(2, 9)}`;
+const SortType = {
+  ASC: 'ASC',
+  LENGTH: 'LENGTH',
 };
 
-const getVisibleGoods = (goods, sortValue, isReversed) => {
-  const visibleGoods = [...goods];
+const sortOptions = [
+  {
+    type: SortType.ASC,
+    title: 'Sort alphabetically',
+    cssClass: 'is-info',
+  },
+  {
+    type: SortType.LENGTH,
+    title: 'Sort by length',
+    cssClass: 'is-success',
+  },
+];
 
-  if (sortValue === 'alphabetically') {
-    visibleGoods.sort();
-  } else if (sortValue === 'by length') {
-    visibleGoods.sort((a, b) => a.length - b.length);
-  }
+const getPreparedGoods = (goods, { sortBy, isReversed }) => {
+  const preparedGoods = [...goods];
+
+  preparedGoods.sort((a, b) => {
+    switch (sortBy) {
+      case SortType.ASC:
+        return a.localeCompare(b);
+      case SortType.LENGTH:
+        return a.length - b.length;
+      default:
+        return 0;
+    }
+  });
 
   if (isReversed) {
-    visibleGoods.reverse();
+    preparedGoods.reverse();
   }
 
-  return visibleGoods;
+  return preparedGoods;
 };
 
 export const App = () => {
-  const [sortValue, setSortValue] = useState('');
+  const [sortBy, setSortBy] = useState();
   const [isReversed, setIsReversed] = useState(false);
-  const [, forceUpdate] = useState(0);
 
-  const visibleGoods = getVisibleGoods(goodsFromServer, sortValue, isReversed);
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortBy,
+    isReversed,
+  });
 
-  const sortAlphabetically = () => {
-    setSortValue('alphabetically');
-    setIsReversed(false);
-  };
-
-  const sortByLength = () => {
-    setSortValue('by length');
-    setIsReversed(false);
-  };
-
-  const reverseOrder = () => {
+  const toggleReverse = () => {
     setIsReversed(!isReversed);
   };
 
-  const resetOrder = () => {
-    setSortValue('');
-    setIsReversed(false);
-    forceUpdate(prevKey => prevKey + 1);
+  const resetSorting = () => {
+    setSortBy(null);
+    setIsReversed(null);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
-        <button
-          type="button"
-          className={`button is-info ${sortValue === 'alphabetically' ? '' : 'is-light'}`}
-          onClick={sortAlphabetically}
-        >
-          Sort alphabetically
-        </button>
+        {sortOptions.map(sort => (
+          <button
+            type="button"
+            className={cn('button', sort.cssClass, {
+              'is-light': sortBy !== sort.type,
+            })}
+            onClick={() => setSortBy(sort.type)}
+          >
+            {sort.title}
+          </button>
+        ))}
 
         <button
           type="button"
-          className={`button is-success ${sortValue === 'by length' ? '' : 'is-light'}`}
-          onClick={sortByLength}
-        >
-          Sort by length
-        </button>
-
-        <button
-          type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={reverseOrder}
+          className={cn('button', 'is-warning', { 'is-light': !isReversed })}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
 
-        {(sortValue || isReversed) && (
+        {(sortBy || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={resetOrder}
+            onClick={resetSorting}
           >
             Reset
           </button>
@@ -102,9 +109,7 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li key={generateKey()} data-cy="Good">
-            {good}
-          </li>
+          <li data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
