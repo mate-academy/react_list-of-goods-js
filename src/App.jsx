@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-export const goodsFromServer = [
+const goodsFromServer = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -34,10 +34,20 @@ const sortOptions = [
   },
 ];
 
-const getPreparedGoods = (goods, { sortBy, isReversed }) => {
-  const preparedGoods = [...goods];
+export const App = () => {
+  const [sortBy, setSortBy] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
 
-  preparedGoods.sort((a, b) => {
+  const toggleReverse = () => {
+    setIsReversed(!isReversed);
+  };
+
+  const resetSorting = () => {
+    setSortBy(null);
+    setIsReversed(false);
+  };
+
+  const visibleGoods = [...goodsFromServer].sort((a, b) => {
     switch (sortBy) {
       case SortType.ASC:
         return a.localeCompare(b);
@@ -49,35 +59,15 @@ const getPreparedGoods = (goods, { sortBy, isReversed }) => {
   });
 
   if (isReversed) {
-    preparedGoods.reverse();
+    visibleGoods.reverse();
   }
-
-  return preparedGoods;
-};
-
-export const App = () => {
-  const [sortBy, setSortBy] = useState();
-  const [isReversed, setIsReversed] = useState(false);
-
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
-    sortBy,
-    isReversed,
-  });
-
-  const toggleReverse = () => {
-    setIsReversed(!isReversed);
-  };
-
-  const resetSorting = () => {
-    setSortBy(null);
-    setIsReversed(null);
-  };
 
   return (
     <div className="section content">
       <div className="buttons">
         {sortOptions.map(sort => (
           <button
+            key={sort.type}
             type="button"
             className={cn('button', sort.cssClass, {
               'is-light': sortBy !== sort.type,
@@ -109,7 +99,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
