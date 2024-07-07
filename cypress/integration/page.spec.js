@@ -79,7 +79,7 @@ describe('Page', () => {
     it('should allow to sort alphabetically', () => {
       page.sortAlphButton().click();
 
-      page.assertFirstGoods('Apple', 'Bread', 'Carrot');
+      page.assertFirstGoods('Jam', 'Ice cream', 'Honey');
       page.reverseButton().should('not.have.class', NOT_ACTIVE_CLASS);
       page.sortAlphButton().should('not.have.class', NOT_ACTIVE_CLASS);
     });
