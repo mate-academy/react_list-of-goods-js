@@ -53,6 +53,11 @@ export const App = () => {
     isReversed,
   });
 
+  const reset = () => {
+    setSortField(SORT_FIELD_RESET);
+    setIsReversed(false);
+  };
+
   const isOriginalOrder =
     JSON.stringify(sortGoods) === JSON.stringify(goodsFromServer);
 
@@ -82,7 +87,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReversed === false,
+            'is-light': !isReversed,
           })}
           onClick={() => setIsReversed(prev => !prev)}
         >
@@ -95,10 +100,7 @@ export const App = () => {
             className={cn('button', 'is-danger', {
               'is-light': sortField !== SORT_FIELD_RESET,
             })}
-            onClick={() => {
-              setSortField(SORT_FIELD_RESET);
-              setIsReversed(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
@@ -107,38 +109,11 @@ export const App = () => {
 
       <ul>
         {sortGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good.id}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
   );
-
-  // <div className="section content">
-  //   <div className="buttons">
-  //     <button type="button" className="button is-info is-light">
-  //       Sort alphabetically
-  //     </button>
-
-  //     <button type="button" className="button is-success is-light">
-  //       Sort by length
-  //     </button>
-
-  //     <button type="button" className="button is-warning is-light">
-  //       Reverse
-  //     </button>
-
-  //     <button type="button" className="button is-danger is-light">
-  //       Reset
-  //     </button>
-  //   </div>
-
-  //   <ul>
-  //     <li data-cy="Good">Dumplings</li>
-  //     <li data-cy="Good">Carrot</li>
-  //     <li data-cy="Good">Eggs</li>
-  //     <li data-cy="Good">Ice cream</li>
-  //     <li data-cy="Good">Apple</li>
-  //     <li data-cy="Good">...</li>
-  //   </ul>
-  // </div>
 };
