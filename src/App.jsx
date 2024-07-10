@@ -38,7 +38,7 @@ function getPrepearedGoods(goods, { sortField, isReversed }) {
     });
   }
 
-  if (isReversed === true) {
+  if (isReversed) {
     prepearedSortGoods.reverse();
   }
 
@@ -109,7 +109,7 @@ export const App = () => {
 
       <ul>
         {sortGoods.map(good => (
-          <li data-cy="Good" key={good.id}>
+          <li data-cy="Good" key={good}>
             {good}
           </li>
         ))}
