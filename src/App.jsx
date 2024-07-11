@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,102 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function getGoodsPrepared(goods, query1, query2, reverse) {
+  let goodsPrepared = [...goods];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  if (query1 === 'abc') {
+    goodsPrepared = goodsPrepared.sort((good1, good2) => {
+      return good1 > good2 ? 1 : -1;
+    });
+  }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (query2 === 'length') {
+    goodsPrepared = goodsPrepared.sort((good1, good2) => {
+      return good1.length - good2.length;
+    });
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (reverse % 2 === 0) {
+    goodsPrepared = goodsPrepared.reverse();
+  }
+
+  return goodsPrepared;
+}
+
+let COUNTER_PLUS = 1;
+
+export const App = () => {
+  const [query1, setQuery1] = useState('');
+  const [query2, setQuery2] = useState('');
+  const [reverse, setReverse] = useState(1);
+  const renderingGoods = getGoodsPrepared(
+    goodsFromServer,
+    query1,
+    query2,
+    reverse,
+  );
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': query1 === '',
+          })}
+          onClick={() => {
+            setQuery1('abc');
+            setQuery2('');
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': query2 === '',
+          })}
+          onClick={() => {
+            setQuery1('');
+            setQuery2('length');
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': reverse % 2 !== 0,
+          })}
+          onClick={() => {
+            setReverse((COUNTER_PLUS += 1));
+          }}
+        >
+          Reverse
+        </button>
+
+        {(query1 || query2 || reverse % 2 === 0) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setQuery1('');
+              setQuery2('');
+              setReverse(1);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {renderingGoods.map(good => (
+        <ul>
+          <li data-cy="Good">{good}</li>
+        </ul>
+      ))}
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
