@@ -21,11 +21,11 @@ function getGoodsPrepared(goods, goodsSortBy, reverse) {
 
   if (goodsSortBy) {
     goodsPrepared = goodsPrepared.sort((good1, good2) => {
-      switch (true) {
-        case goodsSortBy === 'abc':
+      switch (goodsSortBy) {
+        case 'abc':
           return good1 > good2 ? 1 : -1;
 
-        case goodsSortBy === 'length':
+        case 'length':
           return good1.length - good2.length;
 
         default:
