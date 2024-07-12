@@ -34,19 +34,23 @@ function getGoodsPrepared(goods, goodsSortBy, reverse) {
     });
   }
 
-  if (reverse % 2 === 0) {
+  if (reverse) {
     goodsPrepared = goodsPrepared.reverse();
   }
 
   return goodsPrepared;
 }
 
-let COUNTER_PLUS = 1;
+// let COUNTER_PLUS = 1;
 
 export const App = () => {
-  const [query, setQuery] = useState('');
-  const [reverse, setReverse] = useState(1);
-  const renderingGoods = getGoodsPrepared(goodsFromServer, query, reverse);
+  const [goodsSortBy, setGoodsSortBy] = useState('');
+  const [reverse, setReverse] = useState(false);
+  const renderingGoods = getGoodsPrepared(
+    goodsFromServer,
+    goodsSortBy,
+    reverse,
+  );
 
   return (
     <div className="section content">
@@ -54,10 +58,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': query === '' || query === 'length',
+            'is-light': goodsSortBy === '' || goodsSortBy === 'length',
           })}
           onClick={() => {
-            setQuery('abc');
+            setGoodsSortBy('abc');
           }}
         >
           Sort alphabetically
@@ -66,10 +70,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': query === '' || query === 'abc',
+            'is-light': goodsSortBy === '' || goodsSortBy === 'abc',
           })}
           onClick={() => {
-            setQuery('length');
+            setGoodsSortBy('length');
           }}
         >
           Sort by length
@@ -78,22 +82,22 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-warning', {
-            'is-light': reverse % 2 !== 0,
+            'is-light': reverse === false,
           })}
           onClick={() => {
-            setReverse((COUNTER_PLUS += 1));
+            setReverse(!reverse);
           }}
         >
           Reverse
         </button>
 
-        {(query || reverse % 2 === 0) && (
+        {(goodsSortBy || reverse) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setReverse(1);
-              setQuery('');
+              setReverse(false);
+              setGoodsSortBy('');
             }}
           >
             Reset
@@ -102,7 +106,9 @@ export const App = () => {
       </div>
       <ul>
         {renderingGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
