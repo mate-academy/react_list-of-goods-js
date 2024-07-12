@@ -16,18 +16,21 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getGoodsPrepared(goods, query1, query2, reverse) {
+function getGoodsPrepared(goods, goodsSortBy, reverse) {
   let goodsPrepared = [...goods];
 
-  if (query1 === 'abc') {
+  if (goodsSortBy) {
     goodsPrepared = goodsPrepared.sort((good1, good2) => {
-      return good1 > good2 ? 1 : -1;
-    });
-  }
+      switch (true) {
+        case goodsSortBy === 'abc':
+          return good1 > good2 ? 1 : -1;
 
-  if (query2 === 'length') {
-    goodsPrepared = goodsPrepared.sort((good1, good2) => {
-      return good1.length - good2.length;
+        case goodsSortBy === 'length':
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
     });
   }
 
@@ -41,15 +44,9 @@ function getGoodsPrepared(goods, query1, query2, reverse) {
 let COUNTER_PLUS = 1;
 
 export const App = () => {
-  const [query1, setQuery1] = useState('');
-  const [query2, setQuery2] = useState('');
+  const [query, setQuery] = useState('');
   const [reverse, setReverse] = useState(1);
-  const renderingGoods = getGoodsPrepared(
-    goodsFromServer,
-    query1,
-    query2,
-    reverse,
-  );
+  const renderingGoods = getGoodsPrepared(goodsFromServer, query, reverse);
 
   return (
     <div className="section content">
@@ -57,11 +54,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': query1 === '',
+            'is-light': query === '' || query === 'length',
           })}
           onClick={() => {
-            setQuery1('abc');
-            setQuery2('');
+            setQuery('abc');
           }}
         >
           Sort alphabetically
@@ -70,11 +66,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': query2 === '',
+            'is-light': query === '' || query === 'abc',
           })}
           onClick={() => {
-            setQuery1('');
-            setQuery2('length');
+            setQuery('length');
           }}
         >
           Sort by length
@@ -92,26 +87,24 @@ export const App = () => {
           Reverse
         </button>
 
-        {(query1 || query2 || reverse % 2 === 0) && (
+        {(query || reverse % 2 === 0) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setQuery1('');
-              setQuery2('');
               setReverse(1);
+              setQuery('');
             }}
           >
             Reset
           </button>
         )}
       </div>
-
-      {renderingGoods.map(good => (
-        <ul>
+      <ul>
+        {renderingGoods.map(good => (
           <li data-cy="Good">{good}</li>
-        </ul>
-      ))}
+        ))}
+      </ul>
     </div>
   );
 };
