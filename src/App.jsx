@@ -41,8 +41,6 @@ function getGoodsPrepared(goods, goodsSortBy, reverse) {
   return goodsPrepared;
 }
 
-// let COUNTER_PLUS = 1;
-
 export const App = () => {
   const [goodsSortBy, setGoodsSortBy] = useState('');
   const [reverse, setReverse] = useState(false);
@@ -51,6 +49,11 @@ export const App = () => {
     goodsSortBy,
     reverse,
   );
+
+  const reset = () => {
+    setReverse(false);
+    setGoodsSortBy('');
+  };
 
   return (
     <div className="section content">
@@ -95,10 +98,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setReverse(false);
-              setGoodsSortBy('');
-            }}
+            onClick={reset}
           >
             Reset
           </button>
