@@ -77,16 +77,15 @@ export const App = () => {
         >
           Reverse
         </button>
-        {sortedBy.length > 0 ||
-          (reversed && (
-            <button
-              type="button"
-              className="button is-danger"
-              onClick={resetGoods}
-            >
-              Reset
-            </button>
-          ))}
+        {(sortedBy || reversed) && (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={resetGoods}
+          >
+            Reset
+          </button>
+        )}
       </div>
       <ul>
         {sortedGoods.map(good => (
