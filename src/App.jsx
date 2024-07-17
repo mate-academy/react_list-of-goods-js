@@ -15,13 +15,19 @@ const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+
+const SORT_FIELD = {
+  None: '',
+  Length: 'length',
+  Alphabetically: 'alphabetically'
+};
+
 const sortList = (goods, sortBy, isReversed) => {
   const sortedGoods = [...goods].sort((a, b) => {
     switch (sortBy) {
-      case 'alphabetically':
+      case SORT_FIELD.Alphabetically:
         return a.localeCompare(b);
-
-      case 'length':
+      case SORT_FIELD.Length:
         return a.length - b.length;
       default:
         return 0;
@@ -36,14 +42,13 @@ const sortList = (goods, sortBy, isReversed) => {
 };
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [sortedBy, setSortedBy] = useState('');
+  const [sortedBy, setSortedBy] = useState(SORT_FIELD.None);
   const [reversed, setReversed] = useState(false);
 
-  const sortedGoods = sortList(goods, sortedBy, reversed);
+  const sortedGoods = sortList(goodsFromServer, sortedBy, reversed);
+
   const resetGoods = () => {
-    setGoods(goodsFromServer);
-    setSortedBy('');
+    setSortedBy(SORT_FIELD.None);
     setReversed(false);
   };
 
@@ -53,18 +58,18 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortedBy !== 'alphabetically',
+            'is-light': sortedBy !== SORT_FIELD.Alphabetically,
           })}
-          onClick={() => setSortedBy('alphabetically')}
+          onClick={() => setSortedBy(SORT_FIELD.Alphabetically)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortedBy !== 'length',
+            'is-light': sortedBy !== SORT_FIELD.Length,
           })}
-          onClick={() => setSortedBy('length')}
+          onClick={() => setSortedBy(SORT_FIELD.Length)}
         >
           Sort by length
         </button>
@@ -77,7 +82,7 @@ export const App = () => {
         >
           Reverse
         </button>
-        {(sortedBy || reversed) && (
+        {(sortedBy !== SORT_FIELD.None || reversed) && (
           <button
             type="button"
             className="button is-danger"
