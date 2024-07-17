@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import classNames from 'classnames'; // Імпортуємо бібліотеку classnames
 
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -31,7 +32,7 @@ export const App = () => {
 
     setGoods(sortedGoods);
     setSortedBy('alphabet');
-    setReversed(false); // Reset reversed state after sorting
+    setReversed(false); // Скидаємо стан reversed після сортування
   };
 
   const sortByLength = () => {
@@ -43,7 +44,7 @@ export const App = () => {
 
     setGoods(sortedGoods);
     setSortedBy('length');
-    setReversed(false); // Reset reversed state after sorting
+    setReversed(false); // Скидаємо стан reversed після сортування
   };
 
   const reverseOrder = () => {
@@ -64,7 +65,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortedBy === 'alphabet' && !reversed ? '' : 'is-light'}`}
+          className={classNames('button', 'is-info', {
+            'is-light': !(sortedBy === 'alphabet' && !reversed),
+          })}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -72,7 +75,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortedBy === 'length' && !reversed ? '' : 'is-light'}`}
+          className={classNames('button', 'is-success', {
+            'is-light': !(sortedBy === 'length' && !reversed),
+          })}
           onClick={sortByLength}
         >
           Sort by length
@@ -80,7 +85,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${reversed ? '' : 'is-light'}`}
+          className={classNames('button', 'is-warning', {
+            'is-light': !reversed,
+          })}
           onClick={reverseOrder}
         >
           Reverse
