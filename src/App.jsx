@@ -42,12 +42,10 @@ export const App = () => {
 
   const handleSortAlphabetically = () => {
     setSortOrder('alphabetical');
-    setIsReversed(false);
   };
 
   const handleSortByLength = () => {
     setSortOrder('length');
-    setIsReversed(false);
   };
 
   const handleReverseOrder = () => {
