@@ -20,8 +20,25 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alpha';
 const SORT_FIELD_LENGTH = 'length';
 
+const getPreparedGoods = (goods, sortField, reversed) => {
+  let sortedGoods = [...goods];
+
+  if (sortField === SORT_FIELD_ALPHABET) {
+    sortedGoods.sort((good1, good2) => good1.localeCompare(good2));
+  }
+
+  if (sortField === SORT_FIELD_LENGTH) {
+    sortedGoods.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (reversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
 export const App = () => {
-  let visibleGoods = [...goodsFromServer];
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
 
@@ -30,17 +47,7 @@ export const App = () => {
     setReversed(false);
   };
 
-  if (sortField === SORT_FIELD_ALPHABET) {
-    visibleGoods.sort((good1, good2) => good1.localeCompare(good2));
-  }
-
-  if (sortField === SORT_FIELD_LENGTH) {
-    visibleGoods.sort((good1, good2) => good1.length - good2.length);
-  }
-
-  if (reversed) {
-    visibleGoods = [...visibleGoods].reverse();
-  }
+  const preparedGoods = getPreparedGoods(goodsFromServer, sortField, reversed);
 
   return (
     <div className="section content">
@@ -77,7 +84,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField !== '' || reversed === true ? (
+        {(sortField || reversed) && (
           <button
             onClick={reset}
             type="button"
@@ -85,13 +92,11 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {preparedGoods.map(good => (
           <Good key={good} content={good} />
         ))}
       </ul>
