@@ -15,6 +15,9 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_FIELD_ALPHABET = 'alphabet';
+const SORT_FIELD_LENGTH = 'length';
+
 export const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
@@ -28,11 +31,11 @@ export const GoodList = ({ goods }) => (
 function getPreparedGoods(goods, sortField) {
   const preparedGoods = [...goods];
 
-  if (sortField === 'alphabet') {
+  if (sortField === SORT_FIELD_ALPHABET) {
     return preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
   }
 
-  if (sortField === 'length') {
+  if (sortField === SORT_FIELD_LENGTH) {
     return preparedGoods.sort((good1, good2) => good1.length - good2.length);
   }
 
@@ -53,16 +56,16 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField === 'alphabet' ? '' : 'is-light'}`}
-          onClick={() => setSortField('alphabet')}
+          className={`button is-info ${sortField === SORT_FIELD_ALPHABET ? '' : 'is-light'}`}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-info ${sortField === 'length' ? '' : 'is-light'}`}
-          onClick={() => setSortField('length')}
+          className={`button is-info ${sortField === SORT_FIELD_LENGTH ? '' : 'is-light'}`}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
