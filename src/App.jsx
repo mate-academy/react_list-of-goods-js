@@ -47,11 +47,10 @@ export const App = () => {
 
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
-
-  const set = () => {
-    setSortField('');
-    setIsReversed(false);
-  };
+  // const set = () => {
+  //   setSortField('');
+  //   setIsReversed(false);
+  // };
 
   return (
     <div className="section content">
@@ -101,7 +100,7 @@ export const App = () => {
                 active: sortField === SORT_FIELD_NAME,
               },
             )}
-            onClick={() => set()}
+            onClick={() => setSortField('')}
           >
             Reset
           </button>
