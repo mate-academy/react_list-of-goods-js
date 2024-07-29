@@ -1,6 +1,10 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+import { useState } from 'react';
+import classNames from 'classnames';
+import { GoodsList } from './components/GoodsList';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -14,33 +18,94 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const goods = goodsFromServer.map((good, id) => ({
+  name: good,
+  id,
+}));
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+const ORDER_NATURAL = 'natural';
+const ORDER_ALPHABETICALLY = 'alphabetically';
+const ORDER_BY_LENGTH = 'by length';
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+function getGoodsToDisplay(array, order, reverse) {
+  const goodsToDisplay = [...array];
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  switch (order) {
+    case ORDER_NATURAL:
+      break;
+    case ORDER_ALPHABETICALLY:
+      goodsToDisplay.sort(({ name: a }, { name: b }) => a.localeCompare(b));
+      break;
+    case ORDER_BY_LENGTH:
+      goodsToDisplay.sort(({ name: a }, { name: b }) => a.length - b.length);
+      break;
+    default:
+      throw new Error(`"${order}" is not a valid sorting order`);
+  }
+
+  if (reverse) {
+    goodsToDisplay.reverse();
+  }
+
+  return goodsToDisplay;
+}
+
+export const App = () => {
+  const [order, setOrder] = useState(ORDER_NATURAL);
+  const [reverse, setReverse] = useState(false);
+
+  const isOrderedAlphabetically = order === ORDER_ALPHABETICALLY;
+  const isOrderedByLength = order === ORDER_BY_LENGTH;
+  const isResetMeaningful = order !== ORDER_NATURAL || reverse;
+
+  const goodsToDisplay = getGoodsToDisplay(goods, order, reverse);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => setOrder(ORDER_ALPHABETICALLY)}
+          type="button"
+          className={classNames('button is-info', {
+            'is-light': !isOrderedAlphabetically,
+          })}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={() => setOrder(ORDER_BY_LENGTH)}
+          type="button"
+          className={classNames('button is-success', {
+            'is-light': !isOrderedByLength,
+          })}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={() => setReverse(!reverse)}
+          type="button"
+          className={classNames('button is-warning', { 'is-light': !reverse })}
+        >
+          Reverse
+        </button>
+
+        {isResetMeaningful && (
+          <button
+            onClick={() => {
+              setOrder(ORDER_NATURAL);
+              setReverse(false);
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <GoodsList goods={goodsToDisplay} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
