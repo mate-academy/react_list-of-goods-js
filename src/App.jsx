@@ -53,6 +53,11 @@ export const App = () => {
     return reverseParam ? listToReverse.reverse() : listToReverse;
   }
 
+  function reset() {
+    setSortButton('');
+    setReversed(false);
+  }
+
   const visibleList = prepareList(goodsFromServer);
   const acltualList = reverseVisibleList(visibleList, reversed);
 
@@ -93,10 +98,7 @@ export const App = () => {
 
         {(sortButton || reversed) && (
           <button
-            onClick={() => {
-              setSortButton('');
-              setReversed(false);
-            }}
+            onClick={reset}
             type="button"
             className="button is-danger is-light"
           >
@@ -105,13 +107,11 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {acltualList.map(item => {
-          return (
-            <li key={item} data-cy="Good">
-              {item}
-            </li>
-          );
-        })}
+        {acltualList.map(item => (
+          <li key={item} data-cy="Good">
+            {item}
+          </li>
+        ))}
       </ul>
     </div>
   );
