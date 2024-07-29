@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
+import { GoodList } from './goods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -18,25 +20,24 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 
-export const GoodList = ({ goods }) => (
-  <ul>
-    {goods.map(good => (
-      <li data-cy="Good" key={good}>
-        {good}
-      </li>
-    ))}
-  </ul>
-);
-
-function getPreparedGoods(goods, sortField) {
+function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
-  if (sortField === SORT_FIELD_ALPHABET) {
-    return preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
+  switch (sortField) {
+    case SORT_FIELD_ALPHABET:
+      preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
+      break;
+
+    case SORT_FIELD_LENGTH:
+      preparedGoods.sort((good1, good2) => good1.length - good2.length);
+      break;
+
+    default:
+      break;
   }
 
-  if (sortField === SORT_FIELD_LENGTH) {
-    return preparedGoods.sort((good1, good2) => good1.length - good2.length);
+  if (isReversed) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -44,19 +45,18 @@ function getPreparedGoods(goods, sortField) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  let visibleGoods = getPreparedGoods(goodsFromServer, sortField);
-  const [reversed, setReversed] = useState(false);
-
-  if (reversed) {
-    visibleGoods = [...visibleGoods].reverse();
-  }
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
+  const showResetButton = sortField || isReversed;
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_FIELD_ALPHABET ? '' : 'is-light'}`}
+          className={classNames('button is-info', {
+            'is-light': sortField !== SORT_FIELD_ALPHABET,
+          })}
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
@@ -64,7 +64,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_FIELD_LENGTH ? '' : 'is-light'}`}
+          className={classNames('button is-info', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
@@ -72,19 +74,19 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-info ${reversed === true ? '' : 'is-light'}`}
-          onClick={() => setReversed(!reversed)}
+          className={`button is-info ${isReversed ? '' : 'is-light'}`}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortField || reversed) && (
+        {showResetButton && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField('');
-              setReversed(false);
+              setIsReversed(false);
             }}
           >
             Reset
