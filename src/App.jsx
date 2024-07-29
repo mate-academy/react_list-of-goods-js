@@ -56,7 +56,7 @@ export const App = () => {
 
   const isOrderedAlphabetically = order === ORDER_ALPHABETICALLY;
   const isOrderedByLength = order === ORDER_BY_LENGTH;
-  const isResetMeaningful = order !== ORDER_NATURAL || reverse !== false;
+  const isResetMeaningful = order !== ORDER_NATURAL || reverse;
 
   const goodsToDisplay = getGoodsToDisplay(goods, order, reverse);
 
