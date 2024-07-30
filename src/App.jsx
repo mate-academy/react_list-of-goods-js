@@ -53,10 +53,10 @@ export const App = () => {
   });
 
   const toggleReverse = () => {
-    setIsReversed(!isReversed);
+    setIsReversed(prev => !prev);
   };
 
-  const isFilterApplied = sortField !== '' || isReversed;
+  const isFilterApplied = sortField || isReversed;
 
   return (
     <div className="section content">
@@ -64,12 +64,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            // 'is-info': sortField === SORT_FIELD_ALPHA,
             'is-light': sortField !== SORT_FIELD_ALPHA,
           })}
           onClick={() => {
             setSortField(SORT_FIELD_ALPHA);
-            // setIsReversed(false);
           }}
         >
           Sort alphabetically
@@ -78,7 +76,6 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            // 'is-success': sortField === SORT_FIELD_LENGTH,
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
           onClick={() => {
@@ -91,7 +88,6 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            // 'is-warning': isReversed,
             'is-light': !isReversed,
           })}
           onClick={toggleReverse}
