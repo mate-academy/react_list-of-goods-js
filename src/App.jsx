@@ -15,50 +15,48 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-const lengthCondition = 'length';
-const alphabetCondition = 'alphabet';
-const reverseCondition = 'reverse';
 
-function getSortedList(list, condition) {
-  const listCopy = [...list];
+const LENGTH_CONDITION = 'length';
+const ALPHABET_CONDITION = 'alphabet';
 
-  if (condition) {
-    switch (condition) {
-      case lengthCondition:
-        return listCopy.sort((a, b) => a.length - b.length);
-      case alphabetCondition:
-        return listCopy.sort();
+function getSortedGoodsList(goods, isReversed, sortCondition) {
+  const goodsListCopy = [...goods];
+
+  if (sortCondition) {
+    switch (sortCondition) {
+      case LENGTH_CONDITION:
+        goodsListCopy.sort((a, b) => a.length - b.length);
+        break;
+      case ALPHABET_CONDITION:
+        goodsListCopy.sort();
+        break;
       default:
-        return listCopy;
+        return 0;
     }
   }
 
-  return listCopy;
+  if (isReversed) {
+    goodsListCopy.reverse();
+  }
+
+  return goodsListCopy;
 }
 
 export const App = () => {
-  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [sortCondition, setSortCondition] = useState('');
 
-  const handleClick = condition => {
-    if (condition === reverseCondition) {
-      setIsReversed(prev => !prev);
-    } else {
-      const newSortedGoods = getSortedList(goodsFromServer, condition);
-
-      setSortCondition(condition);
-      setSortedGoods(newSortedGoods);
-    }
-  };
+  const displayedGoods = getSortedGoodsList(
+    goodsFromServer,
+    isReversed,
+    sortField,
+  );
+  const isSortFieldChosen = condition => condition !== sortField;
 
   const reset = () => {
-    setSortCondition('');
-    setSortedGoods(goodsFromServer);
+    setSortField('');
     setIsReversed(false);
   };
-
-  const displayedGoods = isReversed ? [...sortedGoods].reverse() : sortedGoods;
 
   return (
     <div className="section content">
@@ -66,9 +64,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortCondition !== alphabetCondition,
+            'is-light': isSortFieldChosen(ALPHABET_CONDITION),
           })}
-          onClick={() => handleClick(alphabetCondition)}
+          onClick={() => setSortField(ALPHABET_CONDITION)}
         >
           Sort alphabetically
         </button>
@@ -76,9 +74,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortCondition !== lengthCondition,
+            'is-light': isSortFieldChosen(LENGTH_CONDITION),
           })}
-          onClick={() => handleClick(lengthCondition)}
+          onClick={() => setSortField(LENGTH_CONDITION)}
         >
           Sort by length
         </button>
@@ -88,12 +86,12 @@ export const App = () => {
           className={classNames('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => handleClick(reverseCondition)}
+          onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
         </button>
 
-        {(sortCondition || isReversed) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
