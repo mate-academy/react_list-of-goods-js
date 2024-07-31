@@ -83,21 +83,20 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          style={{
-            display:
-              sortField !== SORT_FIELD_ALPHABETICALLY &&
-              (sortField !== SORT_FIELD_BY_LENGTH && !reversed ? 'none' : ''),
-          }}
-          onClick={() => {
-            setSortField(goodsFromServer);
-            setReversed(!goodsFromServer);
-          }}
-        >
-          Reset
-        </button>
+        {(sortField === SORT_FIELD_ALPHABETICALLY ||
+          sortField === SORT_FIELD_BY_LENGTH ||
+          reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
       <ul>
         {visibleGoods.map(good => (
