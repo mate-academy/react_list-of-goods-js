@@ -51,7 +51,7 @@ export const App = () => {
     sortField,
     isReversed,
   });
-  const isResetAppear = isReversed || sortField;
+  const isResetButtonVisible = isReversed || sortField;
 
   const reset = () => {
     setSortField('');
@@ -86,16 +86,16 @@ export const App = () => {
           className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => setIsReversed(!isReversed)}
+          onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
         </button>
 
-        {isResetAppear && (
+        {isResetButtonVisible && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => reset()}
+            onClick={reset}
           >
             Reset
           </button>
