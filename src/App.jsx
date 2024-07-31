@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,15 +16,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const GoodsList = ({ goods }) => (
-  <ul>
-    {goods.map(good => (
-      <li data-cy="Good" key={good}>
-        {good}
-      </li>
-    ))}
-  </ul>
-);
 
 const SORT_FIELD_BY_ALPHABET = 'alphabet';
 const SORT_FIELD_BY_LENGTH = 'length';
@@ -68,7 +60,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_FIELD_BY_ALPHABET ? '' : 'is-light'}`}
+          className={cn('button', 'is-info', {'is-light' : sortField !== SORT_FIELD_BY_ALPHABET})}
           onClick={() => setSortField(SORT_FIELD_BY_ALPHABET)}
         >
           Sort alphabetically
@@ -76,7 +68,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_FIELD_BY_LENGTH ? '' : 'is-light'}`}
+          className={cn('button', 'is-info', {'is-light' : sortField !== SORT_FIELD_BY_LENGTH})}
           onClick={() => setSortField(SORT_FIELD_BY_LENGTH)}
         >
           Sort by length
@@ -84,7 +76,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${reversedField ? '' : 'is-light'}`}
+          className={cn('button', {'is-light' : !reversedField})}
           onClick={() => setReversedField(!reversedField)}
         >
           Reverse
@@ -100,7 +92,14 @@ export const App = () => {
           </button>
         )}
       </div>
-      <GoodsList goods={visibleGoods} />
+      <ul>
+        {visibleGoods.map(good => (
+          <li data-cy="Good"
+          key={good}>
+            {good}
+          </li>
+        ))}
+        </ul>
     </div>
   );
 };
