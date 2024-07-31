@@ -19,8 +19,8 @@ export const goodsFromServer = [
 const SORT_BY_FIRST_LETTER = 'byLetter';
 const SORT_BY_GOOD_LENGTH = 'byLength';
 
-function getSortedGoods(goodsList, sortField) {
-  const goodsListCopy = [...goodsList];
+function getSortedGoods(goodsList, sortField, reversed) {
+  let goodsListCopy = [...goodsList];
 
   if (sortField) {
     goodsListCopy.sort((good1, good2) => {
@@ -35,17 +35,17 @@ function getSortedGoods(goodsList, sortField) {
     });
   }
 
+  if (reversed) {
+    goodsListCopy = [...goodsListCopy].reverse();
+  }
+
   return goodsListCopy;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  let renderedGoods = getSortedGoods(goodsFromServer, sortField);
   const [reversed, setReversed] = useState(false);
-
-  if (reversed) {
-    renderedGoods = [...renderedGoods].reverse();
-  }
+  const renderedGoods = getSortedGoods(goodsFromServer, sortField, reversed);
 
   return (
     <div className="section content">
@@ -53,7 +53,7 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortField !== SORT_BY_FIRST_LETTER,
+            'is-light': !(sortField === SORT_BY_FIRST_LETTER),
           })}
           onClick={() => setSortField(SORT_BY_FIRST_LETTER)}
         >
@@ -63,7 +63,7 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortField !== SORT_BY_GOOD_LENGTH,
+            'is-light': !(sortField === SORT_BY_GOOD_LENGTH),
           })}
           onClick={() => setSortField(SORT_BY_GOOD_LENGTH)}
         >
