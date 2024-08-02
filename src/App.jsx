@@ -17,18 +17,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const isArraySame = (arr1, arr2) => {
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
-
-  return arr1.every((element, index) => element === arr2[index]);
-};
-
-export const clear = (...args) => {
-  args.forEach(arg => arg(false));
-};
-
 export const App = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [reversed, setReversed] = useState(false);
@@ -80,11 +68,14 @@ export const App = () => {
           Reverse
         </button>
 
-        {!isArraySame(goodsFromServer, sortedGoods) && (
+        {(reversed || sortOrder) && (
           <button
             type="button"
             className="button is-danger"
-            onClick={() => clear(setSortOrder, setReversed)}
+            onClick={() => {
+              setSortOrder('');
+              setReversed(false);
+            }}
           >
             Reset
           </button>
