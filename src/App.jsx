@@ -35,10 +35,10 @@ const getPreparedGoods = (goods, { sortField, reversed }) => {
           return 0;
       }
     });
+  }
 
-    if (reversed) {
-      preparedGoods.reverse();
-    }
+  if (reversed) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
