@@ -44,29 +44,19 @@ function getPrepearedGoods(goods, sortField, isReversed) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [isResetButtonVisible, setIsResetButtonVisible] = useState(false);
 
   const resetSort = () => {
     setSortField('');
     setIsReversed(false);
-    setIsResetButtonVisible(false);
   };
 
   const handleSortClick = field => {
-    getPrepearedGoods(goodsFromServer, field);
-    setIsResetButtonVisible(true);
     setSortField(field);
   };
 
   const handleReverseClick = () => {
     setIsReversed(prevIsReversed => {
-      const newReversed = !prevIsReversed;
-
-      setIsResetButtonVisible(
-        prevIsResetButtonVisible => sortField || newReversed,
-      );
-
-      return newReversed;
+      return !prevIsReversed;
     });
   };
 
@@ -75,6 +65,8 @@ export const App = () => {
     sortField,
     isReversed,
   );
+
+  const isResetButtonVisible = sortField || isReversed;
 
   return (
     <div className="section content">
