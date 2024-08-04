@@ -22,15 +22,18 @@ const SORT_BY_LENGTH = 'length';
 function handleGoods(goods, sortField, reverse) {
   const prepareGoods = [...goods];
 
-  if (sortField === SORT_BY_ALPHABET) {
+  if (sortField) {
     prepareGoods.sort((good1, good2) => {
-      return good1.localeCompare(good2);
-    });
-  }
+      switch (sortField) {
+        case SORT_BY_ALPHABET:
+          return good1.localeCompare(good2);
 
-  if (sortField === SORT_BY_LENGTH) {
-    prepareGoods.sort((good1, good2) => {
-      return good1.length - good2.length;
+        case SORT_BY_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
+      }
     });
   }
 
@@ -43,9 +46,8 @@ function handleGoods(goods, sortField, reverse) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverse, SetReverse] = useState(false);
+  const [reverse, setReverse] = useState(false);
   const preparedGoods = handleGoods(goodsFromServer, sortField, reverse);
-  const REVERSE = !reverse;
 
   return (
     <div className="section content">
@@ -71,7 +73,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => SetReverse(REVERSE)}
+          onClick={() => setReverse(!reverse)}
           type="button"
           className={classNames('button is-warning', {
             'is-light': reverse !== true,
@@ -84,7 +86,7 @@ export const App = () => {
           <button
             onClick={() => {
               setSortField('');
-              SetReverse(false);
+              setReverse(false);
             }}
             type="button"
             className="button is-danger is-light"
@@ -96,7 +98,9 @@ export const App = () => {
 
       <ul>
         {preparedGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
