@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,8 +16,8 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SET_SF_ALPHABETICALLY = 'alph';
-const SET_SF_LENGTH = 'length';
+const SORT_ALPHABETICALLY = 'alph';
+const SORTF_LENGTH = 'length';
 
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
@@ -24,10 +25,10 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SET_SF_ALPHABETICALLY:
+        case SORT_ALPHABETICALLY:
           return good1.localeCompare(good2);
 
-        case SET_SF_LENGTH:
+        case SORTF_LENGTH:
           return good1.length - good2.length;
         default:
           return 0;
@@ -56,23 +57,29 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField !== SET_SF_ALPHABETICALLY ? 'is-light' : ''}`}
-          onClick={() => setSortField(SET_SF_ALPHABETICALLY)}
+          className={classNames('button', 'is-info', {
+            'is-light': sortField !== SORT_ALPHABETICALLY,
+          })}
+          onClick={() => setSortField(SORT_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-info ${sortField !== SET_SF_LENGTH ? 'is-light' : ''}`}
-          onClick={() => setSortField(SET_SF_LENGTH)}
+          className={classNames('button', 'is-info', {
+            'is-light': sortField !== SORTF_LENGTH,
+          })}
+          onClick={() => setSortField(SORTF_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={classNames('button', 'is-warning', {
+            'is-light': !isReversed,
+          })}
           onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
