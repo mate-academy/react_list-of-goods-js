@@ -19,8 +19,8 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function getPraparedGoods(goods, sortField) {
-  const preparedGoods = [...goodsFromServer];
+function stringManipulation(goods, sortField, isReversed) {
+  const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
@@ -37,17 +37,21 @@ function getPraparedGoods(goods, sortField) {
     });
   }
 
+  if (isReversed) {
+    return preparedGoods.reverse();
+  }
+
   return preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reversed, setReversed] = useState(false);
-  let visibleGoods = getPraparedGoods(goodsFromServer, sortField);
-
-  if (reversed) {
-    visibleGoods = visibleGoods.reverse();
-  }
+  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = stringManipulation(
+    goodsFromServer,
+    sortField,
+    isReversed,
+  );
 
   return (
     <div className="section content">
@@ -75,20 +79,20 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-warning', {
-            'is-light': !reversed,
+            'is-light': !isReversed,
           })}
-          onClick={() => setReversed(!reversed)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {(sortField.length > 0 || reversed) && (
+        {(!!sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setSortField('');
-              setReversed(false);
+              setIsReversed(false);
             }}
           >
             Reset
@@ -98,7 +102,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
