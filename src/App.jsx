@@ -20,19 +20,15 @@ const SORT_ALPHABET = 'alphabet';
 const SORT_LENGTH = 'length';
 
 const handleSort = (type, isReversed) => {
-  let sortedGoods = [...goodsFromServer];
+  const sortedGoods = [...goodsFromServer];
 
   switch (type) {
     case SORT_ALPHABET:
-      sortedGoods = [...sortedGoods].sort((goods1, goods2) =>
-        goods1.localeCompare(goods2),
-      );
+      sortedGoods.sort((goods1, goods2) => goods1.localeCompare(goods2));
       break;
 
     case SORT_LENGTH:
-      sortedGoods = [...sortedGoods].sort(
-        (goods1, goods2) => goods1.length - goods2.length,
-      );
+      sortedGoods.sort((goods1, goods2) => goods1.length - goods2.length);
       break;
     default:
       break;
@@ -48,7 +44,9 @@ const handleSort = (type, isReversed) => {
 export const App = () => {
   const [isReversed, setReversed] = useState(false);
   const [sortType, setsortType] = useState('');
-  const listOfGoods = handleSort(sortType, isReversed);
+  const sortedGoods = handleSort(sortType, isReversed);
+  const shouldShowResetButton =
+    sortType === SORT_ALPHABET || sortType === SORT_LENGTH || isReversed;
 
   return (
     <div className="section content">
@@ -83,9 +81,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortType === SORT_ALPHABET ||
-          sortType === SORT_LENGTH ||
-          isReversed) && (
+        {shouldShowResetButton && (
           <button
             type="button"
             className="button is-danger is-light"
@@ -99,8 +95,10 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {listOfGoods.map(good => (
-          <li key={good} data-cy="Good">{good}</li>
+        {sortedGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
