@@ -19,13 +19,13 @@ export const goodsFromServer = [
 const FIELDS = {
   name: 'name',
   length: 'length',
-  none: 'none',
+  any: '',
 };
 
 function getPreparedGoods(goods, sortField, isReversed) {
   const preparedGoods = [...goods];
 
-  if (sortField !== FIELDS.none) {
+  if (sortField !== FIELDS.any) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
         case FIELDS.name:
@@ -46,14 +46,14 @@ function getPreparedGoods(goods, sortField, isReversed) {
 }
 
 export const App = () => {
-  const [sortField, setSortField] = useState(FIELDS.none);
+  const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
-  const shouldShowResetButton = sortField !== FIELDS.none || isReversed;
+  const shouldShowResetButton = sortField !== FIELDS.any || isReversed;
 
   const handleReset = () => {
-    setSortField(FIELDS.none);
+    setSortField(FIELDS.any);
     setIsReversed(false);
   };
 
@@ -99,7 +99,9 @@ export const App = () => {
       </div>
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
