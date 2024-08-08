@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETIC = 'alphabet';
 const SORT_FIELD_LENGTH = 'by length';
 
-function getPreparedGoods(goods, reverse, { sortField }) {
+function getPreparedGoods(goods, isReverse, { sortField }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
@@ -37,12 +37,22 @@ function getPreparedGoods(goods, reverse, { sortField }) {
     });
   }
 
-  if (reverse) {
+  if (isReverse) {
     preparedGoods.reverse();
   }
 
   return preparedGoods;
 }
+
+const Goods = ({ goods }) => (
+  <ul>
+    {goods.map(good => (
+      <li data-cy="Good" key={good}>
+        {good}
+      </li>
+    ))}
+  </ul>
+);
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
@@ -99,55 +109,7 @@ export const App = () => {
         )}
       </div>
 
-      {goods.map(good => (
-        <ul>
-          <li data-cy="Good">{good}</li>
-        </ul>
-      ))}
+      <Goods goods={goods} />
     </div>
   );
 };
-
-// export const App = () => (
-
-//   const sortByAlphabet = () => {
-//     goodsFromServer.sort((good1, good2) => good1.localeCompare(good2))
-//   };
-
-//   <div className="section content">
-//     <div className="buttons">
-//       <button
-//       type="button"
-//       className="button is-info is-light"
-//       onClick={sortByAlphabet}
-//       >
-//         Sort alphabetically
-//       </button>
-
-//       <button
-//       type="button"
-//       className="button is-success is-light"
-//       onClick={}
-//       >
-//         Sort by length
-//       </button>
-
-//       <button type="button" className="button is-warning is-light">
-//         Reverse
-//       </button>
-
-//       <button type="button" className="button is-danger is-light">
-//         Reset
-//       </button>
-//     </div>
-
-//     <ul>
-//       <li data-cy="Good">Dumplings</li>
-//       <li data-cy="Good">Carrot</li>
-//       <li data-cy="Good">Eggs</li>
-//       <li data-cy="Good">Ice cream</li>
-//       <li data-cy="Good">Apple</li>
-//       <li data-cy="Good">...</li>
-//     </ul>
-//   </div>
-// );
