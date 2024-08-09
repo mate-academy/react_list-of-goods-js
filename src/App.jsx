@@ -2,6 +2,11 @@ import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
 
+const SORT_BY = {
+  ALPHABET: 'alphabet',
+  LENGTH: 'length',
+};
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -15,20 +20,15 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const sortValue = {
-  alphabet: 'alphabet',
-  length: 'length',
-};
-
 function prepareGoods(goods, sortBy, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortBy) {
     preparedGoods.sort((goods1, goods2) => {
       switch (sortBy) {
-        case sortValue.alphabet:
+        case SORT_BY.ALPHABET:
           return goods1.localeCompare(goods2);
-        case sortValue.length:
+        case SORT_BY.LENGTH:
           return goods1.length - goods2.length;
         default:
           return 0;
@@ -53,16 +53,16 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortBy === sortValue.alphabet ? '' : 'is-light'}`}
-          onClick={() => setSortBy(sortValue.alphabet)}
+          className={`button is-info ${sortBy === SORT_BY.ALPHABET ? '' : 'is-light'}`}
+          onClick={() => setSortBy(SORT_BY.ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortBy === sortValue.length ? '' : 'is-light'}`}
-          onClick={() => setSortBy(sortValue.length)}
+          className={`button is-success ${sortBy === SORT_BY.LENGTH ? '' : 'is-light'}`}
+          onClick={() => setSortBy(SORT_BY.LENGTH)}
         >
           Sort by length
         </button>
