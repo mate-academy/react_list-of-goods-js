@@ -24,12 +24,12 @@ function prepareGoods(goods, sortBy, isReversed) {
   const preparedGoods = [...goods];
 
   if (sortBy) {
-    preparedGoods.sort((goods1, goods2) => {
+    preparedGoods.sort((good1, good2) => {
       switch (sortBy) {
         case SORT_BY.ALPHABET:
-          return goods1.localeCompare(goods2);
+          return good1.localeCompare(good2);
         case SORT_BY.LENGTH:
-          return goods1.length - goods2.length;
+          return good1.length - good2.length;
         default:
           return 0;
       }
