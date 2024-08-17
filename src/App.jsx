@@ -15,11 +15,12 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const showList = arr => arr.map(good => (
-  <li key={good} data-cy="Good">
-    {good}
-  </li>
-));
+const showList = arr =>
+  arr.map(good => (
+    <li key={good} data-cy="Good">
+      {good}
+    </li>
+  ));
 
 const defaultList = showList(goodsFromServer);
 
@@ -31,6 +32,7 @@ export const App = () => {
 
   const sortArray = (arr, method) => {
     let sortedArr;
+
     switch (method) {
       case 'alphabetically':
         sortedArr = [...arr].sort((a, b) => a.localeCompare(b));
@@ -41,6 +43,7 @@ export const App = () => {
       default:
         sortedArr = arr;
     }
+
     return sortedArr;
   };
 
@@ -54,7 +57,7 @@ export const App = () => {
     setSortMethod(method);
     setActualListArr(sortedArr);
     setActualList(showList(sortedArr));
-  };;
+  };
 
   const handleReverse = () => {
     const reversedArr = [...actualListArr].reverse();
@@ -72,13 +75,26 @@ export const App = () => {
   };
 
   const getButtonClass = method => {
-    if (sortMethod === method) {
-      return 'button';
+    if (sortMethod === method && method === 'alphabetically') {
+      return 'button is-info';
     }
+
+    if (method === 'alphabetically') {
+      return 'button is-info is-light';
+    }
+
+    if (sortMethod === method && method === 'byLength') {
+      return 'button is-success';
+    }
+
+    if (method === 'byLength') {
+      return 'button is-success is-light';
+    }
+
     return 'button is-light';
   };
 
-  const reverseButtonClass = `button ${isReversed ? '' : 'is-light'}`;
+  const reverseButtonClass = `button is-warning ${isReversed ? '' : 'is-light'}`;
 
   return (
     <div className="section content">
@@ -111,7 +127,7 @@ export const App = () => {
           <button
             onClick={handleReset}
             type="button"
-            className="button is-danger"
+            className="button is-danger is-light"
           >
             Reset
           </button>
