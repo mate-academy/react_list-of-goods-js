@@ -52,7 +52,7 @@ export const App = () => {
     setSortType(type);
   };
 
-  const handleRevers = () => {
+  const handleReverse = () => {
     setReversed(!reversed);
   };
 
@@ -86,7 +86,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => handleRevers()}
+          onClick={handleReverse}
           className={cn('button', 'is-warning', { 'is-light': !reversed })}
         >
           Reverse
@@ -94,7 +94,7 @@ export const App = () => {
         {(sortType || reversed) && (
           <button
             type="button"
-            onClick={() => handleReset()}
+            onClick={handleReset}
             className="button is-danger is-light"
           >
             Reset
@@ -103,9 +103,9 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(goods => (
-          <li data-cy="Good" key={goods}>
-            {goods}
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
           </li>
         ))}
       </ul>
