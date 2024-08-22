@@ -16,10 +16,10 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [isAlphabetical, setIsAlphabetical] = useState(false);
-  const [isByLength, setIsByLength] = useState(false);
-  const [isReversed, setIsReversed] = useState(false);
+const [goods,setGoods] = useState(goodsFromServer);
+const [isAlphabetical, setIsAlphabetical] = useState(false);
+const [isByLength,setIsByLength] = useState(false);
+const [isReversed,setIsReversed] = useState(false);
 
   const sortAlphabetically = () => {
     const sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
