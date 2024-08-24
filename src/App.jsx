@@ -32,7 +32,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={classNames('button', 'is-info', { 'is-light': sortType !== 'alphabetical' })}
+          className={classNames('button', 'is-info', {
+            'is-light': sortType !== 'alphabetical',
+          })}
           onClick={() => setSortType('alphabetical')}
         >
           Sort alphabetically
@@ -40,7 +42,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames('button', 'is-success', { 'is-light': sortType !== 'byLength' })}
+          className={classNames('button', 'is-success', {
+            'is-light': sortType !== 'byLength',
+          })}
           onClick={() => setSortType('byLength')}
         >
           Sort by length
@@ -48,7 +52,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames('button', 'is-warning', { 'is-light': !isReversed })}
+          className={classNames('button', 'is-warning', {
+            'is-light': !isReversed,
+          })}
           onClick={() => setIsReversed(prev => !prev)}
         >
           Reverse
@@ -56,7 +62,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames('button', 'is-danger', { 'is-light': !sortType && !isReversed })}
+          className={classNames('button', 'is-danger', {
+            'is-light': !sortType && !isReversed,
+          })}
           onClick={resetOrder}
           disabled={!sortType && !isReversed}
         >
@@ -76,7 +84,7 @@ export const App = () => {
 };
 
 const getVisibleGoods = (goods, currentSortType, isReversed) => {
-  let goodsCopy = [...goods];
+  const goodsCopy = [...goods];
 
   switch (currentSortType) {
     case 'alphabetical':
