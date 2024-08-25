@@ -27,6 +27,9 @@ export const App = () => {
     setIsReversed(false);
   };
 
+  // Перевірка, чи потрібно відображати кнопку Reset
+  const shouldRenderResetButton = sortType !== null || isReversed;
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -60,16 +63,16 @@ export const App = () => {
           Reverse
         </button>
 
-        <button
-          type="button"
-          className={classNames('button', 'is-danger', {
-            'is-light': !sortType && !isReversed,
-          })}
-          onClick={resetOrder}
-          disabled={!sortType && !isReversed}
-        >
-          Reset
-        </button>
+        {shouldRenderResetButton && (
+          <button
+            type="button"
+            className={classNames('button', 'is-danger')}
+            onClick={resetOrder}
+            data-testid="reset-button"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
