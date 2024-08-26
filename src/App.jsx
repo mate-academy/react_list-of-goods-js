@@ -42,6 +42,11 @@ const getSortGoods = (goods, sortField, isReversed) => {
   return preparedList;
 };
 
+const resetClick = (setSortField, setIsReversed) => {
+  setSortField('');
+  setIsReversed(false);
+};
+
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
@@ -91,10 +96,7 @@ export const App = () => {
           <button
             type="button"
             className={cn('button', 'is-danger', 'is-light')}
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={() => resetClick(setSortField, setIsReversed)}
           >
             Reset
           </button>
