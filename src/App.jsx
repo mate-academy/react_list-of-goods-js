@@ -45,7 +45,6 @@ const getSortGoods = (goods, sortField, isReversed) => {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [isSorted, setIsSorted] = useState(false);
 
   const finalGoods = getSortGoods(goodsFromServer, sortField, isReversed);
 
@@ -59,8 +58,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField(sortByABC);
-            setIsSorted(true);
-            setIsReversed(false);
           }}
         >
           Sort alphabetically
@@ -73,8 +70,6 @@ export const App = () => {
           })}
           onClick={() => {
             setSortField(sortByLength);
-            setIsSorted(true);
-            setIsReversed(false);
           }}
         >
           Sort by length
@@ -87,20 +82,18 @@ export const App = () => {
           })}
           onClick={() => {
             setIsReversed(!isReversed);
-            setIsSorted(true);
           }}
         >
           Reverse
         </button>
 
-        {isSorted && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className={cn('button', 'is-danger', 'is-light')}
             onClick={() => {
               setSortField('');
               setIsReversed(false);
-              setIsSorted(false);
             }}
           >
             Reset
