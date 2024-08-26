@@ -18,6 +18,7 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
+const REVERSED = 'reversed';
 
 export const App = () => {
   const [items, setItems] = useState(goodsFromServer);
@@ -26,39 +27,39 @@ export const App = () => {
   const [initialItems] = useState(goodsFromServer);
 
   function sortByAlphabet() {
-    if (sortType === SORT_BY_ALPHABET) {
-      // Якщо вже сортували по алфавіту, повертаємо в початковий порядок
-      setItems(initialItems);
-      setSortType('');
-    } else {
-      // Сортуємо по алфавіту
-      const sortedItems = [...items].sort((a, b) => a.localeCompare(b));
-
-      // Оновлення стану items на новий відсортований масив sortedItems
-      setItems(sortedItems);
-      setSortType(SORT_BY_ALPHABET);
+    if (sortType === SORT_BY_ALPHABET && !isReversed) {
+      return;
     }
 
-    setIsReversed(false);
+    const sortedItems = [...items].sort((a, b) => a.localeCompare(b));
+
+    if (isReversed) {
+      sortedItems.reverse();
+    }
+
+    setItems(sortedItems);
+    setSortType(SORT_BY_ALPHABET);
   }
 
   function sortByLength() {
     if (sortType === SORT_BY_LENGTH) {
-      // Якщо сортували по довжині, повертаємо в початковий порядок
-      setItems(initialItems);
-      setSortType('');
-    } else {
-      // Сортуємо по довжині
-      const sortedItems = [...items].sort(
-        (good1, good2) => good1.length - good2.length,
-      );
-
-      // Оновлення стану items на новий відсортований масив sortedItems
-      setItems(sortedItems);
-      setSortType(SORT_BY_LENGTH);
+      return;
     }
 
-    setIsReversed(false);
+    const sortedItems = [...items].sort((good1, good2) => {
+      if (good1.length === good2.length) {
+        return good1.localeCompare(good2); // Сортуємо алфавітно, якщо довжина однакова
+      }
+
+      return good1.length - good2.length; // Інакше сортуємо за довжиною
+    });
+
+    if (isReversed) {
+      sortedItems.reverse();
+    }
+
+    setItems(sortedItems);
+    setSortType(SORT_BY_LENGTH);
   }
 
   const reset = () => {
@@ -72,6 +73,13 @@ export const App = () => {
 
     setItems(reversedGoods);
     setIsReversed(!isReversed);
+
+    // Якщо товари повернулися до початкового порядку, скидаємо сортування
+    if (JSON.stringify(reversedGoods) === JSON.stringify(initialItems)) {
+      setSortType('');
+    } else if (sortType === SORT_BY_ALPHABET || sortType === SORT_BY_LENGTH) {
+      setSortType(REVERSED); // Тут оновлюємо тип сортування на реверс
+    }
   };
 
   return (
