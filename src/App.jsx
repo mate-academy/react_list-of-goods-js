@@ -21,7 +21,7 @@ const SORT_FIELD_LENGTH = 'Sort by length';
 const SORT_FIELD_REVERSE = 'Reverse';
 
 function getPreparedGoods(goods, { sortField, query }) {
-  let prepearedGoods = [...goods];
+  const prepearedGoods = [...goods];
 
   if (sortField) {
     prepearedGoods.sort();
