@@ -18,24 +18,37 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ALPHABET = 'Sort alphabetically';
 const SORT_FIELD_LENGTH = 'Sort by length';
-const SORT_FIELD_REVERSE = 'Reverse';
 
-function getPreparedGoods(goods, { sortField, query }) {
-  const prepearedGoods = [...goods];
+function getPreparedGoods(goods, { sortField }) {
+  const preparedGoods = [...goods];
 
   if (sortField) {
-    prepearedGoods.sort();
+    switch (sortField) {
+      case SORT_FIELD_ALPHABET:
+        preparedGoods.sort((a, b) => a.localeCompare(b));
+        break;
+      case SORT_FIELD_LENGTH:
+        preparedGoods.sort((a, b) => a.length - b.length);
+        break;
+      default:
+        break;
+    }
   }
 
-  return prepearedGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
+  let visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
   });
+  const [reversed, setReversed] = useState(false);
+
+  if (reversed) {
+    visibleGoods = visibleGoods.reverse();
+  }
 
   const buttonClassAplhabet = classNames('button', 'is-info', {
     'is-light': sortField !== SORT_FIELD_ALPHABET,
@@ -46,7 +59,7 @@ export const App = () => {
   });
 
   const buttonClassReverse = classNames('button', 'is-warning', {
-    'is-light': sortField !== SORT_FIELD_REVERSE,
+    'is-light': !reversed,
   });
 
   return (
@@ -71,18 +84,23 @@ export const App = () => {
         <button
           type="button"
           className={buttonClassReverse}
-          onClick={() => setSortField(SORT_FIELD_REVERSE)}
+          onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => setSortField('')}
-        >
-          Reset
-        </button>
+        {(sortField || reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
