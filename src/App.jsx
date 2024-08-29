@@ -28,8 +28,10 @@ function getPreparedGoods(goods, sortingType) {
       switch (sortingType) {
         case SORTING_TYPE_NAME:
           return good1.localeCompare(good2);
+
         case SORTING_TYPE_LENGTH:
           return good1.length - good2.length;
+
         default:
           return 0;
       }
@@ -43,6 +45,10 @@ export const App = () => {
   const [sortingType, setSortingType] = useState('');
   let visibleGoods = getPreparedGoods(goodsFromServer, sortingType);
   const [reversedState, setReversedState] = useState(false);
+  const reset = () => {
+    setSortingType('');
+    setReversedState(false);
+  };
 
   if (reversedState) {
     visibleGoods = visibleGoods.reverse();
@@ -85,10 +91,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortingType('');
-              setReversedState(false);
-            }}
+            onClick={reset}
           >
             Reset
           </button>
