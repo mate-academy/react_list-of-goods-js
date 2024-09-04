@@ -53,25 +53,25 @@ export const App = () => {
     setIsReversed(false);
   };
 
+  const sortedGood = handleSort(goodsFromServer, { sortType, isReversed });
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn(
-            'button is-info',
-            sortType !== SORT_ALPHABET && 'is-light',
-          )}
+          className={cn('button is-info', {
+            'is-light': sortType !== SORT_ALPHABET,
+          })}
           onClick={() => setSortType(SORT_ALPHABET)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
-          className={cn(
-            'button is-success',
-            sortType !== SORT_LENGTH && 'is-light',
-          )}
+          className={cn('button is-success', {
+            'is-light': sortType !== SORT_LENGTH,
+          })}
           onClick={() => setSortType(SORT_LENGTH)}
         >
           Sort by length
@@ -97,7 +97,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {handleSort(goodsFromServer, { sortType, isReversed }).map(good => (
+        {sortedGood.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
