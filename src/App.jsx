@@ -20,26 +20,37 @@ const SORT_BY_ABC = 'abc';
 const SORT_BY_LENGTH = 'length';
 const SORT_REVERSE = 'reverse';
 
-export const App = () => {
-  const [sortField, setSortField] = useState('');
-  const [reverseField, setReverseField] = useState('');
-  const goods = [...goodsFromServer];
+const sortGoods = (sortField, reverseField) => {
+  const sortedGoods = [...goodsFromServer];
 
   switch (sortField) {
     case SORT_BY_ABC:
-      goods.sort((a, b) => a.localeCompare(b));
+      sortedGoods.sort((a, b) => a.localeCompare(b));
       break;
 
     case SORT_BY_LENGTH:
-      goods.sort((a, b) => a.length - b.length);
+      sortedGoods.sort((a, b) => a.length - b.length);
       break;
 
     default:
   }
 
   if (reverseField) {
-    goods.reverse();
+    sortedGoods.reverse();
   }
+
+  return sortedGoods;
+};
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [reverseField, setReverseField] = useState('');
+  const goods = sortGoods(sortField, reverseField);
+
+  const reset = () => {
+    setSortField('');
+    setReverseField('');
+  };
 
   return (
     <div className="section content">
@@ -78,10 +89,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setReverseField('');
-            }}
+            onClick={reset}
           >
             Reset
           </button>
