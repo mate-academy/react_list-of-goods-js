@@ -16,11 +16,9 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-let clickResetButton = false;
-let updatedGoods = goodsFromServer;
-
 export const App = () => {
   const [currentButton, setButton] = useState('');
+  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
 
   return (
     <div className="section content">
@@ -28,7 +26,9 @@ export const App = () => {
         <button
           onClick={() => {
             setButton('byAlphabet');
-            updatedGoods = goodsFromServer.sort((a, b) => a.localeCompare(b));
+            setSortedGoods(
+              [...goodsFromServer].sort((a, b) => a.localeCompare(b)),
+            );
           }}
           type="button"
           className={cn('button', 'is-info', {
@@ -45,7 +45,9 @@ export const App = () => {
           })}
           onClick={() => {
             setButton('byLength');
-            updatedGoods = goodsFromServer.sort((a, b) => a.length - b.length);
+            setSortedGoods(
+              [...goodsFromServer].sort((a, b) => a.length - b.length),
+            );
           }}
         >
           Sort by length
@@ -58,23 +60,24 @@ export const App = () => {
           })}
           onClick={() => {
             setButton('byReversed');
-            updatedGoods = goodsFromServer.sort((a, b) => b.localeCompare(a));
+            setSortedGoods(
+              [...goodsFromServer].sort((a, b) => b.localeCompare(a)),
+            );
           }}
         >
           Reverse
         </button>
 
-        {!clickResetButton && (
+        {currentButton && (
           <button
             type="button"
             style={{
-              display: !currentButton ? 'none' : 'block',
+              display: sortedGoods === goodsFromServer ? 'none' : 'block',
             }}
             className="button is-danger is-light"
             onClick={() => {
-              clickResetButton = true;
               setButton('reset');
-              updatedGoods = goodsFromServer;
+              setSortedGoods(goodsFromServer);
             }}
           >
             Reset
@@ -83,7 +86,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {updatedGoods.map(item => (
+        {sortedGoods.map(item => (
           <li key={item}>{item}</li>
         ))}
       </ul>
