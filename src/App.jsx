@@ -33,7 +33,9 @@ export const App = () => {
   };
 
   const sortByLength = () => {
-    const sorted = [...goodsOrdered].sort(
+    const goodsCopy = [...goodsFromServer];
+
+    const sorted = goodsCopy.sort(
       (good1, good2) => good1.length - good2.length,
     );
 
@@ -54,9 +56,16 @@ export const App = () => {
   };
 
   const reset = () => {
+    setIsReversed(false)
     setSortType(null);
 
     return setGoodsOrdered(goodsFromServer);
+  };
+
+  const arraysAreEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+
+    return arr1.every((item, index) => item === arr2[index]);
   };
 
   return (
@@ -94,7 +103,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {goodsOrdered !== goodsFromServer ? (
+        {!arraysAreEqual(goodsOrdered, goodsFromServer) ? (
           <button
             type="button"
             className="button is-danger is-light"
@@ -107,7 +116,7 @@ export const App = () => {
 
       <ul>
         {goodsOrdered.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
