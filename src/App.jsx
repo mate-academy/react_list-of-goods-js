@@ -16,58 +16,60 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [sortType, setSortType] = useState('default');
   const [isReversed, setIsReversed] = useState(false);
-  const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false);
-  const [isSortedByLength, setIsSortedByLength] = useState(false);
 
-  const sortAlphabetically = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
+  const getSortedGoods = () => {
+    const sortedGoods = [...goodsFromServer];
 
-    setGoods(sortedGoods);
-    setIsSortedAlphabetically(true);
-    setIsSortedByLength(false);
+    if (sortType === 'alphabet') {
+      sortedGoods.sort((a, b) => a.localeCompare(b));
+    } else if (sortType === 'length') {
+      sortedGoods.sort((a, b) => a.length - b.length);
+    }
+
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
+
+    return sortedGoods;
+  };
+
+  const handleSortAlphabetically = () => {
+    setSortType('alphabet');
+  };
+
+  const handleSortByLength = () => {
+    setSortType('length');
+  };
+
+  const handleReverse = () => {
+    setIsReversed(prevState => !prevState);
+  };
+
+  const handleReset = () => {
+    setSortType('default');
     setIsReversed(false);
   };
 
-  const sortByLength = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.length - b.length);
-
-    setGoods(sortedGoods);
-    setIsSortedByLength(true);
-    setIsSortedAlphabetically(false);
-    setIsReversed(false);
-  };
-
-  const reverseOrder = () => {
-    setGoods(prevGoods => [...prevGoods].reverse());
-    setIsReversed(!isReversed);
-  };
-
-  const resetOrder = () => {
-    setGoods([...goodsFromServer]);
-    setIsReversed(false);
-    setIsSortedAlphabetically(false);
-    setIsSortedByLength(false);
-  };
-
-  const showResetButton = goods.join() !== goodsFromServer.join();
+  const isActive = sortType !== 'default' || isReversed;
+  const sortedGoods = getSortedGoods();
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${isSortedAlphabetically ? '' : 'is-light'}`}
-          onClick={sortAlphabetically}
+          className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
+          onClick={handleSortAlphabetically}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${isSortedByLength ? '' : 'is-light'}`}
-          onClick={sortByLength}
+          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+          onClick={handleSortByLength}
         >
           Sort by length
         </button>
@@ -75,16 +77,16 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={reverseOrder}
+          onClick={handleReverse}
         >
           Reverse
         </button>
 
-        {showResetButton && (
+        {isActive && (
           <button
             type="button"
-            className="button is-danger is-light"
-            onClick={resetOrder}
+            className="button is-danger"
+            onClick={handleReset}
           >
             Reset
           </button>
@@ -92,7 +94,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {sortedGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
