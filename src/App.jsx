@@ -41,6 +41,10 @@ export const App = () => {
   };
 
   const visibleGoods = sortedGoods(sortGoods, isReversed);
+  const reset = () => {
+    setIsReversed(false);
+    setSortGoods('');
+  };
 
   return (
     <div className="section content">
@@ -78,10 +82,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setIsReversed(false);
-              setSortGoods('');
-            }}
+            onClick={reset}
           >
             Reset
           </button>
@@ -90,7 +91,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(item => (
-          <li data-cy="Good">{item}</li>
+          <li data-cy="Good" key={item}>
+            {item}
+          </li>
         ))}
       </ul>
     </div>
