@@ -30,6 +30,9 @@ const getPreparedGoods = (goods, sortType, isReversed) => {
     case SORT_TYPE_LENGTH:
       preparedGoods.sort((a, b) => a.length - b.length);
       break;
+
+    default:
+      break;
   }
 
   if (isReversed) {
