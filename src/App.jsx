@@ -27,21 +27,33 @@ export const App = () => {
   const reset = () => {
     setVisibleGoods(goodsFromServer);
     setSortField('');
-  };
-
-  const sortByLength = () => {
-    setVisibleGoods([...visibleGoods].sort((good1, good2) => good1.length - good2.length));
-    setSortField(SORT_FIELD_LENGTH);
+    // eslint-disable-next-line no-use-before-define
+    setIsReversed(false);
   };
 
   const sortAlphabetically = () => {
-    setVisibleGoods([...visibleGoods].sort());
+    const sortedGoods = [...goodsFromServer].sort();
+
+    // eslint-disable-next-line no-use-before-define
+    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortField(SORT_FIELD_ALPHABETICAL);
   };
 
+  const sortByLength = () => {
+    const sortedGoods = [...goodsFromServer].sort(
+      (good1, good2) => good1.length - good2.length,
+    );
+
+    // eslint-disable-next-line no-use-before-define
+    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
+    setSortField(SORT_FIELD_LENGTH);
+  };
+
+  const [isReversed, setIsReversed] = useState(false);
+
   const reverseGoods = () => {
     setVisibleGoods([...visibleGoods].reverse());
-    setSortField(SORT_FIELD_REVERSE);
+    setIsReversed(!isReversed);
   };
 
   return (
@@ -71,13 +83,13 @@ export const App = () => {
           onClick={reverseGoods}
           type="button"
           className={cn('button is-warning', {
-            'is-light': sortField !== SORT_FIELD_REVERSE,
+            'is-light': isReversed === false,
           })}
         >
           Reverse
         </button>
 
-        {sortField && (
+        {(sortField || isReversed) && (
           <button
             onClick={reset}
             type="button"
