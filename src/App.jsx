@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -18,7 +19,6 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ALPHABETICAL = 'alphabetical';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERSE = 'reverse';
 
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
@@ -27,14 +27,17 @@ export const App = () => {
   const reset = () => {
     setVisibleGoods(goodsFromServer);
     setSortField('');
-    // eslint-disable-next-line no-use-before-define
     setIsReversed(false);
+  };
+
+  const reverseGoods = () => {
+    setVisibleGoods([...visibleGoods].reverse());
+    setIsReversed(!isReversed);
   };
 
   const sortAlphabetically = () => {
     const sortedGoods = [...goodsFromServer].sort();
 
-    // eslint-disable-next-line no-use-before-define
     setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortField(SORT_FIELD_ALPHABETICAL);
   };
@@ -44,17 +47,11 @@ export const App = () => {
       (good1, good2) => good1.length - good2.length,
     );
 
-    // eslint-disable-next-line no-use-before-define
     setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortField(SORT_FIELD_LENGTH);
   };
 
   const [isReversed, setIsReversed] = useState(false);
-
-  const reverseGoods = () => {
-    setVisibleGoods([...visibleGoods].reverse());
-    setIsReversed(!isReversed);
-  };
 
   return (
     <div className="section content">
@@ -83,7 +80,7 @@ export const App = () => {
           onClick={reverseGoods}
           type="button"
           className={cn('button is-warning', {
-            'is-light': isReversed === false,
+            'is-light': !isReversed,
           })}
         >
           Reverse
@@ -100,9 +97,9 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {visibleGoods.map(n => (
-          <li data-cy="Good" key={n}>
-            {n}
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
           </li>
         ))}
       </ul>
