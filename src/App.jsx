@@ -20,38 +20,44 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICAL = 'alphabetical';
 const SORT_FIELD_LENGTH = 'length';
 
+const getVisibleGoods = (goods, sortField, isReversed) => {
+  const sortedGoods = [...goods];
+
+  if (sortField === SORT_FIELD_ALPHABETICAL) {
+    sortedGoods.sort();
+  } else if (sortField === SORT_FIELD_LENGTH) {
+    sortedGoods.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
 export const App = () => {
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
   const reset = () => {
-    setVisibleGoods(goodsFromServer);
     setSortField('');
     setIsReversed(false);
   };
 
   const reverseGoods = () => {
-    setVisibleGoods([...visibleGoods].reverse());
     setIsReversed(!isReversed);
   };
 
   const sortAlphabetically = () => {
-    const sortedGoods = [...goodsFromServer].sort();
-
-    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortField(SORT_FIELD_ALPHABETICAL);
   };
 
   const sortByLength = () => {
-    const sortedGoods = [...goodsFromServer].sort(
-      (good1, good2) => good1.length - good2.length,
-    );
-
-    setVisibleGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortField(SORT_FIELD_LENGTH);
   };
 
-  const [isReversed, setIsReversed] = useState(false);
+  const visibleGoods = getVisibleGoods(goodsFromServer, sortField, isReversed);
 
   return (
     <div className="section content">
