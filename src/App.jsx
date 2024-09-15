@@ -16,166 +16,78 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const goodsForRender = goodsFromServer.map((good, index) => {
-  return { id: index + 1, product: good };
-});
-
-const buttonsDataForRender = {
-  ALPHA: {
-    id: 1,
-    visible: true,
-    value: 'Sort alphabetically',
-    classes: ['button', 'is-info', 'is-light'],
-  },
-  LENGTH: {
-    id: 2,
-    visible: true,
-    value: 'Sort by length',
-    classes: ['button', 'is-success', 'is-light'],
-  },
-  REVERSE: {
-    id: 3,
-    visible: true,
-    value: 'Reverse',
-    classes: ['button', 'is-warning', 'is-light'],
-  },
-  RESET: {
-    id: 4,
-    visible: false,
-    value: 'Reset',
-    classes: ['button', 'is-danger', 'is-light'],
-  },
-};
-
 export const App = () => {
-  const [buttons, setButtons] = useState(buttonsDataForRender);
-  const [goods, setGoods] = useState(goodsForRender);
   const [isReversed, setIsReversed] = useState(false);
+  const [sortValue, setSortValue] = useState('');
 
-  function handleButtonClick(key) {
-    let sortedGoods = JSON.parse(JSON.stringify(goods));
-    let updatedButtons = JSON.parse(JSON.stringify(buttons));
-
-    const makeResetVisible = show => {
-      let isActiveSorting = false;
-      const listToReset = Object.keys(updatedButtons).filter(
-        w => w !== 'REVERSE',
-      );
-
-      listToReset.forEach(b => {
-        if (!updatedButtons[b].classes.includes(`is-light`)) {
-          isActiveSorting = true;
-        }
-      });
-
-      updatedButtons.RESET.visible = show || isActiveSorting;
-    };
-
-    const offLightClass = buttonType => {
-      const list = updatedButtons[buttonType].classes;
-      const indexOfLight = list.indexOf('is-light');
-
-      if (indexOfLight >= 0) {
-        list.splice(indexOfLight, 1);
+  function getSortedList(array, sortBy, isReverse) {
+    const sortedArray = [...array].sort((a, b) => {
+      switch (sortBy) {
+        case 'ALPHA':
+          return a.localeCompare(b);
+        case 'LENGTH':
+          return a.length - b.length;
+        default:
+          return 0;
       }
-    };
+    });
 
-    const lightClassSwitcher = keyWord => {
-      return updatedButtons[keyWord].classes.includes(`is-light`)
-        ? updatedButtons[keyWord].classes.pop()
-        : updatedButtons[keyWord].classes.push(`is-light`);
-    };
+    const listForRender = list =>
+      list.map((good, index) => ({ id: index, product: good }));
 
-    const resetClasses = () => {
-      const listToReset = Object.keys(updatedButtons).filter(
-        w => w !== 'REVERSE',
-      );
-
-      listToReset.forEach(buttonType => {
-        updatedButtons[buttonType].classes = [
-          ...buttonsDataForRender[buttonType].classes,
-        ];
-      });
-    };
-
-    const sortList = (listToSort, isSortByLetters) => {
-      let sortedList = listToSort;
-
-      if (isSortByLetters) {
-        sortedList = isReversed
-          ? listToSort.sort((a, b) => b.product.localeCompare(a.product))
-          : listToSort.sort((a, b) => a.product.localeCompare(b.product));
-      } else {
-        sortedList = isReversed
-          ? listToSort.sort((a, b) => b.product.length - a.product.length)
-          : listToSort.sort((a, b) => a.product.length - b.product.length);
-      }
-
-      return sortedList;
-    };
-
-    const handleSort = isSortbyLet => {
-      resetClasses();
-      sortList(sortedGoods, isSortbyLet);
-      makeResetVisible(true);
-      offLightClass(key);
-    };
-
-    switch (key) {
-      case 'ALPHA':
-        handleSort(true);
-        break;
-
-      case 'LENGTH':
-        handleSort(false);
-        break;
-
-      case 'REVERSE':
-        sortedGoods.reverse();
-
-        setIsReversed(!isReversed);
-
-        makeResetVisible(!isReversed);
-
-        lightClassSwitcher(key);
-        break;
-
-      case 'RESET':
-        sortedGoods = [...goodsForRender];
-        updatedButtons = { ...buttonsDataForRender };
-        setIsReversed(false);
-        break;
-
-      default:
-        sortedGoods.sort(() => 0);
-        break;
-    }
-
-    setGoods(sortedGoods);
-    setButtons(updatedButtons);
+    return isReverse
+      ? listForRender(sortedArray.reverse())
+      : listForRender(sortedArray);
   }
 
   return (
     <div className="section content">
       <div className="buttons">
-        {Object.keys(buttons).map(key => {
-          const { id, visible, value, classes } = buttons[key];
-
-          return visible ? (
-            <button
-              key={id}
-              onClick={() => handleButtonClick(key)}
-              type="button"
-              className={classes.join(' ')}
-            >
-              {value}
-            </button>
-          ) : null;
-        })}
+        <button
+          onClick={() => setSortValue('ALPHA')}
+          type="button"
+          className={
+            sortValue !== 'ALPHA' ? 'button is-info is-light' : 'button is-info'
+          }
+        >
+          Sort alphabetically
+        </button>
+        <button
+          onClick={() => setSortValue('LENGTH')}
+          type="button"
+          className={
+            sortValue !== 'LENGTH'
+              ? 'button is-success is-light'
+              : 'button is-info'
+          }
+        >
+          Sort by length
+        </button>
+        <button
+          onClick={() => setIsReversed(!isReversed)}
+          type="button"
+          className={
+            !isReversed ? 'button is-warning is-light' : 'button is-warning'
+          }
+        >
+          Reverse
+        </button>
+        {sortValue.length || isReversed ? (
+          <button
+            onClick={() => {
+              setIsReversed(false);
+              setSortValue('');
+            }}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        ) : null}
       </div>
 
       <ul>
-        {goods.map(good => (
+        {getSortedList(goodsFromServer, sortValue, isReversed).map(good => (
           <li key={good.id} data-cy="Good">
             {good.product}
           </li>
