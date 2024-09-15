@@ -8,7 +8,6 @@ import {
 } from '../variables';
 
 export const Buttons = ({ sortBy, onSort, reverse, onReverse }) => {
-
   return (
     <div className="buttons">
       <button

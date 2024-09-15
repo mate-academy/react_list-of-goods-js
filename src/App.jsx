@@ -24,14 +24,14 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function sortGoods(goods, { sortBy: criteria, reverse }) {
+function sortGoods(goods, { sortBy: criteria, isReversed }) {
   let sortedGoods;
 
-  switch (true) {
-    case criteria === SORT_BY_NAME:
+  switch (criteria) {
+    case SORT_BY_NAME:
       sortedGoods = goods.toSorted((a, b) => a.localeCompare(b));
       break;
-    case criteria === SORT_BY_LENGTH:
+    case SORT_BY_LENGTH:
       sortedGoods = goods.toSorted((a, b) => a.length - b.length);
       break;
 
@@ -39,7 +39,7 @@ function sortGoods(goods, { sortBy: criteria, reverse }) {
       sortedGoods = [...goods];
   }
 
-  if (reverse) {
+  if (isReversed) {
     sortedGoods = sortedGoods.toReversed();
   }
 
@@ -48,17 +48,17 @@ function sortGoods(goods, { sortBy: criteria, reverse }) {
 
 export const App = () => {
   const [sortBy, setSortBy] = useState(RESET_VALUE);
-  const [reverse, setReversed] = useState(REVERSE);
+  const [isReversed, setIsReversed] = useState(REVERSE);
 
-  const sortedGoods = sortGoods(goodsFromServer, { sortBy, reverse });
+  const sortedGoods = sortGoods(goodsFromServer, { sortBy, isReversed });
 
   return (
     <div className="section content">
       <Buttons
         sortBy={sortBy}
         onSort={setSortBy}
-        reverse={reverse}
-        onReverse={setReversed}
+        reverse={isReversed}
+        onReverse={setIsReversed}
       />
 
       <Goods goods={sortedGoods} />
