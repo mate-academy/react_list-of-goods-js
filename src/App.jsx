@@ -57,7 +57,18 @@ export const App = () => {
     let updatedButtons = JSON.parse(JSON.stringify(buttons));
 
     const makeResetVisible = show => {
-      updatedButtons.RESET.visible = show;
+      let isActiveSorting = false;
+      const listToReset = Object.keys(updatedButtons).filter(
+        w => w !== 'REVERSE',
+      );
+
+      listToReset.forEach(b => {
+        if (!updatedButtons[b].classes.includes(`is-light`)) {
+          isActiveSorting = true;
+        }
+      });
+
+      updatedButtons.RESET.visible = show || isActiveSorting;
     };
 
     const offLightClass = buttonType => {
@@ -103,27 +114,20 @@ export const App = () => {
       return sortedList;
     };
 
+    const handleSort = isSortbyLet => {
+      resetClasses();
+      sortList(sortedGoods, isSortbyLet);
+      makeResetVisible(true);
+      offLightClass(key);
+    };
+
     switch (key) {
       case 'ALPHA':
-        resetClasses();
-
-        sortList(sortedGoods, true);
-
-        makeResetVisible(true);
-
-        offLightClass(key);
-
+        handleSort(true);
         break;
 
       case 'LENGTH':
-        resetClasses();
-
-        sortList(sortedGoods, false);
-
-        makeResetVisible(true);
-
-        offLightClass(key);
-
+        handleSort(false);
         break;
 
       case 'REVERSE':
@@ -139,6 +143,7 @@ export const App = () => {
       case 'RESET':
         sortedGoods = [...goodsForRender];
         updatedButtons = { ...buttonsDataForRender };
+        setIsReversed(false);
         break;
 
       default:
