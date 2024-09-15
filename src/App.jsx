@@ -1,5 +1,8 @@
 import 'bulma/css/bulma.css';
+import { useState } from 'react';
 import './App.scss';
+import { GoodsList } from './components/GoodsList';
+import { SortingButtons } from './components/SortingButtons';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,69 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const visibleGoods = [...goodsFromServer];
+  const [goods, setGoods] = useState(visibleGoods);
+  const [sortType, setSortType] = useState({ type: '', direction: 'straight' });
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const sortGoods = type => {
+    let sortedGoods = [];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    switch (type) {
+      case 'alphabet':
+        if (sortType.direction === 'reversed') {
+          sortedGoods = [...goods].sort((a, b) => b.localeCompare(a));
+        } else {
+          sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
+        }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        break;
+      case 'length':
+        if (sortType.direction === 'reversed') {
+          sortedGoods = [...goods].sort((a, b) => b.length - a.length);
+        } else {
+          sortedGoods = [...goods].sort((a, b) => a.length - b.length);
+        }
+
+        break;
+      default:
+        break;
+    }
+
+    setGoods(sortedGoods);
+    setSortType({
+      ...sortType,
+      type,
+    });
+  };
+
+  const revSort = () => {
+    const reversedGoods = [...goods].reverse();
+
+    setGoods(reversedGoods);
+    setSortType({
+      ...sortType,
+      direction: sortType.direction === 'straight' ? 'reversed' : 'straight',
+    });
+  };
+
+  const resetSort = () => {
+    setGoods(visibleGoods);
+    setSortType({
+      type: '',
+      direction: 'straight',
+    });
+  };
+
+  return (
+    <div className="section content">
+      <SortingButtons
+        sortGoods={sortGoods}
+        sortType={sortType}
+        revSort={revSort}
+        resetSort={resetSort}
+      />
+      <GoodsList goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
