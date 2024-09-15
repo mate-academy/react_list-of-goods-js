@@ -20,13 +20,16 @@ export const App = () => {
   const [activeSort, setActiveSort] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
+  const SORT_BY_ALPHABET = 'Alphabetically';
+  const SORT_BY_LENGTH = 'ByLength';
+
   const sortAlphabetically = () => {
     const sortedGoods = [...goods].sort((a, b) => {
       return isReversed ? b.localeCompare(a) : a.localeCompare(b);
     });
 
     setGoods(sortedGoods);
-    setActiveSort('Alphabetically');
+    setActiveSort(SORT_BY_ALPHABET);
   };
 
   const sortByLength = () => {
@@ -35,7 +38,7 @@ export const App = () => {
     });
 
     setGoods(sortedGoods);
-    setActiveSort('ByLength');
+    setActiveSort(SORT_BY_LENGTH);
   };
 
   const reverseGoods = () => {
@@ -58,7 +61,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeSort === 'Alphabetically' ? '' : 'is-light'}`}
+          className={`button is-info ${activeSort === SORT_BY_ALPHABET ? '' : 'is-light'}`}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -66,7 +69,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${activeSort === 'ByLength' ? '' : 'is-light'}`}
+          className={`button is-success ${activeSort === SORT_BY_LENGTH ? '' : 'is-light'}`}
           onClick={sortByLength}
         >
           Sort by length
