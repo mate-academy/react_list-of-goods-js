@@ -1,7 +1,14 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import classNames from 'classnames';
+
+import {
+  RESET_VALUE,
+  SORT_BY_LENGTH,
+  SORT_BY_NAME,
+  REVERSE,
+} from './variables';
+import { Buttons } from './components/Buttons';
 import { Goods } from './components/Goods';
 
 export const goodsFromServer = [
@@ -16,12 +23,8 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-const RESET_VALUE = '';
-const SORT_BY_NAME = 'name';
-const SORT_BY_LENGTH = 'length';
-const REVERSE = false;
 
-function sortGoods(goods, criteria) {
+function sortGoods(goods, { sortBy: criteria, reverse }) {
   let sortedGoods;
 
   switch (true) {
@@ -36,6 +39,10 @@ function sortGoods(goods, criteria) {
       sortedGoods = [...goods];
   }
 
+  if (reverse) {
+    sortedGoods = sortedGoods.toReversed();
+  }
+
   return sortedGoods;
 }
 
@@ -43,60 +50,16 @@ export const App = () => {
   const [sortBy, setSortBy] = useState(RESET_VALUE);
   const [reverse, setReversed] = useState(REVERSE);
 
-  let sortedGoods = sortGoods(goodsFromServer, sortBy, reverse);
-
-  if (reverse) {
-    sortedGoods = sortedGoods.toReversed();
-  }
+  const sortedGoods = sortGoods(goodsFromServer, { sortBy, reverse });
 
   return (
     <div className="section content">
-      <div className="buttons">
-        <button
-          type="button"
-          className={classNames('button', 'is-info', {
-            'is-light': SORT_BY_NAME !== sortBy,
-          })}
-          onClick={() => setSortBy(SORT_BY_NAME)}
-        >
-          Sort alphabetically
-        </button>
-
-        <button
-          type="button"
-          className={classNames('button', 'is-info', {
-            'is-light': SORT_BY_LENGTH !== sortBy,
-          })}
-          onClick={() => setSortBy(SORT_BY_LENGTH)}
-        >
-          Sort by length
-        </button>
-
-        <button
-          type="button"
-          className={classNames('button', 'is-info', {
-            'is-light': !reverse,
-          })}
-          onClick={() => {
-            setReversed(!reverse);
-          }}
-        >
-          Reverse
-        </button>
-
-        {(sortBy || reverse) && (
-          <button
-            type="button"
-            className="button is-info"
-            onClick={() => {
-              setSortBy(RESET_VALUE);
-              setReversed(REVERSE);
-            }}
-          >
-            Reset
-          </button>
-        )}
-      </div>
+      <Buttons
+        sortBy={sortBy}
+        onSort={setSortBy}
+        reverse={reverse}
+        onReverse={setReversed}
+      />
 
       <Goods goods={sortedGoods} />
     </div>
