@@ -1,5 +1,15 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+
+import {
+  RESET_VALUE,
+  SORT_BY_LENGTH,
+  SORT_BY_NAME,
+  REVERSE,
+} from './variables';
+import { Buttons } from './components/Buttons';
+import { Goods } from './components/Goods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +24,44 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function sortGoods(goods, { sortBy: criteria, isReversed }) {
+  let sortedGoods;
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  switch (criteria) {
+    case SORT_BY_NAME:
+      sortedGoods = goods.toSorted((a, b) => a.localeCompare(b));
+      break;
+    case SORT_BY_LENGTH:
+      sortedGoods = goods.toSorted((a, b) => a.length - b.length);
+      break;
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    default:
+      sortedGoods = [...goods];
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (isReversed) {
+    sortedGoods = sortedGoods.toReversed();
+  }
+
+  return sortedGoods;
+}
+
+export const App = () => {
+  const [sortBy, setSortBy] = useState(RESET_VALUE);
+  const [isReversed, setIsReversed] = useState(REVERSE);
+
+  const sortedGoods = sortGoods(goodsFromServer, { sortBy, isReversed });
+
+  return (
+    <div className="section content">
+      <Buttons
+        sortBy={sortBy}
+        onSort={setSortBy}
+        reverse={isReversed}
+        onReverse={setIsReversed}
+      />
+
+      <Goods goods={sortedGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
