@@ -14,12 +14,9 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-
   const sortGoods = type => {
     const sortedGoods = [...goodsFromServer];
 
@@ -29,20 +26,23 @@ export const App = () => {
       sortedGoods.sort((a, b) => a.length - b.length);
     }
 
-    setGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
-    setSortType(type);
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
+
+    return sortedGoods;
   };
 
   const reverseGoods = () => {
-    setGoods([...goods].reverse());
     setIsReversed(prev => !prev);
   };
 
   const resetGoods = () => {
-    setGoods([...goodsFromServer]);
     setSortType('');
     setIsReversed(false);
   };
+
+  const goods = sortGoods(goodsFromServer, sortType, isReversed);
 
   return (
     <div className="section content">
@@ -50,19 +50,17 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortType === 'alphabetically' ? '' : 'is-light'}`}
-          onClick={() => sortGoods('alphabetically')}
+          onClick={() => setSortType('alphabetically')}
         >
           Sort alphabetically
         </button>
-
         <button
           type="button"
           className={`button is-info ${sortType === 'length' ? '' : 'is-light'}`}
-          onClick={() => sortGoods('length')}
+          onClick={() => setSortType('length')}
         >
           Sort by length
         </button>
-
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
@@ -70,8 +68,7 @@ export const App = () => {
         >
           Reverse
         </button>
-
-        {goods.toString() !== goodsFromServer.toString() && (
+        {(sortType || isReversed) && (
           <button
             type="button"
             className="button is-danger"
@@ -81,7 +78,6 @@ export const App = () => {
           </button>
         )}
       </div>
-
       <ul>
         {goods.map(good => (
           <li key={good} data-cy="Good">
