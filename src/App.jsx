@@ -14,25 +14,25 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+const sortGoods = (goods, type, isReversed) => {
+  const sortedGoods = [...goodsFromServer];
+
+  if (type === 'alphabetically') {
+    sortedGoods.sort((a, b) => a.localeCompare(b));
+  } else if (type === 'length') {
+    sortedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
 export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const sortGoods = type => {
-    const sortedGoods = [...goodsFromServer];
-
-    if (type === 'alphabetically') {
-      sortedGoods.sort((a, b) => a.localeCompare(b));
-    } else if (type === 'length') {
-      sortedGoods.sort((a, b) => a.length - b.length);
-    }
-
-    if (isReversed) {
-      sortedGoods.reverse();
-    }
-
-    return sortedGoods;
-  };
-
   const reverseGoods = () => {
     setIsReversed(prev => !prev);
   };
