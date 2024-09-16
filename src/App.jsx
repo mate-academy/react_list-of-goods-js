@@ -17,16 +17,15 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
   const [sortConfig, setSortConfig] = useState({
     type: null,
     reversed: false,
   });
 
-  const handleSort = type => {
-    const newSortedGoods = [...goodsFromServer];
+  const handleSort = (goods, config) => {
+    const newSortedGoods = [...goods];
 
-    switch (type) {
+    switch (config.type) {
       case 'byAlphabet':
         newSortedGoods.sort((a, b) => a.localeCompare(b));
         break;
@@ -37,16 +36,16 @@ export const App = () => {
         break;
     }
 
-    if (sortConfig.reversed) {
+    if (config.reversed) {
       newSortedGoods.reverse();
     }
 
-    setSortedGoods(newSortedGoods);
-    setSortConfig({ type, reversed: sortConfig.reversed });
+    return newSortedGoods;
   };
 
+  const sortedGoods = handleSort(goodsFromServer, sortConfig);
+
   const handleReverse = () => {
-    setSortedGoods([...sortedGoods].reverse());
     setSortConfig(prevConfig => ({
       ...prevConfig,
       reversed: !prevConfig.reversed,
@@ -54,7 +53,6 @@ export const App = () => {
   };
 
   const handleReset = () => {
-    setSortedGoods(goodsFromServer);
     setSortConfig({ type: null, reversed: false });
   };
 
@@ -66,7 +64,7 @@ export const App = () => {
           className={cn('button', 'is-info', {
             'is-light': sortConfig.type !== 'byAlphabet',
           })}
-          onClick={() => handleSort('byAlphabet')}
+          onClick={() => setSortConfig({ ...sortConfig, type: 'byAlphabet' })}
         >
           Sort alphabetically
         </button>
@@ -76,7 +74,7 @@ export const App = () => {
           className={cn('button', 'is-success', {
             'is-light': sortConfig.type !== 'byLength',
           })}
-          onClick={() => handleSort('byLength')}
+          onClick={() => setSortConfig({ ...sortConfig, type: 'byLength' })}
         >
           Sort by length
         </button>
@@ -91,16 +89,15 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortedGoods !== goodsFromServer &&
-          JSON.stringify(sortedGoods) !== JSON.stringify(goodsFromServer) && (
-            <button
-              type="button"
-              className="button is-danger is-light"
-              onClick={handleReset}
-            >
-              Reset
-            </button>
-          )}
+        {(sortConfig.type || sortConfig.reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
