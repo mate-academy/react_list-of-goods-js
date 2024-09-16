@@ -14,16 +14,16 @@ const page = {
 
 const NOT_ACTIVE_CLASS = 'is-light';
 
-let failed = false;
+// let failed = false;
 
 Cypress.on('fail', e => {
-  failed = true;
+  // failed = true;
   throw e;
 });
 
 describe('Page', () => {
   beforeEach(() => {
-    if (failed) Cypress.runner.stop();
+    // if (failed) Cypress.runner.stop();
 
     cy.visit('/');
   });

@@ -17,58 +17,46 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [currentButton, setButton] = useState('');
   const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
-  const [reversedBool, setReverseBool] = useState(false);
-  const [reverseBtnLight, setReverseBtnLight] = useState(false);
-  const [alphabetBtnLight, setAlphabetBtnLight] = useState(false);
-  const [lengthBtnLight, setLengthBtnLight] = useState(false);
+  const [sortConfig, setSortConfig] = useState({
+    type: null,
+    reversed: false,
+  });
 
-  function handleButtonBehavior(typeofButton) {
-    setButton(typeofButton);
+  const handleSort = type => {
+    const newSortedGoods = [...goodsFromServer];
 
-    // handle styles
-    switch (typeofButton) {
+    switch (type) {
       case 'byAlphabet':
-        setAlphabetBtnLight(true);
-        setLengthBtnLight(false);
+        newSortedGoods.sort((a, b) => a.localeCompare(b));
         break;
-
       case 'byLength':
-        setAlphabetBtnLight(false);
-        setLengthBtnLight(true);
+        newSortedGoods.sort((a, b) => a.length - b.length);
         break;
-
-      case 'byReversed':
-        setSortedGoods([...sortedGoods].reverse());
-        setReverseBool(!reversedBool);
-        setReverseBtnLight(!reverseBtnLight);
-        break;
-
-      case 'reset':
-        setSortedGoods(goodsFromServer);
-        setAlphabetBtnLight(false);
-        setLengthBtnLight(false);
-        setReverseBtnLight(false);
-        break;
-
       default:
-    }
-  }
-
-  function handleReverseLogic(typeofButton) {
-    if (reverseBtnLight && typeofButton === 'byAlphabet') {
-      setSortedGoods([...goodsFromServer].sort((a, b) => b.localeCompare(a)));
-    } else if (!reverseBtnLight && typeofButton === 'byAlphabet') {
-      setSortedGoods([...goodsFromServer].sort((a, b) => a.localeCompare(b)));
+        break;
     }
 
-    if (reverseBtnLight && typeofButton === 'byLength') {
-      setSortedGoods([...goodsFromServer].sort((a, b) => b.length - a.length));
-    } else if (!reverseBtnLight && typeofButton === 'byLength') {
-      setSortedGoods([...goodsFromServer].sort((a, b) => a.length - b.length));
+    if (sortConfig.reversed) {
+      newSortedGoods.reverse();
     }
-  }
+
+    setSortedGoods(newSortedGoods);
+    setSortConfig({ type, reversed: sortConfig.reversed });
+  };
+
+  const handleReverse = () => {
+    setSortedGoods([...sortedGoods].reverse());
+    setSortConfig(prevConfig => ({
+      ...prevConfig,
+      reversed: !prevConfig.reversed,
+    }));
+  };
+
+  const handleReset = () => {
+    setSortedGoods(goodsFromServer);
+    setSortConfig({ type: null, reversed: false });
+  };
 
   return (
     <div className="section content">
@@ -76,12 +64,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-info', {
-            'is-light': !alphabetBtnLight,
+            'is-light': sortConfig.type !== 'byAlphabet',
           })}
-          onClick={() => {
-            handleButtonBehavior('byAlphabet');
-            handleReverseLogic('byAlphabet');
-          }}
+          onClick={() => handleSort('byAlphabet')}
         >
           Sort alphabetically
         </button>
@@ -89,12 +74,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-success', {
-            'is-light': !lengthBtnLight,
+            'is-light': sortConfig.type !== 'byLength',
           })}
-          onClick={() => {
-            handleButtonBehavior('byLength');
-            handleReverseLogic('byLength');
-          }}
+          onClick={() => handleSort('byLength')}
         >
           Sort by length
         </button>
@@ -102,32 +84,23 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': !reverseBtnLight,
+            'is-light': !sortConfig.reversed,
           })}
-          onClick={() => {
-            handleButtonBehavior('byReversed');
-          }}
+          onClick={handleReverse}
         >
           Reverse
         </button>
 
-        {currentButton && (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            style={{
-              display:
-                JSON.stringify(sortedGoods) === JSON.stringify(goodsFromServer)
-                  ? 'none'
-                  : 'block',
-            }}
-            onClick={() => {
-              handleButtonBehavior('reset');
-            }}
-          >
-            Reset
-          </button>
-        )}
+        {sortedGoods !== goodsFromServer &&
+          JSON.stringify(sortedGoods) !== JSON.stringify(goodsFromServer) && (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={handleReset}
+            >
+              Reset
+            </button>
+          )}
       </div>
 
       <ul>
