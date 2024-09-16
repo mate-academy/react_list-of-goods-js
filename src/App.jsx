@@ -27,8 +27,10 @@ function getPreparedGoods(goods, sortField, isReversed) {
       switch (sortField) {
         case SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
+
         case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
+
         default:
           return 0;
       }
@@ -47,14 +49,17 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
 
+  function handleReset() {
+    setSortField(null);
+    setIsReversed(false);
+  }
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={cn({
-            button: true,
-            'is-info': true,
+          className={cn('button is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
           onClick={() => setSortField(SORT_FIELD_ALPHABET)}
@@ -64,9 +69,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn({
-            button: true,
-            'is-success': true,
+          className={cn('button is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
           onClick={() => setSortField(SORT_FIELD_LENGTH)}
@@ -76,9 +79,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn({
-            button: true,
-            'is-warning': true,
+          className={cn('button is-warning', {
             'is-light': !isReversed,
           })}
           onClick={() => setIsReversed(!isReversed)}
@@ -86,19 +87,14 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortField || isReversed ? (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('');
-              setIsReversed(false);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
