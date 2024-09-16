@@ -1,7 +1,9 @@
 import 'bulma/css/bulma.css';
-import './App.scss';
 import { useState } from 'react';
 import classNames from 'classnames';
+
+import { SortBy } from './constants/constants';
+import './App.scss';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -21,34 +23,37 @@ export const App = () => {
   const [activeSort, setActiveSort] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const SortBy = {
-    ALPHABET: 'Alphabetically',
-    LENGTH: 'ByLength',
+  const sortGoods = compareFunction => {
+    const sortedGoods = [...goods].sort(compareFunction);
+
+    setGoods(sortedGoods);
   };
 
   const sort = typeOfSortGoods => {
-    let sortedGoods;
+    let compareFunction;
 
     switch (typeOfSortGoods) {
       case SortBy.ALPHABET:
-        sortedGoods = [...goods].sort((a, b) => {
+        compareFunction = (a, b) => {
           return isReversed ? b.localeCompare(a) : a.localeCompare(b);
-        });
-        setGoods(sortedGoods);
+        };
+
         setActiveSort(SortBy.ALPHABET);
         break;
 
       case SortBy.LENGTH:
-        sortedGoods = [...goods].sort((a, b) => {
+        compareFunction = (a, b) => {
           return isReversed ? b.length - a.length : a.length - b.length;
-        });
-        setGoods(sortedGoods);
+        };
+
         setActiveSort(SortBy.LENGTH);
         break;
 
       default:
         throw new Error(`Unknown sort type: ${typeOfSortGoods}`);
     }
+
+    sortGoods(compareFunction);
   };
 
   const reverseGoods = () => {
