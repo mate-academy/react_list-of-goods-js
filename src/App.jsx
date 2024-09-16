@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -23,22 +24,22 @@ export const App = () => {
   const SORT_BY_ALPHABET = 'Alphabetically';
   const SORT_BY_LENGTH = 'ByLength';
 
-  const sortAlphabetically = () => {
-    const sortedGoods = [...goods].sort((a, b) => {
-      return isReversed ? b.localeCompare(a) : a.localeCompare(b);
-    });
+  const sort = typeOfSort => {
+    if (typeOfSort === SORT_BY_ALPHABET) {
+      const sortedGoods = [...goods].sort((a, b) => {
+        return isReversed ? b.localeCompare(a) : a.localeCompare(b);
+      });
 
-    setGoods(sortedGoods);
-    setActiveSort(SORT_BY_ALPHABET);
-  };
+      setGoods(sortedGoods);
+      setActiveSort(SORT_BY_ALPHABET);
+    } else {
+      const sortedGoods = [...goods].sort((a, b) => {
+        return isReversed ? b.length - a.length : a.length - b.length;
+      });
 
-  const sortByLength = () => {
-    const sortedGoods = [...goods].sort((a, b) => {
-      return isReversed ? b.length - a.length : a.length - b.length;
-    });
-
-    setGoods(sortedGoods);
-    setActiveSort(SORT_BY_LENGTH);
+      setGoods(sortedGoods);
+      setActiveSort(SORT_BY_LENGTH);
+    }
   };
 
   const reverseGoods = () => {
@@ -61,23 +62,30 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeSort === SORT_BY_ALPHABET ? '' : 'is-light'}`}
-          onClick={sortAlphabetically}
+          className={classNames('button is-info', {
+            'is-light': activeSort !== SORT_BY_ALPHABET,
+          })}
+          onClick={() => sort(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${activeSort === SORT_BY_LENGTH ? '' : 'is-light'}`}
-          onClick={sortByLength}
+          className={classNames('button is-success', {
+            'is-light': activeSort !== SORT_BY_LENGTH,
+          })}
+          onClick={() => sort(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button ${isReversed ? 'is-warning' : 'is-warning is-light'}`}
+          className={classNames('button', {
+            'is-warning': isReversed,
+            'is-warning is-light': !isReversed,
+          })}
           onClick={reverseGoods}
         >
           Reverse
