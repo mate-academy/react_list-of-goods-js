@@ -21,32 +21,39 @@ export const App = () => {
   const [activeSort, setActiveSort] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const SORT_BY_ALPHABET = 'Alphabetically';
-  const SORT_BY_LENGTH = 'ByLength';
+  const SortBy = {
+    ALPHABET: 'Alphabetically',
+    LENGTH: 'ByLength',
+  };
 
-  const sort = typeOfSort => {
-    if (typeOfSort === SORT_BY_ALPHABET) {
-      const sortedGoods = [...goods].sort((a, b) => {
-        return isReversed ? b.localeCompare(a) : a.localeCompare(b);
-      });
+  const sort = typeOfSortGoods => {
+    let sortedGoods;
 
-      setGoods(sortedGoods);
-      setActiveSort(SORT_BY_ALPHABET);
-    } else {
-      const sortedGoods = [...goods].sort((a, b) => {
-        return isReversed ? b.length - a.length : a.length - b.length;
-      });
+    switch (typeOfSortGoods) {
+      case SortBy.ALPHABET:
+        sortedGoods = [...goods].sort((a, b) => {
+          return isReversed ? b.localeCompare(a) : a.localeCompare(b);
+        });
+        setGoods(sortedGoods);
+        setActiveSort(SortBy.ALPHABET);
+        break;
 
-      setGoods(sortedGoods);
-      setActiveSort(SORT_BY_LENGTH);
+      case SortBy.LENGTH:
+        sortedGoods = [...goods].sort((a, b) => {
+          return isReversed ? b.length - a.length : a.length - b.length;
+        });
+        setGoods(sortedGoods);
+        setActiveSort(SortBy.LENGTH);
+        break;
+
+      default:
+        throw new Error(`Unknown sort type: ${typeOfSortGoods}`);
     }
   };
 
   const reverseGoods = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-    setIsReversed(!isReversed);
+    setGoods(prevGoods => [...prevGoods].reverse());
+    setIsReversed(prevIsReversed => !prevIsReversed);
   };
 
   const resetGoods = () => {
@@ -55,7 +62,13 @@ export const App = () => {
     setActiveSort('');
   };
 
-  const shouldShowReset = activeSort !== '' || isReversed;
+  const sortByAlphabet = () => {
+    sort(SortBy.ALPHABET);
+  };
+
+  const sortByLength = () => {
+    sort(SortBy.LENGTH);
+  };
 
   return (
     <div className="section content">
@@ -63,9 +76,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-info', {
-            'is-light': activeSort !== SORT_BY_ALPHABET,
+            'is-light': activeSort !== SortBy.ALPHABET,
           })}
-          onClick={() => sort(SORT_BY_ALPHABET)}
+          onClick={sortByAlphabet}
         >
           Sort alphabetically
         </button>
@@ -73,9 +86,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-success', {
-            'is-light': activeSort !== SORT_BY_LENGTH,
+            'is-light': activeSort !== SortBy.LENGTH,
           })}
-          onClick={() => sort(SORT_BY_LENGTH)}
+          onClick={sortByLength}
         >
           Sort by length
         </button>
@@ -91,7 +104,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {shouldShowReset && (
+        {(activeSort !== '' || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
