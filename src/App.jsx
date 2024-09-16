@@ -1,46 +1,121 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
+import { goodsFromServer } from './data';
+
 import './App.scss';
 
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
+const BASIC_SORT = 'all';
+const ALPHA_SORT = 'alpha';
+const LENGTH_SORT = 'length';
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const sortGoods = (goods, sortMethod, reverse) => {
+  let result = [...goods];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  switch (sortMethod) {
+    case BASIC_SORT: {
+      if (reverse) {
+        result.reverse();
+      } else {
+        result = goodsFromServer;
+      }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+      break;
+    }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    case ALPHA_SORT: {
+      if (reverse) {
+        result = result.sort((a, b) => b.name.localeCompare(a.name));
+      } else {
+        result = result.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      break;
+    }
+
+    case LENGTH_SORT: {
+      if (reverse) {
+        result.sort(
+          (a, b) =>
+            b.name.length - a.name.length || b.name.localeCompare(a.name),
+        );
+      } else {
+        result.sort(
+          (a, b) =>
+            a.name.length - b.name.length || a.name.localeCompare(b.name),
+        );
+      }
+
+      break;
+    }
+
+    default: {
+      break;
+    }
+  }
+
+  return result;
+};
+
+export const App = () => {
+  const [filter, setFilter] = useState(BASIC_SORT);
+  const [reverse, setReverse] = useState(false);
+
+  const goods = sortGoods(goodsFromServer, filter, reverse);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${filter !== ALPHA_SORT && 'is-light'}`}
+          onClick={() => {
+            setFilter(ALPHA_SORT);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${filter !== LENGTH_SORT && 'is-light'}`}
+          onClick={() => {
+            setFilter(LENGTH_SORT);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${!reverse && 'is-light'}`}
+          onClick={() => {
+            setReverse(!reverse);
+          }}
+        >
+          Reverse
+        </button>
+
+        {(filter !== BASIC_SORT || reverse) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setFilter(BASIC_SORT);
+              setReverse(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goods.map(good => (
+          <li data-cy="Good" key={good.id}>
+            {good.name}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
