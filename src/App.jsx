@@ -56,9 +56,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={classNames({
-            button: true,
-            'is-info': true,
+          className={classNames('button', 'is-info', {
             'is-light': sortBy !== SORT_BY_ALPHABET,
           })}
           onClick={() => setSortBy(SORT_BY_ALPHABET)}
@@ -68,9 +66,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames({
-            button: true,
-            'is-success': true,
+          className={classNames('button', 'is-success', {
             'is-light': sortBy !== SORT_BY_LENGTH,
           })}
           onClick={() => setSortBy(SORT_BY_LENGTH)}
@@ -80,9 +76,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={classNames({
-            button: true,
-            'is-warning': true,
+          className={classNames('button', 'is-warning', {
             'is-light': !isReversed,
           })}
           onClick={() => setIsReversed(!isReversed)}
