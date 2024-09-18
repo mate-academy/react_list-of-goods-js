@@ -16,7 +16,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_BY_ALPHABET = 'alfabet';
+const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
 function getPreparedGoods(goods, { sortBy, reversed }) {
