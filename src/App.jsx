@@ -16,19 +16,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_BY_ALFABET = 'alfabet';
+const SORT_BY_ALPHABET = 'alfabet';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, { sortField, reversed }) {
+function getPreparedGoods(goods, { sortBy, reversed }) {
   const preparedGoods = [...goods];
 
-  if (sortField) {
+  if (sortBy) {
     preparedGoods.sort((good1, good2) => {
-      switch (sortField) {
+      switch (sortBy) {
         case SORT_BY_LENGTH:
           return good1.length - good2.length;
 
-        case SORT_BY_ALFABET:
+        case SORT_BY_ALPHABET:
           return good1.localeCompare(good2);
 
         default:
@@ -47,10 +47,7 @@ function getPreparedGoods(goods, { sortField, reversed }) {
 export const App = () => {
   const [sortBy, setSortBy] = useState('');
   const [reversed, setReversed] = useState(false);
-  const visibleGoods = getPreparedGoods(goodsFromServer, {
-    sortField: sortBy,
-    reversed,
-  });
+  const visibleGoods = getPreparedGoods(goodsFromServer, { sortBy, reversed });
 
   return (
     <div className="section content">
@@ -58,9 +55,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-info', {
-            'is-light': sortBy !== SORT_BY_ALFABET,
+            'is-light': sortBy !== SORT_BY_ALPHABET,
           })}
-          onClick={() => setSortBy(SORT_BY_ALFABET)}
+          onClick={() => setSortBy(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
