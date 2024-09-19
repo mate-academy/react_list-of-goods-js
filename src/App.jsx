@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cn from 'classname';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
@@ -19,7 +20,7 @@ export const goodsFromServer = [
 const SORT_BY_NAME = 'name';
 const SORT_BY_LENGTH = 'length';
 const REVERSE = 'reverse';
-let isNull;
+let isSortParametersNull;
 
 export function App() {
   const goodsCopy = [...goodsFromServer];
@@ -39,9 +40,9 @@ export function App() {
   }
 
   if (sortType === null && reverseOfArray === null) {
-    isNull = null;
+    isSortParametersNull = null;
   } else {
-    isNull = 'yes';
+    isSortParametersNull = 'yes';
   }
 
   function setResets() {
@@ -55,7 +56,9 @@ export function App() {
         <button
           onClick={() => setSortType(SORT_BY_NAME)}
           type="button"
-          className="button is-info is-light"
+          className={cn('button is-info', {
+            'is-light': sortType !== SORT_BY_NAME,
+          })}
         >
           Sort alphabetically
         </button>
@@ -63,7 +66,9 @@ export function App() {
         <button
           onClick={() => setSortType(SORT_BY_LENGTH)}
           type="button"
-          className="button is-success is-light"
+          className={cn('button is-success', {
+            'is-light': sortType !== SORT_BY_LENGTH,
+          })}
         >
           Sort by length
         </button>
@@ -80,13 +85,15 @@ export function App() {
           <button
             onClick={() => setReverseOfArray(null)}
             type="button"
-            className="button is-warning is-light"
+            className={cn('button is-warning', {
+              'is-light': reverseOfArray === null,
+            })}
           >
             Reverse
           </button>
         )}
 
-        {isNull !== null ? (
+        {isSortParametersNull !== null ? (
           <button
             onClick={setResets}
             type="button"
