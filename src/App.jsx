@@ -48,7 +48,7 @@ export const App = () => {
     isReversed: false,
   });
 
-  const inAnyFilterApplied =
+  const isAnyFilterApplied =
     filterInstruction.filterType || filterInstruction.isReversed;
 
   const visibleGoods = getPreparedGoods(goodsFromServer, filterInstruction);
@@ -118,7 +118,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {inAnyFilterApplied && (
+        {isAnyFilterApplied && (
           <button
             onClick={() => handleClearFilter()}
             type="button"
