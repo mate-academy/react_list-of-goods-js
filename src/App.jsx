@@ -40,6 +40,7 @@ function sortGoods(goods, sortField = '') {
   return visibleGoods;
 }
 
+
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState(false);
