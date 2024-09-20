@@ -35,6 +35,11 @@ export const App = () => {
     return isReverse ? sortedList.reverse() : sortedList;
   }
 
+  const reset = () => {
+    setReversed('');
+    setSortType('');
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -69,10 +74,7 @@ export const App = () => {
         </button>
         {sortType.length || reversed ? (
           <button
-            onClick={() => {
-              setReversed('');
-              setSortType('');
-            }}
+            onClick={reset}
             type="button"
             className="button is-danger is-light"
           >
