@@ -105,7 +105,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {handledGoods.map((good) => (
+        {handledGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
