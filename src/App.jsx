@@ -46,7 +46,7 @@ function handleGoodsSortAction(goods, action, isReversed) {
 }
 
 function resetState(...args) {
-  args.forEach((arg) => arg(false));
+  args.forEach(arg => arg(false));
 }
 
 export const App = () => {
@@ -106,7 +106,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {handledGoods.map((good) => (
+        {handledGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
