@@ -45,6 +45,10 @@ function handleGoodsSortAction(goods, action, isReversed) {
   return renderedGoods;
 }
 
+function resetState(...args) {
+  args.forEach(arg => arg(false));
+}
+
 export const App = () => {
   const [sortAction, setSortAction] = useState('');
   const [reversed, setReversed] = useState(false);
@@ -94,10 +98,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger"
-            onClick={() => {
-              setSortAction('');
-              setReversed(false);
-            }}
+            onClick={() => resetState(setReversed, setSortAction)}
           >
             Reset
           </button>
