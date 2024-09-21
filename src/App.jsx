@@ -46,7 +46,7 @@ function handleGoodsSortAction(goods, action, isReversed) {
 }
 
 function resetState(...args) {
-  args.forEach(arg => arg(false));
+  args.forEach((arg) => arg(false));
 }
 
 export const App = () => {
@@ -76,7 +76,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-info', {
+          className={cn('button', 'is-success', {
             'is-light': sortAction !== length,
           })}
           onClick={() => setSortAction(length)}
@@ -86,7 +86,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={cn('button', 'is-info', {
+          className={cn('button', 'is-warning', {
             'is-light': !reversed,
           })}
           onClick={() => setReversed(!reversed)}
@@ -106,7 +106,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {handledGoods.map(good => (
+        {handledGoods.map((good) => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
