@@ -22,17 +22,8 @@ const SORT_FIELD_LENGTH = 'Sort by length';
 const SORT_FIELD_RESET = 'Reset';
 const SORT_FIELD_REVERSE = 'Reverse';
 
-export const App = () => {
-  const [currentSort, setCurrentSort] = useState('');
-  const [reversed, setReversed] = useState(false);
-
-  let sortedGoods = [...goodsFromServer];
-  const isReset = currentSort || reversed;
-
-  const handleReset = () => {
-    setCurrentSort('');
-    setReversed(false);
-  };
+const sortGoods = (goods, currentSort, isReversed) => {
+  let sortedGoods = [...goods];
 
   switch (currentSort) {
     case SORT_FIELD_ABC:
@@ -48,9 +39,25 @@ export const App = () => {
       break;
   }
 
-  if (reversed) {
-    sortedGoods = sortedGoods.toReversed();
+  if (isReversed) {
+    sortedGoods.reverse();
   }
+
+  return sortedGoods;
+};
+
+export const App = () => {
+  const [currentSort, setCurrentSort] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+
+  const isReset = currentSort || isReversed;
+
+  const handleReset = () => {
+    setCurrentSort('');
+    setIsReversed(false);
+  };
+
+  const sortedGoods = sortGoods(goodsFromServer, currentSort, isReversed);
 
   return (
     <div className="section content">
@@ -80,10 +87,10 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', {
-            'is-light': !reversed,
-            'is-warning': reversed,
+            'is-light': !isReversed,
+            'is-warning': isReversed,
           })}
-          onClick={() => setReversed(!reversed)}
+          onClick={() => setIsReversed(prevState => !prevState)}
         >
           {SORT_FIELD_REVERSE}
         </button>
