@@ -21,7 +21,7 @@ const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_RESET = '';
 
-function sortGoods(goods, sortField = '') {
+function sortGoods(goods, sortField = '', isReverse = false) {
   const visibleGoods = [...goods];
 
   if (sortField) {
@@ -37,18 +37,17 @@ function sortGoods(goods, sortField = '') {
     }
   }
 
+  if (isReverse) {
+    visibleGoods.reverse();
+  }
+
   return visibleGoods;
 }
 
-
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [reverse, setReverse] = useState(false);
-  let visibleGoods = sortGoods(goodsFromServer, sortField);
-
-  if (reverse) {
-    visibleGoods = visibleGoods.reverse();
-  }
+  const [isReverse, setReverse] = useState(false);
+  const visibleGoods = sortGoods(goodsFromServer, sortField, isReverse);
 
   return (
     <div className="section content">
@@ -80,16 +79,16 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-warning', {
-            'is-light': !reverse,
+            'is-light': !isReverse,
           })}
           onClick={() => {
-            setReverse(!reverse);
+            setReverse(!isReverse);
           }}
         >
           Reverse
         </button>
 
-        {(sortField !== SORT_FIELD_RESET || reverse) && (
+        {(sortField !== SORT_FIELD_RESET || isReverse) && (
           <button
             type="button"
             className="button is-danger"
