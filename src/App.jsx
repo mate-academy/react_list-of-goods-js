@@ -16,26 +16,40 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const ALPHABET = 'alphabet';
+const LENGTH = 'length';
+
+const preparedGoods = [...goodsFromServer];
+
+const sortGoods = (order, isReversed) => {
+  let sortedGoods;
+
+  switch (order) {
+    case ALPHABET:
+      sortedGoods = [...preparedGoods].sort((a, b) => a.localeCompare(b));
+      break;
+    case LENGTH:
+      sortedGoods = [...preparedGoods].sort((a, b) => a.length - b.length);
+      break;
+    default:
+      sortedGoods = [...preparedGoods];
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [goods, setGoods] = useState(preparedGoods);
   const [isReversed, setIsReversed] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const sortGoods = order => {
-    let sortedGoods;
+  const handleSort = order => {
+    const sortedGoods = sortGoods(order, isReversed);
 
-    switch (order) {
-      case 'alphabet':
-        sortedGoods = [...goodsFromServer].sort();
-        break;
-      case 'length':
-        sortedGoods = [...goodsFromServer].sort((a, b) => a.length - b.length);
-        break;
-      default:
-        sortedGoods = [...goodsFromServer];
-    }
-
-    if (isReversed) sortedGoods.reverse();
     setGoods(sortedGoods);
     setSortOrder(order);
   };
@@ -46,13 +60,12 @@ export const App = () => {
   };
 
   const resetGoods = () => {
-    setGoods([...goodsFromServer]);
+    setGoods(preparedGoods);
     setSortOrder(null);
     setIsReversed(false);
   };
 
-  const isResetVisible =
-    JSON.stringify(goods) !== JSON.stringify(goodsFromServer);
+  const isResetVisible = sortOrder || isReversed;
   const visibleGoods = goods;
 
   return (
@@ -61,9 +74,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortOrder !== 'alphabet',
+            'is-light': sortOrder !== ALPHABET,
           })}
-          onClick={() => sortGoods('alphabet')}
+          onClick={() => handleSort(ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -71,9 +84,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortOrder !== 'length',
+            'is-light': sortOrder !== LENGTH,
           })}
-          onClick={() => sortGoods('length')}
+          onClick={() => handleSort(LENGTH)}
         >
           Sort by length
         </button>
