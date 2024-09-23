@@ -88,9 +88,8 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {goods.map((good, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <li key={index} data-cy="Good">
+        {goods.map(good => (
+          <li key={good} data-cy="Good">
             {good}
           </li>
         ))}
