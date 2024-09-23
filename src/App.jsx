@@ -21,22 +21,23 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const sortAlphabetically = () => {
-    const sortedGoods = [...goodsFromServer].sort();
+  const sortGoods = order => {
+    let sortedGoods;
+
+    switch (order) {
+      case 'alphabet':
+        sortedGoods = [...goodsFromServer].sort();
+        break;
+      case 'length':
+        sortedGoods = [...goodsFromServer].sort((a, b) => a.length - b.length);
+        break;
+      default:
+        sortedGoods = [...goodsFromServer];
+    }
 
     if (isReversed) sortedGoods.reverse();
     setGoods(sortedGoods);
-    setSortOrder('alphabet');
-  };
-
-  const sortByLength = () => {
-    const sortedGoods = [...goodsFromServer].sort(
-      (a, b) => a.length - b.length,
-    );
-
-    if (isReversed) sortedGoods.reverse();
-    setGoods(sortedGoods);
-    setSortOrder('length');
+    setSortOrder(order);
   };
 
   const reverseGoods = () => {
@@ -52,6 +53,7 @@ export const App = () => {
 
   const isResetVisible =
     JSON.stringify(goods) !== JSON.stringify(goodsFromServer);
+  const visibleGoods = goods;
 
   return (
     <div className="section content">
@@ -61,7 +63,7 @@ export const App = () => {
           className={classNames('button', 'is-info', {
             'is-light': sortOrder !== 'alphabet',
           })}
-          onClick={sortAlphabetically}
+          onClick={() => sortGoods('alphabet')}
         >
           Sort alphabetically
         </button>
@@ -71,7 +73,7 @@ export const App = () => {
           className={classNames('button', 'is-success', {
             'is-light': sortOrder !== 'length',
           })}
-          onClick={sortByLength}
+          onClick={() => sortGoods('length')}
         >
           Sort by length
         </button>
@@ -98,7 +100,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {visibleGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
