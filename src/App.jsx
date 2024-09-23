@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
 import { useState } from 'react';
 
 const SORT_BY_ALPHABET = 'alphabet';
@@ -59,30 +60,23 @@ export const App = () => {
   const buttons = [
     {
       name: 'Sort alphabetically',
-      className: `is-info ${sortField === SORT_BY_ALPHABET ? '' : 'is-light'}`,
+      className: cn('is-info', { 'is-light': sortField !== SORT_BY_ALPHABET }),
       handleClick() {
         setSortField(SORT_BY_ALPHABET);
       },
     },
     {
       name: 'Sort by length',
-      className: `is-success ${sortField === SORT_BY_LENGTH ? '' : 'is-light'}`,
+      className: cn('is-success', { 'is-light': sortField !== SORT_BY_LENGTH }),
       handleClick() {
         setSortField(SORT_BY_LENGTH);
       },
     },
     {
       name: 'Reverse',
-      className: `is-warning ${isReversed ? '' : 'is-light'}`,
+      className: cn('is-warning', { 'is-light': !isReversed }),
       handleClick() {
-        setIsReversed(!isReversed);
-      },
-    },
-    {
-      name: 'Reset',
-      className: 'is-danger',
-      handleClick() {
-        handleClear();
+        setIsReversed(prevState => !prevState);
       },
     },
   ];
@@ -90,20 +84,27 @@ export const App = () => {
   return (
     <div className="section content">
       <div className="buttons">
-        {buttons.map(button =>
-          button.name === 'Reset' && !isChanged ? (
-            ''
-          ) : (
-            <button
-              type="button"
-              className={`button ${button.className}`}
-              onClick={button.handleClick}
-              key={button.name}
-            >
-              {button.name}
-            </button>
-            // eslint-disable-next-line prettier/prettier
-          ))}
+        {buttons.map(button => (
+          <button
+            type="button"
+            className={cn(`button ${button.className}`)}
+            onClick={button.handleClick}
+            key={button.name}
+          >
+            {button.name}
+          </button>
+          // eslint-disable-next-line prettier/prettier
+        ))}
+
+        {isChanged && (
+          <button
+            type="button"
+            className={cn('button is-danger is-light')}
+            onClick={handleClear}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
