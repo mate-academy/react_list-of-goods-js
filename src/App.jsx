@@ -89,7 +89,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => handleReverse()}
+          onClick={handleReverse}
           type="button"
           className={cn('button is-warning', {
             'is-light': !isReversed,
@@ -100,7 +100,7 @@ export const App = () => {
 
         {sortState && (
           <button
-            onClick={() => handleReset()}
+            onClick={handleReset}
             type="button"
             className="button is-danger is-light"
           >
