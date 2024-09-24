@@ -89,17 +89,16 @@ export const App = () => {
         >
           Reverse
         </button>
-        {sortField !== '' || isReverse ? (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={resetFilters}
-          >
-            Reset
-          </button>
-        ) : (
-          ''
-        )}
+        {sortField ||
+          (isReverse && (
+            <button
+              type="button"
+              className="button is-danger is-light"
+              onClick={resetFilters}
+            >
+              Reset
+            </button>
+          ))}
       </div>
 
       <ul>
