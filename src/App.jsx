@@ -19,36 +19,48 @@ export const goodsFromServer = [
 
 const SORT_BY_NAME = 'name';
 const SORT_BY_LENGTH = 'length';
-const REVERSE = 'reverse';
-let isSortParametersNull;
+
+function sortingAndReversing(array, sortType, isReverse) {
+  const arrayCopy = [...array];
+
+  switch (sortType) {
+    case SORT_BY_NAME:
+      arrayCopy.sort((goods1, goods2) => goods1.localeCompare(goods2));
+      break;
+    case SORT_BY_LENGTH:
+      arrayCopy.sort((goods1, goods2) => goods1.length - goods2.length);
+      break;
+
+    default:
+      break;
+  }
+
+  if (isReverse) {
+    arrayCopy.reverse();
+  }
+
+  return arrayCopy;
+}
 
 export function App() {
-  const goodsCopy = [...goodsFromServer];
-  const [sortType, setSortType] = useState(null);
-  const [reverseOfArray, setReverseOfArray] = useState(null);
+  const [sortType, setSortType] = useState('');
+  const [reverseCondition, setReverseCondition] = useState(false);
 
-  if (sortType === SORT_BY_NAME) {
-    goodsCopy.sort((goods1, goods2) => goods1.localeCompare(goods2));
-  }
-
-  if (sortType === SORT_BY_LENGTH) {
-    goodsCopy.sort((goods1, goods2) => goods1.length - goods2.length);
-  }
-
-  if (reverseOfArray === REVERSE) {
-    goodsCopy.reverse();
-  }
-
-  if (sortType === null && reverseOfArray === null) {
-    isSortParametersNull = null;
-  } else {
-    isSortParametersNull = 'yes';
-  }
+  const goodsSorted = sortingAndReversing(
+    goodsFromServer,
+    sortType,
+    reverseCondition,
+  );
 
   function setResets() {
-    setSortType(null);
-    setReverseOfArray(null);
+    setSortType('');
+    setReverseCondition(false);
   }
+
+  const handleIsReverse = () =>
+    reverseCondition ? setReverseCondition(false) : setReverseCondition(true);
+
+  const hasNoSortParameters = !sortType && !reverseCondition;
 
   return (
     <div className="section content">
@@ -73,27 +85,17 @@ export function App() {
           Sort by length
         </button>
 
-        {reverseOfArray === null ? (
-          <button
-            onClick={() => setReverseOfArray(REVERSE)}
-            type="button"
-            className="button is-warning is-light"
-          >
-            Reverse
-          </button>
-        ) : (
-          <button
-            onClick={() => setReverseOfArray(null)}
-            type="button"
-            className={cn('button is-warning', {
-              'is-light': reverseOfArray === null,
-            })}
-          >
-            Reverse
-          </button>
-        )}
+        <button
+          onClick={handleIsReverse}
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': !reverseCondition,
+          })}
+        >
+          Reverse
+        </button>
 
-        {isSortParametersNull !== null ? (
+        {!hasNoSortParameters && (
           <button
             onClick={setResets}
             type="button"
@@ -101,14 +103,14 @@ export function App() {
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
       <ul>
-        {goodsCopy.map(good => (
-          <li data-cy="Good">{good}</li>
+        {goodsSorted.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
