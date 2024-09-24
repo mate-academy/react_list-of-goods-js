@@ -55,8 +55,8 @@ export const App = () => {
   };
 
   const reverseGoods = () => {
-    setGoods([...goods].reverse());
-    setIsReversed(!isReversed);
+    setGoods(prevGoods => [...prevGoods].reverse());
+    setIsReversed(prevState => !prevState);
   };
 
   const resetGoods = () => {
