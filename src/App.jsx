@@ -43,12 +43,11 @@ const preparedGoods = (goods, sortField, reverse) => {
 };
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
+  const [goods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
   const [isReverse, setIsReverse] = useState(false);
 
   const resetFilters = () => {
-    setGoods(goodsFromServer);
     setIsReverse(false);
     setSortField('');
   };
