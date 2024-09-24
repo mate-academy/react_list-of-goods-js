@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import cn from 'classname';
+import cn from 'classnames';
 
 import 'bulma/css/bulma.css';
 import './App.scss';
