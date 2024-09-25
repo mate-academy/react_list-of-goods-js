@@ -25,10 +25,10 @@ function sortingAndReversing(array, sortType, isReverse) {
 
   switch (sortType) {
     case SORT_BY_NAME:
-      arrayCopy.sort((goods1, goods2) => goods1.localeCompare(goods2));
+      arrayCopy.sort((good1, good2) => good1.localeCompare(good2));
       break;
     case SORT_BY_LENGTH:
-      arrayCopy.sort((goods1, goods2) => goods1.length - goods2.length);
+      arrayCopy.sort((good1, good2) => good1.length - good2.length);
       break;
 
     default:
@@ -44,23 +44,23 @@ function sortingAndReversing(array, sortType, isReverse) {
 
 export function App() {
   const [sortType, setSortType] = useState('');
-  const [reverseCondition, setReverseCondition] = useState(false);
+  const [isReversedGoods, setIsReversedGoods] = useState(false);
 
   const goodsSorted = sortingAndReversing(
     goodsFromServer,
     sortType,
-    reverseCondition,
+    isReversedGoods,
   );
 
   function setResets() {
     setSortType('');
-    setReverseCondition(false);
+    setIsReversedGoods(false);
   }
 
   const handleIsReverse = () =>
-    reverseCondition ? setReverseCondition(false) : setReverseCondition(true);
+    isReversedGoods ? setIsReversedGoods(false) : setIsReversedGoods(true);
 
-  const hasNoSortParameters = !sortType && !reverseCondition;
+  const hasNoSortParameters = !sortType && !isReversedGoods;
 
   return (
     <div className="section content">
@@ -89,7 +89,7 @@ export function App() {
           onClick={handleIsReverse}
           type="button"
           className={cn('button is-warning', {
-            'is-light': !reverseCondition,
+            'is-light': !isReversedGoods,
           })}
         >
           Reverse
