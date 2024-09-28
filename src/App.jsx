@@ -66,6 +66,14 @@ export const App = () => {
   const [listOfGoods, setListOfGoods] = useState(goodsFromServer);
   const [stateArray, setStateArray] = useState([]);
   const listForPrint = sorting(listOfGoods, state, stateArray);
+  const isButtonAlphabetLight =
+    !stateArray.includes(STATE_ALPHABETICALLY) &&
+    (!stateArray.includes(STATE_ALPHABETICALLY) ||
+      !stateArray.includes(STATE_REVERSE));
+  const isButtonByLengthLight =
+    !stateArray.includes(STATE_BY_LENGTH) &&
+    (!stateArray.includes(STATE_BY_LENGTH) ||
+      !stateArray.includes(STATE_REVERSE));
 
   return (
     <div className="section content">
@@ -73,10 +81,7 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-info ', {
-            'is-light':
-              !stateArray.includes(STATE_ALPHABETICALLY) &&
-              (!stateArray.includes(STATE_ALPHABETICALLY) ||
-                !stateArray.includes(STATE_REVERSE)),
+            'is-light': isButtonAlphabetLight,
           })}
           onClick={() => {
             setState(STATE_ALPHABETICALLY);
@@ -91,10 +96,7 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button is-success ', {
-            'is-light':
-              !stateArray.includes(STATE_BY_LENGTH) &&
-              (!stateArray.includes(STATE_BY_LENGTH) ||
-                !stateArray.includes(STATE_REVERSE)),
+            'is-light': isButtonByLengthLight,
           })}
           onClick={() => {
             setState(STATE_BY_LENGTH);
