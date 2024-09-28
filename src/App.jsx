@@ -75,6 +75,13 @@ export const App = () => {
     (!stateArray.includes(STATE_BY_LENGTH) ||
       !stateArray.includes(STATE_REVERSE));
 
+  const onclickHendler = nameOfState => {
+    setState(nameOfState);
+    setStateArray(prev => {
+      return addStates(nameOfState, stateArray, prev);
+    });
+  };
+
   return (
     <div className="section content">
       <div className="buttons">
@@ -84,10 +91,7 @@ export const App = () => {
             'is-light': isButtonAlphabetLight,
           })}
           onClick={() => {
-            setState(STATE_ALPHABETICALLY);
-            setStateArray(prev => {
-              return addStates(STATE_ALPHABETICALLY, stateArray, prev);
-            });
+            onclickHendler(STATE_ALPHABETICALLY);
           }}
         >
           Sort alphabetically
@@ -99,10 +103,7 @@ export const App = () => {
             'is-light': isButtonByLengthLight,
           })}
           onClick={() => {
-            setState(STATE_BY_LENGTH);
-            setStateArray(prev => {
-              return addStates(STATE_BY_LENGTH, stateArray, prev);
-            });
+            onclickHendler(STATE_BY_LENGTH);
           }}
         >
           Sort by length
@@ -124,7 +125,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {stateArray.length !== 0 && (
+        {!!stateArray.length && (
           <button
             type="button"
             className="button is-danger"
