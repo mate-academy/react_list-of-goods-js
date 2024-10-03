@@ -1,6 +1,7 @@
+import cn from 'classnames';
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,43 +16,50 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SortType = {
+  ALPHABET: 'alphabet',
+  LENGTH: 'length',
+  DEFAULT: 'default',
+};
+
+const handleSort = (type, setGoods, isReversed) => {
+  let sortedGoods = [...goodsFromServer];
+
+  switch (type) {
+    case SortType.ALPHABET:
+      sortedGoods = sortedGoods.sort();
+      break;
+    case SortType.LENGTH:
+      sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
+      break;
+    default:
+      sortedGoods = [...goodsFromServer];
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  setGoods(sortedGoods);
+};
+
+const handleReverse = (setGoods, setIsReversed) => {
+  setGoods(prevGoods => [...prevGoods].reverse());
+  setIsReversed(prevIsReversed => !prevIsReversed);
+};
+
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [isReversed, setIsReversed] = useState(false);
-  const [sortType, setSortType] = useState(null);
+  const [sortType, setSortType] = useState(SortType.DEFAULT);
 
-  const handleSort = type => {
-    let sortedGoods = [...goodsFromServer];
-
-    if (type === 'alphabet') {
-      sortedGoods = sortedGoods.sort();
-    } else if (type === 'length') {
-      sortedGoods = sortedGoods.sort((a, b) => a.length - b.length);
-    }
-
-    if (isReversed) {
-      sortedGoods.reverse();
-    }
-
-    setGoods(sortedGoods);
-    setSortType(type);
-  };
-
-  const handleReverse = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-
-    if (JSON.stringify(reversedGoods) === JSON.stringify(goodsFromServer)) {
-      setSortType(null);
-    }
-
-    setIsReversed(!isReversed);
-  };
+  const shouldShowResetButton =
+    (sortType !== SortType.DEFAULT || isReversed) &&
+    JSON.stringify(goods) !== JSON.stringify(goodsFromServer);
 
   const handleReset = () => {
     setGoods(goodsFromServer);
-    setSortType(null);
+    setSortType(SortType.DEFAULT);
     setIsReversed(false);
   };
 
@@ -60,39 +68,49 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
-          onClick={() => handleSort('alphabet')}
+          className={cn('button is-info', {
+            'is-light': sortType !== SortType.ALPHABET,
+          })}
+          onClick={() => {
+            handleSort(SortType.ALPHABET, setGoods, isReversed);
+            setSortType(SortType.ALPHABET);
+          }}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
-          onClick={() => handleSort('length')}
+          className={cn('button is-success', {
+            'is-light': sortType !== SortType.LENGTH,
+          })}
+          onClick={() => {
+            handleSort(SortType.LENGTH, setGoods, isReversed);
+            setSortType(SortType.LENGTH);
+          }}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={handleReverse}
+          className={cn('button is-warning', {
+            'is-light': !isReversed,
+          })}
+          onClick={() => handleReverse(setGoods, setIsReversed)}
         >
           Reverse
         </button>
 
-        {(sortType || isReversed) &&
-          JSON.stringify(goods) !== JSON.stringify(goodsFromServer) && (
-            <button
-              type="button"
-              className="button is-danger"
-              onClick={handleReset}
-            >
-              Reset
-            </button>
-            // eslint-disable-next-line indent
-          )}
+        {shouldShowResetButton && (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
