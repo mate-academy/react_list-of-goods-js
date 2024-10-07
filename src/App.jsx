@@ -15,66 +15,46 @@ export const originalGoods = [
   'Garlic',
 ];
 
-const arraysAreEqual = (arr1, arr2) => {
-  if (arr1.length !== arr2.length) {
-    return false;
+const getSortedGoods = (goods, sortType, isReversed) => {
+  const sortedGoods = [...goods];
+
+  if (sortType === 'alphabet') {
+    sortedGoods.sort();
+  } else if (sortType === 'length') {
+    sortedGoods.sort((a, b) => a.length - b.length);
   }
 
-  for (let i = 0; i < arr1.length; i += 1) {
-    if (arr1[i] !== arr2[i]) {
-      return false;
-    }
+  if (isReversed) {
+    sortedGoods.reverse();
   }
 
-  return true;
+  return sortedGoods;
 };
 
 export const App = () => {
-  const [goods, setGoods] = useState(originalGoods);
   const [isReversed, setIsReversed] = useState(false);
   const [sortType, setSortType] = useState('');
 
+  const goods = getSortedGoods(originalGoods, sortType, isReversed);
+
   const sortByAlphabet = () => {
-    const sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
-
-    if (isReversed) {
-      sortedGoods.reverse();
-    }
-
-    setGoods(sortedGoods);
     setSortType('alphabet');
   };
 
   const sortByLength = () => {
-    const sortedGoods = [...goods].sort(
-      (a, b) =>
-        a.length - b.length ||
-        originalGoods.indexOf(a) - originalGoods.indexOf(b),
-    );
-
-    if (isReversed) {
-      sortedGoods.reverse();
-    }
-
-    setGoods(sortedGoods);
     setSortType('length');
   };
 
   const reverseGoods = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
     setIsReversed(!isReversed);
   };
 
   const resetGoods = () => {
-    setGoods(originalGoods);
     setSortType('');
     setIsReversed(false);
   };
 
-  const isChanged =
-    !arraysAreEqual(goods, originalGoods) || isReversed || sortType !== '';
+  const isChanged = sortType !== '' || isReversed;
 
   return (
     <div className="section content">
