@@ -16,7 +16,6 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
   const [isReversed, setIsReversed] = useState(false);
   const [sortMethod, setSortMethod] = useState(null);
 
@@ -33,31 +32,31 @@ export const App = () => {
       sortedGoods.reverse();
     }
 
-    setGoods(sortedGoods);
-    setSortMethod(method);
+    return sortedGoods;
   };
 
   const handleReverse = () => {
     setIsReversed(prev => !prev);
-    sortGoods(sortMethod, !isReversed);
   };
 
   const handleSortAlphabetically = () => {
-    sortGoods('alphabetically', isReversed);
+    setSortMethod('alphabetically');
   };
 
   const handleSortByLength = () => {
-    sortGoods('length', isReversed);
+    setSortMethod('length');
   };
 
   const handleReset = () => {
-    setGoods(goodsFromServer);
     setIsReversed(false);
     setSortMethod(null);
   };
 
   const isActive = method => method === sortMethod;
   const isResetVisible = sortMethod !== null || isReversed;
+
+  // Calculate goods based on current sortMethod and isReversed state
+  const goods = sortGoods(sortMethod, isReversed);
 
   return (
     <div className="section content">
