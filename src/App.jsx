@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const originalGoods = [
   'Dumplings',
@@ -21,7 +20,7 @@ const arraysAreEqual = (arr1, arr2) => {
     return false;
   }
 
-  for (let i = 0; i < arr1.length; i++) {
+  for (let i = 0; i < arr1.length; i += 1) {
     if (arr1[i] !== arr2[i]) {
       return false;
     }
@@ -36,16 +35,22 @@ export const App = () => {
   const [sortType, setSortType] = useState('');
 
   const sortByAlphabet = () => {
-    let sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
+    const sortedGoods = [...goods].sort((a, b) => a.localeCompare(b));
+
     if (isReversed) {
       sortedGoods.reverse();
     }
+
     setGoods(sortedGoods);
     setSortType('alphabet');
   };
 
   const sortByLength = () => {
-    let sortedGoods = [...goods].sort((a, b) => a.length - b.length || originalGoods.indexOf(a) - originalGoods.indexOf(b));
+    const sortedGoods = [...goods].sort(
+      (a, b) =>
+        a.length - b.length ||
+        originalGoods.indexOf(a) - originalGoods.indexOf(b),
+    );
 
     if (isReversed) {
       sortedGoods.reverse();
@@ -57,6 +62,7 @@ export const App = () => {
 
   const reverseGoods = () => {
     const reversedGoods = [...goods].reverse();
+
     setGoods(reversedGoods);
     setIsReversed(!isReversed);
   };
@@ -67,13 +73,14 @@ export const App = () => {
     setIsReversed(false);
   };
 
-  const isChanged = !arraysAreEqual(goods, originalGoods) || isReversed || sortType !== '';
+  const isChanged =
+    !arraysAreEqual(goods, originalGoods) || isReversed || sortType !== '';
 
   return (
     <div className="section content">
       <div className="buttons">
-        <button 
-          type="button" 
+        <button
+          type="button"
           className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
           onClick={sortByAlphabet}
         >
@@ -81,7 +88,7 @@ export const App = () => {
         </button>
 
         <button
-          type="button" 
+          type="button"
           className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
           onClick={sortByLength}
         >
@@ -97,8 +104,8 @@ export const App = () => {
         </button>
 
         {isChanged && (
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="button is-danger"
             onClick={resetGoods}
           >
@@ -108,8 +115,10 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map((good) => (
-          <li key={good} data-cy="Good">{good}</li>
+        {goods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
