@@ -20,46 +20,49 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-const getPreparedGoods = (goods, { sortField }) => {
+const getPreparedGoods = (
+  goods,
+  { sortField, reverseOption, setReverseOption },
+) => {
   const preparedGoods = [...goods];
+
+  const reverseGoods = () => {
+    setReverseOption(optionList => !optionList);
+  };
 
   if (sortField) {
     switch (sortField) {
-      case SORT_FIELD_ALPHABETICALLY: {
-        return preparedGoods.toSorted();
-      }
-
-      case SORT_FIELD_LENGTH: {
-        return preparedGoods.toSorted(
-          (good1, good2) => good1.length - good2.length,
-        );
-      }
-
+      case SORT_FIELD_ALPHABETICALLY:
+        preparedGoods.sort();
+        break;
+      case SORT_FIELD_LENGTH:
+        preparedGoods.sort((good1, good2) => good1.length - good2.length);
+        break;
       default:
         return 0;
     }
   }
 
-  return preparedGoods;
+  if (reverseOption) {
+    preparedGoods.reverse();
+  }
+
+  return { preparedGoods, reverseGoods };
 };
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseOption, setReverseOption] = useState(false);
-  const sortedGoods = getPreparedGoods(goodsFromServer, { sortField });
-
-  const reverse = () => {
-    setReverseOption(optionList => !optionList);
-  };
+  const sortedGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+    reverseOption,
+    setReverseOption,
+  });
 
   const reset = () => {
     setReverseOption(false);
     setSortField('');
   };
-
-  if (reverseOption) {
-    sortedGoods.reverse();
-  }
 
   return (
     <div className="section content">
@@ -88,23 +91,26 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => reverse()}
+          onClick={() => sortedGoods.reverseGoods()}
           className={cn({ 'is-light': !reverseOption }, 'button is-warning')}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          onClick={() => reset()}
-          style={{ display: !sortField ? 'none' : '' }}
-          className="button is-danger is-light"
-        >
-          Reset
-        </button>
+        {!goodsFromServer[0]
+          .toString()
+          .includes(sortedGoods.preparedGoods[0].toString()) && (
+          <button
+            type="button"
+            onClick={() => reset()}
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
       </div>
       <ul>
-        {sortedGoods.map(good => (
+        {sortedGoods.preparedGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
