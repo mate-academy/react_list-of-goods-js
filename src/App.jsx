@@ -19,14 +19,14 @@ export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
   const [sortOrder, setSortOrder] = useState('');
 
-  const sortByAlphabetically = () => {
+  const sortAlphabetically = () => {
     setVisibleGoods(
       [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
     );
     setSortOrder('alphabetical');
   };
 
-  const sortByLength = () => {
+  const sortByItemLength = () => {
     setVisibleGoods(
       [...visibleGoods].sort((good1, good2) => {
         const length1 = good1.replace(/[^a-zA-Z]/g, '').length;
@@ -38,12 +38,12 @@ export const App = () => {
     setSortOrder('length');
   };
 
-  const reverseList = () => {
+  const reverseGoodsList = () => {
     setVisibleGoods([...visibleGoods].reverse());
     setSortOrder('reverse');
   };
 
-  const reset = () => {
+  const resetToOriginalOrder = () => {
     setVisibleGoods(goodsFromServer);
     setSortOrder('');
   };
@@ -58,7 +58,7 @@ export const App = () => {
           className={`button is-info ${
             sortOrder === 'alphabetical' ? '' : 'is-light'
           }`}
-          onClick={sortByAlphabetically}
+          onClick={sortAlphabetically}
         >
           Sort alphabetically
         </button>
@@ -68,7 +68,7 @@ export const App = () => {
           className={`button is-success ${
             sortOrder === 'length' ? '' : 'is-light'
           }`}
-          onClick={sortByLength}
+          onClick={sortByItemLength}
         >
           Sort by length
         </button>
@@ -78,7 +78,7 @@ export const App = () => {
           className={`button is-warning ${
             sortOrder === 'reverse' ? '' : 'is-light'
           }`}
-          onClick={reverseList}
+          onClick={reverseGoodsList}
         >
           Reverse
         </button>
@@ -87,7 +87,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={reset}
+            onClick={resetToOriginalOrder}
           >
             Reset
           </button>
