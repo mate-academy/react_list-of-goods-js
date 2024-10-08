@@ -26,7 +26,7 @@ const getPreparedGoods = (goods, { sortField, reverseOption }) => {
   if (sortField) {
     switch (sortField) {
       case SORT_FIELD_ALPHABETICALLY:
-        preparedGoods.sort();
+        preparedGoods.sort((a, b) => a.localeCompare(b));
         break;
       case SORT_FIELD_LENGTH:
         preparedGoods.sort((good1, good2) => good1.length - good2.length);
@@ -93,7 +93,7 @@ export const App = () => {
         {isChanged && (
           <button
             type="button"
-            onClick={() => reset()}
+            onClick={reset}
             className="button is-danger is-light"
           >
             Reset
