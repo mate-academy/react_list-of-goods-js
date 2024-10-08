@@ -20,15 +20,8 @@ export const goodsFromServer = [
 const SORT_FIELD_ALPHABETICALLY = 'alphabetically';
 const SORT_FIELD_LENGTH = 'length';
 
-const getPreparedGoods = (
-  goods,
-  { sortField, reverseOption, setReverseOption },
-) => {
+const getPreparedGoods = (goods, { sortField, reverseOption }) => {
   const preparedGoods = [...goods];
-
-  const reverseGoods = () => {
-    setReverseOption(optionList => !optionList);
-  };
 
   if (sortField) {
     switch (sortField) {
@@ -47,7 +40,7 @@ const getPreparedGoods = (
     preparedGoods.reverse();
   }
 
-  return { preparedGoods, reverseGoods };
+  return preparedGoods;
 };
 
 export const App = () => {
@@ -56,8 +49,8 @@ export const App = () => {
   const sortedGoods = getPreparedGoods(goodsFromServer, {
     sortField,
     reverseOption,
-    setReverseOption,
   });
+  const isChanged = sortField || reverseOption;
 
   const reset = () => {
     setReverseOption(false);
@@ -91,15 +84,13 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => sortedGoods.reverseGoods()}
+          onClick={() => setReverseOption(optionList => !optionList)}
           className={cn({ 'is-light': !reverseOption }, 'button is-warning')}
         >
           Reverse
         </button>
 
-        {!goodsFromServer[0]
-          .toString()
-          .includes(sortedGoods.preparedGoods[0].toString()) && (
+        {isChanged && (
           <button
             type="button"
             onClick={() => reset()}
@@ -110,7 +101,7 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {sortedGoods.preparedGoods.map(good => (
+        {sortedGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
