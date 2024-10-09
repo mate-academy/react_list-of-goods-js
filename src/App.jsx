@@ -87,7 +87,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReversed,
+            'is-light': !isReversed,
           })}
           onClick={handleReverse}
         >
