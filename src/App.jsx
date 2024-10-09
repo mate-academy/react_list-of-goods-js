@@ -55,7 +55,7 @@ export const App = () => {
 
   const needReset = sortField || isReversed;
 
-  const resetSorting = () => {
+  const resetSortFields = () => {
     setSortField('');
     setIsReversed(false);
   };
@@ -103,7 +103,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger"
-            onClick={resetSorting}
+            onClick={resetSortFields}
           >
             Reset
           </button>
