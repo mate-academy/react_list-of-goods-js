@@ -1,6 +1,7 @@
+import { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -15,15 +16,18 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_FIELD_ALPHABETICAL = 'alphabetical';
+const SORT_FIELD_LENGTH = 'length';
+
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case 'alphabetical':
+        case SORT_FIELD_ALPHABETICAL:
           return good1.localeCompare(good2);
-        case 'length':
+        case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
         default:
           return 0;
@@ -62,7 +66,9 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField === 'alphabetical' ? '' : 'is-light'}`}
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== SORT_FIELD_ALPHABETICAL,
+          })}
           onClick={() => setSortField('alphabetical')}
         >
           Sort alphabetically
@@ -70,7 +76,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortField === 'length' ? '' : 'is-light'}`}
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
           onClick={() => setSortField('length')}
         >
           Sort by length
@@ -78,7 +86,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={cn('button', 'is-warning', {
+            'is-light': isReversed,
+          })}
           onClick={handleReverse}
         >
           Reverse
