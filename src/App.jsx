@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
+import { useVisibleGoods } from './hooks';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,74 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function constructKeyForGood({ good, index }) {
+  return `${index}_${good}`;
+}
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const {
+    sortButton,
+    visibleGoods,
+    sortAlphabetically,
+    sortByLength,
+    reverseSort,
+    resetSort,
+  } = useVisibleGoods(goodsFromServer);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-active': sortButton.alphabetically,
+            'is-light': !sortButton.alphabetically,
+          })}
+          onClick={sortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-active': sortButton.length,
+            'is-light': !sortButton.length,
+          })}
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-active': sortButton.reverse,
+            'is-light': !sortButton.reverse,
+          })}
+          onClick={reverseSort}
+        >
+          Reverse
+        </button>
+
+        {sortButton.reset && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={resetSort}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleGoods.map((good, index) => (
+          <li data-cy="Good" key={constructKeyForGood({ good, index })}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
