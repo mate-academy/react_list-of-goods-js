@@ -19,12 +19,14 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
+
   const reset = () => {
-    setSortField('reset');
+    setSortField('');
     setReversed(false);
   };
 
-  goodsFromServer.sort((good1, good2) => {
+  // Створення копії масиву перед сортуванням
+  const sortedGoods = [...goodsFromServer].sort((good1, good2) => {
     switch (sortField) {
       case 'length':
         return good1.length - good2.length;
@@ -35,8 +37,9 @@ export const App = () => {
     }
   });
 
+  // Реверсування скопійованого масиву, якщо прапор `reversed` увімкнено
   if (reversed) {
-    goodsFromServer.reverse();
+    sortedGoods.reverse();
   }
 
   return (
@@ -71,6 +74,7 @@ export const App = () => {
         >
           Reverse
         </button>
+
         {(sortField || reversed) && (
           <button
             type="button"
@@ -83,8 +87,10 @@ export const App = () => {
       </div>
 
       <ul>
-        {goodsFromServer.map(good => (
-          <li data-cy="Good">{good}</li>
+        {sortedGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
