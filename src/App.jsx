@@ -1,5 +1,11 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import classnames from 'classnames';
+import { GoodList } from './GoodList';
+
+const SORT_BY_LENGTH = 'length';
+const SORT_BY_ALPHABET = 'alphabet';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +20,95 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function sortItems(goods, { sortType, queue }) {
+  const items = [...goods];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  if (sortType) {
+    items.sort((a, b) => {
+      switch (sortType) {
+        case SORT_BY_ALPHABET:
+          return a.localeCompare(b);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+        case SORT_BY_LENGTH:
+          return a.length - b.length;
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (queue) {
+    items.reverse();
+  }
+
+  return items;
+}
+
+export const App = () => {
+  const [queueField, setQueueField] = useState(false); // Булеве значення
+  const [sortField, setSortField] = useState('');
+  const visibleGoods = sortItems(goodsFromServer, {
+    sortType: sortField,
+    queue: queueField,
+  });
+
+  const isResetVisible = sortField || queueField;
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {/* Кнопка сортування за алфавітом */}
+        <button
+          type="button"
+          className={classnames('button', 'is-info', {
+            'is-light': sortField !== SORT_BY_ALPHABET,
+          })}
+          onClick={() => {
+            setSortField(SORT_BY_ALPHABET);
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={classnames('button', 'is-success', {
+            'is-light': sortField !== SORT_BY_LENGTH,
+          })}
+          onClick={() => {
+            setSortField(SORT_BY_LENGTH);
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={classnames('button', 'is-warning', {
+            'is-light': !queueField, // Активний стан, якщо queueField = false
+          })}
+          onClick={() => setQueueField((prev) => !prev)} // Інвертуємо значення
+        >
+          Reverse
+        </button>
+
+        {/* Кнопка Reset */}
+        {isResetVisible && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField(''); // Скидаємо поле сортування
+              setQueueField(false); // Повертаємо початковий стан
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <GoodList goods={visibleGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
