@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -14,33 +16,81 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortOrder, setSortOrder] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  let goodsCopy = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (sortOrder) {
+    goodsCopy = [...goodsFromServer].sort((a, b) => {
+      switch (sortOrder) {
+        case 'alphabetically':
+          return a.localeCompare(b);
+        case 'length':
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (isReversed) {
+    goodsCopy = [...goodsCopy].reverse();
+  }
+
+  const GoodList = ({ goodsList }) => {
+    return goodsList.map(good => (
+      <li data-cy="Good" key={good}>
+        {good}
+      </li>
+    ));
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortOrder === 'alphabetically' && 'is-light'}`}
+          onClick={() => setSortOrder('alphabetically')}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${sortOrder === 'length' && 'is-light'}`}
+          onClick={() => setSortOrder('length')}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${isReversed && 'is-light'}`}
+          onClick={() => setIsReversed(!isReversed)}
+        >
+          Reverse
+        </button>
+
+        {(sortOrder || isReversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortOrder('');
+              setIsReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        <GoodList goodsList={goodsCopy} />
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
