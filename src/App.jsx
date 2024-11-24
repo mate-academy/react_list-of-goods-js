@@ -32,7 +32,15 @@ export const App = () => {
   };
 
   const sortByLength = () => {
-    const sorted = [...goods].sort((a, b) => a.length - b.length);
+    const sorted = [...goods].sort((a, b) => {
+      const lengthDiff = a.length - b.length;
+
+      if (lengthDiff === 0) {
+        return a.localeCompare(b);
+      }
+
+      return lengthDiff;
+    });
 
     setGoods(isReversed ? sorted.reverse() : sorted);
     setActiveSort('length');
