@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import classNames from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,64 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
+  const [fieldName, setFieldName] = useState('');
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function sortBy(field) {
+    let updateGoodsArr = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    switch (field) {
+      case 'Sort alphabetically':
+        updateGoodsArr.sort((a, b) => a.localeCompare(b));
+        break;
+      case 'Sort by length':
+        updateGoodsArr.sort((a, b) => a.length - b.length);
+        break;
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+      case 'Reverse':
+        updateGoodsArr.reverse();
+        break;
+
+      case 'Reset':
+        updateGoodsArr = [...goodsFromServer];
+        break;
+
+      default:
+        break;
+    }
+
+    setSortedGoods(updateGoodsArr);
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {['Sort alphabetically', 'Sort by length', 'Reverse', 'Reset'].map(
+          field => (
+            <button
+              key={field}
+              type="button"
+              className={classNames('button', 'is-info', {
+                'is-light': fieldName !== field,
+                'no-light': fieldName === field,
+              })}
+              onClick={() => {
+                sortBy(field);
+                setFieldName(field);
+              }}
+            >
+              {field}
+            </button>
+          ),
+        )}
+      </div>
+
+      <ul>
+        {sortedGoods.map(good => (
+          <li data-cy="Good">{good}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
