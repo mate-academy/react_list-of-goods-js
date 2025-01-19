@@ -1,7 +1,3 @@
-const GoodGard = ({ good }) => (
-  <li data-cy="Good">
-    {good}
-  </li>
-);
+const GoodCard = ({ good }) => <li data-cy="Good">{good}</li>;
 
-export default GoodGard;
+export default GoodCard;

@@ -1,9 +1,9 @@
-import GoodGard from './GoodCard';
+import GoodCard from './GoodCard';
 
 export const GoodList = ({ goods }) => (
   <ul>
     {goods.map(good => (
-      <GoodGard good={good} key={good} />
+      <GoodCard good={good} key={good} />
     ))}
   </ul>
 );
