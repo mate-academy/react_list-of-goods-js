@@ -15,36 +15,40 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const prepareGoodsList = (goods, sortOrder, isReversed) => {
+  let sortedGoods = [...goods];
+
+  if (sortOrder === 'alphabetically') {
+    sortedGoods.sort();
+  } else if (sortOrder === 'length') {
+    sortedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  return sortedGoods;
+};
+
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
   const [sortOrder, setSortOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
+  const goodsToRender = prepareGoodsList(goodsFromServer, sortOrder, isReversed);
+
   const sortAlphabetically = () => {
-    const sortedGoods = [...goodsFromServer].sort();
-
-    setGoods(sortedGoods);
-    setSortOrder('alphabetical');
-    setIsReversed(false);
+    setSortOrder('alphabetically');
   };
-
   const sortByLength = () => {
-    const sortedGoods = [...goodsFromServer].sort((a, b) => a.length - b.length);
-
-    setGoods(sortedGoods);
     setSortOrder('length');
-    setIsReversed(false);
   };
 
   const reverseOrder = () => {
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-    setIsReversed(!isReversed);
+    setIsReversed((prev) => !prev);
   };
 
   const resetOrder = () => {
-    setGoods(goodsFromServer);
     setSortOrder('');
     setIsReversed(false);
   };
@@ -54,7 +58,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortOrder === 'alphabetical' ? '' : 'is-light'}`}
+          className={`button is-info ${sortOrder === 'alphabetically' ? '' : 'is-light'}`}
           onClick={sortAlphabetically}
         >
           Sort alphabetically
@@ -76,7 +80,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {sortOrder || isReversed ? (
+        {(sortOrder || isReversed) && (
           <button
             type="button"
             className="button is-danger"
@@ -84,14 +88,14 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : null}
+        )}
       </div>
 
       <ul>
-        {goods.map((good) => (
+        {goodsToRender.map((good) => (
           <li key={good} data-cy="Good">
             {good}
-          </li> 
+          </li>
         ))}
       </ul>
     </div>
