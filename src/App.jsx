@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,96 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const buttonMappings = [
+  {
+    key: 'alphabetical',
+    label: 'Sort alphabetically',
+    theme: 'is-info',
+  },
+  {
+    key: 'length',
+    label: 'Sort by length',
+    theme: 'is-success',
+  },
+  {
+    key: 'reverse',
+    label: 'Reverse',
+    theme: 'is-warning',
+  },
+];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+const sortGoods = (goods, reversed, criteria) => {
+  const sortFunc =
+    criteria === 'alphabetical'
+      ? (a, b) => a.localeCompare(b)
+      : (a, b) => a.length - b.length;
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  return goods.toSorted((a, b) => (reversed ? sortFunc(b, a) : sortFunc(a, b)));
+};
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [sortKey, setSortKey] = useState('');
+  const [reversed, setReversed] = useState(false);
+
+  const handleSort = key => {
+    switch (key) {
+      case 'alphabetical':
+      case 'length':
+        setSortKey(key);
+        setGoods(sortGoods(goods, reversed, key));
+        break;
+      case 'reverse':
+        setReversed(!reversed);
+        setGoods(goods.toReversed());
+        break;
+      default:
+        setSortKey('');
+        setReversed(false);
+        setGoods([...goodsFromServer]);
+        break;
+    }
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {buttonMappings.map(({ key, label, theme }) => {
+          const isLight =
+            (key === 'reverse' && reversed) || key === sortKey
+              ? ''
+              : 'is-light';
+
+          return (
+            <button
+              type="button"
+              key={key}
+              className={`button ${theme} ${isLight}`}
+              onClick={() => handleSort(key)}
+            >
+              {label}
+            </button>
+          );
+        })}
+
+        {(sortKey || reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => handleSort('')}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
