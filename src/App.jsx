@@ -18,33 +18,38 @@ export const goodsFromServer = [
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [sortField, setSortField] = useState('');
-  const [isReversed, setisReversed] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
 
   const sortAlphabetically = () => {
     const sortedGoods = [...goodsFromServer].sort();
+
     setGoods(sortedGoods);
     setSortField('alphabetical');
-    setisReversed(false);
-  }
+    setIsReversed(false);
+  };
 
   const sortBylength = () => {
-    const sortedGoods = [...goodsFromServer].sort((a, b) => a.length - b.length);
+    const sortedGoods = [...goodsFromServer].sort(
+      (a, b) => a.length - b.length,
+    );
+
     setGoods(sortedGoods);
     setSortField('length');
-    setisReversed(false)
-  }
+    setIsReversed(false);
+  };
 
   const reversedGoods = () => {
-    const reversedGoods = [...goods].reverse();
-    setGoods(reversedGoods);
-    setisReversed(!isReversed)
-  }
+    const reversdGoods = [...goods].reverse();
+
+    setGoods(reversdGoods);
+    setIsReversed(!isReversed);
+  };
 
   const resetGoods = () => {
-    setGoods(goodsFromServer)
-    setSortField('')
-    setisReversed(false)
-  }
+    setGoods(goodsFromServer);
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -82,14 +87,13 @@ export const App = () => {
             Reset
           </button>
         )}
-
       </div>
 
       <ul>
-        {goods.map(good => (
-          <li data-cy="Good">{good}</li>
+        {goods.map((good, index) => (
+          <li key={index} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
-  )
+  );
 };
