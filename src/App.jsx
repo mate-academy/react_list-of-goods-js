@@ -17,16 +17,15 @@ export const goodsFromServer = [
 ];
 
 function getPreparedGoods(goods, sortField, isReverse) {
-  const prepearedGoods = [...goods];
+  const preparedGoods = [...goods];
 
   if (sortField) {
-    prepearedGoods.sort((goods1, goods2) => {
+    preparedGoods.sort((goods1, goods2) => {
       switch (sortField) {
         case 'alphabetically':
           return goods1.localeCompare(goods2);
         case 'length':
           return goods1.length - goods2.length;
-        case 'reverse':
         default:
           return 0;
       }
@@ -34,10 +33,10 @@ function getPreparedGoods(goods, sortField, isReverse) {
   }
 
   if (isReverse) {
-    prepearedGoods.reverse();
+    preparedGoods.reverse();
   }
 
-  return prepearedGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
