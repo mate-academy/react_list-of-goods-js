@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.scss';
 
 function App() {
     const initialGoods = ['Jam', 'Bread', 'Milk', 'Butter', 'Cheese'];
@@ -35,24 +35,15 @@ function App() {
             <h1 className="title">Goods Reordering</h1>
 
             <div className="buttons">
-                <button
-                    className={`button ${currentSort === 'alphabetical' ? '' : 'is-light'}`}
-                    onClick={handleSortAlphabetically}
-                >
+                <button className={`button ${currentSort === 'alphabetical' ? '' : 'is-light'}`} onClick={handleSortAlphabetically}>
                     Sort alphabetically
                 </button>
 
-                <button
-                    className={`button ${currentSort === 'length' ? '' : 'is-light'}`}
-                    onClick={handleSortByLength}
-                >
+                <button className={`button ${currentSort === 'length' ? '' : 'is-light'}`} onClick={handleSortByLength}>
                     Sort by length
                 </button>
 
-                <button
-                    className={`button ${isReversed ? '' : 'is-light'}`}
-                    onClick={handleReverse}
-                >
+                <button className={`button ${isReversed ? '' : 'is-light'}`} onClick={handleReverse}>
                     Reverse
                 </button>
 
