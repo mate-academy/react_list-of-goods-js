@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import clsx from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,90 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_BY_ALPHABET = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+const REVERSE_LIST = 'reverse';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [activeButton, setActiveButton] = useState(null);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const sortAlphabetically = () => {
+    setGoods([...goods].sort());
+    setActiveButton(SORT_BY_ALPHABET);
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const sortByLength = () => {
+    setGoods([...goods].sort((a, b) => a.length - b.length));
+    setActiveButton(SORT_BY_LENGTH);
+  };
+
+  const reverseList = () => {
+    if (activeButton === REVERSE_LIST) {
+      setGoods([...goods].reverse());
+      setActiveButton(null);
+    } else {
+      setGoods([...goods].reverse());
+      setActiveButton(REVERSE_LIST);
+    }
+  };
+
+  const resetList = () => {
+    setGoods([...goodsFromServer]);
+    setActiveButton(null);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={sortAlphabetically}
+          type="button"
+          className={clsx('button is-info', {
+            'is-light': activeButton !== SORT_BY_ALPHABET,
+          })}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={sortByLength}
+          type="button"
+          className={clsx('button is-success', {
+            'is-light': activeButton !== SORT_BY_LENGTH,
+          })}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={reverseList}
+          type="button"
+          className={clsx('button is-warning', {
+            'is-light': activeButton !== REVERSE_LIST,
+          })}
+        >
+          Reverse
+        </button>
+
+        {activeButton && (
+          <button
+            onClick={resetList}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
