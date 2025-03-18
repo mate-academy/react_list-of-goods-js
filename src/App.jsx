@@ -20,7 +20,7 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 
-function getPreparedGoods(goods, sortState) {
+function prepareGoods(goods, sortState) {
   const preparedGoods = [...goods];
 
   preparedGoods.sort((good1, good2) => {
@@ -49,7 +49,7 @@ export const App = () => {
     isReversed: false,
   });
 
-  const goods = getPreparedGoods(goodsFromServer, sortState);
+  const goods = prepareGoods(goodsFromServer, sortState);
 
   return (
     <div className="section content">
