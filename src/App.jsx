@@ -21,40 +21,41 @@ const SORT_FIELD_LENGTH = 'Sort by length';
 const REVERSE = 'Reverse';
 const RESET = 'Reset';
 
-let goodsList = [...goodsFromServer];
-
 export const App = () => {
+  const [goodsList, setGoodList] = useState([...goodsFromServer]);
   const [sortField, setSortField] = useState('');
   const [revers, setReverse] = useState(false);
 
-  const reset = () => {
-    goodsList = [...goodsFromServer];
+  const resetList = () => {
+    setGoodList([...goodsFromServer]);
     setSortField('');
     setReverse(false);
   };
 
-  const reverse = () => {
-    goodsList.reverse();
+  const reverseList = () => {
+    setGoodList(goodsList.reverse());
     setReverse(!revers);
   };
 
-  const sort = sortRule => {
-    goodsList.sort((good1, good2) => {
-      switch (sortRule) {
-        case SORT_FIELD_ASC:
-          return revers
-            ? good2.localeCompare(good1)
-            : good1.localeCompare(good2);
+  const sortList = sortRule => {
+    setGoodList(
+      goodsList.sort((good1, good2) => {
+        switch (sortRule) {
+          case SORT_FIELD_ASC:
+            return revers
+              ? good2.localeCompare(good1)
+              : good1.localeCompare(good2);
 
-        case SORT_FIELD_LENGTH:
-          return revers
-            ? good2.length - good1.length
-            : good1.length - good2.length;
+          case SORT_FIELD_LENGTH:
+            return revers
+              ? good2.length - good1.length
+              : good1.length - good2.length;
 
-        default:
-          return 0;
-      }
-    });
+          default:
+            return 0;
+        }
+      }),
+    );
 
     setSortField(sortRule);
   };
@@ -67,7 +68,7 @@ export const App = () => {
           className={classNames('button', 'is-info', {
             'is-light': sortField !== SORT_FIELD_ASC,
           })}
-          onClick={() => sort(SORT_FIELD_ASC)}
+          onClick={() => sortList(SORT_FIELD_ASC)}
         >
           {SORT_FIELD_ASC}
         </button>
@@ -76,7 +77,7 @@ export const App = () => {
           className={classNames('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
-          onClick={() => sort(SORT_FIELD_LENGTH)}
+          onClick={() => sortList(SORT_FIELD_LENGTH)}
         >
           {SORT_FIELD_LENGTH}
         </button>
@@ -85,7 +86,7 @@ export const App = () => {
           className={classNames('button', 'is-warning', {
             'is-light': !revers,
           })}
-          onClick={() => reverse()}
+          onClick={() => reverseList()}
         >
           {REVERSE}
         </button>
@@ -94,7 +95,7 @@ export const App = () => {
           <button
             type="button"
             className={classNames('button', 'is-danger', 'is-light')}
-            onClick={() => reset()}
+            onClick={() => resetList()}
           >
             {RESET}
           </button>
