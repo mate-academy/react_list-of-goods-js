@@ -24,30 +24,30 @@ const RESET = 'Reset';
 export const App = () => {
   const [goodsList, setGoodList] = useState([...goodsFromServer]);
   const [sortField, setSortField] = useState('');
-  const [revers, setReverse] = useState(false);
+  const [isReversed, setIsReversed] = useState(false);
 
   const resetList = () => {
     setGoodList([...goodsFromServer]);
     setSortField('');
-    setReverse(false);
+    setIsReversed(false);
   };
 
-  const reverseList = () => {
-    setGoodList(goodsList.reverse());
-    setReverse(!revers);
+  const toggleReverseList = () => {
+    setGoodList([...goodsList].reverse());
+    setIsReversed(!isReversed);
   };
 
   const sortList = sortRule => {
     setGoodList(
-      goodsList.sort((good1, good2) => {
+      [...goodsList].sort((good1, good2) => {
         switch (sortRule) {
           case SORT_FIELD_ASC:
-            return revers
+            return isReversed
               ? good2.localeCompare(good1)
               : good1.localeCompare(good2);
 
           case SORT_FIELD_LENGTH:
-            return revers
+            return isReversed
               ? good2.length - good1.length
               : good1.length - good2.length;
 
@@ -84,14 +84,14 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-warning', {
-            'is-light': !revers,
+            'is-light': !isReversed,
           })}
-          onClick={() => reverseList()}
+          onClick={() => toggleReverseList()}
         >
           {REVERSE}
         </button>
 
-        {(sortField || revers) && (
+        {(sortField || isReversed) && (
           <button
             type="button"
             className={classNames('button', 'is-danger', 'is-light')}
