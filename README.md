@@ -1,3 +1,5 @@
+[DEMO LINK](https://vkrasnovyd.github.io/react_list-of-goods-js/)
+
 # React list of goods
 
 Implement the ability to reorder the goods with the given buttons.
