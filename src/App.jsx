@@ -1,5 +1,8 @@
+/* eslint-disable function-paren-newline */
 import 'bulma/css/bulma.css';
+import { useState } from 'react';
 import './App.scss';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,120 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [didSortAlf, setDidSortAlf] = useState('');
+  const [goods] = useState([...goodsFromServer]);
+  const [showResetB, setShowResetB] = useState(true);
+  const [secondClick, setSecondClick] = useState(1);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function showButton(boolen) {
+    setShowResetB(boolen);
+  }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  function countClick() {
+    setSecondClick(prev => 1 - prev);
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  function appLogic(goodsClon, howSort) {
+    if (howSort === 'DoSortAlf') {
+      // eslint-disable-next-line max-len
+      return [...goodsClon].sort((firts, second) =>
+        firts.localeCompare(second),
+      );
+    }
+
+    if (howSort === 'sortLength') {
+      // eslint-disable-next-line max-len
+      return [...goodsClon].sort(
+        (firts, second) => firts.length - second.length,
+      );
+    }
+
+    if (secondClick === 0) {
+      return [...goodsClon.reverse()];
+    }
+
+    if (howSort === 'reverse') {
+      return [...goodsClon.reverse()];
+    }
+
+    if (howSort === 'reset') {
+      return goodsFromServer;
+    }
+
+    return goodsClon;
+  }
+
+  const isSortGoods = appLogic(goods, didSortAlf);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': didSortAlf !== 'DoSortAlf',
+          })}
+          onClick={() => {
+            showButton(true);
+            setDidSortAlf('DoSortAlf');
+          }}
+        >
+          Sort alphabetically
+        </button>
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': didSortAlf !== 'sortLength',
+          })}
+          onClick={() => {
+            showButton(true);
+            setDidSortAlf('sortLength');
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-danger', {
+            'is-light': didSortAlf !== 'reverse',
+          })}
+          onClick={() => {
+            countClick();
+            showButton(true);
+            setDidSortAlf('reverse');
+          }}
+        >
+          Reverse
+        </button>
+
+        {showResetB && (
+          <button
+            type="button"
+            className={cn('button is-danger', {
+              'is-light': didSortAlf !== 'reset',
+              iframe: didSortAlf === '',
+            })}
+            onClick={() => {
+              showButton(false);
+              setDidSortAlf('reset');
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {isSortGoods.map(good => {
+          return (
+            <li key={good} data-cy="good">
+              {good}
+            </li>
+          );
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
