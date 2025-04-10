@@ -20,7 +20,7 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
   const [sortType, setSortType] = useState(null);
 
-  const sortAlphabetically = () => {
+  const sortGoodsAlphabetically = () => {
     const sortedGoods = [...currentGoods].sort((a, b) => a.localeCompare(b));
     const finalGoods = isReversed ? [...sortedGoods].reverse() : sortedGoods;
 
@@ -28,7 +28,7 @@ export const App = () => {
     setSortType('alphabet');
   };
 
-  const sortByLength = () => {
+  const sortGoodsByLength = () => {
     const sortedGoods = [...currentGoods].sort((a, b) => {
       const lengthDiff = a.length - b.length;
 
@@ -40,7 +40,7 @@ export const App = () => {
     setSortType('length');
   };
 
-  const reverseGoods = () => {
+  const reverseGoodsOrder = () => {
     const reversedGoods = [...currentGoods].reverse();
 
     setCurrentGoods(reversedGoods);
@@ -48,7 +48,7 @@ export const App = () => {
     setIsReversed(!isReversed);
   };
 
-  const resetGoods = () => {
+  const resetGoodsOrder = () => {
     setCurrentGoods(goodsFromServer);
     setIsReversed(false);
     setSortType(null);
@@ -60,7 +60,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
-          onClick={sortAlphabetically}
+          onClick={sortGoodsAlphabetically}
         >
           Sort alphabetically
         </button>
@@ -68,7 +68,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
-          onClick={sortByLength}
+          onClick={sortGoodsByLength}
         >
           Sort by length
         </button>
@@ -76,7 +76,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={reverseGoods}
+          onClick={reverseGoodsOrder}
         >
           Reverse
         </button>
@@ -85,7 +85,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={resetGoods}
+            onClick={resetGoodsOrder}
           >
             Reset
           </button>
