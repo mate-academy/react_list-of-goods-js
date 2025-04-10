@@ -30,14 +30,14 @@ export const App = () => {
 
   const handleSortByLength = () => {
     const sortedGoods = [...currentGoods].sort((a, b) => {
-      const lengthDiff = b.length - a.length;
+      const lengthDiff = a.length - b.length;
 
-      return lengthDiff !== 0 ? lengthDiff : b.localeCompare(a);
+      return lengthDiff !== 0 ? lengthDiff : a.localeCompare(b);
     });
+    const finalGoods = isReversed ? [...sortedGoods].reverse() : sortedGoods;
 
-    setCurrentGoods(sortedGoods);
+    setCurrentGoods(finalGoods);
     setSortType('length');
-    setIsReversed(false);
   };
 
   const handleReverse = () => {
@@ -75,7 +75,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${!isReversed ? '' : 'is-light'}`}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={handleReverse}
         >
           Reverse
