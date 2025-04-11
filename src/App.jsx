@@ -1,6 +1,11 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+import { useState } from 'react';
+import cn from 'classnames';
+
+import { GoodList } from './components/GoodList';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -14,33 +19,91 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const ALPHABETICALL_SORT_KEY = 'alpha';
+const LENGTH_SORT_KEY = 'length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function sortArray(array, key, descOrder) {
+  return array.sort((firstVal, secondVal) => {
+    switch (key) {
+      case ALPHABETICALL_SORT_KEY:
+        return descOrder
+          ? secondVal.localeCompare(firstVal)
+          : firstVal.localeCompare(secondVal);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+      case LENGTH_SORT_KEY: {
+        const difference = firstVal.length - secondVal.length;
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        if (difference >= 0) {
+          return descOrder ? -1 : 1;
+        }
+
+        return descOrder ? 1 : -1;
+      }
+
+      default:
+        return descOrder ? -1 : 1;
+    }
+  });
+}
+
+export function App() {
+  const [changeSort, setChangeSort] = useState('');
+  const [descSortOrder, setDescSortOrder] = useState(false);
+
+  const sortedGoods = sortArray(
+    [...goodsFromServer],
+    changeSort,
+    descSortOrder,
+  );
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': changeSort !== ALPHABETICALL_SORT_KEY,
+          })}
+          onClick={() => setChangeSort(ALPHABETICALL_SORT_KEY)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': changeSort !== LENGTH_SORT_KEY,
+          })}
+          onClick={() => setChangeSort(LENGTH_SORT_KEY)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': !descSortOrder,
+          })}
+          onClick={() => setDescSortOrder(!descSortOrder)}
+        >
+          Reverse
+        </button>
+
+        {changeSort !== '' || descSortOrder ? (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setChangeSort('');
+              setDescSortOrder(false);
+            }}
+          >
+            Reset
+          </button>
+        ) : null}
+      </div>
+
+      <GoodList goodsList={sortedGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+}
