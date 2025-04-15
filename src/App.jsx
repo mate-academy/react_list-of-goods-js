@@ -1,5 +1,12 @@
+/* eslint-disable prettier/prettier */
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
+import { Goods } from './components/Goods/goods';
+
+const SORT_FIELD_ALPH = 'Alphabetically';
+const SORT_FIELD_LENGTH = 'Length';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +21,87 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  let visibleGoods = [...goodsFromServer];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const [sortAlphbetically, setSortAlphabetically] = useState('');
+  const [sortLength, setSortLength] = useState('');
+  const [reversed, setReversed] = useState(false);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (sortAlphbetically) {
+    // eslint-disable-next-line max-len
+    visibleGoods = visibleGoods.sort((good1, good2) => good1.localeCompare(good2));
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  if (sortLength) {
+    visibleGoods = visibleGoods.sort(
+      (good1, good2) => good2.length - good1.length,
+    );
+  }
+
+  if (reversed) {
+    visibleGoods = [...visibleGoods].reverse();
+  }
+
+  const sortByName = () => {
+    setSortAlphabetically(SORT_FIELD_ALPH);
+    setSortLength('');
+  };
+
+  const sortByLength = () => {
+    setSortLength(SORT_FIELD_LENGTH);
+    setSortAlphabetically('');
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn(['button', 'is-info'], {
+            'is-light': !sortAlphbetically,
+          })}
+          onClick={() => sortByName()}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn(['button', 'is-success'], {
+            'is-light': !sortLength,
+          })}
+          onClick={() => sortByLength()}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn(['button', 'is-warning'], {
+            'is-light': !reversed,
+          })}
+          onClick={() => setReversed(!reversed)}
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className={cn(['is-danger', 'button', 'is-light'], {
+            'is-hidden': !(reversed || sortLength || sortAlphbetically),
+          })}
+          onClick={() => {
+            setSortLength('');
+            setSortAlphabetically('');
+            setReversed(false);
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      <Goods goods={visibleGoods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
