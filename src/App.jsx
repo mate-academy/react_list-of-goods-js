@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import React, { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,104 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [sortType, setSortType] = useState(null); // 'alphabet' | 'length' | null
+  const [isDescending, setIsDescending] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const applySort = (type, descending) => {
+    let sorted = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    if (type === 'alphabet') {
+      sorted.sort((a, b) => a.localeCompare(b));
+    } else if (type === 'length') {
+      sorted.sort((a, b) => a.length - b.length);
+    }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    if (descending) {
+      sorted.reverse();
+    }
+
+    setGoods(sorted);
+  };
+
+  const handleAlphabetSort = () => {
+    setSortType('alphabet');
+    setIsDescending(false);
+    applySort('alphabet', false);
+  };
+
+  const handleLengthSort = () => {
+    setSortType('length');
+    setIsDescending(false);
+    applySort('length', false);
+  };
+
+  const handleReverse = () => {
+    const newIsDescending = !isDescending;
+
+    if (sortType) {
+      setIsDescending(newIsDescending);
+      applySort(sortType, newIsDescending);
+    } else {
+      // Caso sem sort ativo, apenas inverte a ordem atual
+      setGoods([...goods].reverse());
+    }
+  };
+
+  const handleReset = () => {
+    setGoods([...goodsFromServer]);
+    setSortType(null);
+    setIsDescending(false);
+  };
+
+  const isOriginalOrder = JSON.stringify(goods) === JSON.stringify(goodsFromServer);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
+          onClick={handleAlphabetSort}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+          onClick={handleLengthSort}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${(sortType || isDescending) ? '' : 'is-light'}`}
+          onClick={handleReverse}
+        >
+          Reverse
+        </button>
+
+        {!isOriginalOrder && (
+          <button
+            type="button"
+            className="button is-danger"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goods.map((good) => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
