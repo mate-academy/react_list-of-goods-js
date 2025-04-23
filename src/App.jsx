@@ -17,11 +17,11 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
-  const [sortType, setSortType] = useState(null); // 'alphabet' | 'length' | null
+  const [sortType, setSortType] = useState(null);
   const [isDescending, setIsDescending] = useState(false);
 
   const applySort = (type, descending) => {
-    let sorted = [...goodsFromServer];
+    const sorted = [...goodsFromServer];
 
     if (type === 'alphabet') {
       sorted.sort((a, b) => a.localeCompare(b));
@@ -66,7 +66,8 @@ export const App = () => {
     setIsDescending(false);
   };
 
-  const isOriginalOrder = JSON.stringify(goods) === JSON.stringify(goodsFromServer);
+  const isOriginalOrder =
+    JSON.stringify(goods) === JSON.stringify(goodsFromServer);
 
   return (
     <div className="section content">
@@ -89,8 +90,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${(sortType || isDescending) ? '' : 'is-light'}`}
+          className={`button is-warning ${sortType ? '' : 'is-light'}`}
           onClick={handleReverse}
+          disabled={!sortType}
         >
           Reverse
         </button>
