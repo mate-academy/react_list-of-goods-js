@@ -17,33 +17,53 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
-  const [isReversed, setIsReversed] = useState(false);
   const [sortType, setSortType] = useState(null); // 'alphabet' | 'length' | null
+  const [isDescending, setIsDescending] = useState(false);
+
+  const applySort = (type, descending) => {
+    let sorted = [...goodsFromServer];
+
+    if (type === 'alphabet') {
+      sorted.sort((a, b) => a.localeCompare(b));
+    } else if (type === 'length') {
+      sorted.sort((a, b) => a.length - b.length);
+    }
+
+    if (descending) {
+      sorted.reverse();
+    }
+
+    setGoods(sorted);
+  };
 
   const handleAlphabetSort = () => {
-    const sorted = [...goods].sort((a, b) => a.localeCompare(b));
-    setGoods(sorted);
     setSortType('alphabet');
-    setIsReversed(false);
+    setIsDescending(false);
+    applySort('alphabet', false);
   };
 
   const handleLengthSort = () => {
-    const sorted = [...goods].sort((a, b) => a.length - b.length);
-    setGoods(sorted);
     setSortType('length');
-    setIsReversed(false);
+    setIsDescending(false);
+    applySort('length', false);
   };
 
   const handleReverse = () => {
-    const reversed = [...goods].reverse();
-    setGoods(reversed);
-    setIsReversed(!isReversed);
+    const newIsDescending = !isDescending;
+
+    if (sortType) {
+      setIsDescending(newIsDescending);
+      applySort(sortType, newIsDescending);
+    } else {
+      // Caso sem sort ativo, apenas inverte a ordem atual
+      setGoods([...goods].reverse());
+    }
   };
 
   const handleReset = () => {
     setGoods([...goodsFromServer]);
     setSortType(null);
-    setIsReversed(false);
+    setIsDescending(false);
   };
 
   const isOriginalOrder = JSON.stringify(goods) === JSON.stringify(goodsFromServer);
@@ -69,7 +89,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={`button is-warning ${(sortType || isDescending) ? '' : 'is-light'}`}
           onClick={handleReverse}
         >
           Reverse
