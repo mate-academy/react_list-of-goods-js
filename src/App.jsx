@@ -40,6 +40,16 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const GoodItem = ({ good }) => <li data-cy="Good">{good}</li>;
+
+const GoodList = ({ goods }) => (
+  <ul>
+    {goods.map(good => (
+      <GoodItem good={good} key={good} />
+    ))}
+  </ul>
+);
+
 export function App() {
   const [sortFilter, setSortFilter] = useState('');
   const [isReversed, setIsReversed] = useState(false);
@@ -102,13 +112,3 @@ export function App() {
     </div>
   );
 }
-
-const GoodList = ({ goods }) => (
-  <ul>
-    {goods.map(good => (
-      <GoodItem good={good} key={good} />
-    ))}
-  </ul>
-);
-
-const GoodItem = ({ good }) => <li data-cy="Good">{good}</li>;
