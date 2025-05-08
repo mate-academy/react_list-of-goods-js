@@ -25,15 +25,15 @@ export const App = () => {
   }
 
   if (sortField === 'alphabet') {
-    visibleGoods = visibleGoods.sort();
+    visibleGoods = [...visibleGoods].sort();
   }
 
   if (sortField === 'length') {
-    visibleGoods = visibleGoods.sort((a, b) => a.length - b.length);
+    visibleGoods = [...visibleGoods].sort((a, b) => a.length - b.length);
   }
 
   if (reversedState) {
-    visibleGoods.reverse();
+    visibleGoods = [...visibleGoods].reverse();
   }
 
   return (
@@ -67,15 +67,15 @@ export const App = () => {
 
         {(sortField !== '' || reversedState) && (
           <button
-          type="button"
-          className={`button is-danger is-light`}
-          onClick={() => {
-            setSortField('');
-            setReverseState(false);
-          }}
-        >
-          Reset
-        </button>
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReverseState(false);
+            }}
+          >
+            Reset
+          </button>
         )}
       </div>
 
