@@ -58,8 +58,9 @@ export const App = () => {
             type="button"
             className={classNames('button', {
               'is-light': field !== sortedField,
-              'is-info': field === 'Sort alphabetically',
-              'is-success': field === 'Sort by length',
+              'is-info':
+                field === 'Sort alphabetically' && sortedField === field,
+              'is-success': field === 'Sort by length' && sortedField === field,
             })}
             onClick={() => handleSort(field)}
           >
