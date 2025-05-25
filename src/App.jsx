@@ -17,38 +17,50 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGood] = useState(goodsFromServer);
-  const [state, setState] = useState('noReset');
+  const [sortType, setSortType] = useState('none');
+  const [isReversed, setIsReversed] = useState(false);
+  const [goods, setGoods] = useState(goodsFromServer);
 
-  const sortByLenght = () => {
-    if (state !== 'length') {
-      setGood([...goods].sort((a, b) => a.length - b.length));
-      setState('length');
-    } else {
-      setGood([...goods].sort((a, b) => b.length - a.length));
-      setState(null);
-    }
-  }
+  const getSortedGoods = (type, reverse) => {
+    let sorted = [...goodsFromServer];
 
-  const sortByAlphabet = () => {
-    if (state !== 'alphabet') {
-      setGood([...goods].sort((a, b) => a.localeCompare(b)));
-      setState('alphabet');
-    } else {
-      setGood([...goods].sort((a, b) => b.localeCompare(a)));
-      setState(null);
+    if (type === 'alphabet') {
+      sorted.sort((a, b) => a.localeCompare(b));
+    } else if (type === 'length') {
+      sorted.sort((a, b) => a.length - b.length);
     }
+
+    return reverse ? sorted.reverse() : sorted;
   };
 
-  const reversed = () => {
-    setGood([...goods].reverse());
-    setState('reversed');
+  const sortByAlphabet = () => {
+    const newType = 'alphabet';
+    setSortType(newType);
+    setGoods(getSortedGoods(newType, isReversed));
+  };
+
+  const sortByLength = () => {
+    const newType = 'length';
+    setSortType(newType);
+    setGoods(getSortedGoods(newType, isReversed));
+  };
+
+  const reverseOrder = () => {
+    const newReverse = !isReversed;
+    setIsReversed(newReverse);
+    setGoods(getSortedGoods(sortType, newReverse));
   };
 
   const reset = () => {
-    setGood([...goodsFromServer]);
-    setState('noReset');
+    setSortType('none');
+    setIsReversed(false);
+    setGoods(goodsFromServer);
   };
+
+  const isModified =
+    sortType !== 'none' ||
+    isReversed ||
+    goods.join(',') !== goodsFromServer.join(',');
 
   return (
     <div className="section content">
@@ -57,38 +69,32 @@ export const App = () => {
           onClick={sortByAlphabet}
           type="button"
           className={classNames('button is-success', {
-            'is-light': state !== 'alphabet',
+            'is-light': sortType !== 'alphabet',
           })}
         >
           Sort alphabetically
         </button>
         <button
-          onClick={sortByLenght}
+          onClick={sortByLength}
           type="button"
           className={classNames('button is-success', {
-            'is-light': state !== 'length',
+            'is-light': sortType !== 'length',
           })}
         >
           Sort by length
         </button>
         <button
-          onClick={reversed}
+          onClick={reverseOrder}
           type="button"
           className={classNames('button is-warning', {
-            'is-light': state !== 'reversed',
+            'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {state !== 'noReset' && (
-          <button
-            onClick={reset}
-            type="button"
-            className={classNames('button is-danger', {
-              'is-light': state !== 'noReset',
-            })}
-          >
+        {isModified && (
+          <button onClick={reset} type="button" className="button is-danger">
             Reset
           </button>
         )}
