@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,71 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortBy, setSortBy] = useState('');
+  const [goods, setGoods] = useState([...goodsFromServer]);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function sortByAlph() {
+    setGoods([...goodsFromServer].sort());
+    setSortBy('alph');
+  }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  function sortByLength() {
+    setGoods([...goodsFromServer].sort((a, b) => a.length - b.length));
+    setSortBy('length');
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  function reverse() {
+    setGoods([...goods].reverse());
+    setSortBy('reverse');
+  }
+
+  function reset() {
+    setGoods([...goodsFromServer]);
+    setSortBy('');
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={sortByAlph}
+          type="button"
+          className={cn('button is-info', { 'is-light': sortBy === 'alph' })}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={sortByLength}
+          type="button"
+          className={cn('button is-info', { 'is-light': sortBy === 'length' })}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={reverse}
+          type="button"
+          className={cn('button is-info', { 'is-light': sortBy === 'reverse' })}
+        >
+          Reverse
+        </button>
+        {sortBy !== '' && (
+          <button
+            onClick={reset}
+            type="button"
+            className={cn('button is-info', { 'is-light': sortBy === '' })}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <ul>
+        {[...goods].map(good => (
+          <li key={good}>{good}</li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
