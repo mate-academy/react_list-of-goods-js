@@ -67,7 +67,7 @@ export const App = () => {
 
   const currentGoods = getPreparedGoods(sortedGoods, {
     sort: wayOfSorting,
-    reverse: reversed,
+    reversing: reversed,
   });
 
   return (
