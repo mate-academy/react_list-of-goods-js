@@ -24,8 +24,9 @@ export const App = () => {
   const [wayOfSorting, setWayOfSorting] = useState('');
   const [reversed, setReversed] = useState(false);
 
-  const getPreparedGoods = (goods, { sort, reverse }) => {
+  const getPreparedGoods = (goods, { sort, reversing }) => {
     const preparedGoods = [...goods];
+
     if (sort) {
       preparedGoods.sort((good1, good2) => {
         switch (sort) {
@@ -38,9 +39,11 @@ export const App = () => {
         }
       });
     }
-    if (reverse) {
+
+    if (reversing) {
       return preparedGoods.reverse();
     }
+
     return preparedGoods;
   };
 
@@ -72,7 +75,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={cn('button is-info', { 'is-light': wayOfSorting != ABC })}
+          className={cn('button is-info', { 'is-light': wayOfSorting !== ABC })}
           onClick={sortABC}
         >
           Sort alphabetically
@@ -81,7 +84,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': wayOfSorting != LENGTH,
+            'is-light': wayOfSorting !== LENGTH,
           })}
           onClick={sortLength}
         >
