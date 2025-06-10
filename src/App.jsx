@@ -69,7 +69,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => setVisibleGoods(goodsFromServer)}
+            onClick={() => setVisibleGoods([...goodsFromServer])}
           >
             Reset
           </button>
