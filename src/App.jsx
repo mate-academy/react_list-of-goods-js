@@ -74,6 +74,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${order !== GOODS_SORT.REVERSE ? 'is-light' : ''}`}
+          disabled={sortingState === GOODS_SORT.RESET}
           onClick={() =>
             order === GOODS_SORT.ORIGINAL
               ? setOrder(GOODS_SORT.REVERSE)
@@ -94,7 +95,9 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : ('')}
+        ) : (
+          ''
+        )}
       </div>
 
       <ul>
