@@ -94,9 +94,7 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          ''
-        )}
+        ) : ('')}
       </div>
 
       <ul>
