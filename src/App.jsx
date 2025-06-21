@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
+
 import './App.scss';
 
 export const goodsFromServer = [
@@ -14,33 +16,71 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [visibleGoods, setVisibleGoods] = useState([...goodsFromServer]);
+  const sortByAlphabetically = () => {
+    setVisibleGoods(
+      [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
+    );
+  };
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const sortByLength = () => {
+    setVisibleGoods(
+      [...visibleGoods].sort((good1, good2) => good1.length - good2.length),
+    );
+  };
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const reverse = () => {
+    setVisibleGoods(visibleGoods.toReversed());
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const reset = () => {
+    setVisibleGoods(goodsFromServer);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className="button is-info is-light"
+          onClick={sortByAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className="button is-success is-light"
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className="button is-warning is-light"
+          onClick={reverse}
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className="button is-danger is-light"
+          onClick={reset}
+        >
+          Reset
+        </button>
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
