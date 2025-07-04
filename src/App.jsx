@@ -44,18 +44,8 @@ export const App = () => {
   };
 
   const reverseArray = () => {
-    const base = [...goodsFromServer];
-
-    if (sort === 'alp') {
-      base.sort((a, b) => a.localeCompare(b));
-    } else if (sort === 'len') {
-      base.sort((a, b) => a.length - b.length);
-    }
-
-    const reversed = isReversed ? base : base.reverse();
-
     setIsReversed(!isReversed);
-    setVisibleGoods(reversed);
+    setVisibleGoods([...visibleGoods].reverse());
   };
 
   const reset = () => {
