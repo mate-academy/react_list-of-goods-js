@@ -1,3 +1,60 @@
 iframe {
   display: none;
 }
+
+.section.content {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+
+  background-color: #fefefe;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+}
+
+.buttons {
+  margin-bottom: 20px;
+
+  .button {
+    margin-right: 10px;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+
+    &.active {
+      border-color: transparent !important;
+      color: rgb(255, 0, 0) !important;
+
+      // Відмітка активної кнопки: видаляємо is-light, підсвічуємо
+      background-color: #209cee !important; // наприклад, блакитний
+      box-shadow: 0 0 8px rgba(32, 156, 238, 0.6);
+    }
+  }
+}
+
+ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+
+  .list-item {
+    user-select: none;
+
+    margin-bottom: 8px;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+
+    font-size: 18px;
+    color: #363636;
+
+    background-color: #f5f5f5;
+
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      cursor: default;
+      background-color: #e4f0ff;
+    }
+  }
+}
