@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,93 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_FIELD_ABC = 'abc';
+const SORT_FIELD_LENGTH = 'length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function sortList(list, { sortField, reversed }) {
+  const preperedList = [...list];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (sortField) {
+    preperedList.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_ABC:
+          return good1.localeCompare(good2);
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        case SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (reversed) {
+    preperedList.reverse();
+  }
+
+  return preperedList;
+}
+
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [reversed, setReversed] = useState(false);
+  const visibleList = sortList(goodsFromServer, { sortField, reversed });
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortField !== SORT_FIELD_ABC,
+          })}
+          onClick={() => setSortField(SORT_FIELD_ABC)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': !reversed,
+          })}
+          onClick={() => setReversed(prev => !prev)}
+        >
+          Reverse
+        </button>
+
+        {(sortField !== '' || reversed) && (
+          <button
+            style={{ display: sortField === '' && !reversed ? 'none' : '' }}
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleList.map(good => (
+          <li key={good.id} data-cy="Good">{good}</li>
+        ))}
+      </ul>
     </div>
+  );
+};
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+// замінити класи на cn на умовно викнути is-light, додати реверс та ресет
