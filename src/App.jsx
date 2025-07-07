@@ -114,7 +114,7 @@ export const App = () => {
 
       <ul>
         {visibleGoodsCopy.map(good => (
-          <li className="good" data-cy="Good">
+          <li className="good" data-cy="Good" key={good}>
             {good}
           </li>
         ))}
