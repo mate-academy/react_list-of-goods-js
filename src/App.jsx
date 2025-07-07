@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_FIELD_ABC = 'abc';
 const SORT_FIELD_LENGTH = 'length';
-const SORT_FIELD_REVERSE = 'reverse';
 
 function sortList(list, { sortField, reversed }) {
   const preperedList = [...list];
@@ -99,7 +98,7 @@ export const App = () => {
 
       <ul>
         {visibleList.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good.id} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
