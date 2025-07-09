@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
-import './App.scss';
 
-export const goodsFromServer = [
+const originalGoods = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -14,33 +14,83 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function App() {
+  const [goods, setGoods] = useState([...originalGoods]);
+  const [activeSort, setActiveSort] = useState(null);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const sortAlphabetically = () => {
+    setGoods([...goods].sort());
+    setActiveSort('alphabetically');
+  };
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const sortByLength = () => {
+    setGoods([...goods].sort((a, b) => a.length - b.length));
+    setActiveSort('by-length');
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const reverseOrder = () => {
+    setGoods([...goods].reverse());
+    setActiveSort('reverse');
+  };
+
+  const resetOrder = () => {
+    setGoods([...originalGoods]);
+    setActiveSort(null);
+  };
+
+  return (
+    <div className="container mt-5">
+      <div className="buttons">
+        <button
+          type="button"
+          data-cy="sort-alphabetically"
+          className={`button ${activeSort === 'alphabetically' ? 'is-primary' : 'is-light'}`}
+          onClick={sortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          data-cy="sort-by-length"
+          className={`button ${activeSort === 'by-length' ? 'is-primary' : 'is-light'}`}
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          data-cy="reverse"
+          className={`button ${activeSort === 'reverse' ? 'is-primary' : 'is-light'}`}
+          onClick={reverseOrder}
+        >
+          Reverse
+        </button>
+
+        {activeSort && (
+          <button
+            type="button"
+            data-cy="reset"
+            className="button is-danger"
+            onClick={resetOrder}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <table className="table mt-4 is-fullwidth">
+        <tbody>
+          {goods.map(item => (
+            <tr key={item}>
+              <td>{item}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
+  );
+}
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+export default App;
