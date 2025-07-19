@@ -15,7 +15,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 const SORT_ALPHABETICALLY = 'alphabetically';
-const SORT_BY_LENGHT = 'length';
+const SORT_BY_LENGTH = 'length';
 
 function getSortedGoods(goods, sortQuery, reversed) {
   const sortedGoods = [...goods];
@@ -25,7 +25,7 @@ function getSortedGoods(goods, sortQuery, reversed) {
       switch (sortQuery) {
         case SORT_ALPHABETICALLY:
           return goods1.localeCompare(goods2);
-        case SORT_BY_LENGHT:
+        case SORT_BY_LENGTH:
           return goods1.length - goods2.length;
         default:
           return 0;
@@ -61,9 +61,9 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortQuery === SORT_BY_LENGHT ? '' : 'is-light'}`}
+          className={`button is-success ${sortQuery === SORT_BY_LENGTH ? '' : 'is-light'}`}
           onClick={() => {
-            setQuery(SORT_BY_LENGHT);
+            setQuery(SORT_BY_LENGTH);
           }}
         >
           Sort by length
