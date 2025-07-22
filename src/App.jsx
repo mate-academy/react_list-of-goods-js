@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,111 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function getListFiltered(sort = '', reverse = false) {
+  const filteredList = {
+    filterType: sort,
+    reversed: reverse,
+    listOfGoods: [...goodsFromServer],
+  };
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  switch (sort) {
+    case 'alphabetically':
+      if (filteredList.reversed) {
+        filteredList.listOfGoods.sort().reverse();
+      } else {
+        filteredList.listOfGoods.sort();
+      }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+      break;
+    case 'length':
+      filteredList.listOfGoods.sort((a, b) => {
+        return a.length - b.length;
+      });
+      if (filteredList.reversed) {
+        filteredList.listOfGoods.reverse();
+      }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+      break;
+    case 'reset':
+      filteredList.reversed = false;
+      filteredList.listOfGoods = [...goodsFromServer];
+      filteredList.filterType = '';
+      break;
+    default:
+      if (filteredList.reversed) {
+        filteredList.listOfGoods.reverse();
+      } else {
+        filteredList.listOfGoods = [...goodsFromServer];
+      }
+  }
+
+  return filteredList;
+}
+
+export const App = () => {
+  const [filter, setFilter] = useState(getListFiltered());
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={
+            filter.filterType === 'alphabetically'
+              ? 'button is-info'
+              : 'button is-info  is-light '
+          }
+          onClick={() => {
+            setFilter(getListFiltered('alphabetically', filter.reversed));
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={
+            filter.filterType === 'length'
+              ? 'button is-success'
+              : 'button is-success is-light'
+          }
+          onClick={() => {
+            setFilter(getListFiltered('length', filter.reversed));
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={
+            filter.reversed ? 'button is-warning' : 'button is-warning is-light'
+          }
+          onClick={() => {
+            setFilter(getListFiltered(filter.filterType, !filter.reversed));
+          }}
+        >
+          Reverse
+        </button>
+
+        {filter.listOfGoods.join('') !== goodsFromServer.join('') && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setFilter(getListFiltered('reset'));
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {filter.listOfGoods.map(good => {
+          return <li data-cy="Good">{good}</li>;
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
