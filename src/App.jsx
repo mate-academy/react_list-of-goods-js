@@ -20,9 +20,7 @@ const sortedAlphabet = items => {
 };
 
 const sortedReverse = items => {
-  const sortedReverseItem = [...items].reverse();
-
-  return sortedReverseItem;
+  return [...items].reverse();
 };
 
 const sortedLength = items => {
@@ -34,13 +32,12 @@ const sortedLength = items => {
 };
 
 export const App = () => {
-  const [goods, setGood] = useState(goodsFromServer);
+  const [goods, setGoods] = useState(goodsFromServer);
   const [originalGoods] = useState([...goodsFromServer]);
-  const [currentSortType, setcurrentSortType] = useState('none');
-  const [isReversed, setisReversed] = useState(false);
+  const [currentSortType, setCurrentSortType] = useState('none');
+  const [isReversed, setIsReversed] = useState(false);
   const isResetVisible = currentSortType !== 'none' || isReversed;
 
-  // Функція для застосування поточного сортування з урахуванням реверсу
   const applySorting = (sortType, shouldReverse) => {
     let sortedItems;
 
@@ -68,8 +65,8 @@ export const App = () => {
           onClick={() => {
             const newSorted = applySorting('alphabetical', isReversed);
 
-            setGood(newSorted);
-            setcurrentSortType('alphabetical');
+            setGoods(newSorted);
+            setCurrentSortType('alphabetical');
           }}
         >
           Sort alphabetically
@@ -81,8 +78,8 @@ export const App = () => {
           onClick={() => {
             const newSortedLength = applySorting('length', isReversed);
 
-            setGood(newSortedLength);
-            setcurrentSortType('length');
+            setGoods(newSortedLength);
+            setCurrentSortType('length');
           }}
         >
           Sort by length
@@ -94,12 +91,11 @@ export const App = () => {
           onClick={() => {
             const newReversedState = !isReversed;
 
-            setisReversed(newReversedState);
+            setIsReversed(newReversedState);
 
-            // Застосовуємо поточне сортування з новим станом реверсу
             const newSorted = applySorting(currentSortType, newReversedState);
 
-            setGood(newSorted);
+            setGoods(newSorted);
           }}
         >
           Reverse
@@ -110,9 +106,9 @@ export const App = () => {
             type="button"
             className="button is-danger"
             onClick={() => {
-              setGood(originalGoods);
-              setcurrentSortType('none');
-              setisReversed(false);
+              setGoods(originalGoods);
+              setCurrentSortType('none');
+              setIsReversed(false);
             }}
           >
             Reset
