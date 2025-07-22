@@ -117,7 +117,7 @@ export const App = () => {
 
       <ul>
         {filter.listOfGoods.map(good => {
-          return <li data-cy="Good">{good}</li>;
+          return <li key={good} data-cy="Good">{good}</li>;
         })}
       </ul>
     </div>
