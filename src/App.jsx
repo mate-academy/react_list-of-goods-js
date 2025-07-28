@@ -1,46 +1,36 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { ButtonList } from './components/ButtonList/ButtonList';
+import { useState, createContext } from 'react';
+import { GoodList } from './components/GoodsList/GoodsList';
+import { goodsFromServer } from './model/GoodsFromServer.model';
 
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
+export const GoodsContext = createContext(); 
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  
+  const [goods, setGoods] = useState(goodsFromServer);
+  const [historyOrder, setHistoryOrder] = useState([]);
+  const [counterReset, setCounterReset] = useState(0);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  return(
+    <GoodsContext.Provider 
+      value={{
+          goods, 
+          setGoods, 
+          historyOrder, 
+          setHistoryOrder,
+          counterReset,
+          setCounterReset
+      }}
+    >    
+    <>
+      <div className="section content">
+          <ButtonList />
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
-
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
-    </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+          <GoodList />
+      </div>
+    </>
+    </GoodsContext.Provider>
+  )
+};
