@@ -29,7 +29,7 @@ export const App = () => {
         isLightReverse,
         setIsLightAlpha,
         setIsLightLength,
-        setIsLightReverse
+        setIsLightReverse,
       }}
     >
       <>

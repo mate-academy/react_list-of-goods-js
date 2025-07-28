@@ -15,11 +15,10 @@ export const Button = ({ button }) => {
     isLightLength,
     setIsLightAlpha,
     setIsLightLength,
-    setIsLightReverse
+    setIsLightReverse,
   } = useContext(GoodsContext);
 
   const handleOrderByAlpha = () => {
-    
     setIsLightAlpha(false);
     setIsLightLength(true);
     setIsLightReverse(true);
@@ -34,10 +33,9 @@ export const Button = ({ button }) => {
   };
 
   const handleOrderByLength = () => {
-    
     setIsLightLength(false);
     setIsLightAlpha(true);
-    setIsLightReverse(true)
+    setIsLightReverse(true);
 
     setGoods(
       [...goods].sort((good1, good2) => {
@@ -84,7 +82,7 @@ export const Button = ({ button }) => {
               <button
                 type="button"
                 onClick={() => handleOrderByAlpha()}
-                className={`${button.className} ${ isLightAlpha ? 'is-light': ''}`}
+                className={`${button.className} ${isLightAlpha ? 'is-light' : ''}`}
               >
                 {button.textContent}
               </button>
@@ -94,7 +92,7 @@ export const Button = ({ button }) => {
               <button
                 type="button"
                 onClick={() => handleOrderByLength()}
-                className={`${button.className} ${ isLightLength ? 'is-light': ''}`}
+                className={`${button.className} ${isLightLength ? 'is-light' : ''}`}
               >
                 {button.textContent}
               </button>
@@ -104,22 +102,26 @@ export const Button = ({ button }) => {
               <button
                 type="button"
                 onClick={() => handleOrderByReverse()}
-                className={`${button.className} ${ isLightReverse ? 'is-light': ''}`}
+                className={`${button.className} ${isLightReverse ? 'is-light' : ''}`}
               >
                 {button.textContent}
               </button>
             );
           case 'Reset':
-            if (goods !== goodsFromServer) {
-              return (
-                <button
-                  type="button"
-                  onClick={() => handleOrderReset()}
-                  className={`${button.className}`}
-                >
-                  {button.textContent}
-                </button>
-              );
+            {
+              
+              if(!isLightAlpha || !isLightLength || !isLightReverse) {
+                return (
+                  <button
+                    type="button"
+                    onClick={() => handleOrderReset()}
+                    className={`${button.className}`}
+                  >
+                    {button.textContent}
+                  </button>
+                );
+              }
+              
             }
         }
       })()}
