@@ -17,33 +17,48 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [activeButton, setActiveButton] = useState(null);
+  const [sortType, setSortType] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
 
   const NOT_ACTIVE_CLASS = 'is-light';
 
+  const getSortedGoods = () => {
+    const sorted = [...goodsFromServer];
+
+    if (sortType === 'alphabet') {
+      sorted.sort();
+    } else if (sortType === 'length') {
+      sorted.sort((a, b) => a.length - b.length);
+    }
+
+    if (isReversed) {
+      sorted.reverse();
+    }
+
+    return sorted;
+  };
+
+  const goods = getSortedGoods();
+
   const isOriginalOrder = () => {
-    return goods.every((good, index) => good === goodsFromServer[index]);
+    return sortType === null && !isReversed;
   };
 
-  const sortByAlphabet = () => {
-    setGoods([...goods].slice().sort());
-    setActiveButton('alphabet');
+  const handleSortAlphabet = () => {
+    setSortType('alphabet');
   };
 
-  const sortByLength = () => {
-    setGoods([...goods].slice().sort((a, b) => a.length - b.length));
-    setActiveButton('length');
+  const handleSortLength = () => {
+    setSortType('length');
   };
 
-  const reversedGoods = () => {
-    setGoods([...goods].slice().reverse());
-    setActiveButton('reverse');
+  const handleReverse = () => {
+    setIsReversed(prev => !prev);
   };
 
   const resetGoods = () => {
-    setGoods([...goodsFromServer]);
-    setActiveButton(null);
+    setSortType(null);
+    setIsReversed(false);
   };
 
   return (
@@ -52,9 +67,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            [NOT_ACTIVE_CLASS]: activeButton !== 'alphabet',
+            [NOT_ACTIVE_CLASS]: sortType !== 'alphabet',
           })}
-          onClick={sortByAlphabet}
+          onClick={handleSortAlphabet}
         >
           Sort alphabetically
         </button>
@@ -62,9 +77,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            [NOT_ACTIVE_CLASS]: activeButton !== 'length',
+            [NOT_ACTIVE_CLASS]: sortType !== 'length',
           })}
-          onClick={sortByLength}
+          onClick={handleSortLength}
         >
           Sort by length
         </button>
@@ -72,9 +87,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-warning', {
-            [NOT_ACTIVE_CLASS]: activeButton !== 'reverse',
+            [NOT_ACTIVE_CLASS]: !isReversed,
           })}
-          onClick={reversedGoods}
+          onClick={handleReverse}
         >
           Reverse
         </button>
