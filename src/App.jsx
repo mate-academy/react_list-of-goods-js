@@ -1,8 +1,9 @@
-import 'bulma/css/bulma.css';
 import { useState } from 'react';
+
+import 'bulma/css/bulma.css';
 import './App.scss';
 
-export const goodsFromServer = [
+export const initialGoods = [
   'Dumplings',
   'Carrot',
   'Eggs',
@@ -15,40 +16,48 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_NAME = 'alphabet';
+const SORT_BY_SIZE = 'length';
+
+function sortGoods(goods, { sortType, isDescending }) {
+  const sorted = [...goods];
+
+  if (sortType) {
+    sorted.sort((a, b) => {
+      switch (sortType) {
+        case SORT_BY_NAME:
+          return a.localeCompare(b);
+        case SORT_BY_SIZE:
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (isDescending) {
+    sorted.reverse();
+  }
+
+  return sorted;
+}
+
 export const App = () => {
-  const [list, setList] = useState([...goodsFromServer]);
-  const [activeSort, setActiveSort] = useState(null);
+  const [sortType, setSortType] = useState(null);
+  const [isDescending, setIsDescending] = useState(false);
 
-  const sortList = type => {
-    setActiveSort(type);
+  const displayGoods = sortGoods(initialGoods, {
+    sortType,
+    isDescending,
+  });
 
-    const listCopy = [...list];
+  const handleReverse = () => {
+    setIsDescending(prev => !prev);
+  };
 
-    if (type === 'reset') {
-      setList([...goodsFromServer]);
-      setActiveSort(null);
-
-      return;
-    }
-
-    switch (type) {
-      case 'reverse':
-        listCopy.reverse();
-        break;
-
-      case 'alphabetically':
-        listCopy.sort((a, b) => a.localeCompare(b));
-        break;
-
-      case 'length':
-        listCopy.sort((a, b) => a.length - b.length);
-        break;
-
-      default:
-        break;
-    }
-
-    setList(listCopy);
+  const handleReset = () => {
+    setSortType(null);
+    setIsDescending(false);
   };
 
   return (
@@ -56,32 +65,33 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          onClick={() => sortList('alphabetically')}
-          className={`button is-info ${activeSort !== 'alphabetically' && 'is-light'}`}
+          className={`button is-info ${sortType === SORT_BY_NAME ? '' : 'is-light'}`}
+          onClick={() => setSortType(SORT_BY_NAME)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          onClick={() => sortList('length')}
-          className={`button is-success ${activeSort !== 'length' && 'is-light'}`}
+          className={`button is-success ${sortType === SORT_BY_SIZE ? '' : 'is-light'}`}
+          onClick={() => setSortType(SORT_BY_SIZE)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          onClick={() => sortList('reverse')}
-          className={`button is-warning ${activeSort !== 'reverse' && 'is-light'}`}
+          className={`button is-warning ${isDescending ? '' : 'is-light'}`}
+          onClick={handleReverse}
         >
           Reverse
         </button>
-        {activeSort !== null && (
+
+        {(sortType || isDescending) && (
           <button
             type="button"
-            onClick={() => sortList('reset')}
             className="button is-danger is-light"
+            onClick={handleReset}
           >
             Reset
           </button>
@@ -89,14 +99,12 @@ export const App = () => {
       </div>
 
       <ul>
-        {list.map(good => (
-          <li data-cy="Good" key={good}>
-            {good}
+        {displayGoods.map(item => (
+          <li key={item} data-cy="Good">
+            {item}
           </li>
         ))}
       </ul>
     </div>
   );
 };
-
-export default App;
