@@ -59,7 +59,7 @@ export const App = () => {
           <button
             key={field}
             className={classNames('button', 'is-info', {
-              'is-light': sortField === field,
+              'is-light': sortField !== field,
             })}
             onClick={() => setSortField(field)}
             type="button"
@@ -71,23 +71,26 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-warning', {
-            'is-light': reversed,
+            'is-light': !reversed,
           })}
           onClick={() => setReversed(!reversed)}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className="button is-danger is-light"
-          onClick={() => {
-            setSortField('');
-            setReversed(false);
-          }}
-        >
-          Reset
-        </button>
+        {(sortField || reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+              setReversed(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
+
       </div>
 
       <GoodsList goods={visibleGoods} />
