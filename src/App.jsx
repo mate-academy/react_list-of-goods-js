@@ -16,7 +16,6 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  let orders = [...goodsFromServer];
   const [sortOrder, setSortOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
@@ -25,24 +24,32 @@ export const App = () => {
     setIsReversed(false);
   }
 
-  switch (sortOrder) {
-    case 'alphabetically': {
-      orders = orders.toSorted();
-      break;
+  function sortByType(type) {
+    const orders = [...goodsFromServer];
+
+    switch (type) {
+      case 'alphabetically': {
+        orders.sort();
+        break;
+      }
+
+      case 'length': {
+        orders.sort((a, b) => a.length - b.length);
+        break;
+      }
+
+      default:
+        break;
     }
 
-    case 'length': {
-      orders = orders.toSorted((a, b) => a.length - b.length);
-      break;
+    if (isReversed) {
+      orders.reverse();
     }
 
-    default:
-      break;
+    return orders;
   }
 
-  if (isReversed) {
-    orders = orders.reverse();
-  }
+  const goods = sortByType(sortOrder);
 
   return (
     <div className="section content">
@@ -83,7 +90,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {orders.map(order => (
+        {goods.map(order => (
           <li data-cy="Good" key={order}>
             {order}
           </li>
