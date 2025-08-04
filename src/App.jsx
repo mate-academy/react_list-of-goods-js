@@ -19,7 +19,7 @@ const SORT_FIELD_ALPHABET = 'alphabet';
 const SORT_FIELD_LENGTH = 'length';
 const SORT_FIELD_REVERSE = 'reverse';
 
-function getPreparedGoord(goods, { sortField, reverseField }) {
+function getPreparedGood(goods, { sortField, reverseField }) {
   const preparedGood = [...goods];
 
   if (sortField) {
@@ -47,7 +47,7 @@ function getPreparedGoord(goods, { sortField, reverseField }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverseField, setReverseField] = useState('');
-  const visibleGoods = getPreparedGoord(goodsFromServer, {
+  const visibleGoods = getPreparedGood(goodsFromServer, {
     sortField,
     reverseField,
   });
