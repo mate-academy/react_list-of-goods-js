@@ -57,14 +57,14 @@ export const App = () => {
       <div className="buttons">
         {[SORT_FIELD_ALPHABET, SORT_FIELD_LENGTH].map(field => (
           <button
-            key={field || 'default'}
+            key={field}
             className={classNames('button', 'is-info', {
               'is-light': sortField === field,
             })}
             onClick={() => setSortField(field)}
             type="button"
           >
-            {field || 'Default'}
+            {field}
           </button>
         ))}
 
