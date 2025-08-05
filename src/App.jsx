@@ -21,11 +21,11 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
 
   const sortAlphabet = arr => {
-    return arr.sort((a, b) => a.localeCompare(b));
+    return [...arr].sort((a, b) => a.localeCompare(b));
   };
 
   const sortByLength = arr => {
-    return arr.sort((a, b) => a.length - b.length);
+    return [...arr].sort((a, b) => a.length - b.length);
   };
 
   const handleSortAlphabet = () => {
