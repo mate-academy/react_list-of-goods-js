@@ -16,41 +16,47 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [activeSort, setActiveSort] = useState(null);
+  const [sortType, setSortType] = useState('original'); // 'original', 'alpha', 'length'
   const [isReversed, setIsReversed] = useState(false);
 
-  const applyReverseIfNeeded = (array) =>
-    isReversed ? [...array].reverse() : array;
+  const getSortedGoods = () => {
+    const sorted = [...goodsFromServer];
+
+    if (sortType === 'alpha') {
+      sorted.sort((a, b) => a.localeCompare(b));
+    } else if (sortType === 'length') {
+      sorted.sort((a, b) => a.length - b.length);
+    }
+
+    if (isReversed) {
+      sorted.reverse();
+    }
+
+    return sorted;
+  };
 
   const handleSortAlphabetically = () => {
-    let sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
-    sorted = applyReverseIfNeeded(sorted);
-    setGoods(sorted);
-    setActiveSort('alpha');
+    setSortType('alpha');
   };
 
   const handleSortByLength = () => {
-    let sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
-    sorted = applyReverseIfNeeded(sorted);
-    setGoods(sorted);
-    setActiveSort('length');
+    setSortType('length');
   };
 
   const handleReverse = () => {
     setIsReversed(prev => !prev);
-    setGoods(prevGoods => [...prevGoods].reverse());
   };
 
   const handleReset = () => {
+    setSortType('original');
     setIsReversed(false);
-    setActiveSort(null);
-    setGoods(goodsFromServer);
   };
 
+  const goods = getSortedGoods();
+
   const isInitialOrder =
+    sortType === 'original' &&
     !isReversed &&
-    activeSort === null &&
     goods.every((good, index) => good === goodsFromServer[index]);
 
   return (
@@ -58,9 +64,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${
-            activeSort === 'alpha' ? '' : 'is-light'
-          }`}
+          className={`button is-info ${sortType === 'alpha' ? '' : 'is-light'}`}
           onClick={handleSortAlphabetically}
         >
           Sort alphabetically
@@ -69,7 +73,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${
-            activeSort === 'length' ? '' : 'is-light'
+            sortType === 'length' ? '' : 'is-light'
           }`}
           onClick={handleSortByLength}
         >
@@ -96,7 +100,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map((good) => (
+        {goods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
