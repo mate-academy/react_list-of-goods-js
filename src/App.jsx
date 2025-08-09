@@ -15,27 +15,29 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const getSortedBy = (goods, sort, isReversed) => {
+  let preparedGoods = [...goods];
+
+  if (sort === 'alphabet') {
+    preparedGoods.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (sort === 'length') {
+    preparedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    preparedGoods.reverse();
+  }
+
+  return preparedGoods;
+};
+
 export const App = () => {
   const [sort, setSort] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const getSortedBy = () => {
-    const preparedGoods = [...goodsFromServer];
-
-    if (sort === 'alphabet') {
-      preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
-    } else if (sort === 'length') {
-      preparedGoods.sort((good1, good2) => good1.length - good2.length);
-    }
-
-    if (isReversed) {
-      preparedGoods.reverse();
-    }
-
-    return preparedGoods;
-  };
-
-  const goods = getSortedBy();
+  const goods = getSortedBy(goodsFromServer, sort, isReversed);
 
   const handleReverse = () => {
     setIsReversed(prev => !prev);
@@ -54,9 +56,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sort === 'alphabet' ? '' : 'is-light'}`}
-          onClick={() => {
-            setSort('alphabet');
-          }}
+          onClick={() => setSort('alphabet')}
         >
           Sort alphabetically
         </button>
@@ -64,9 +64,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sort === 'length' ? '' : 'is-light'}`}
-          onClick={() => {
-            setSort('length');
-          }}
+          onClick={() => setSort('length')}
         >
           Sort by length
         </button>
