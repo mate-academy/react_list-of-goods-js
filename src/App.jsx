@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useState } from 'react';
 import cn from 'classnames';
 import 'bulma/css/bulma.css';
@@ -84,7 +85,9 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField || sortFieldReverse) && (
+        {goodsFromServer.every(
+          (value, index) => value === visibleGoods[index],
+        ) ? null : (
           <button
             type="button"
             className="button is-danger is-light"
@@ -100,7 +103,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}{' '}
+          </li>
         ))}
       </ul>
     </div>
