@@ -18,6 +18,7 @@ export const goodsFromServer = [
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
   const [sortType, setSortType] = useState('none');
+  const [isReversed, setIsReversed] = useState(false);
 
   const handleAlphabetSort = () => {
     const sorted = [...goods].sort((a, b) => a.localeCompare(b));
@@ -34,9 +35,8 @@ export const App = () => {
   };
 
   const handleReverseSort = () => {
-    const sorted = [...goods].reverse();
-
-    setGoods(sorted);
+    setGoods(prevGoods => [...prevGoods].reverse());
+    setIsReversed(prev => !prev);
     setSortType('reverse');
   };
 
