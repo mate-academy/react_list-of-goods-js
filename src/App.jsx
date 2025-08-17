@@ -57,7 +57,7 @@ export const App = () => {
     alphabetBtnClass = 'button is-info';
   } else if (sortType === 'length') {
     lengthBtnClass = 'button is-success';
-  } else if (sortType === 'reverse') {
+  } else if (sortType === 'reverse' || isReversed) {
     reverseBtnClass = 'button is-warning';
   } else if (sortType === 'reset') {
     resetBtnClass = 'button is-danger';
