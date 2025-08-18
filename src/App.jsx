@@ -16,52 +16,61 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
-  const [sortType, setSortType] = useState('none');
+  const [sortType, setSortType] = useState('original');
+
   const [isReversed, setIsReversed] = useState(false);
 
-  const handleAlphabetSort = () => {
-    const sorted = [...goods].sort((a, b) => a.localeCompare(b));
+  const displayedGoods = [...goodsFromServer];
 
-    setGoods(sorted);
+  if (sortType === 'alphabet') {
+    displayedGoods.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (sortType === 'length') {
+    displayedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    displayedGoods.reverse();
+  }
+
+  const handleAlphabetSort = () => {
     setSortType('alphabet');
+    setIsReversed(false);
   };
 
   const handleLengthSort = () => {
-    const sorted = [...goods].sort((a, b) => a.length - b.length);
-
-    setGoods(sorted);
     setSortType('length');
+    setIsReversed(false);
   };
 
   const handleReverseSort = () => {
-    setGoods(prevGoods => [...prevGoods].reverse());
     setIsReversed(prev => !prev);
-    setSortType('reverse');
   };
 
   const handleResetList = () => {
-    setGoods([...goodsFromServer]);
-    setSortType('reset');
+    setSortType('original');
+    setIsReversed(false);
   };
-
-  const isInitialOrder =
-    JSON.stringify(goods) === JSON.stringify(goodsFromServer);
 
   let alphabetBtnClass = 'button is-info is-light';
   let lengthBtnClass = 'button is-success is-light';
   let reverseBtnClass = 'button is-warning is-light';
-  let resetBtnClass = 'button is-danger is-light';
+  const resetBtnClass = 'button is-danger is-light';
 
   if (sortType === 'alphabet') {
     alphabetBtnClass = 'button is-info';
-  } else if (sortType === 'length') {
-    lengthBtnClass = 'button is-success';
-  } else if (sortType === 'reverse' || isReversed) {
-    reverseBtnClass = 'button is-warning';
-  } else if (sortType === 'reset') {
-    resetBtnClass = 'button is-danger';
   }
+
+  if (sortType === 'length') {
+    lengthBtnClass = 'button is-success';
+  }
+
+  if (isReversed) {
+    reverseBtnClass = 'button is-warning';
+  }
+
+  const showReset = sortType !== 'original' || isReversed;
 
   return (
     <div className="section content">
@@ -90,7 +99,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {!isInitialOrder && (
+        {showReset && (
           <button
             type="button"
             className={resetBtnClass}
@@ -102,7 +111,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {displayedGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
