@@ -18,33 +18,24 @@ export const goodsFromServer = [
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reverse, setReverse] = useState(false);
-  let visibleGoods = goodsFromServer;
+  let visibleGoods = [...goodsFromServer];
 
-  if (reverse && sortField === '') {
-    visibleGoods = goodsFromServer.toReversed();
+  if (sortField === 'alphabetical') {
+    visibleGoods = visibleGoods.toSorted((a, b) => a.localeCompare(b));
   }
 
-  if (sortField !== '') {
-    switch (sortField) {
-      case 'alphabetical':
-        visibleGoods = visibleGoods.toSorted((a, b) => a.localeCompare(b));
-        break;
-      case 'length':
-        visibleGoods = visibleGoods.toSorted((a, b) => a.length - b.length);
-        break;
-      default:
-        break;
-    }
+  if (sortField === 'length') {
+    visibleGoods = visibleGoods.toSorted((a, b) => a.length - b.length);
+  }
 
-    if (reverse) {
-      visibleGoods = visibleGoods.toReversed();
-    }
+  if (reverse) {
+    visibleGoods = visibleGoods.toReversed();
   }
 
   const alphaLight = sortField !== 'alphabetical' ? 'is-light' : '';
   const lengthLight = sortField !== 'length' ? 'is-light' : '';
   const reverseLight = !reverse ? 'is-light' : '';
-  const resetVisible = visibleGoods !== goodsFromServer;
+  const resetVisible = sortField !== '' || reverse;
   const clearAll = () => {
     setSortField('');
     setReverse(false);
