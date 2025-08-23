@@ -1,7 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -17,46 +16,44 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState([...goodsFromServer]);
-  const [isReversed, setIsReversed] = useState(false);
-  const [sortOrder, setSortOrder] = useState('original');
+  const [sortMode, setSortMode] = useState('original'); // 'original' | 'alphabetical' | 'length'
+  const [isReversed, setIsReversed] = useState(false); // sempre relativo ao sortMode
 
-  const isOriginal = JSON.stringify(goods) === JSON.stringify(goodsFromServer);
+  const baseGoods = useMemo(() => {
+    switch (sortMode) {
+      case 'alphabetical':
+        return [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+      case 'length':
+        return [...goodsFromServer].sort(
+          (a, b) => a.length - b.length || a.localeCompare(b),
+        );
+      case 'original':
+      default:
+        return [...goodsFromServer];
+    }
+  }, [sortMode]);
 
-  // Manipuladores de eventos
+  const goods = useMemo(
+    () => (isReversed ? [...baseGoods].reverse() : baseGoods),
+    [baseGoods, isReversed],
+  );
+
+  // Handlers
   const handleSortAlphabetically = () => {
-    // Classifica a lista em ordem alfabética.
-    const sortedGoods = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
-
-    setGoods(sortedGoods);
-    setIsReversed(false);
-    setSortOrder('alphabetical');
+    setSortMode('alphabetical');
+    // não reseta isReversed → persiste reverso
   };
 
   const handleSortByLength = () => {
-    // Classifica a lista por comprimento.
-    const sortedGoods = [...goodsFromServer].sort(
-      (a, b) => a.length - b.length,
-    );
-
-    setGoods(sortedGoods);
-    setIsReversed(false);
-    setSortOrder('length');
+    setSortMode('length');
+    // não reseta isReversed → persiste reverso
   };
 
-  const handleReverse = () => {
-    // Inverte a ordem atual da lista
-    const reversedGoods = [...goods].reverse();
-
-    setGoods(reversedGoods);
-    setIsReversed(!isReversed);
-  };
+  const handleReverse = () => setIsReversed(prev => !prev);
 
   const handleReset = () => {
-    // Reseta a lista para a ordem original do servidor
-    setGoods([...goodsFromServer]);
-    setIsReversed(false);
-    setSortOrder('original');
+    setSortMode('original');
+    setIsReversed(false); // reset total
   };
 
   return (
@@ -64,20 +61,18 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${
-            sortOrder === 'alphabetical' ? '' : 'is-light'
-          }`}
+          className={`button is-info ${sortMode === 'alphabetical' ? '' : 'is-light'}`}
           onClick={handleSortAlphabetically}
+          data-cy="SortByName"
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${
-            sortOrder === 'length' ? '' : 'is-light'
-          }`}
+          className={`button is-success ${sortMode === 'length' ? '' : 'is-light'}`}
           onClick={handleSortByLength}
+          data-cy="SortByLength"
         >
           Sort by length
         </button>
@@ -86,15 +81,17 @@ export const App = () => {
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
           onClick={handleReverse}
+          data-cy="Reverse"
         >
           Reverse
         </button>
 
-        {!isOriginal && (
+        {(sortMode !== 'original' || isReversed) && (
           <button
             type="button"
             className="button is-danger"
             onClick={handleReset}
+            data-cy="Reset"
           >
             Reset
           </button>
