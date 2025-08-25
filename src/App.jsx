@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -15,79 +16,88 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const ORDER = {
-  ORIGINAL: 'original',
-  ALPHABET: 'alphabet',
-  LENGTH: 'length',
-};
+const SORT_FIELD_ALPHABET = 'Sort alphabetically';
+const SORT_FIELD_LENGTH = 'Sort by length';
+
+function getPreparedGoods(goods, { sortField }) {
+  const preparedGoods = [...goods];
+
+  if (sortField) {
+    preparedGoods.sort((good1, good2) => {
+      switch (sortField) {
+        case SORT_FIELD_LENGTH:
+          return good1.length - good2.length;
+        case SORT_FIELD_ALPHABET:
+          return good1.localeCompare(good2);
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  return preparedGoods;
+}
 
 export const App = () => {
-  const [order, setOrder] = useState(ORDER.ORIGINAL);
-  const [isReversed, setIsReversed] = useState(false);
-  const getGoods = () => {
-    const goods = [...goodsFromServer];
+  const [sortField, setSortField] = useState('');
+  const [reversed, setReversed] = useState(false);
 
-    if (order === ORDER.ALPHABET) {
-      goods.sort((a, b) => a.localeCompare(b));
-    } else if (order === ORDER.LENGTH) {
-      goods.sort((a, b) => a.length - b.length);
-    }
+  let visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortField,
+  });
 
-    if (isReversed) {
-      goods.reverse();
-    }
+  const initialState = sortField === '' && reversed === false;
 
-    return goods;
-  };
-
-  const goods = getGoods();
-  const isOriginalOrder = order === ORDER.ORIGINAL && !isReversed;
+  if (reversed) {
+    visibleGoods = visibleGoods.toReversed();
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info${order === ORDER.ALPHABET ? '' : ' is-light'}`}
-          onClick={() => {
-            if (order === ORDER.ALPHABET) {
-              setOrder(ORDER.ORIGINAL);
-            } else {
-              setOrder(ORDER.ALPHABET);
-            }
-          }}
+          className={cn('button', 'is-info', {
+            'is-light': sortField !== SORT_FIELD_ALPHABET,
+          })}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
+
         <button
           type="button"
-          className={`button is-success${order === ORDER.LENGTH ? '' : ' is-light'}`}
-          onClick={() => {
-            if (order === ORDER.LENGTH) {
-              setOrder(ORDER.ORIGINAL);
-            } else {
-              setOrder(ORDER.LENGTH);
-            }
-          }}
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning${isReversed && !isOriginalOrder ? '' : ' is-light'}`}
-          onClick={() => setIsReversed(prev => !prev)}
+          className={cn('button', 'is-warning', {
+            'is-light': !reversed,
+            active: reversed,
+          })}
+          onClick={() => setReversed(prev => !prev)}
         >
           Reverse
         </button>
 
-        {!isOriginalOrder && (
+        {initialState ? (
+          ''
+        ) : (
           <button
             type="button"
-            className="button is-danger"
+            className={cn('button', 'is-danger', 'is-light', {
+              'is-hidden': initialState,
+            })}
             onClick={() => {
-              setOrder(ORDER.ORIGINAL);
-              setIsReversed(false);
+              setSortField('');
+              setReversed(false);
             }}
           >
             Reset
@@ -96,7 +106,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
+        {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>
             {good}
           </li>
