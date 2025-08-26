@@ -87,14 +87,10 @@ export const App = () => {
           Reverse
         </button>
 
-        {initialState ? (
-          ''
-        ) : (
+        {!initialState && (
           <button
             type="button"
-            className={cn('button', 'is-danger', 'is-light', {
-              'is-hidden': initialState,
-            })}
+            className="button is-danger is-light"
             onClick={() => {
               setSortField('');
               setReversed(false);
