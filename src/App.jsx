@@ -15,8 +15,8 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function prepairGoods(goods, sortField) {
-  const prepGoods = [...goods];
+function prepareGoods(goods, sortField, reversed) {
+  let prepGoods = [...goods];
 
   if (sortField) {
     prepGoods.sort((goods1, goods2) => {
@@ -33,17 +33,18 @@ function prepairGoods(goods, sortField) {
     });
   }
 
+  if (reversed) {
+    prepGoods = prepGoods.toReversed();
+  }
+
   return prepGoods;
 }
 
 export const App = () => {
   const [sortGoods, setSortGoods] = useState('');
-  let visibleGoods = prepairGoods(goodsFromServer, sortGoods);
   const [reversed, setReversed] = useState(false);
 
-  if (reversed) {
-    visibleGoods = visibleGoods.toReversed();
-  }
+  const visibleGoods = prepareGoods(goodsFromServer, sortGoods, reversed);
 
   return (
     <div className="section content">
@@ -51,9 +52,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortGoods === 'Sort alphabetically' ? '' : 'is-light'}`}
-          onClick={() => {
-            setSortGoods('Sort alphabetically');
-          }}
+          onClick={() => setSortGoods('Sort alphabetically')}
         >
           Sort alphabetically
         </button>
@@ -61,9 +60,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${sortGoods === 'Sort by length' ? '' : 'is-light'}`}
-          onClick={() => {
-            setSortGoods('Sort by length');
-          }}
+          onClick={() => setSortGoods('Sort by length')}
         >
           Sort by length
         </button>
@@ -71,7 +68,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${reversed ? '' : 'is-light'}`}
-          onClick={() => setReversed(!reversed)}
+          onClick={() => setReversed(prev => !prev)}
         >
           Reverse
         </button>
