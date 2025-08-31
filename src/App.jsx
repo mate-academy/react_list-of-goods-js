@@ -46,7 +46,7 @@ export const App = () => {
 
   let visibleGoods = getPreparedGood(goodsFromServer, sortField);
 
-  const reset = () => {
+  const resetGoods = () => {
     visibleGoods = getPreparedGood(goodsFromServer, '');
     setSortField('');
     setReversed(false);
@@ -56,8 +56,8 @@ export const App = () => {
     return sortField !== field ? 'is-light' : '';
   };
 
-  const appliedReverseBtn = state => {
-    return reversed === state ? 'is-light' : '';
+  const appliedReverseBtn = () => {
+    return reversed ? '' : 'is-light';
   };
 
   const isModified = sortField !== '' || reversed;
@@ -88,14 +88,14 @@ export const App = () => {
         <button
           onClick={() => setReversed(!reversed)}
           type="button"
-          className={`button is-warning ${appliedReverseBtn(false)}`}
+          className={`button is-warning ${appliedReverseBtn()}`}
         >
           Reverse
         </button>
 
         {isModified && (
           <button
-            onClick={reset}
+            onClick={resetGoods}
             type="button"
             className="button is-danger is-light"
           >
