@@ -1,5 +1,8 @@
 import 'bulma/css/bulma.css';
+import cn from 'classnames';
+import { useState } from 'react';
 import './App.scss';
+import { ProductList } from './components/productList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,97 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_PRODUCT_NAME = 'alphabetically';
+const SORT_PRODUCT_LENGTH = 'length';
+const PRODUCT_REVERSE = 'reverse';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function getSortedGoods(list, { sortProduct, reverse = '' }) {
+  const newGoodList = [...list];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (sortProduct) {
+    newGoodList.sort((poz1, poz2) => {
+      switch (sortProduct) {
+        case SORT_PRODUCT_NAME:
+          return poz1.localeCompare(poz2);
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        case SORT_PRODUCT_LENGTH:
+          return poz1.length - poz2.length;
+
+        default:
+          return 0;
+      }
+    });
+  }
+
+  if (reverse === PRODUCT_REVERSE) {
+    newGoodList.reverse();
+  }
+
+  return newGoodList;
+}
+
+export const App = () => {
+  const [sortProduct, setSortProduct] = useState('');
+  const [reverse, setReverse] = useState('');
+  const visibleProduct = getSortedGoods(goodsFromServer, {
+    sortProduct,
+    reverse,
+  });
+
+  const coincidence = (
+    visibleProduct.length === goodsFromServer.length 
+  &&  visibleProduct.every((g, i) => g === goodsFromServer[i]))
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortProduct !== SORT_PRODUCT_NAME,
+          })}
+          onClick={() => setSortProduct(SORT_PRODUCT_NAME)}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': sortProduct !== SORT_PRODUCT_LENGTH,
+          })}
+          onClick={() => setSortProduct(SORT_PRODUCT_LENGTH)}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': reverse !== PRODUCT_REVERSE,
+          })}
+          onClick={() =>
+            setReverse(ch => (ch !== PRODUCT_REVERSE ? PRODUCT_REVERSE : ''))
+          }
+        >
+          Reverse
+        </button>
+
+        {!coincidence && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortProduct('');
+              setReverse('');
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ProductList products={visibleProduct} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
