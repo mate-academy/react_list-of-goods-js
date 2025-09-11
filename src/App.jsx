@@ -19,20 +19,26 @@ const handleSortByName = 'Sort alphabetically';
 const handleSortByLength = 'Sort by length';
 
 function getPreparedGoods(goods, sortField, handleReverse = false) {
-  const prepearedGoods = [...goods];
+  let prepearedGoods = [...goods];
 
   if (sortField) {
-    prepearedGoods.sort((good1, good2) => {
-      switch (sortField) {
-        case handleSortByName:
-          return good1.localeCompare(good2);
-        case handleSortByLength:
-          return good1.length - good2.length;
+    if (sortField === handleSortByName) {
+    prepearedGoods.sort((good1, good2) => good1.localeCompare(good2));
 
-        default:
-          return 0;
-      }
-    });
+    } else if (sortField === handleSortByLength) {
+      const decoratedGoods = prepearedGoods.map((value, index) => ({ value, index }));
+
+      decoratedGoods.sort((a, b) => {
+        const lengthDiff = a.value.length - b.value.length;
+        if (lengthDiff !== 0) {
+          return lengthDiff;
+        }
+
+        return a.index - b.index;
+      });
+
+      prepearedGoods = decoratedGoods.map(item => item.value);
+    }
   }
 
   if (handleReverse) {
@@ -44,15 +50,20 @@ function getPreparedGoods(goods, sortField, handleReverse = false) {
 
 export const App = () => {
   const [sortField, setSortField] = useState('');
-  const [handleReverse, setReverse] = useState(false);
+  const [handleReverse, setIsReverse] = useState(false);
 
-  const visibleGoods = getPreparedGoods(goodsFromServer, sortField, handleReverse);
-  const isInitialOrder = visibleGoods.length === goodsFromServer.length
-  && visibleGoods.every((g, i) => g === goodsFromServer[i])
+  const visibleGoods = getPreparedGoods(
+    goodsFromServer,
+    sortField,
+    handleReverse,
+  );
+  const isInitialOrder =
+    visibleGoods.length === goodsFromServer.length &&
+    visibleGoods.every((g, i) => g === goodsFromServer[i]);
 
-  function reset() {
+  function handleReset() {
     setSortField('');
-    setReverse(false);
+    setIsReverse(false);
   }
 
   return (
@@ -85,17 +96,17 @@ export const App = () => {
         <button
           type="button"
           onClick={() => {
-            setReverse(prev => !prev);
+           setIsReverse(prev => !prev);
           }}
-          className={cn('button', 'is-warning', { 'is-light': !handleReverse})}
+          className={cn('button', 'is-warning', { 'is-light': !handleReverse })}
         >
           Reverse
         </button>
 
-        {(!isInitialOrder) && (
+        {!isInitialOrder && (
           <button
             type="button"
-            onClick={reset}
+            onClick={handleReset}
             className="button is-danger is-light"
           >
             Reset
