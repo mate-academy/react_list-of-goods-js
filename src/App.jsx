@@ -21,18 +21,41 @@ export const App = () => {
   const [reversed, setReversed] = useState(false);
 
   const handleAlphabet = () => {
-    setGoods([...goods].sort());
+    const sorted = [...goodsFromServer].sort();
+
+    if (reversed) sorted.reverse();
+    setGoods(sorted);
     setSortType('alphabet');
   };
 
   const handleLength = () => {
-    setGoods([...goods].sort((a, b) => a.length - b.length));
+    const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
+    if (reversed) sorted.reverse();
+    setGoods(sorted);
     setSortType('length');
   };
 
   const handleReverse = () => {
-    setGoods([...goods].reverse());
     setReversed(prev => !prev);
+
+    if (sortType === 'alphabet') {
+      const sorted = [...goodsFromServer].sort();
+
+      if (!reversed) sorted.reverse();
+      setGoods(sorted);
+    }
+
+    if (sortType === 'length') {
+      const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
+      if (!reversed) sorted.reverse();
+      setGoods(sorted);
+    }
+
+    if (!sortType) {
+      setGoods([...goods].reverse());
+    }
   };
 
   const handleReset = () => {
