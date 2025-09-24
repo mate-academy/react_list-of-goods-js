@@ -39,8 +39,24 @@ function getPreparedGoods(goods, query) {
 }
 
 export const App = () => {
-  const [sortParams, setSortParams] = useState(null);
+  const [sortParams, setSortParams] = useState({ sort: null, reverse: false });
   const visibleGoods = getPreparedGoods(goodsFromServer, sortParams);
+
+  const sortByAlphabet = () => {
+    setSortParams(p => ({ ...p, sort: 'alphabet' }));
+  };
+
+  const sortByLength = () => {
+    setSortParams(p => ({ ...p, sort: 'length' }));
+  };
+
+  const toggleReverse = () => {
+    setSortParams(p => ({ ...p, reverse: !p.reverse }));
+  };
+
+  const reset = () => {
+    setSortParams({ sort: null, reverse: false });
+  };
 
   return (
     <div className="section content">
@@ -52,9 +68,7 @@ export const App = () => {
               ? 'button is-info'
               : 'button is-info is-light'
           }
-          onClick={() => {
-            setSortParams({ sort: 'alphabet', reverse: sortParams?.reverse });
-          }}
+          onClick={sortByAlphabet}
         >
           Sort alphabetically
         </button>
@@ -66,9 +80,7 @@ export const App = () => {
               ? 'button is-success'
               : 'button is-success is-light'
           }
-          onClick={() => {
-            setSortParams({ sort: 'length', reverse: sortParams?.reverse });
-          }}
+          onClick={sortByLength}
         >
           Sort by length
         </button>
@@ -80,12 +92,7 @@ export const App = () => {
               ? 'button is-warning'
               : 'button is-warning is-light'
           }
-          onClick={() => {
-            setSortParams(prev => ({
-              ...prev,
-              reverse: !prev?.reverse,
-            }));
-          }}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
@@ -94,7 +101,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => setSortParams(null)}
+            onClick={reset}
           >
             Reset
           </button>
@@ -104,7 +111,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
