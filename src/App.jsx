@@ -1,7 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import { GoodList } from './components/GoodsList';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -23,6 +22,23 @@ export const App = () => {
 
   const list = [...initialGoods];
 
+  const handleSortAlphabetically = () => {
+    setSortType('alpha');
+  };
+
+  const handleSortByLength = () => {
+    setSortType('length');
+  };
+
+  const handleToggleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleReset = () => {
+    setSortType('none');
+    setIsReversed(false);
+  };
+
   if (sortType === 'alpha') {
     list.sort((good1, good2) => good1.localeCompare(good2));
   }
@@ -42,7 +58,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          onClick={() => setSortType('alpha')}
+          onClick={handleSortAlphabetically}
           className={`button is-info ${sortType === 'alpha' ? '' : 'is-light'}`}
         >
           Sort alphabetically
@@ -50,7 +66,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortType('length')}
+          onClick={handleSortByLength}
           className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
         >
           Sort by length
@@ -58,7 +74,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setIsReversed(prev => !prev)}
+          onClick={handleToggleReverse}
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
         >
           Reverse
@@ -67,10 +83,7 @@ export const App = () => {
         {isChanged && (
           <button
             type="button"
-            onClick={() => {
-              setSortType('none');
-              setIsReversed(false);
-            }}
+            onClick={handleReset}
             className="button is-danger is-light"
           >
             Reset
@@ -78,7 +91,13 @@ export const App = () => {
         )}
       </div>
 
-      <GoodList goods={list} />
+      <ul>
+        {list.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
