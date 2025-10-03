@@ -33,7 +33,19 @@ export const App = () => {
     goods.reverse();
   }
 
-  const resetGoods = () => {
+  const handleSortAlphabetically = () => {
+    setSortType('alpha');
+  };
+
+  const handleSortByLength = () => {
+    setSortType('length');
+  };
+
+  const handleToggleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleReset = () => {
     setSortType(null);
     setIsReversed(false);
   };
@@ -46,7 +58,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortType === 'alpha' ? '' : 'is-light'}`}
-          onClick={() => setSortType('alpha')}
+          onClick={handleSortAlphabetically}
         >
           Sort alphabetically
         </button>
@@ -56,7 +68,7 @@ export const App = () => {
           className={`button is-success ${
             sortType === 'length' ? '' : 'is-light'
           }`}
-          onClick={() => setSortType('length')}
+          onClick={handleSortByLength}
         >
           Sort by length
         </button>
@@ -64,7 +76,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={() => setIsReversed(prev => !prev)}
+          onClick={handleToggleReverse}
         >
           Reverse
         </button>
@@ -73,7 +85,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger"
-            onClick={resetGoods}
+            onClick={handleReset}
           >
             Reset
           </button>
