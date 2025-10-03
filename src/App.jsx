@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,89 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortType, setSortType] = useState('none');
+  const [isReversed, setIsReversed] = useState(false);
+  const [initialGoods] = useState(goodsFromServer);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const list = [...initialGoods];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const handleSortAlphabetically = () => {
+    setSortType('alpha');
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const handleSortByLength = () => {
+    setSortType('length');
+  };
+
+  const handleToggleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleReset = () => {
+    setSortType('none');
+    setIsReversed(false);
+  };
+
+  if (sortType === 'alpha') {
+    list.sort((good1, good2) => good1.localeCompare(good2));
+  }
+
+  if (sortType === 'length') {
+    list.sort((good1, good2) => good1.length - good2.length);
+  }
+
+  if (isReversed) {
+    list.reverse();
+  }
+
+  const isChanged = sortType !== 'none' || isReversed;
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          onClick={handleSortAlphabetically}
+          className={`button is-info ${sortType === 'alpha' ? '' : 'is-light'}`}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSortByLength}
+          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          onClick={handleToggleReverse}
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+        >
+          Reverse
+        </button>
+
+        {isChanged && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {list.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
