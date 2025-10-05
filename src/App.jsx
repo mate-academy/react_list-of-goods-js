@@ -46,10 +46,28 @@ function getPreparedGoods(goods, sortField, isReversed) {
 }
 
 export const App = () => {
-  const [sortField, handleSortField] = useState('');
-  const [isReversed, handleIsReversed] = useState(false);
+  const [sortField, setSortField] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField, isReversed);
+
+  // ✅ Іменовані хендлери (починаються з дієслова)
+  const handleSortAlphabetically = () => {
+    setSortField(SORT_FIELD_ALPHABETIC);
+  };
+
+  const handleSortByLength = () => {
+    setSortField(SORT_FIELD_LENGTH);
+  };
+
+  const handleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleReset = () => {
+    setSortField('');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -59,7 +77,7 @@ export const App = () => {
           className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABETIC,
           })}
-          onClick={() => handleSortField(SORT_FIELD_ALPHABETIC)}
+          onClick={handleSortAlphabetically}
         >
           Sort alphabetically
         </button>
@@ -69,7 +87,7 @@ export const App = () => {
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
-          onClick={() => handleSortField(SORT_FIELD_LENGTH)}
+          onClick={handleSortByLength}
         >
           Sort by length
         </button>
@@ -79,7 +97,7 @@ export const App = () => {
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => handleIsReversed(prev => !prev)}
+          onClick={handleReverse}
         >
           Reverse
         </button>
@@ -88,10 +106,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              handleSortField('');
-              handleIsReversed(false);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
