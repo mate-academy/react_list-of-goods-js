@@ -4,11 +4,11 @@ module.exports = {
     es2024: true,
   },
   extends: [
-    'standard',
+    'eslint:recommended',
     'plugin:react/recommended',
     'airbnb',
-    'plugin:prettier/recommended',
     'plugin:cypress/recommended',
+    'plugin:prettier/recommended', 
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -19,70 +19,51 @@ module.exports = {
   },
   plugins: ['jsx-a11y', 'import', 'react', 'prettier'],
   rules: {
-    'function-paren-newline': ['error', 'consistent'],
-    'comma-dangle': [
+    'prettier/prettier': [
       'error',
       {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-        functions: 'always-multiline',
+        trailingComma: 'es5', 
+        bracketSameLine: false,
+        singleQuote: true,
+        printWidth: 100,
       },
     ],
+    'comma-dangle': 'off',
+    'function-paren-newline': 'off',
+
     indent: [
       'error',
       2,
       {
         SwitchCase: 1,
         VariableDeclarator: 1,
-        outerIIFEBody: 1,
-        // MemberExpression: null,
-        FunctionDeclaration: {
-          parameters: 1,
-          body: 1,
-        },
-        FunctionExpression: {
-          parameters: 1,
-          body: 1,
-        },
-        CallExpression: {
-          arguments: 1,
-        },
+        FunctionDeclaration: { parameters: 1, body: 1 },
+        FunctionExpression: { parameters: 1, body: 1 },
+        CallExpression: { arguments: 1 },
         ArrayExpression: 1,
         ObjectExpression: 1,
         ImportDeclaration: 1,
-        flatTernaryExpressions: false,
-        // list derived from https://github.com/benjamn/ast-types/blob/HEAD/def/jsx.js
-        ignoredNodes: [
-          'JSXElement',
-          'JSXElement > *',
-          'JSXAttribute',
-          'JSXIdentifier',
-          'JSXNamespacedName',
-          'JSXMemberExpression',
-          'JSXSpreadAttribute',
-          'JSXExpressionContainer',
-          'JSXOpeningElement',
-          'JSXClosingElement',
-          'JSXFragment',
-          'JSXOpeningFragment',
-          'JSXClosingFragment',
-          'JSXText',
-          'JSXEmptyExpression',
-          'JSXSpreadChild',
-        ],
         ignoreComments: false,
       },
     ],
-    'no-unused-expressions': [
+
+    'no-console': 'warn',
+    'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': [
       'error',
       {
-        allowShortCircuit: false,
-        allowTernary: false,
-        allowTaggedTemplates: false,
+        devDependencies: true,
+        optionalDependencies: false,
+        peerDependencies: false,
       },
     ],
+
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/destructuring-assignment': 'off',
+    'react/function-component-definition': 'off',
+
     'jsx-a11y/label-has-for': [
       2,
       {
@@ -95,24 +76,16 @@ module.exports = {
     ],
     'jsx-a11y/label-has-associated-control': [2, { assert: 'either' }],
     'jsx-a11y/control-has-associated-label': 'off',
-    'implicit-arrow-linebreak': 0,
-    'import/prefer-default-export': 0,
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: true,
-        optionalDependencies: false,
-        peerDependencies: false,
-      },
-    ],
+
+    'implicit-arrow-linebreak': 'off',
     'max-len': [
       'error',
       {
+        code: 120,
         ignoreTemplateLiterals: true,
         ignoreComments: true,
       },
     ],
-    'no-console': 'error',
     'no-param-reassign': [2, { props: true }],
     'no-shadow': ['error', { builtinGlobals: false }],
     'padding-line-between-statements': [
@@ -127,10 +100,13 @@ module.exports = {
       { blankLine: 'always', prev: 'directive', next: '*' },
       { blankLine: 'always', prev: 'block-like', next: '*' },
     ],
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-    'react/prop-types': 0,
-    'react/react-in-jsx-scope': 0,
-    'react/destructuring-assignment': 0,
-    'react/function-component-definition': 0,
+    'no-unused-expressions': [
+      'error',
+      {
+        allowShortCircuit: false,
+        allowTernary: false,
+        allowTaggedTemplates: false,
+      },
+    ],
   },
 };
