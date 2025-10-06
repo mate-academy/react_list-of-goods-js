@@ -15,8 +15,19 @@ Implement the ability to reorder the goods with the given buttons.
 1. `Reset` button should show the goods in the initial order.
     - it should be visible only if goods are not already in the original order;
 
+    1. Кнопка «Сортувати за алфавітом» повинна сортувати товари за алфавітом.
+- видалити клас `is-light` з кнопки, коли застосовується цей порядок;
+1. Кнопка «Сортувати за довжиною» повинна сортувати товари за довжиною.
+- видалити клас `is-light` з кнопки, коли застосовується цей порядок;
+1. Кнопка «Зворотне сортування» змінює поточний порядок на протилежний.
+- вона повинна працювати разом з будь-яким сортуванням;
+- видалити клас `is-light` з кнопки, коли товари змінюються на зворотне;
+- друге натискання має показувати товари в прямому порядку;
+1. Кнопка «Скинути» повинна показувати товари в початковому порядку.
+- вона має бути видимою, лише якщо товари ще не знаходяться в початковому порядку;
+
 ## Instructions
 - Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
 - Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_list-of-goods-js/) and add it to the PR description.
+- Replace `<your_account>` with your Github username in the [DEMO LINK](https://ElinaMrachkovska.github.io/react_list-of-goods-js/) and add it to the PR description.
