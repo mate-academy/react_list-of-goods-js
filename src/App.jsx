@@ -37,22 +37,28 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-
   const visibleGoods = getPreparedGoods(goodsFromServer, {
     sortField,
     isReversed,
   });
 
+  const handleSortByName = () => setSortField('alphabetically');
+  const handleSortByLength = () => setSortField('length');
+  const handleReverse = () => setIsReversed(prev => !prev);
   const handleReset = () => {
     setSortField('');
     setIsReversed(false);
   };
 
+  const isInitialOrder =
+    visibleGoods.length === goodsFromServer.length &&
+    visibleGoods.every((good, index) => good === goodsFromServer[index]);
+
   return (
     <div className="section content">
       <div className="buttons">
         <button
-          onClick={() => setSortField('alphabetically')}
+          onClick={handleSortByName}
           type="button"
           className={`button is-info ${sortField === 'alphabetically' ? '' : 'is-light'}`}
         >
@@ -60,7 +66,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setSortField('length')}
+          onClick={handleSortByLength}
           type="button"
           className={`button is-success ${sortField === 'length' ? '' : 'is-light'}`}
         >
@@ -68,14 +74,14 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => setIsReversed(prev => !prev)}
+          onClick={handleReverse}
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
         >
           Reverse
         </button>
 
-        {(sortField !== '' || isReversed) && (
+        {!isInitialOrder && (
           <button
             onClick={handleReset}
             type="button"
