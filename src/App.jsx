@@ -24,17 +24,17 @@ export const App = () => {
     switch (type) {
       case 'alphabet':
       case 'length': {
-        const sorted = [...goods].sort(
-          type === 'alphabet'
-            ? (a, b) => a.localeCompare(b)
-            : (a, b) => a.length - b.length,
-        );
-
-        // const sorted = [...goodsFromServer].sort(
+        // const sorted = [...goods].sort(
         //   type === 'alphabet'
         //     ? (a, b) => a.localeCompare(b)
         //     : (a, b) => a.length - b.length,
         // );
+
+        const sorted = [...goodsFromServer].sort(
+          type === 'alphabet'
+            ? (a, b) => a.localeCompare(b)
+            : (a, b) => a.length - b.length,
+        );
 
         setGoods(isReversed ? sorted.reverse() : sorted);
         setActiveSort(type);
