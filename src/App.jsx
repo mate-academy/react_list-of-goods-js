@@ -37,16 +37,22 @@ export const App = () => {
   const [sortField, setSortField] = useState(null);
   const [isReverse, setIsReverse] = useState(false);
 
-  const visibleList = [...goodsFromServer].sort((a, b) => {
-    switch (sortField) {
-      case 'Sort alphabetically':
-        return a.localeCompare(b);
-      case 'Sort by length':
-        return a.length - b.length;
-      default:
-        return 0;
-    }
-  });
+  let visibleList;
+
+  if (sortField === null) {
+    visibleList = [...goodsFromServer];
+  } else {
+    visibleList = [...goodsFromServer].sort((a, b) => {
+      switch (sortField) {
+        case 'Sort alphabetically':
+          return a.localeCompare(b);
+        case 'Sort by length':
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
+  }
 
   if (isReverse) {
     visibleList.reverse();
@@ -109,35 +115,4 @@ export const App = () => {
       </ul>
     </div>
   );
-
-  /*  return (
-    <div className="section content">
-      <div className="buttons">
-        <button type="button" className="button is-info is-light">
-          Sort alphabetically
-        </button>
-
-        <button type="button" className="button is-success is-light">
-          Sort by length
-        </button>
-
-        <button type="button" className="button is-warning is-light">
-          Reverse
-        </button>
-
-        <button type="button" className="button is-danger is-light">
-          Reset
-        </button>
-      </div>
-
-      <ul>
-        <li data-cy="Good">Dumplings</li>
-        <li data-cy="Good">Carrot</li>
-        <li data-cy="Good">Eggs</li>
-        <li data-cy="Good">Ice cream</li>
-        <li data-cy="Good">Apple</li>
-        <li data-cy="Good">...</li>
-      </ul>
-    </div>
-  );  */
 };
