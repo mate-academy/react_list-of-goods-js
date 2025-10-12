@@ -37,7 +37,7 @@ export const App = () => {
   const [sortField, setSortField] = useState(null);
   const [isReverse, setIsReverse] = useState(false);
 
-  const visibleList = goodsFromServer.toSorted((a, b) => {
+  const visibleList = [...goodsFromServer].sort((a, b) => {
     switch (sortField) {
       case 'Sort alphabetically':
         return a.localeCompare(b);
@@ -66,9 +66,13 @@ export const App = () => {
     }
   };
 
+  const isOriginal =
+    visibleList.length === goodsFromServer.length &&
+    visibleList.every((v, i) => v === goodsFromServer[i]);
+
   return (
     <div className="section content">
-      <div className="section content">
+      <div className="buttons">
         {sortList.map(field => (
           <button
             key={field.id}
@@ -85,7 +89,7 @@ export const App = () => {
           </button>
         ))}
 
-        {(sortField || isReverse) && (
+        {!isOriginal && (
           <button
             type="button"
             className="button is-danger is-light"
