@@ -51,7 +51,15 @@ export const App = () => {
     sortOrder,
   });
 
-  function changeOrder() {
+  function handleSortAlphabetically() {
+    setSortField(SORT_FIELD_NAME);
+  }
+
+  function handleSortByLength() {
+    setSortField(SORT_FIELD_LENGTH);
+  }
+
+  function handleChangeOrder() {
     if (sortOrder === SORT_ORDER_REVERSE) {
       setSortOrder('');
     } else {
@@ -59,7 +67,7 @@ export const App = () => {
     }
   }
 
-  function reset() {
+  function handleReset() {
     setSortOrder('');
     setSortField('');
   }
@@ -69,7 +77,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          onClick={() => setSortField(SORT_FIELD_NAME)}
+          onClick={handleSortAlphabetically}
           className={cn('button is-info', {
             'is-light': sortField !== SORT_FIELD_NAME,
           })}
@@ -79,7 +87,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortField(SORT_FIELD_LENGTH)}
+          onClick={handleSortByLength}
           className={cn('button is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
@@ -89,7 +97,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => changeOrder()}
+          onClick={handleChangeOrder}
           className={cn('button is-warning', {
             'is-light': sortOrder !== SORT_ORDER_REVERSE,
           })}
@@ -100,7 +108,7 @@ export const App = () => {
         {(sortField !== '' || sortOrder !== '') && (
           <button
             type="button"
-            onClick={() => reset()}
+            onClick={handleReset}
             className="button is-danger is-light"
           >
             Reset
