@@ -50,6 +50,9 @@ export const App = () => {
     sortField,
     sortOrder,
   });
+  const isOriginalOrder =
+    visibleGoods.length === goodsFromServer.length &&
+    visibleGoods.every((g, i) => g === goodsFromServer[i]);
 
   function handleSortAlphabetically() {
     setSortField(SORT_FIELD_NAME);
@@ -105,7 +108,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || sortOrder !== '') && (
+        {!isOriginalOrder && (
           <button
             type="button"
             onClick={handleReset}
