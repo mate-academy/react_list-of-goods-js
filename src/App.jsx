@@ -23,12 +23,29 @@ export const App = () => {
   if (sortField === 'alpha') {
     prepared.sort((a, b) => a.localeCompare(b));
   } else if (sortField === 'length') {
-    prepared.sort((a, b) => a.length - b.length);
+    prepared.sort((a, b) => a.length - b.length || a.localeCompare(b));
   }
 
   if (isReversed) {
     prepared.reverse();
   }
+
+  const handleSortAlpha = () => {
+    setSortField('alpha');
+  };
+
+  const handleSortLength = () => {
+    setSortField('length');
+  };
+
+  const toggleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const resetList = () => {
+    setSortField('none');
+    setIsReversed(false);
+  };
 
   return (
     <div className="section content">
@@ -36,7 +53,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortField !== 'alpha' ? 'is-light' : ''}`}
-          onClick={() => setSortField('alpha')}
+          onClick={handleSortAlpha}
         >
           Sort alphabetically
         </button>
@@ -44,7 +61,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${sortField !== 'length' ? 'is-light' : ''}`}
-          onClick={() => setSortField('length')}
+          onClick={handleSortLength}
         >
           Sort by length
         </button>
@@ -52,7 +69,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-warning ${!isReversed ? 'is-light' : ''}`}
-          onClick={() => setIsReversed(prev => !prev)}
+          onClick={toggleReverse}
         >
           Reverse
         </button>
@@ -61,10 +78,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortField('none');
-              setIsReversed(false);
-            }}
+            onClick={resetList}
           >
             Reset
           </button>
