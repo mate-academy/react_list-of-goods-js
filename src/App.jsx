@@ -20,7 +20,6 @@ export const goodsFromServer = [
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
 const REVERSE_ORDER = 'reverse';
-const RESET_ORDER = 'reset';
 
 function orderedGoods(goods, sortField, orderBy) {
   const preparedGoods = [...goods];
