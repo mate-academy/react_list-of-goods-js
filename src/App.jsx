@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import cn from 'classnames';
-
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -37,7 +36,7 @@ function orderedGoods(goods, sortField, orderBy) {
     });
   }
 
-  if (orderBy === 'reverse') {
+  if (orderBy === REVERSE_ORDER) {
     return preparedGoods.reverse();
   }
 
@@ -47,14 +46,34 @@ function orderedGoods(goods, sortField, orderBy) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [orderBy, setOrderBy] = useState('');
+
   const visibleGoods = orderedGoods(goodsFromServer, sortField, orderBy);
+
+  const handleSortByAlphabet = () => {
+    setSortField(sortField === SORT_BY_ALPHABET ? '' : SORT_BY_ALPHABET);
+  };
+
+  const handleSortByLength = () => {
+    setSortField(sortField === SORT_BY_LENGTH ? '' : SORT_BY_LENGTH);
+  };
+
+  const handleReverse = () => {
+    setOrderBy(orderBy === REVERSE_ORDER ? '' : REVERSE_ORDER);
+  };
+
+  const handleReset = () => {
+    setSortField('');
+    setOrderBy('');
+  };
+
+  const isModified = sortField !== '' || orderBy !== '';
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          onClick={() => setSortField(SORT_BY_ALPHABET)}
+          onClick={handleSortByAlphabet}
           className={cn('button', 'is-info', {
             'is-light': sortField !== SORT_BY_ALPHABET,
             active: sortField === SORT_BY_ALPHABET,
@@ -65,7 +84,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortField(SORT_BY_LENGTH)}
+          onClick={handleSortByLength}
           className={cn('button', 'is-success', {
             'is-light': sortField !== SORT_BY_LENGTH,
             active: sortField === SORT_BY_LENGTH,
@@ -76,9 +95,7 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() =>
-            setOrderBy(orderBy === REVERSE_ORDER ? '' : REVERSE_ORDER)
-          }
+          onClick={handleReverse}
           className={cn('button', 'is-warning', {
             'is-light': orderBy !== REVERSE_ORDER,
             active: orderBy === REVERSE_ORDER,
@@ -87,13 +104,10 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortField !== '' || orderBy !== '') && (
+        {isModified && (
           <button
             type="button"
-            onClick={() => {
-              setSortField('');
-              setOrderBy('');
-            }}
+            onClick={handleReset}
             className={cn('button', 'is-danger')}
           >
             Reset
@@ -103,7 +117,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
