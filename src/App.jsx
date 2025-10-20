@@ -26,12 +26,14 @@ export const App = () => {
 
   const sortAlph = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+
     setGoods(aplyReverseIfNedded(sorted));
     setButtonStatus('alph');
   };
 
   const sortByLength = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
     setGoods(aplyReverseIfNedded(sorted));
     setButtonStatus('length');
   };
@@ -74,16 +76,17 @@ export const App = () => {
           Reverse
         </button>
 
-        {isReversed ||
-          buttonStatus.length > 0 ? (
-            <button
-              type="button"
-              onClick={reset}
-              className="button is-danger is-light"
-            >
-              Reset
-            </button>
-          ) : <></>}
+        {isReversed || buttonStatus.length > 0 ? (
+          <button
+            type="button"
+            onClick={reset}
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        ) : (
+          <div />
+        )}
       </div>
 
       <ul>
