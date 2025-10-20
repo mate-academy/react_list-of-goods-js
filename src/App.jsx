@@ -20,23 +20,25 @@ export const App = () => {
   const [buttonStatus, setButtonStatus] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const isInitial = goods.length === goodsFromServer.length && goods.every((g, i) => g === goodsFromServer[i])
+  const isInitial =
+    goods.length === goodsFromServer.length &&
+    goods.every((g, i) => g === goodsFromServer[i]);
 
-  const applyReverseIfNedded = arr => {
+  const applyReverseIfNeeded = arr => {
     return isReversed ? [...arr].reverse() : arr;
   };
 
   const sortAlph = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
-    setGoods(applyReverseIfNedded(sorted));
+    setGoods(applyReverseIfNeeded(sorted));
     setButtonStatus('alph');
   };
 
   const sortByLength = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
 
-    setGoods(applyReverseIfNedded(sorted));
+    setGoods(applyReverseIfNeeded(sorted));
     setButtonStatus('length');
   };
 
@@ -78,7 +80,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {!isInitial ? (
+        {!isInitial && (
           <button
             type="button"
             onClick={reset}
@@ -86,8 +88,6 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          <div />
         )}
       </div>
 
