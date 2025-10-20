@@ -16,25 +16,27 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
+  const [goods, setGoods] = useState([...goodsFromServer]);
   const [buttonStatus, setButtonStatus] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const aplyReverseIfNedded = arr => {
-    return isReversed ? arr.reverse() : arr;
+  const isInitial = goods.length === goodsFromServer.length && goods.every((g, i) => g === goodsFromServer[i])
+
+  const applyReverseIfNedded = arr => {
+    return isReversed ? [...arr].reverse() : arr;
   };
 
   const sortAlph = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
-    setGoods(aplyReverseIfNedded(sorted));
+    setGoods(applyReverseIfNedded(sorted));
     setButtonStatus('alph');
   };
 
   const sortByLength = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
 
-    setGoods(aplyReverseIfNedded(sorted));
+    setGoods(applyReverseIfNedded(sorted));
     setButtonStatus('length');
   };
 
@@ -44,7 +46,7 @@ export const App = () => {
   };
 
   const reset = () => {
-    setGoods(goodsFromServer);
+    setGoods([...goodsFromServer]);
     setIsReversed(false);
     setButtonStatus('');
   };
@@ -76,7 +78,7 @@ export const App = () => {
           Reverse
         </button>
 
-        {isReversed || buttonStatus.length > 0 ? (
+        {!isInitial ? (
           <button
             type="button"
             onClick={reset}
