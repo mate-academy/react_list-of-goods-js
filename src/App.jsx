@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import React, { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,93 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const NOT_ACTIVE_CLASS = 'is-light';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [isReversed, setIsReversed] = useState(false);
+  const [sortBy, setSortBy] = useState(null);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const resetGoods = () => {
+    setGoods([...goodsFromServer]);
+    setIsReversed(false);
+    setSortBy(null);
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const reverseGoods = () => {
+    setGoods([...goods].reverse());
+    setIsReversed(!isReversed);
+  };
+
+  const sortAlphabetically = () => {
+    const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+
+    setGoods(sorted);
+    setSortBy('alphabet');
+    setIsReversed(false);
+  };
+
+  const sortByLength = () => {
+    const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
+    setGoods(sorted);
+    setSortBy('length');
+    setIsReversed(false);
+  };
+
+  const getButtonClass = buttonType => {
+    switch (buttonType) {
+      case 'reverse':
+        return isReversed ? '' : NOT_ACTIVE_CLASS;
+      case 'alphabet':
+        return sortBy === 'alphabet' ? '' : NOT_ACTIVE_CLASS;
+      case 'length':
+        return sortBy === 'length' ? '' : NOT_ACTIVE_CLASS;
+      default:
+        return '';
+    }
+  };
+
+  const isResetVisible = () => goods.toString() !== goodsFromServer.toString();
+
+  return (
+    <div className="App">
+      <h1>Goods List</h1>
+      <ul>
+        {goods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
+      <div className="buttons">
+        <button
+          type="button"
+          className={getButtonClass('reverse')}
+          onClick={reverseGoods}
+        >
+          Reverse
+        </button>
+        <button
+          type="button"
+          className={getButtonClass('alphabet')}
+          onClick={sortAlphabetically}
+        >
+          Sort alphabetically
+        </button>
+        <button
+          type="button"
+          className={getButtonClass('length')}
+          onClick={sortByLength}
+        >
+          Sort by length
+        </button>
+        {isResetVisible() && (
+          <button type="button" onClick={resetGoods}>
+            Reset
+          </button>
+        )}
+      </div>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
