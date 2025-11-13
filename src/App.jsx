@@ -17,7 +17,7 @@ export const goodsFromServer = [
 ];
 
 const SORT_BY_ALPHABETICALLY = 'alphabetically';
-const SORT_BY_LENGHT = 'length';
+const SORT_BY_LENGTH = 'length';
 
 const getPreparedGoods = (goods, sortField, isReversed) => {
   let preparedGoods = [...goods];
@@ -29,7 +29,7 @@ const getPreparedGoods = (goods, sortField, isReversed) => {
           return good1.localeCompare(good2);
         }
 
-        case SORT_BY_LENGHT: {
+        case SORT_BY_LENGTH: {
           return good1.length - good2.length;
         }
 
@@ -72,9 +72,9 @@ export const App = () => {
 
         <button
           type="button"
-          onClick={() => setSortField(SORT_BY_LENGHT)}
-          className={cn('button', 'is-succes', {
-            'is-light': sortField !== SORT_BY_LENGHT,
+          onClick={() => setSortField(SORT_BY_LENGTH)}
+          className={cn('button', 'is-success', {
+            'is-light': sortField !== SORT_BY_LENGTH,
           })}
         >
           Sort by length
@@ -83,7 +83,7 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': reversed !== true,
+            'is-light': !reversed,
           })}
           onClick={() => setReversed(!reversed)}
         >
@@ -103,7 +103,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
