@@ -1,7 +1,9 @@
+/* eslint-disable max-len */
+/* eslint-disable prettier/prettier */
 import 'bulma/css/bulma.css';
 import './App.scss';
-
 import { useState } from 'react';
+import cn from 'classnames';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -16,82 +18,98 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
-  const [activeSort, setActiveSort] = useState('');
-  const [isReversed, setIsReversed] = useState(false);
+const BUTTON_SORT_ALPHABET = 'alphabet';
+const BUTTON_SORT_LENGTH = 'length';
 
-  const handleAction = type => {
-    switch (type) {
-      case 'alphabet':
-      case 'length': {
-        // const sorted = [...goods].sort(
-        //   type === 'alphabet'
-        //     ? (a, b) => a.localeCompare(b)
-        //     : (a, b) => a.length - b.length,
-        // );
+function getPreparedGoods(goods, { buttonSort, buttonReverse }) {
+  let preparedGoods = [...goods];
 
-        const sorted = [...goodsFromServer].sort(
-          type === 'alphabet'
-            ? (a, b) => a.localeCompare(b)
-            : (a, b) => a.length - b.length,
-        );
+  if (buttonSort) {
+    preparedGoods.sort((good1, good2) => {
+      switch (buttonSort) {
+        case BUTTON_SORT_ALPHABET:
+          return good1.localeCompare(good2);
 
-        setGoods(isReversed ? sorted.reverse() : sorted);
-        setActiveSort(type);
-        break;
+        case BUTTON_SORT_LENGTH:
+          return good1.length - good2.length;
+
+        default:
+          return 0;
       }
+    });
+  }
 
-      case 'reverse':
-        setGoods(good => [...good].reverse());
-        setIsReversed(r => !r);
-        break;
+  if (buttonReverse) {
+    preparedGoods = preparedGoods.reverse();
+  }
 
-      case 'reset':
-        setGoods(goodsFromServer);
-        setActiveSort('');
-        setIsReversed(false);
-        break;
+  return preparedGoods;
+}
 
-      default:
-        break;
-    }
+export const App = () => {
+  const [buttonSort, setButtonSort] = useState('');
+  const [buttonReverse, setButtonReverse] = useState(false);
+
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    buttonSort,
+    buttonReverse,
+  });
+
+  const handleSortAlphabet = () => {
+    setButtonSort(BUTTON_SORT_ALPHABET);
   };
 
-  const isChanged = goods.join() !== goodsFromServer.join();
+  const handleSortLength = () => {
+    setButtonSort(BUTTON_SORT_LENGTH);
+  };
+
+  const handleReverse = () => {
+    // Старий варіант
+    // setButtonReverse(!buttonReverse);
+    // Більш новіший варіант і типу читаєміший
+    setButtonReverse(prev => !prev);
+  };
+
+  const handleReset = () => {
+    setButtonSort('');
+    setButtonReverse(false);
+  };
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${activeSort === 'alphabet' ? '' : 'is-light'}`}
-          onClick={() => handleAction('alphabet')}
+          // className={`button is-info ${BUTTON_SORT_ALPHABET !== buttonSort ? 'is-light' : ''}`}
+          className={cn('button is-info', {'is-light': BUTTON_SORT_ALPHABET !== buttonSort})}
+          onClick={handleSortAlphabet}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-success ${activeSort === 'length' ? '' : 'is-light'}`}
-          onClick={() => handleAction('length')}
+          // className={`button is-success ${BUTTON_SORT_LENGTH !== buttonSort ? 'is-light' : ''}`}
+          className={cn('button is-success', {'is-light': BUTTON_SORT_LENGTH !== buttonSort})}
+          onClick={handleSortLength}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-          onClick={() => handleAction('reverse')}
+          // className={`button is-warning ${!buttonReverse ? 'is-light' : ''}`}
+          className={cn('button is-warning', {'is-light': !buttonReverse})}
+          onClick={handleReverse}
         >
           Reverse
         </button>
 
-        {isChanged && (
+        {(buttonSort || buttonReverse) && (
           <button
             type="button"
-            className="button is-danger"
-            onClick={() => handleAction('reset')}
+            className="button is-danger is-light"
+            onClick={handleReset}
           >
             Reset
           </button>
@@ -99,98 +117,16 @@ export const App = () => {
       </div>
 
       <ul>
-        {goods.map(good => (
-          <li data-cy="Good" key={good}>
-            {good}
-          </li>
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>{good}</li>
         ))}
       </ul>
     </div>
   );
 };
 
-// export const App = () => {
-//   const [goods, setGoods] = useState(goodsFromServer);
-//   const [activeSort, setActiveSort] = useState('');
-//   const [isReversed, setIsReversed] = useState(false);
+// ★ Краще 1-й варіант, по міркам семантики:
+// className={`button is-info ${BUTTON_SORT_ALPHABET !== buttonSort ? 'is-light' : ''}`}
+// className={`button is-info ${BUTTON_SORT_ALPHABET !== buttonSort && 'is-light'}`}
 
-//   const sortAlphabetically = () => {
-//     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
-
-//     setGoods(isReversed ? sorted.reverse() : sorted);
-//     setActiveSort('alphabet');
-//   };
-
-//   const sortByLength = () => {
-//     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
-
-//     setGoods(isReversed ? sorted.reverse() : sorted);
-//     setActiveSort('length');
-//   };
-
-//   const reverseGoods = () => {
-//     setGoods(prevGoods => [...prevGoods].reverse());
-//     setIsReversed(prev => !prev);
-//     // НЕ меняем activeSort
-//   };
-
-//   const resetGoods = () => {
-//     setGoods(goodsFromServer);
-//     setActiveSort('');
-//     setIsReversed(false);
-//   };
-
-//   const isChanged = goods.join(',') !== goodsFromServer.join(',');
-
-//   return (
-//     <div className="section content">
-//       <div className="buttons">
-//         <button
-//           type="button"
-//           className={`button is-info ${
-//             activeSort === 'alphabet' ? '' : 'is-light'
-//           }`}
-//           onClick={sortAlphabetically}
-//         >
-//           Sort alphabetically
-//         </button>
-
-//         <button
-//           type="button"
-//           className={`button is-success ${
-//             activeSort === 'length' ? '' : 'is-light'
-//           }`}
-//           onClick={sortByLength}
-//         >
-//           Sort by length
-//         </button>
-
-//         <button
-//           type="button"
-//           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
-//           onClick={reverseGoods}
-//         >
-//           Reverse
-//         </button>
-
-//         {isChanged && (
-//           <button
-//             type="button"
-//             className="button is-danger"
-//             onClick={resetGoods}
-//           >
-//             Reset
-//           </button>
-//         )}
-//       </div>
-
-//       <ul>
-//         {goods.map(good => (
-//           <li key={good} data-cy="Good">
-//             {good}
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
+// ★ Не забывать про уникальные ключи в map()
