@@ -1,46 +1,66 @@
-import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import { goodsFromServer, buttonClassesFields } from './data/data';
+import { Buttons } from './components/buttons/Buttons';
+import { List } from './components/list/List';
 
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [isReversed, setReversed] = useState(false);
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+  const handleClick = sortType => {
+    switch (sortType) {
+      case 'Sort alphabetically':
+      case 'Sort by length':
+        setSortField(sortType);
+        break;
+      case 'Reverse':
+        setReversed(!isReversed);
+        break;
+      case 'Reset':
+        setSortField('');
+        setReversed(false);
+        break;
+      default:
+        break;
+    }
+  };
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function prepareGoods(
+    initialGoods,
+    { sortField: field, isReversed: reversed },
+  ) {
+    const copyGgoods = [...initialGoods];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    copyGgoods.sort((goodA, goodB) => {
+      switch (field) {
+        case 'Sort alphabetically':
+          return goodA.localeCompare(goodB);
+        case 'Sort by length':
+          return goodA.length - goodB.length;
+        default:
+          return 0;
+      }
+    });
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    if (reversed) {
+      copyGgoods.reverse();
+    }
+
+    return copyGgoods;
+  }
+
+  const goods = prepareGoods(goodsFromServer, { sortField, isReversed });
+
+  return (
+    <div className="section content">
+      <Buttons
+        buttonClassesFields={buttonClassesFields}
+        sortField={sortField}
+        handleClick={handleClick}
+        isReversed={isReversed}
+      />
+      <List goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
