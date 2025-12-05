@@ -53,7 +53,6 @@ export const App = () => {
   });
 
   const reverseGoods = () => {
-    visibleGoods.reverse();
     setReversed(!reversed);
   };
 
