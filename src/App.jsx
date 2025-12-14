@@ -17,16 +17,16 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
+  let [goods, setGoods] = useState(goodsFromServer);
   const [isActive, setIsActive] = useState(null);
-  console.log(isActive)
+  const [isReversed, setIsReversed] = useState(false);
 
   const sortByAlfb = () => {
-    const sorted = [...goods].sort((good1, good2) =>
-      good1.localeCompare(good2),
+    const sorted = [...goods].sort(
+      (good1, good2) => good1.localeCompare(good2), // Убедитесь, что здесь нет лишней запятой или переноса перед ')'
     );
 
-    setGoods(sorted);
+    setGoods(isReversed ? sorted.reverse() : sorted);
     setIsActive('alfb');
   };
 
@@ -35,22 +35,26 @@ export const App = () => {
       (good1, good2) => good1.length - good2.length,
     );
 
-    setGoods(sortedByLength);
+    setGoods(isReversed ? sortedByLength.reverse() : sortedByLength);
     setIsActive('length');
   };
 
   const sortByReverse = () => {
-    const sortedByReverse = [...goods]
-      .sort((a, b) => a.localeCompare(b))
-      .reverse();
+    const sortedByReverse = [...goods].reverse();
 
     setGoods(sortedByReverse);
-    setIsActive('reverse');
+    setIsReversed(!isReversed);
+    // setIsActive('reverse');
   };
 
   const reset = () => {
     setGoods(goodsFromServer);
     setIsActive(null);
+    setIsReversed(false);
+  };
+
+  const isOrderChanged = () => {
+    return goods.some((item, index) => item !== goodsFromServer[index]);
   };
 
   return (
@@ -80,13 +84,13 @@ export const App = () => {
           onClick={sortByReverse}
           type="button"
           className={cn('button is-warning', {
-            'is-light': isActive !== 'reverse',
+            'is-light': !isReversed,
           })}
         >
           Reverse
         </button>
 
-        {isActive !== null ? (
+        {isOrderChanged() && (
           <button
             onClick={reset}
             type="button"
@@ -94,8 +98,6 @@ export const App = () => {
           >
             Reset
           </button>
-        ) : (
-          ''
         )}
       </div>
 
