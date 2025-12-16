@@ -1,0 +1,11 @@
+import { Good } from '../Good/Good';
+
+export const GoodList = ({ goods }) => {
+  return (
+    <ul>
+      {goods.map(good => (
+        <Good good={good} key={good} />
+      ))}
+    </ul>
+  );
+};
