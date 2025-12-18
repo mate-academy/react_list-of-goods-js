@@ -34,7 +34,7 @@ export const App = () => {
             'is-light': sortBy !== 'alphabet',
           })}
           onClick={() => {
-            const sortedAlphabet = [...visibleGoods].sort((a, b) => {
+            const sortedAlphabet = [...goodsFromServer].sort((a, b) => {
               return a.localeCompare(b);
             });
 
