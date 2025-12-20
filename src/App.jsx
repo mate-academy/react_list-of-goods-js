@@ -16,13 +16,14 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
- const [goods, setGoods] = useState(goodsFromServer);
+  const [goods, setGoods] = useState(goodsFromServer);
   const [isModified, setIsModified] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
   const [sortType, setSortType] = useState('');
 
   const sortAlphabetically = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+
     setGoods(isReversed ? sorted.reverse() : sorted);
     setIsModified(true);
     setSortType('alphabetically');
@@ -30,19 +31,25 @@ export const App = () => {
 
   const sortByLength = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
     setGoods(isReversed ? sorted.reverse() : sorted);
     setIsModified(true);
     setSortType('length');
   };
 
- const reverseGoods = () => {
+  const reverseGoods = () => {
     const reversed = [...goods].reverse();
+
     setGoods(reversed);
     const newIsReversed = !isReversed;
+
     setIsReversed(newIsReversed);
 
     // Check if we're back to original order
-    const isBackToOriginal = reversed.every((item, index) => item === goodsFromServer[index]);
+    const isBackToOriginal = reversed.every(
+      (item, index) => item === goodsFromServer[index],
+    );
+
     setIsModified(!isBackToOriginal || sortType !== '');
   };
 
