@@ -20,7 +20,7 @@ export const App = () => {
   const [isSortedByLength, setIsSortedByLength] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
 
-  let goodsList = [...goodsFromServer];
+  const goodsList = [...goodsFromServer];
 
   if (isSortedAlphabetically) {
     goodsList.sort((a, b) => a.localeCompare(b));
