@@ -15,20 +15,25 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => {
-  const [isSortedAlphabetically, setIsSortedAlphabetically] = useState(false);
-  const [isSortedByLength, setIsSortedByLength] = useState(false);
-  const [isReversed, setIsReversed] = useState(false);
+const setMode = (mode = '') => {
+  let goodsList = [...goodsFromServer];
 
-  const goodsList = [...goodsFromServer];
-
-  if (isSortedAlphabetically) {
+  if (mode === 'abc') {
     goodsList.sort((a, b) => a.localeCompare(b));
   }
 
-  if (isSortedByLength) {
+  if (mode === 'length') {
     goodsList.sort((a, b) => a.length - b.length);
   }
+
+  return goodsList;
+};
+
+export const App = () => {
+  const [isReversed, setIsReversed] = useState(false);
+  const [mode, setModeState] = useState('');
+
+  const goodsList = setMode(mode);
 
   if (isReversed) {
     goodsList.reverse();
@@ -39,26 +44,22 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${isSortedAlphabetically ? '' : 'is-light'}`}
+          className={`button is-info ${mode === 'abc' ? '' : 'is-light'}`}
           onClick={() => {
-            setIsSortedAlphabetically(true);
-            setIsSortedByLength(false);
+            setModeState('abc');
           }}
         >
           Sort alphabetically
         </button>
-
         <button
           type="button"
-          className={`button is-success ${isSortedByLength ? '' : 'is-light'}`}
+          className={`button is-success ${mode === 'length' ? '' : 'is-light'}`}
           onClick={() => {
-            setIsSortedByLength(true);
-            setIsSortedAlphabetically(false);
+            setModeState('length');
           }}
         >
           Sort by length
         </button>
-
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
@@ -69,13 +70,12 @@ export const App = () => {
           Reverse
         </button>
 
-        {(isSortedAlphabetically || isSortedByLength || isReversed) && (
+        {(mode.length > 0 || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setIsSortedAlphabetically(false);
-              setIsSortedByLength(false);
+              setModeState('');
               setIsReversed(false);
             }}
           >
