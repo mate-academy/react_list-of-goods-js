@@ -16,7 +16,7 @@ export const goodsFromServer = [
 ];
 
 const setMode = (mode = '') => {
-  let goodsList = [...goodsFromServer];
+  const goodsList = [...goodsFromServer];
 
   if (mode === 'abc') {
     goodsList.sort((a, b) => a.localeCompare(b));
