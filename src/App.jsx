@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState, useMemo } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,87 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortField, setSortField] = useState('');
+  const [reversed, setReversed] = useState(false);
+  const visibleGoods = useMemo(() => {
+    const result = [...goodsFromServer];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+    result.sort((a, b) => {
+      switch (sortField) {
+        case 'alph':
+          return a.localeCompare(b);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+        case 'lngth':
+          return a.length - b.length;
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+        default:
+          return 0;
+      }
+    });
+
+    if (reversed) {
+      result.reverse();
+    }
+
+    return result;
+  }, [sortField, reversed]);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={
+            sortField === 'alph' ? 'button is-info' : 'button is-info is-light'
+          }
+          onClick={() => setSortField('alph')}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={
+            sortField === 'lngth'
+              ? 'button is-success'
+              : 'button is-success is-light'
+          }
+          onClick={() => setSortField('lngth')}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={
+            reversed ? 'button is-warning' : 'button is-warning is-light'
+          }
+          onClick={() => setReversed(!reversed)}
+        >
+          Reverse
+        </button>
+        {(sortField !== '' || reversed) && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setReversed(false);
+              setSortField('');
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
