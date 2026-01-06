@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -39,13 +39,11 @@ function getPreparedGoods(goods, { sortCase, isReversed }) {
 export const App = () => {
   const [sortCase, setSortCase] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [visibleGoods, setVisibleGoods] = useState(goodsFromServer);
 
-  useEffect(() => {
-    setVisibleGoods(
-      getPreparedGoods(goodsFromServer, { sortCase, isReversed }),
-    );
-  }, [sortCase, isReversed]);
+  const visibleGoods = getPreparedGoods(goodsFromServer, {
+    sortCase,
+    isReversed,
+  });
 
   const sortByAlphabet = () => {
     setSortCase(SORT_CASE_ALPHABET);
