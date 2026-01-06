@@ -50,7 +50,10 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info ${sortType === 'alphabet' ? '' : 'is-light'}`}
-          onClick={() => setSortType('alphabet')}
+          onClick={() => {
+            setSortType('alphabet');
+            setIsReversed(false);
+          }}
         >
           Sort alphabetically
         </button>
@@ -58,7 +61,10 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
-          onClick={() => setSortType('length')}
+          onClick={() => {
+            setSortType('length');
+            setIsReversed(false);
+          }}
         >
           Sort by length
         </button>
