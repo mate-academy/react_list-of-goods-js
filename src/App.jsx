@@ -1,46 +1,74 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
-export const goodsFromServer = [
-  'Dumplings',
-  'Carrot',
-  'Eggs',
-  'Ice cream',
-  'Apple',
-  'Bread',
-  'Fish',
-  'Honey',
-  'Jam',
-  'Garlic',
-];
+import goodsFromServer from './api/goods.json';
+import { ButtonsPanel } from './components/ButtonsPanel';
+import { GoodsList } from './components/GoodsList';
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState([...goodsFromServer]);
+  const [isResetVisible, setIsResetVisible] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const [isAlphabetActive, setIsAlphabetActive] = useState(false);
+  const [isLengthActive, setIsLengthActive] = useState(false);
+  const [isReverseActive, setIsReverseActive] = useState(false);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const handleSortAlphabetically = () => {
+    const compareAlphabetically = (a, b) =>
+      isReverseActive ? b.localeCompare(a) : a.localeCompare(b);
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    setGoods(prev => [...prev].sort(compareAlphabetically));
+
+    setIsAlphabetActive(true);
+    setIsLengthActive(false);
+    setIsResetVisible(true);
+  };
+
+  const handleSortByLength = () => {
+    const compareByLength = (a, b) =>
+      isReverseActive ? b.length - a.length : a.length - b.length;
+
+    setGoods(prev => [...prev].sort(compareByLength));
+
+    setIsLengthActive(true);
+    setIsAlphabetActive(false);
+    setIsResetVisible(true);
+  };
+
+  const handleReverse = () => {
+    setGoods(prev => [...prev].reverse());
+    setIsReverseActive(prev => !prev);
+
+    if (isReverseActive && !isAlphabetActive && !isLengthActive) {
+      setIsResetVisible(false);
+    } else {
+      setIsResetVisible(true);
+    }
+  };
+
+  const handleReset = () => {
+    setGoods([...goodsFromServer]);
+    setIsAlphabetActive(false);
+    setIsLengthActive(false);
+    setIsReverseActive(false);
+    setIsResetVisible(false);
+  };
+
+  return (
+    <div className="section content">
+      <ButtonsPanel
+        onSortAlphabetically={handleSortAlphabetically}
+        onSortByLength={handleSortByLength}
+        onReverse={handleReverse}
+        onReset={handleReset}
+        isResetVisible={isResetVisible}
+        isAlphabetActive={isAlphabetActive}
+        isLengthActive={isLengthActive}
+        isReverseActive={isReverseActive}
+      />
+
+      <GoodsList goods={goods} />
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
