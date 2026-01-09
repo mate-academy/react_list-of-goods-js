@@ -29,14 +29,18 @@ export const App = () => {
   };
 
   const handleSortAlphabetically = () => {
-    setGoods(
-      [...goods].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())),
-    );
+    const sorted = [...goodsFromServer].sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase()),
+    ); // eslint-disable-line
+
+    setGoods(isReversed ? sorted.reverse() : sorted);
     setSortType('alphabetically');
   };
 
   const handleSortByLength = () => {
-    setGoods([...goods].sort((a, b) => a.length - b.length));
+    const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
+    setGoods(isReversed ? sorted.reverse() : sorted);
     setSortType('by length');
   };
 
