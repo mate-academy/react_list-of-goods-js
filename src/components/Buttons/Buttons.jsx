@@ -2,16 +2,17 @@ export const Buttons = ({
   sortAlph,
   sortLeng,
   resetArr,
-  reverseArr,
-  activeButton,
+  activeDirection,
+  activeSort,
   isResetVisible,
+  activeReverse,
 }) => {
   return (
     <div className="buttons">
       <button
         type="button"
         className={
-          activeButton === 'active-alphabetically'
+          activeSort === 'alphabet'
             ? 'button is-success'
             : 'button is-success is-light'
         }
@@ -23,7 +24,7 @@ export const Buttons = ({
       <button
         type="button"
         className={
-          activeButton === 'active-length'
+          activeSort === 'length'
             ? 'button is-success'
             : 'button is-success is-light'
         }
@@ -35,11 +36,11 @@ export const Buttons = ({
       <button
         type="button"
         className={
-          activeButton === 'active-reverse'
+          activeDirection === 'reverse'
             ? 'button is-warning'
             : 'button is-warning is-light'
         }
-        onClick={reverseArr}
+        onClick={activeReverse}
       >
         Reverse
       </button>

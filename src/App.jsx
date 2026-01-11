@@ -19,13 +19,15 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [listProduct, setListProduct] = useState(goodsFromServer);
-  const [activeBtn, setActiveBtn] = useState(null);
+  const [sort, setSort] = useState(null); // тип сортування
+  const [direction, setDirection] = useState(null); // стан для напрямку
   const [isResetVisible, setIsResetVisible] = useState(false); // видимість кнопке ресет
+
   const sortAlphabetically = () => {
     const sortArr = listProduct.toSorted((a, b) => a.localeCompare(b));
 
     setListProduct(sortArr);
-    setActiveBtn('active-alphabetically');
+    setSort('alphabet');
     setIsResetVisible(true);
   };
 
@@ -33,7 +35,7 @@ export const App = () => {
     const sortArr = listProduct.toSorted((a, b) => a.length - b.length);
 
     setListProduct(sortArr);
-    setActiveBtn('active-length');
+    setSort('length');
     setIsResetVisible(true);
   };
 
@@ -46,7 +48,7 @@ export const App = () => {
     const reversArr = [...listProduct].reverse();
 
     setListProduct(reversArr);
-    setActiveBtn('active-reverse');
+    setDirection('reverse');
     setIsResetVisible(true);
   };
 
@@ -56,8 +58,9 @@ export const App = () => {
         sortAlph={sortAlphabetically}
         sortLeng={sortLength}
         resetArr={reset}
-        reverseArr={reverse}
-        activeButton={activeBtn}
+        activeSort={sort}
+        activeDirection={direction}
+        activeReverse={reverse}
         isResetVisible={isResetVisible}
       />
       <ListGoods goods={listProduct} />
