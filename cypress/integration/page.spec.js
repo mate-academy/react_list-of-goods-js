@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 const page = {
   sortAlphButton: () => cy.contains('button', 'Sort alphabetically'),
   sortByLengthButton: () => cy.contains('button', 'Sort by length'),
@@ -9,7 +11,7 @@ const page = {
     page.goods().eq(0).should('have.text', first);
     page.goods().eq(1).should('have.text', second);
     page.goods().eq(2).should('have.text', third);
-  }
+  },
 };
 
 const NOT_ACTIVE_CLASS = 'is-light';
@@ -194,7 +196,7 @@ describe('Page', () => {
 
     it('should allow to reverse again', () => {
       page.reverseButton().click();
-      
+
       page.assertFirstGoods('Apple', 'Bread', 'Carrot');
     });
 
@@ -273,7 +275,7 @@ describe('Page', () => {
 
     it('should allow to reverse again', () => {
       page.reverseButton().click();
-      
+
       page.assertFirstGoods('Jam', 'Eggs', 'Fish');
     });
 
