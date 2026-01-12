@@ -2,10 +2,10 @@ export const Buttons = ({
   sortAlph,
   sortLeng,
   resetArr,
-  activeDirection,
+  isReverseActive,
   activeSort,
   isResetVisible,
-  activeReverse,
+  onReverse,
 }) => {
   return (
     <div className="buttons">
@@ -36,11 +36,11 @@ export const Buttons = ({
       <button
         type="button"
         className={
-          activeDirection === 'reverse'
+          isReverseActive === true
             ? 'button is-warning'
             : 'button is-warning is-light'
         }
-        onClick={activeReverse}
+        onClick={onReverse}
       >
         Reverse
       </button>

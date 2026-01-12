@@ -18,10 +18,10 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [listProduct, setListProduct] = useState(goodsFromServer);
+  const [listProduct, setListProduct] = useState(goodsFromServer); // стан для масива продуктів
   const [sort, setSort] = useState(null); // тип сортування
-  const [direction, setDirection] = useState(null); // стан для напрямку
   const [isResetVisible, setIsResetVisible] = useState(false); // видимість кнопке ресет
+  const [isReverseActive, setIsReverseActive] = useState(false); // флаг для кнопки реверс
 
   const sortAlphabetically = () => {
     const sortArr = listProduct.toSorted((a, b) => a.localeCompare(b));
@@ -45,10 +45,7 @@ export const App = () => {
   };
 
   const reverse = () => {
-    const reversArr = [...listProduct].reverse();
-
-    setListProduct(reversArr);
-    setDirection('reverse');
+    setIsReverseActive(prev => !prev);
     setIsResetVisible(true);
   };
 
@@ -59,11 +56,15 @@ export const App = () => {
         sortLeng={sortLength}
         resetArr={reset}
         activeSort={sort}
-        activeDirection={direction}
-        activeReverse={reverse}
+        onReverse={reverse}
         isResetVisible={isResetVisible}
+        isReverseActive={isReverseActive}
       />
       <ListGoods goods={listProduct} />
     </div>
   );
 };
+
+// const reversArr = [...listProduct].reverse();
+
+// setListProduct(reversArr);
