@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { ListGoods } from './components/ListGoods/ListGoods';
+import { Buttons } from './components/Buttons/Buttons';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,54 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [listProduct, setListProduct] = useState(goodsFromServer); // стан для масива продуктів
+  const [sort, setSort] = useState(null); // тип сортування
+  const [isResetVisible, setIsResetVisible] = useState(false); // видимість кнопке ресет
+  const [isReverseActive, setIsReverseActive] = useState(false); // флаг для кнопки реверс
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const sortAlphabetically = () => {
+    const sortArr = listProduct.toSorted((a, b) => a.localeCompare(b));
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+    setListProduct(sortArr);
+    setSort('alphabet');
+    setIsResetVisible(true);
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const sortLength = () => {
+    const sortArr = listProduct.toSorted((a, b) => a.length - b.length);
+
+    setListProduct(sortArr);
+    setSort('length');
+    setIsResetVisible(true);
+  };
+
+  const reset = () => {
+    setListProduct(goodsFromServer);
+    setIsResetVisible(false);
+  };
+
+  const reverse = () => {
+    setIsReverseActive(prev => !prev);
+    setIsResetVisible(true);
+  };
+
+  return (
+    <div className="section content">
+      <Buttons
+        sortAlph={sortAlphabetically}
+        sortLeng={sortLength}
+        resetArr={reset}
+        activeSort={sort}
+        onReverse={reverse}
+        isResetVisible={isResetVisible}
+        isReverseActive={isReverseActive}
+      />
+      <ListGoods goods={listProduct} />
     </div>
+  );
+};
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+// const reversArr = [...listProduct].reverse();
+
+// setListProduct(reversArr);
