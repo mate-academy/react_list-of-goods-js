@@ -27,11 +27,13 @@ export const App = () => {
       case 'alphabetically':
         copy.sort((a, b) => a.localeCompare(b));
         setActiveSort('alphabetically');
+        setIsReversed(false);
         break;
 
       case 'by-length':
         copy.sort((a, b) => a.length - b.length);
         setActiveSort('by-length');
+        setIsReversed(false);
         break;
 
       case 'reverse':
