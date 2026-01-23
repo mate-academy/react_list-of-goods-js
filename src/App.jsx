@@ -79,12 +79,8 @@ export const App = () => {
 
         <button
           onClick={() => {
-            if (btn === '') {
-              setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
-            } else {
-              sortGoodsFromServer(SORT_REVERSE);
-              setBtn(SORT_REVERSE);
-            }
+            sortGoodsFromServer(SORT_REVERSE);
+            setBtn(SORT_REVERSE);
           }}
           type="button"
           className={
