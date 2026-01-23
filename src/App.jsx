@@ -28,7 +28,7 @@ export const App = () => {
       case SORT_ALPHABETICALLY:
         setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort((good1, good2) =>
-            good1.localeCompare(good2)
+            good2.localeCompare(good1)
           )
         );
         break;
@@ -79,8 +79,12 @@ export const App = () => {
 
         <button
           onClick={() => {
-            sortGoodsFromServer(SORT_REVERSE);
-            setBtn(SORT_REVERSE);
+            if (btn === '') {
+              setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
+            } else {
+              sortGoodsFromServer(SORT_REVERSE);
+              setBtn(SORT_REVERSE);
+            }
           }}
           type="button"
           className={
