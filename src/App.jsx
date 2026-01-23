@@ -35,7 +35,7 @@ export const App = () => {
       case SORT_LENGTH:
         setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort(
-            (good1, good2) => good1.length - good2.length
+            (good1, good2) => good2.length - good1.length
           )
         );
         break;
