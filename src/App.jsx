@@ -19,25 +19,26 @@ export const App = () => {
   const [selectedGoodsFromServer, setSelectedGoodsFromServer] =
     useState(goodsFromServer);
   const [btn, setBtn] = useState('');
+  const [reverse, setReverse] = useState(false);
   const SORT_ALPHABETICALLY = 'Sort alphabetically';
   const SORT_LENGTH = 'Sort by length';
   const SORT_REVERSE = 'Reverse';
 
-  const sortGoodsFromServer = button => {
+  const sortGoodsFromServer = (button, reversed) => {
     switch (button) {
       case SORT_ALPHABETICALLY:
-        setSelectedGoodsFromServer(
+        reversed === true ? setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort((good1, good2) =>
             good2.localeCompare(good1)
           )
-        );
+        ) : setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) => good1.localeCompare(good2)));
         break;
       case SORT_LENGTH:
-        setSelectedGoodsFromServer(
+        reversed === true ? setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort(
             (good1, good2) => good2.length - good1.length
           )
-        );
+        ) : setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) => good1.length - good2.length));
         break;
       case SORT_REVERSE:
         setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
@@ -51,7 +52,7 @@ export const App = () => {
       <div className="buttons">
         <button
           onClick={() => {
-            sortGoodsFromServer(SORT_ALPHABETICALLY);
+            sortGoodsFromServer(SORT_ALPHABETICALLY, reverse);
             setBtn(SORT_ALPHABETICALLY);
           }}
           type="button"
@@ -66,7 +67,7 @@ export const App = () => {
 
         <button
           onClick={() => {
-            sortGoodsFromServer(SORT_LENGTH);
+            sortGoodsFromServer(SORT_LENGTH, reverse);
             setBtn(SORT_LENGTH);
           }}
           type="button"
@@ -80,6 +81,7 @@ export const App = () => {
         <button
           onClick={() => {
             sortGoodsFromServer(SORT_REVERSE);
+            setReverse(true);
             setBtn(SORT_REVERSE);
           }}
           type="button"
@@ -94,6 +96,7 @@ export const App = () => {
           <button
             onClick={() => {
               setBtn('');
+              setReverse(false);
               setSelectedGoodsFromServer(goodsFromServer);
             }}
             type="button"
