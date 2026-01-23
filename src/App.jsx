@@ -18,42 +18,41 @@ export const goodsFromServer = [
 export const App = () => {
   const [selectedGoodsFromServer, setSelectedGoodsFromServer] =
     useState(goodsFromServer);
-  const [btn, setBtn] = useState(''); 
+  const [btn, setBtn] = useState('');
   const [btnReset, setBtnReset] = useState(false);
   const [reverse, setReverse] = useState(false);
   const SORT_ALPHABETICALLY = 'Sort alphabetically';
   const SORT_LENGTH = 'Sort by length';
-  const SORT_REVERSE = 'Reverse';
 
   const sortGoodsFromServer = (button, reversed) => {
     switch (button) {
       case SORT_ALPHABETICALLY:
         if (reversed) {
           setSelectedGoodsFromServer(
-          [...selectedGoodsFromServer].sort((good1, good2) =>
-            good2.localeCompare(good1)
-          )
-        );
+            [...selectedGoodsFromServer].sort((good1, good2) =>
+              good2.localeCompare(good1)
+            )
+          );
         } else {
           setSelectedGoodsFromServer(
-          [...selectedGoodsFromServer].sort((good1, good2) =>
-            good1.localeCompare(good2)
-          )
+            [...selectedGoodsFromServer].sort((good1, good2) =>
+              good1.localeCompare(good2)
+            )
           );
         }
         break;
       case SORT_LENGTH:
         if (reversed) {
           setSelectedGoodsFromServer(
-          [...selectedGoodsFromServer].sort(
-            (good1, good2) => good2.length - good1.length
-          )
+            [...selectedGoodsFromServer].sort(
+              (good1, good2) => good2.length - good1.length
+            )
           );
         } else {
           setSelectedGoodsFromServer(
-          [...selectedGoodsFromServer].sort(
-            (good1, good2) => good1.length - good2.length
-          )
+            [...selectedGoodsFromServer].sort(
+              (good1, good2) => good1.length - good2.length
+            )
           );
         }
         break;
@@ -113,7 +112,6 @@ export const App = () => {
               setReverse(true);
             }
           }}
-
           type="button"
           className={
             reverse === true ? 'button is-info' : 'button is-info is-light'
