@@ -27,38 +27,30 @@ export const App = () => {
   const sortGoodsFromServer = (button, reversed) => {
     switch (button) {
       case SORT_ALPHABETICALLY:
+        const goods = [...selectedGoodsFromServer].sort((good1, good2) => good2.localeCompare(good1));
+
         if (reversed) {
-          setSelectedGoodsFromServer(
-            [...selectedGoodsFromServer].sort((good1, good2) =>
-              good2.localeCompare(good1)
-            )
-          );
-        } else {
-          setSelectedGoodsFromServer(
-            [...selectedGoodsFromServer].sort((good1, good2) =>
-              good1.localeCompare(good2)
-            )
-          );
+          goods.reversed();
         }
+
+        setSelectedGoodsFromServer(goods);
         break;
       case SORT_LENGTH:
+        const goods2 = [...selectedGoodsFromServer].sort((good1, good2) => good2.length - good1.length);
+
         if (reversed) {
-          setSelectedGoodsFromServer(
-            [...selectedGoodsFromServer].sort(
-              (good1, good2) => good2.length - good1.length
-            )
-          );
-        } else {
-          setSelectedGoodsFromServer(
-            [...selectedGoodsFromServer].sort(
-              (good1, good2) => good1.length - good2.length
-            )
-          );
+          goods2.reversed();
         }
-        break;        
+        
+        setSelectedGoodsFromServer(goods2);
+        break;
       default:
         setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
     }
+  };
+
+  const equalsArrays = (a, b) => {
+    return a.length === b.length && a.every((valor, index) => valor === b[index]);
   };
 
   return (
@@ -97,18 +89,7 @@ export const App = () => {
         <button
           onClick={() => {
             sortGoodsFromServer();
-
-            if (reverse === false && btn === '') {
-              setReverse(true);
-              setBtnReset(true);
-            } else if (reverse === true && btn === '' && btnReset === true) {
-              setReverse(false);
-              setBtnReset(false);
-            } else if (reverse === true && btn !== '') {
-              setReverse(false);
-            } else if (reverse === false && btn !== '') {
-              setReverse(true);
-            }
+            reverse ? setReverse(false) : setReverse(true);
           }}
           type="button"
           className={
@@ -118,12 +99,11 @@ export const App = () => {
           Reverse
         </button>
 
-        {btnReset === true ? (
+        {equalsArrays(goodsFromServer, selectedGoodsFromServer) === false ? (
           <button
             onClick={() => {
               setBtn('');
               setReverse(false);
-              setBtnReset(false);
               setSelectedGoodsFromServer(goodsFromServer);
             }}
             type="button"
