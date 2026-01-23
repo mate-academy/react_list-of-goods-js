@@ -1,0 +1,32 @@
+{
+  "workbench.colorTheme": "Default Light+",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "workbench.editor.empty.hint": "hidden",
+  "editor.minimap.enabled": false,
+  "workbench.editorAssociations": {
+    "*.dat": "default"
+  },
+
+  "git.openRepositoryInParentFolders": "never",
+  "explorer.confirmDelete": false,
+  "security.workspace.trust.untrustedFiles": "open",
+
+  // Basic settings
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+  "editor.fontSize": 15,
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "boundary",
+  "editor.detectIndentation": false,
+
+  // Formatting with Prettier
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.enable": false,
+  "eslint.enable": false,
+  "editor.formatOnType": false,
+  "editor.formatOnSave": false,
+}
