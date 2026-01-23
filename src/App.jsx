@@ -55,11 +55,9 @@ export const App = () => {
             )
           );
         }
-        break;
-      case 'Reverse':
-        setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
-        break;
+        break;        
       default:
+        setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
     }
   };
 
@@ -98,7 +96,7 @@ export const App = () => {
 
         <button
           onClick={() => {
-            sortGoodsFromServer('Reverse');
+            sortGoodsFromServer();
 
             if (reverse === false && btn === '') {
               setReverse(true);
