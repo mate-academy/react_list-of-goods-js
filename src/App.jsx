@@ -18,7 +18,8 @@ export const goodsFromServer = [
 export const App = () => {
   const [selectedGoodsFromServer, setSelectedGoodsFromServer] =
     useState(goodsFromServer);
-  const [btn, setBtn] = useState('');
+  const [btn, setBtn] = useState(''); 
+  const [btnReset, setBtnReset] = useState(false);
   const [reverse, setReverse] = useState(false);
   const SORT_ALPHABETICALLY = 'Sort alphabetically';
   const SORT_LENGTH = 'Sort by length';
@@ -27,20 +28,36 @@ export const App = () => {
   const sortGoodsFromServer = (button, reversed) => {
     switch (button) {
       case SORT_ALPHABETICALLY:
-        reversed === true ? setSelectedGoodsFromServer(
+        if (reversed) {
+          setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort((good1, good2) =>
             good2.localeCompare(good1)
           )
-        ) : setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) => good1.localeCompare(good2)));
+        );
+        } else {
+          setSelectedGoodsFromServer(
+          [...selectedGoodsFromServer].sort((good1, good2) =>
+            good1.localeCompare(good2)
+          )
+          );
+        }
         break;
       case SORT_LENGTH:
-        reversed === true ? setSelectedGoodsFromServer(
+        if (reversed) {
+          setSelectedGoodsFromServer(
           [...selectedGoodsFromServer].sort(
             (good1, good2) => good2.length - good1.length
           )
-        ) : setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) => good1.length - good2.length));
+          );
+        } else {
+          setSelectedGoodsFromServer(
+          [...selectedGoodsFromServer].sort(
+            (good1, good2) => good1.length - good2.length
+          )
+          );
+        }
         break;
-      case SORT_REVERSE:
+      case 'Reverse':
         setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
         break;
       default:
@@ -54,6 +71,7 @@ export const App = () => {
           onClick={() => {
             sortGoodsFromServer(SORT_ALPHABETICALLY, reverse);
             setBtn(SORT_ALPHABETICALLY);
+            setBtnReset(true);
           }}
           type="button"
           className={
@@ -69,6 +87,7 @@ export const App = () => {
           onClick={() => {
             sortGoodsFromServer(SORT_LENGTH, reverse);
             setBtn(SORT_LENGTH);
+            setBtnReset(true);
           }}
           type="button"
           className={
@@ -80,23 +99,35 @@ export const App = () => {
 
         <button
           onClick={() => {
-            sortGoodsFromServer(SORT_REVERSE);
-            setReverse(true);
-            setBtn(SORT_REVERSE);
+            sortGoodsFromServer('Reverse');
+
+            if (reverse === false && btn === '') {
+              setReverse(true);
+              setBtnReset(true);
+            } else if (reverse === true && btn === '' && btnReset === true) {
+              setReverse(false);
+              setBtnReset(false);
+            } else if (reverse === true && btn !== '') {
+              setReverse(false);
+            } else if (reverse === false && btn !== '') {
+              setReverse(true);
+            }
           }}
+
           type="button"
           className={
-            btn === SORT_REVERSE ? 'button is-info' : 'button is-info is-light'
+            reverse === true ? 'button is-info' : 'button is-info is-light'
           }
         >
           Reverse
         </button>
 
-        {btn !== '' ? (
+        {btnReset === true ? (
           <button
             onClick={() => {
               setBtn('');
               setReverse(false);
+              setBtnReset(false);
               setSelectedGoodsFromServer(goodsFromServer);
             }}
             type="button"
