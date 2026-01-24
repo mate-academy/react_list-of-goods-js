@@ -26,29 +26,25 @@ export const App = () => {
   const sortGoodsFromServer = (button, reversed) => {
     switch (button) {
       case SORT_ALPHABETICALLY: {
-        const goods = [...selectedGoodsFromServer].sort((good1, good2) =>
-          good2.localeCompare(good1)
-        );
-
         if (reversed) {
-          goods.reversed();
+          setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) =>
+            good2.localeCompare(good1)));
+        } else {
+          setSelectedGoodsFromServer([...selectedGoodsFromServer].sort((good1, good2) =>
+            good1.localeCompare(good2)));
         }
-
-        setSelectedGoodsFromServer(goods);
-        break;
       }
+      break;
       case SORT_LENGTH: {
-        const goods2 = [...selectedGoodsFromServer].sort(
-          (good1, good2) => good2.length - good1.length
-        );
-
         if (reversed) {
-          goods2.reversed();
+          setSelectedGoodsFromServer([...selectedGoodsFromServer].sort( (good1, good2) => 
+            good2.length - good1.length));
+        } else {
+          setSelectedGoodsFromServer([...selectedGoodsFromServer].sort( (good1, good2) => 
+            good1.length - good2.length));
         }
-
-        setSelectedGoodsFromServer(goods2);
-        break;
       }
+      break;
       default:
         setSelectedGoodsFromServer([...selectedGoodsFromServer].reverse());
     }
