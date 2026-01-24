@@ -1,8 +1,10 @@
+
 # React list of goods
 
 Implement the ability to reorder the goods with the given buttons.
 
-> Here is [the working version](https://mate-academy.github.io/react_list-of-goods/)
+> Here is [the working version](https://mate-academ
+y.github.io/react_list-of-goods/)
 
 1. `Sort alphabetically` button should sort the goods alphabetically.
     - remove `is-light` class from the button when this order is applied;
