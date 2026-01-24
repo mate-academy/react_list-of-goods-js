@@ -98,8 +98,10 @@ export const App = () => {
       {/* методом .map() витягую з масиву visibleGoods усі значення */}
 
       <ul>
-        {finilazedGood.map((good) => {
-          return <li data-cy="Good">{good}</li>;
+        {finilazedGood.map(good => {
+          return <li key={good} data-cy="Good">
+            {good}
+            </li>;
         })}
       </ul>
     </div>
