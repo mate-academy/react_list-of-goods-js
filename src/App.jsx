@@ -77,7 +77,6 @@ export const App = () => {
             onClick={() => {
               setReversed(false);
               setSortField('');
-              goods = goodsFromServer;
             }}
           >
             Reset
