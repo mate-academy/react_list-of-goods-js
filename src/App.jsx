@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,96 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [goods, setGoods] = useState(goodsFromServer);
+  const [sortBy, setSortBy] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const sortAlphabetically = () => {
+    setGoods([...goods].sort((a, b) => a.localeCompare(b)));
+    setSortBy('alphabetically');
+  };
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const sortByLength = () => {
+    setGoods([...goods].sort((a, b) => a.length - b.length));
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    setSortBy('length');
+  };
+
+  const toggleReverse = () => {
+    setIsReversed(!isReversed);
+  };
+
+  const reset = () => {
+    setGoods(goodsFromServer);
+    setSortBy('');
+    setIsReversed(false);
+  };
+
+  const goodsToShow = [...goods];
+
+  if (isReversed) {
+    goodsToShow.reverse();
+  }
+
+  const isChanged =
+    JSON.stringify(goodsToShow) !== JSON.stringify(goodsFromServer);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => sortAlphabetically()}
+          type="button"
+          className={`button is-info ${sortBy === 'alphabetically' ? '' : 'is-light'}`}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={() => sortByLength()}
+          type="button"
+          className={`button is-success ${sortBy === 'length' ? '' : 'is-light'}`}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={() => toggleReverse()}
+          type="button"
+          className={`button is-warning ${isReversed === true ? '' : 'is-light'}`}
+        >
+          Reverse
+        </button>
+
+        {isChanged === true && (
+          <button
+            onClick={() => reset()}
+            type="button"
+            className="button is-danger is-light"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {goodsToShow.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+
+        {/* <li data-cy="Good">Carrot</li>
+
+        <li data-cy="Good">Eggs</li>
+
+        <li data-cy="Good">Ice cream</li>
+
+        <li data-cy="Good">Apple</li>
+
+        <li data-cy="Good">...</li> */}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
