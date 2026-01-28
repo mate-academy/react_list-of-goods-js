@@ -28,14 +28,14 @@ export const CardList = ({ goods }) => {
 };
 
 const SORT_ALPHABET = 'alphabet';
-const SORT_LENGHT = 'LENGTH';
+const SORT_LENGTH = 'LENGTH';
 
-function metodsSortGoods(goods, { sortField, reversed }) {
+function getSortGoods(goods, { sortField, reversed }) {
   let pGoods = [...goods];
 
   if (sortField === SORT_ALPHABET) {
     pGoods = pGoods.sort((good1, good2) => good1.localeCompare(good2));
-  } else if (sortField === SORT_LENGHT) {
+  } else if (sortField === SORT_LENGTH) {
     pGoods = pGoods.sort((good1, good2) => good1.length - good2.length);
   }
 
@@ -49,7 +49,7 @@ function metodsSortGoods(goods, { sortField, reversed }) {
 export const App = () => {
   const [sortField, setSortField] = useState('');
   const [reversed, setReversed] = useState(false);
-  const visibleGoods = metodsSortGoods(goodsFromServer, {
+  const visibleGoods = getSortGoods(goodsFromServer, {
     sortField,
     reversed,
   });
@@ -75,11 +75,11 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setSortField(SORT_LENGHT);
+            setSortField(SORT_LENGTH);
           }}
           type="button"
           className={
-            sortField === SORT_LENGHT
+            sortField === SORT_LENGTH
               ? 'button is-success'
               : 'button is-success is-light'
           }
