@@ -1,22 +1,80 @@
-# React list of goods
+# React List of Goods (JS)
 
-Implement the ability to reorder the goods with the given buttons.
+Aplicação em React que permite ordenar dinamicamente uma lista de produtos utilizando diferentes critérios de ordenação.
 
-> Here is [the working version](https://mate-academy.github.io/react_list-of-goods/)
+[DEMO LINK](https://Igor-hrm.github.io/react_list-of-goods-js/)
 
-1. `Sort alphabetically` button should sort the goods alphabetically.
-    - remove `is-light` class from the button when this order is applied;
-1. `Sort by length` button should sort the goods by length.
-    - remove `is-light` class from the button when this order is applied;
-1. `Reverse` button changes the current order to the opposite one.
-    - it should work together with any sorting;
-    - remove `is-light` class from the button when goods are reversed;
-    - the second click should show goods in the direct order;
-1. `Reset` button should show the goods in the initial order.
-    - it should be visible only if goods are not already in the original order;
+---
 
-## Instructions
-- Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
-- Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
-- Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_list-of-goods-js/) and add it to the PR description.
+## Sobre o projeto
+
+Este projeto implementa funcionalidades de ordenação para uma lista de produtos, permitindo ao usuário reorganizar os itens de forma alfabética, por tamanho do nome, inverter a ordem atual ou resetar para o estado inicial.
+
+A interface reage dinamicamente ao estado atual da ordenação, incluindo alterações visuais nos botões ativos.
+
+---
+
+## Tecnologias utilizadas
+
+- React
+- JavaScript
+- Bulma CSS
+- GitHub Pages
+
+---
+
+## Funcionalidades implementadas
+
+- Ordenação alfabética dos produtos
+- Ordenação pelo tamanho do nome
+- Inversão da ordem atual
+- Reset da lista para a ordem original
+- Controle visual de botões ativos com classes dinâmicas
+- Renderização condicional do botão de reset
+
+---
+
+## Regras de funcionamento
+
+### Sort alphabetically
+
+- Ordena os produtos em ordem alfabética
+- Remove a classe `is-light` quando ativo
+
+### Sort by length
+
+- Ordena os produtos pelo tamanho do nome
+- Remove a classe `is-light` quando ativo
+
+### Reverse
+
+- Inverte a ordem atual da lista
+- Funciona em conjunto com qualquer tipo de ordenação
+- Remove a classe `is-light` quando ativo
+- Um segundo clique retorna à ordem direta
+
+### Reset
+
+- Retorna a lista para a ordem original
+- Só é exibido quando a lista **não** está na ordem inicial
+
+---
+
+## Conceitos praticados
+
+- Manipulação de arrays (`sort`, `reverse`)
+- Estado no React (`useState`)
+- Renderização condicional
+- Classes CSS dinâmicas
+- Lógica de UI baseada em estado
+- Imutabilidade de dados
+
+---
+
+## Como rodar o projeto localmente
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/Igor-hrm/react_list-of-goods-js.git
+```
