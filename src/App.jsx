@@ -21,29 +21,32 @@ export const App = () => {
   const [isSortedByLength, setIsSortedByLength] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
 
-  // Sort alphabetically based on the current visible list
   function sortByName() {
-    const sortedGoods = isReversed
-      ? [...visibleGoods].sort((a, b) => b.localeCompare(a))
-      : [...visibleGoods].sort((a, b) => a.localeCompare(b));
+    const sortedGoods = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
 
     setVisibleGoods(sortedGoods);
     setIsSortedByName(true);
     setIsSortedByLength(false);
   }
 
-  // Sort by length based on the current visible list
   function sortByLength() {
-    const sortedGoods = isReversed
-      ? [...visibleGoods].sort((a, b) => b.length - a.length)
-      : [...visibleGoods].sort((a, b) => a.length - b.length);
+    const sortedGoods = [...goodsFromServer].sort(
+      (a, b) => a.length - b.length,
+    );
+
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
 
     setVisibleGoods(sortedGoods);
     setIsSortedByLength(true);
     setIsSortedByName(false);
   }
 
-  // Reverse the current visible list
   function reverseOrder() {
     const reversedGoods = [...visibleGoods].reverse();
 
@@ -51,7 +54,6 @@ export const App = () => {
     setIsReversed(!isReversed);
   }
 
-  // Reset to the original order
   function resetOrder() {
     setVisibleGoods([...goodsFromServer]);
     setIsSortedByName(false);
