@@ -16,7 +16,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const Googs = ({ good }) => <li data-cy="Good">{good}</li>;
+const Good = ({ good }) => <li data-cy="Good">{good}</li>;
 
 export const App = () => {
   let visibleGoods = [...goodsFromServer];
@@ -74,7 +74,7 @@ export const App = () => {
           <button
             type="button"
             className={cn('button is-danger', {
-              'is-light': sortField || reversed,
+              'is-light': !(sortField || reversed),
             })}
             onClick={() => {
               setSortField('');
@@ -87,7 +87,7 @@ export const App = () => {
       </div>
       <ul>
         {visibleGoods.map(good => (
-          <Googs key={good} good={good} />
+          <Good key={good} good={good} />
         ))}
       </ul>
     </div>
