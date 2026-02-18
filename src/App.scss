@@ -1,3 +1,11 @@
 iframe {
   display: none;
 }
+
+.button {
+  transition: background-color 0.2s;
+}
+
+.table td {
+  vertical-align: middle;
+}
