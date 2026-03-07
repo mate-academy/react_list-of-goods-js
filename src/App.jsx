@@ -24,6 +24,10 @@ export const App = () => {
   function sortAlphabetically() {
     const sortedGoods = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
+
     setGoods(sortedGoods);
     setCurrentSort('alphabetical');
   }
@@ -32,6 +36,10 @@ export const App = () => {
     const sortedGoods = [...goodsFromServer].sort(
       (a, b) => a.length - b.length,
     );
+
+    if (isReversed) {
+      sortedGoods.reverse();
+    }
 
     setGoods(sortedGoods);
     setCurrentSort('length');
