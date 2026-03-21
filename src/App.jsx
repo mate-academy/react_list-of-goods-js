@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import cn from 'classnames';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,98 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+function isEquial(optionsA, optionsb) {
+  return JSON.stringify(optionsA) === JSON.stringify(optionsb);
+}
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [sortOption, setSortOption] = useState('');
+  const [direction, setDirection] = useState('');
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const reverse = () => {
+    if (direction) {
+      return direction === 'asc' ? -1 : 1;
+    }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    return 0;
+  };
+
+  const copiedGoods = [...goodsFromServer]
+    .sort((a, b) => {
+      const actionsByOption = {
+        alphabetically: (optionA, optionB) => optionA.localeCompare(optionB),
+        length: (optionA, optionB) => optionA.length - optionB.length,
+      };
+
+      if (sortOption) {
+        return actionsByOption[sortOption](a, b);
+      }
+
+      return 0;
+    })
+    .sort(reverse);
+
+  const handleSetSort = option => {
+    if (sortOption !== option) {
+      setSortOption(option);
+    }
+  };
+
+  const handleReset = () => {
+    setSortOption('');
+    setDirection('');
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortOption !== 'alphabetically',
+          })}
+          onClick={() => handleSetSort('alphabetically')}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortOption !== 'length',
+          })}
+          onClick={() => handleSetSort('length')}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': direction !== 'asc',
+          })}
+          onClick={() => setDirection(direction === 'asc' ? 'desc' : 'asc')}
+        >
+          Reverse
+        </button>
+        {!isEquial(goodsFromServer, copiedGoods) && (
+          <button
+            type="button"
+            className={cn('button is-info is-light')}
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {copiedGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
