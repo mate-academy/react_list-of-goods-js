@@ -17,24 +17,20 @@ export const goodsFromServer = [
 
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
-  const [sortType, setSortType] = useState(null); // 'alpha' | 'length'
+  const [sortType, setSortType] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
 
   const sortAlphabetically = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
-    const result = isReversed ? [...sorted].reverse() : sorted;
-
-    setGoods(result);
+    setGoods(isReversed ? [...sorted].reverse() : sorted);
     setSortType('alpha');
   };
 
   const sortByLength = () => {
     const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
 
-    const result = isReversed ? [...sorted].reverse() : sorted;
-
-    setGoods(result);
+    setGoods(isReversed ? [...sorted].reverse() : sorted);
     setSortType('length');
   };
 
