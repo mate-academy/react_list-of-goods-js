@@ -22,30 +22,23 @@ function isEquial(optionsA, optionsb) {
 
 export const App = () => {
   const [sortOption, setSortOption] = useState('');
-  const [direction, setDirection] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
-  const reverse = () => {
-    if (direction) {
-      return direction === 'asc' ? -1 : 1;
+  const copiedGoods = [...goodsFromServer];
+  const sortedGoods = copiedGoods.sort((a, b) => {
+    const actionsByOption = {
+      alphabetically: (optionA, optionB) => optionA.localeCompare(optionB),
+      length: (optionA, optionB) => optionA.length - optionB.length,
+    };
+
+    if (sortOption) {
+      return actionsByOption[sortOption](a, b);
     }
 
     return 0;
-  };
+  });
 
-  const copiedGoods = [...goodsFromServer]
-    .sort((a, b) => {
-      const actionsByOption = {
-        alphabetically: (optionA, optionB) => optionA.localeCompare(optionB),
-        length: (optionA, optionB) => optionA.length - optionB.length,
-      };
-
-      if (sortOption) {
-        return actionsByOption[sortOption](a, b);
-      }
-
-      return 0;
-    })
-    .sort(reverse);
+  const goodsToShow = isReversed ? sortedGoods.reverse() : sortedGoods;
 
   const handleSetSort = option => {
     if (sortOption !== option) {
@@ -55,7 +48,7 @@ export const App = () => {
 
   const handleReset = () => {
     setSortOption('');
-    setDirection('');
+    setIsReversed(false);
   };
 
   return (
@@ -84,13 +77,13 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': direction !== 'asc',
+            'is-light': !isReversed,
           })}
-          onClick={() => setDirection(direction === 'asc' ? 'desc' : 'asc')}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
-        {!isEquial(goodsFromServer, copiedGoods) && (
+        {!isEquial(goodsFromServer, goodsToShow) && (
           <button
             type="button"
             className={cn('button is-info is-light')}
@@ -102,7 +95,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {copiedGoods.map(good => (
+        {goodsToShow.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
