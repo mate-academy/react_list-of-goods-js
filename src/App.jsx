@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
+import cn from 'classnames';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,126 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const SORT_ALPHABETICALLY = 'Sort alphabetically';
+const SORT_BY_LENGTH = 'Sort by length';
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+function getSortedList(sign, reverse) {
+  let newList = [...goodsFromServer];
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (reverse) {
+    newList = [...goodsFromServer].reverse();
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    if (sign) {
+      switch (sign) {
+        case SORT_ALPHABETICALLY:
+          return [...goodsFromServer].sort((first, second) => {
+            return second.localeCompare(first);
+          });
+
+        case SORT_BY_LENGTH:
+          return [...goodsFromServer].sort((first, second) => {
+            if (second.length === first.length) {
+              return second.localeCompare(first);
+            }
+
+            return second.length - first.length;
+          });
+
+        default:
+          break;
+      }
+    }
+  } else {
+    switch (sign) {
+      case SORT_ALPHABETICALLY:
+        return [...goodsFromServer]
+          .sort((first, second) => {
+            return second.localeCompare(first);
+          })
+          .reverse();
+
+      case SORT_BY_LENGTH:
+        return [...goodsFromServer]
+          .sort((first, second) => {
+            if (second.length === first.length) {
+              return second.localeCompare(first);
+            }
+
+            return second.length - first.length;
+          })
+          .reverse();
+
+      default:
+        break;
+    }
+  }
+
+  return newList;
+}
+
+export const App = () => {
+  const [sortSign, setSortSign] = useState('');
+  const [reverse, setReverseSortList] = useState(false);
+  const newSortList = getSortedList(sortSign, reverse);
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          onClick={() => setSortSign(SORT_ALPHABETICALLY)}
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortSign !== SORT_ALPHABETICALLY,
+          })}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          onClick={() => setSortSign(SORT_BY_LENGTH)}
+          type="button"
+          className={cn('button is-success', {
+            'is-light': sortSign !== SORT_BY_LENGTH,
+          })}
+        >
+          Sort by length
+        </button>
+
+        <button
+          onClick={() => setReverseSortList(!reverse)}
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': !reverse,
+          })}
+        >
+          Reverse
+        </button>
+
+        {sortSign || reverse ? (
+          <button
+            onClick={() => {
+              setSortSign('');
+              setReverseSortList(false);
+            }}
+            type="button"
+            className={cn('button is-dangeris-light')}
+          >
+            Reset
+          </button>
+        ) : (
+          ''
+        )}
+      </div>
+
+      <ul>
+        {newSortList.map(good => {
+          return (
+            <li key={good} data-cy="Good">
+              {good}
+            </li>
+          );
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
