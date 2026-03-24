@@ -30,7 +30,7 @@ function getPreparedGoods(goods, { sortType, reversed }) {
           return good1.localeCompare(good2);
 
         default:
-          return good1;
+          return 0;
       }
     });
   }
