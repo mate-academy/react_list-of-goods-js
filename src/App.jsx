@@ -2,6 +2,9 @@ import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
 
+import { Button } from './components/Button';
+import { GoodList } from './components/GoodList';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -46,72 +49,58 @@ export const App = () => {
   return (
     <div className="section content">
       <div className="buttons">
-        <button
-          type="button"
-          className={`button is-info ${
-            sorting.type === SORTING_TYPE.ALPHABETICALLY ? '' : 'is-light'
-          }`}
-          onClick={() =>
+        <Button
+          text="Sort alphabetically"
+          highlightClass="is-info"
+          highlightCondition={sorting.type === SORTING_TYPE.ALPHABETICALLY}
+          handleClick={() =>
             setSorting(currrentSorting => ({
               ...currrentSorting,
               type: SORTING_TYPE.ALPHABETICALLY,
             }))
           }
-        >
-          Sort alphabetically
-        </button>
+        />
 
-        <button
-          type="button"
-          className={`button is-success ${
-            sorting.type === SORTING_TYPE.BY_LENGTH ? '' : 'is-light'
-          }`}
-          onClick={() =>
+        <Button
+          text="Sort by length"
+          highlightClass="is-success"
+          highlightCondition={sorting.type === SORTING_TYPE.BY_LENGTH}
+          handleClick={() =>
             setSorting(currrentSorting => ({
               ...currrentSorting,
               type: SORTING_TYPE.BY_LENGTH,
             }))
           }
-        >
-          Sort by length
-        </button>
+        />
 
-        <button
-          type="button"
-          className={`button is-warning ${sorting.isReversed ? '' : 'is-light'}`}
-          onClick={() =>
+        <Button
+          text="Reverse"
+          highlightClass="is-warning"
+          highlightCondition={sorting.isReversed}
+          handleClick={() =>
             setSorting(currrentSorting => ({
               ...currrentSorting,
               isReversed: !currrentSorting.isReversed,
             }))
           }
-        >
-          Reverse
-        </button>
+        />
 
         {(sorting.type || sorting.isReversed) && (
-          <button
-            type="button"
-            className="button is-danger is-light"
-            onClick={() =>
+          <Button
+            text="Reset"
+            highlightClass="is-danger"
+            highlightCondition={false}
+            handleClick={() =>
               setSorting({
                 type: SORTING_TYPE.undefined,
                 isReversed: false,
               })
             }
-          >
-            Reset
-          </button>
+          />
         )}
       </div>
 
-      <ul>
-        {sortedGoods.map(good => (
-          <li key={good} data-cy="Good">
-            {good}
-          </li>
-        ))}
-      </ul>
+      <GoodList list={sortedGoods} />
     </div>
   );
 };
