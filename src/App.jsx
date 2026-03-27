@@ -104,6 +104,6 @@ export const App = () => {
       <ul>
         <GoodsList goods={sortField} />
       </ul>
-    </div >
+    </div>
   );
 };
