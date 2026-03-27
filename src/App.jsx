@@ -24,7 +24,7 @@ export const goodsFromServer = [
 function getPreparedGoods(order, preparedGoods = [...goodsFromServer]) {
   switch (order) {
     case SORT_BY_ALPHABET:
-      preparedGoods.sort((el1, el2) => el1.localeCompare(el2));
+      preparedGoods.sort((el1, el2) => el2.localeCompare(el1));
       classField = SORT_BY_ALPHABET;
       break;
 
@@ -54,7 +54,7 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info  ${classField === SORT_BY_ALPHABET ? '' : 'is-light'}`}
+          className={`button is-info ${classField === SORT_BY_ALPHABET ? '' : 'is-light'}`}
           onClick={() => {
             setSortField(getPreparedGoods(SORT_BY_ALPHABET));
             setIsVisible(true);
