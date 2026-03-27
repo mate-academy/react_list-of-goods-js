@@ -39,7 +39,7 @@ function getPreparedGoods(order, preparedGoods = [...goodsFromServer]) {
       break;
 
     default:
-      return 0;
+      return [...goodsFromServer];
   }
 
   return preparedGoods;
@@ -47,6 +47,7 @@ function getPreparedGoods(order, preparedGoods = [...goodsFromServer]) {
 
 export const App = () => {
   const [sortField, setSortField] = useState(goodsFromServer);
+  const [isVisible, setVisible] = useState('hide');
 
   return (
     <div className="section content">
@@ -56,6 +57,7 @@ export const App = () => {
           className={`button ${classField === SORT_BY_ALPHABET ? 'is-info' : ''} ${classField !== SORT_BY_ALPHABET ? 'is-light' : ''}`}
           onClick={() => {
             setSortField(getPreparedGoods(SORT_BY_ALPHABET));
+            setVisible('');
           }}
         >
           Sort alphabetically
@@ -66,6 +68,7 @@ export const App = () => {
           className={`button ${classField === SORT_BY_LENGTH ? 'is-success' : ''} ${classField !== '' ? 'is-light' : ''}`}
           onClick={() => {
             setSortField(getPreparedGoods(SORT_BY_LENGTH));
+            setVisible('');
           }}
         >
           Sort by length
@@ -77,6 +80,7 @@ export const App = () => {
           onClick={() => {
             setSortField(() => [...sortField].reverse());
             classField = REVERSE;
+            setVisible('');
           }}
         >
           Reverse
@@ -84,10 +88,12 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${sortField !== '' ? 'is-danger' : ''} ${classField === '' ? '' : 'is-light'} ${classField !== '' ? 'is-light' : ''}`}
+          className={`button is-danger is-light ${isVisible}`}
+          // style={{ display: 'none' }}
           onClick={() => {
             setSortField(goodsFromServer);
             classField = '';
+            setVisible('hide');
           }}
         >
           Reset
@@ -97,6 +103,6 @@ export const App = () => {
       <ul>
         <GoodsList goods={sortField} />
       </ul>
-    </div>
+    </div >
   );
 };
