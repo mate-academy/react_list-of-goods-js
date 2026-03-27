@@ -47,17 +47,17 @@ function getPreparedGoods(order, preparedGoods = [...goodsFromServer]) {
 
 export const App = () => {
   const [sortField, setSortField] = useState(goodsFromServer);
-  const [isVisible, setVisible] = useState('hide');
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`button ${classField === SORT_BY_ALPHABET ? 'is-info' : ''} ${classField !== SORT_BY_ALPHABET ? 'is-light' : ''}`}
+          className={`button is-info  ${classField === SORT_BY_ALPHABET ? '' : 'is-light'}`}
           onClick={() => {
             setSortField(getPreparedGoods(SORT_BY_ALPHABET));
-            setVisible('');
+            setIsVisible(true);
           }}
         >
           Sort alphabetically
@@ -65,10 +65,10 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${classField === SORT_BY_LENGTH ? 'is-success' : ''} ${classField !== '' ? 'is-light' : ''}`}
+          className={`button is-success ${classField === SORT_BY_LENGTH ? '' : 'is-light'}`}
           onClick={() => {
             setSortField(getPreparedGoods(SORT_BY_LENGTH));
-            setVisible('');
+            setIsVisible(true);
           }}
         >
           Sort by length
@@ -76,33 +76,34 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button ${classField === REVERSE ? 'is-warning' : ''} ${classField === '' ? '' : 'is-light'}`}
+          className={`button is-warning ${classField === REVERSE ? '' : 'is-light'}`}
           onClick={() => {
             setSortField(() => [...sortField].reverse());
             classField = REVERSE;
-            setVisible('');
+            setIsVisible(true);
           }}
         >
           Reverse
         </button>
 
-        <button
-          type="button"
-          className={`button is-danger is-light ${isVisible}`}
-          // style={{ display: 'none' }}
-          onClick={() => {
-            setSortField(goodsFromServer);
-            classField = '';
-            setVisible('hide');
-          }}
-        >
-          Reset
-        </button>
+        {isVisible && (
+          <button
+            type="button"
+            className={`button is-danger is-light ${isVisible}`}
+            onClick={() => {
+              setSortField(goodsFromServer);
+              classField = '';
+              setIsVisible(false);
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
         <GoodsList goods={sortField} />
       </ul>
-    </div>
+    </div >
   );
 };
