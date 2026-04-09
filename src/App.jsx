@@ -38,7 +38,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-info${sortBy !== 'alpha' ? ' is-light' : ''}`}
-          onClick={() => setSortBy(sortBy === 'alpha' ? '' : 'alpha')}
+          onClick={() => setSortBy('alpha')}
         >
           Sort alphabetically
         </button>
@@ -46,7 +46,7 @@ export const App = () => {
         <button
           type="button"
           className={`button is-success${sortBy !== 'length' ? ' is-light' : ''}`}
-          onClick={() => setSortBy(sortBy === 'length' ? '' : 'length')}
+          onClick={() => setSortBy('length')}
         >
           Sort by length
         </button>
