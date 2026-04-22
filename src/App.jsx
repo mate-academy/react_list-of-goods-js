@@ -1,6 +1,11 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+import { useState } from 'react';
+import { GoodList } from './components/GoodList/GoodsList';
+import { SortTypes } from './constants/sortTypes';
+import { getVisibleGoods } from './helpers/getVisibleGoods';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -14,33 +19,32 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+const initialGoods = goodsFromServer.map((name, idx) => ({ idx, name }));
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+export const App = () => {
+  const [sortBy, setSortBy] = useState(SortTypes.NONE);
+  const [isReversed, setIsReversed] = useState(false);
+  const updateIsReversed = () => setIsReversed(!isReversed);
+  const reset = () => {
+    setSortBy(SortTypes.NONE);
+    setIsReversed(false);
+  };
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  let visibleGoods = [...initialGoods];
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
-    </div>
+  visibleGoods = getVisibleGoods(visibleGoods, { sortBy, isReversed });
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  const hasChanges = sortBy !== SortTypes.NONE || isReversed;
+
+  return (
+    <GoodList
+      goods={visibleGoods}
+      sortBy={sortBy}
+      isReversed={isReversed}
+      onSort={setSortBy}
+      onReverse={updateIsReversed}
+      onReset={reset}
+      hasChanges={hasChanges}
+    />
+  );
+};
