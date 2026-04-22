@@ -1,5 +1,8 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import { sortBy } from './utils/index';
+import { Button } from './components/Button/Button';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +17,55 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [fieldSort, setFieldSort] = useState('');
+  const [reverse, setReverse] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const goods = sortBy(goodsFromServer, fieldSort, reverse);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  function resetSort() {
+    setFieldSort('');
+    setReverse(false);
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <Button
+          title="Sort alphabetically"
+          onClick={() => setFieldSort('ASC')}
+          sx={`is-info
+            ${fieldSort === 'ASC' ? '' : 'is-light'}`}
+        />
+        <Button
+          title="Sort by length"
+          onClick={() => setFieldSort('length')}
+          sx={`is-success
+             ${fieldSort === 'length' ? '' : 'is-light'}`}
+        />
+        <Button
+          title="Reverse"
+          onClick={() => setReverse(prev => !prev)}
+          sx={`is-warning
+            ${reverse ? '' : 'is-light'}`}
+        />
+
+        {(fieldSort !== '' || reverse) && (
+          <Button
+            title="Reset"
+            onClick={() => resetSort()}
+            sx="is-danger is-light"
+          />
+        )}
+      </div>
+
+      <ul>
+        {goods.map(item => (
+          <li key={item} data-cy="Good">
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
