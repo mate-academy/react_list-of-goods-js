@@ -48,63 +48,67 @@ export const App = () => {
   const [sortField, setSortField] = useState('');
   const visibleGoods = getPreparedGoods(goodsFromServer, sortField);
 
-  <div className="section content">
-    <div className="buttons">
-      <button
-        type="button"
-        className={cn('button', 'is-warning', {
-          'is-light': setSortField !== SORT_FIELD_APHABET,
-        })}
-        onClick={() => {
-          setSortField(SORT_FIELD_APHABET);
-        }}
-      >
-        Sort alphabetically
-      </button>
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button', 'is-warning', {
+            'is-light': sortField !== SORT_FIELD_APHABET,
+          })}
+          onClick={() => {
+            setSortField(SORT_FIELD_APHABET);
+          }}
+        >
+          Sort alphabetically
+        </button>
 
-      <button
-        type="button"
-        className={cn('button', 'is-warning', {
-          'is-light': setSortField !== SORT_FIELD_LENGTH,
-        })}
-        onClick={() => {
-          setSortField(SORT_FIELD_LENGTH);
-        }}
-      >
-        Sort by length
-      </button>
+        <button
+          type="button"
+          className={cn('button', 'is-warning', {
+            'is-light': sortField !== SORT_FIELD_LENGTH,
+          })}
+          onClick={() => {
+            setSortField(SORT_FIELD_LENGTH);
+          }}
+        >
+          Sort by length
+        </button>
 
-      <button
-        type="button"
-        className={cn('button', 'is-warning', {
-          'is-light': setSortField !== SORT_FIELD_REVERSE,
-        })}
-        onClick={() => {
-          setSortField(
-            sortField === SORT_FIELD_REVERSE ? '' : SORT_FIELD_REVERSE,
-          );
-        }}
-      >
-        Reverse
-      </button>
+        <button
+          type="button"
+          className={cn('button', 'is-warning', {
+            'is-light': sortField !== SORT_FIELD_REVERSE,
+          })}
+          onClick={() => {
+            setSortField(
+              sortField === SORT_FIELD_REVERSE ? '' : SORT_FIELD_REVERSE,
+            );
+          }}
+        >
+          Reverse
+        </button>
 
-      <button
-        type="button"
-        className="button is-danger is-light"
-        onClick={() => {
-          setSortField('');
-        }}
-      >
-        Reset
-      </button>
+        {sortField !== '' && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={() => {
+              setSortField('');
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {visibleGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      {visibleGoods.map(good => (
-        <li data-cy="Good" key={good}>
-          {good}
-        </li>
-      ))}
-    </ul>
-  </div>;
+  );
 };
