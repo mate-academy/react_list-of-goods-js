@@ -92,7 +92,7 @@ export const App = () => {
             // className="button is-danger is-light"
             // className="button is-danger"
             className={`button is-danger
-            ${sortAlphabetically || length ? '' : 'is-light'}`}
+            ${sortAlphabetically || length || reversed ? '' : 'is-light'}`}
             onClick={() => {
               setSortAlphabetically('');
               setLength(0);
