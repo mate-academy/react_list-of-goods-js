@@ -22,36 +22,23 @@ const SORT_ALPHABETICALLY = 'alphabetically';
 // const SORT_FIELD_COLOR = 'color';
 
 function getPreparedGoods(goods, { sortAlphabetically, reversed, length }) {
-  let preperdGoods = [...goods];
+  let preparedGoods = [...goods];
 
   if (sortAlphabetically) {
-    preperdGoods.sort((good1, good2) => good1.localeCompare(good2));
-
-    // {
-    //   switch (sortAlphabetically) {
-    //     case SORT_ALPHABETICALLY:
-    //       return good1 - good2;
-
-    //     case SORT_FIELD_NAME:
-    //     case SORT_FIELD_COLOR:
-    //       return good1.localeCompare(good2);
-    //     default:
-    //       return 0;
-    //   }
-    // });
+    preparedGoods.sort((good1, good2) => good1.localeCompare(good2));
   }
 
   if (length) {
-    preperdGoods = preperdGoods.sort(
+    preparedGoods = preparedGoods.sort(
       (good1, good2) => good1.length - good2.length,
     );
   }
 
   if (reversed) {
-    preperdGoods = preperdGoods.toReversed();
+    preparedGoods = preparedGoods.toReversed();
   }
 
-  return preperdGoods;
+  return preparedGoods;
 }
 
 export const App = () => {
@@ -82,10 +69,8 @@ export const App = () => {
         <button
           type="button"
           // className="button is-success is-light"
-          className={`button is-success ${
-            length === SORT_ALPHABETICALLY ? '' : 'is-light'
-          }`}
-          onClick={() => setLength(SORT_ALPHABETICALLY)}
+          className={`button is-success ${length ? '' : 'is-light'}`}
+          onClick={() => setLength(1)}
         >
           Sort by length
         </button>
@@ -107,10 +92,10 @@ export const App = () => {
             // className="button is-danger is-light"
             // className="button is-danger"
             className={`button is-danger
-            ${sortAlphabetically === SORT_ALPHABETICALLY ? '' : 'is-light'}`}
+            ${sortAlphabetically || length ? '' : 'is-light'}`}
             onClick={() => {
               setSortAlphabetically('');
-              setLength('');
+              setLength(0);
               setReversed(false);
             }}
           >
