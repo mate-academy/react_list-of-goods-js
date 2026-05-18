@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,106 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export function App() {
+  const [goodsCopy, setGoodsCopy] = useState([...goodsFromServer]);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const [lastChange, setLastChange] = useState('');
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const alphabetic = () => {
+    const copy = [...goodsCopy].sort();
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+    setGoodsCopy(copy);
+    setLastChange('alphabetic');
+  };
+
+  const lengthSort = () => {
+    const copy = [...goodsCopy].sort((good1, good2) => {
+      return good2.replace(' ', '').length - good1.replace(' ', '').length;
+    });
+
+    setGoodsCopy(copy);
+    setLastChange('length');
+  };
+
+  const reset = () => {
+    setGoodsCopy(goodsFromServer);
+    setLastChange('reset');
+  };
+
+  const reverse = () => {
+    if (lastChange === 'alphabetic') {
+      const copy = [...goodsCopy].sort().reverse();
+
+      setGoodsCopy(copy);
+      setLastChange('reverse-alphabetic');
+    }
+
+    if (lastChange === 'length') {
+      const copy = [...goodsCopy].sort((good1, good2) => {
+        return good1.replace(' ', '').length - good2.replace(' ', '').length;
+      });
+
+      setGoodsCopy(copy);
+      setLastChange('reverse-length');
+    }
+
+    if (lastChange === 'reverse-alphabetic') {
+      alphabetic();
+    }
+
+    if (lastChange === 'reverse-length') {
+      reverse();
+    }
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${lastChange === 'alphabetic' ? '' : 'is-light'}`}
+          onClick={() => {
+            alphabetic();
+          }}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-info ${lastChange === 'length' ? '' : 'is-light'}`}
+          onClick={() => {
+            lengthSort();
+          }}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-info ${lastChange === 'reverse-alphabetic' || lastChange === 'reverse-length' ? '' : 'is-light'}`}
+          onClick={() => {
+            reverse();
+          }}
+        >
+          Reverse
+        </button>
+
+        <button
+          type="button"
+          className={`button is-info ${lastChange === 'reset' ? '' : 'is-light'}`}
+          onClick={() => {
+            reset();
+          }}
+        >
+          Reset
+        </button>
+      </div>
+      <ul>
+        {goodsCopy.map(good => {
+          return <li key={good}>{good}</li>;
+        })}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+}
