@@ -21,12 +21,14 @@ export function App() {
 
   const sortAlphabetically = () => {
     const copy = [...goodsFromServer].sort();
+
     setGoodsCopy(copy);
     setLastChange('alphabetic');
   };
 
   const sortByLength = () => {
     const copy = [...goodsFromServer].sort((a, b) => a.length - b.length);
+
     setGoodsCopy(copy);
     setLastChange('length');
   };
@@ -38,6 +40,7 @@ export function App() {
 
   const reverse = () => {
     const copy = [...goodsCopy].reverse();
+
     setGoodsCopy(copy);
 
     if (lastChange === 'alphabetic') {
