@@ -20,13 +20,13 @@ export function App() {
   const [lastChange, setLastChange] = useState('');
 
   const sortAlphabetically = () => {
-    const copy = [...goodsCopy].sort();
+    const copy = [...goodsFromServer].sort();
     setGoodsCopy(copy);
     setLastChange('alphabetic');
   };
 
   const sortByLength = () => {
-    const copy = [...goodsCopy].sort((a, b) => a.length - b.length);
+    const copy = [...goodsFromServer].sort((a, b) => a.length - b.length);
     setGoodsCopy(copy);
     setLastChange('length');
   };
