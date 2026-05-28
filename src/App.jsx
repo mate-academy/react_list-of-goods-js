@@ -20,8 +20,10 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
         case SORT_FIELD_LENGTH: {
           const tamanho1 = good1.name.replaceAll(' ', '').length;
           const tamanho2 = good2.name.replaceAll(' ', '').length;
+
           return tamanho1 - tamanho2;
         }
+
         default:
           return 0;
       }
@@ -79,11 +81,12 @@ export const App = () => {
         {/* so deve ter botão reset se algum outro tiver sido selecionado */}
         {(sortField || isReversed) && (
           <button
-            onClick={() => {setSortField(''); setIsReversed(false);}}
+            onClick={() => {
+              setSortField('');
+              setIsReversed(false);
+            }}
             type="button"
-            className={cn('button is-danger is-light', {
-              iframe: !sortField && !isReversed,
-            })}
+            className='button is-danger is-light'
           >
             Reset
           </button>
