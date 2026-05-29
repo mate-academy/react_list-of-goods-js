@@ -18,10 +18,8 @@ function getPreparedGoods(goods, { sortField, isReversed }) {
         case SORT_FIELD_ALPH:
           return good1.name.localeCompare(good2.name);
         case SORT_FIELD_LENGTH: {
-          const tamanho1 = good1.name.replaceAll(' ', '').length;
-          const tamanho2 = good2.name.replaceAll(' ', '').length;
 
-          return tamanho1 - tamanho2;
+          return good1.name.length - good2.name.length;
         }
 
         default:
@@ -86,7 +84,7 @@ export const App = () => {
               setIsReversed(false);
             }}
             type="button"
-            className='button is-danger is-light'
+            className="button is-danger is-light"
           >
             Reset
           </button>
