@@ -39,16 +39,14 @@ export const App = () => {
 
   const handleSortAlphabetically = () => {
     setSortType('alphabet');
-    setIsReversed(false);
   };
 
   const handleSortByLength = () => {
     setSortType('length');
-    setIsReversed(false);
   };
 
   const handleReverse = () => {
-    setIsReversed((prev) => !prev);
+    setIsReversed(prev => !prev);
   };
 
   const handleReset = () => {
@@ -97,7 +95,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {displayedGoods.map((item) => (
+        {displayedGoods.map(item => (
           <li key={item} data-cy="Good">
             {item}
           </li>
