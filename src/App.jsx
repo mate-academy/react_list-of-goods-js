@@ -21,24 +21,20 @@ const SORT_FIELD_LENGTH = 'length';
 function getPreparedGoods(goods, sortField, isReverse) {
   let preparedGoods = [...goods];
 
-  if (isReverse) {
-    preparedGoods = preparedGoods.reverse();
-  }
-
   if (sortField === SORT_FIELD_ALPHABET) {
     preparedGoods = preparedGoods.toSorted((good1, good2) => {
       return good1.localeCompare(good2);
     });
-
-    return isReverse === false ? preparedGoods : preparedGoods.reverse();
   }
 
   if (sortField === SORT_FIELD_LENGTH) {
-    return preparedGoods.sort((good1, good2) => {
-      return isReverse === false
-        ? good1.length - good2.length
-        : good2.length - good1.length;
+    preparedGoods = preparedGoods.toSorted((good1, good2) => {
+      return good1.length - good2.length;
     });
+  }
+
+  if (isReverse) {
+    preparedGoods = preparedGoods.toReversed();
   }
 
   return preparedGoods;
@@ -98,7 +94,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
