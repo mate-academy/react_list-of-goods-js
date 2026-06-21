@@ -29,8 +29,9 @@ export const App = () => {
             sortType !== 'alphabet' ? 'is-light' : ''
           }`}
           onClick={() => {
+            // prettier-ignore
             const sorted = [...goodsFromServer].sort((a, b) =>
-              a.localeCompare(b),);
+              a.localeCompare(b))
 
             if (isReversed) {
               sorted.reverse();
