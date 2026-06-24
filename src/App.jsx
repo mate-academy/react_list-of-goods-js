@@ -1,5 +1,10 @@
+import { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
+
+import { SortButtons, SortType } from './SortButtons/SortButtons';
+import { GoodsList } from './GoogsList/GoodsList';
+import { getSortedGoods } from './GetSortedGoods/GetSortedGoods';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +19,56 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortType, setSortType] = useState(SortType.None);
+  const [isReversed, setIsReversed] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  const visibleGoods = getSortedGoods(goodsFromServer, sortType, isReversed);
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const handleReset = () => {
+    setSortType(SortType.None);
+    setIsReversed(false);
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  return (
+    <div className="section content">
+      <SortButtons
+        sortType={sortType}
+        isReversed={isReversed}
+        onSort={setSortType}
+        onReverse={() => setIsReversed(prev => !prev)}
+        onReset={handleReset}
+      />
+
+      <GoodsList goods={visibleGoods} />
     </div>
+  );
+  // <div className="section content">
+  //   <div className="buttons">
+  //     <button type="button" className="button is-info is-light">
+  //       Sort alphabetically
+  //     </button>
 
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  //     <button type="button" className="button is-success is-light">
+  //       Sort by length
+  //     </button>
+
+  //     <button type="button" className="button is-warning is-light">
+  //       Reverse
+  //     </button>
+
+  //     <button type="button" className="button is-danger is-light">
+  //       Reset
+  //     </button>
+  //   </div>
+
+  //   <ul>
+  //     <li data-cy="Good">Dumplings</li>
+  //     <li data-cy="Good">Carrot</li>
+  //     <li data-cy="Good">Eggs</li>
+  //     <li data-cy="Good">Ice cream</li>
+  //     <li data-cy="Good">Apple</li>
+  //     <li data-cy="Good">...</li>
+  //   </ul>
+  // </div>
+};
