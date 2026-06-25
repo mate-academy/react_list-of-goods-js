@@ -16,37 +16,40 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const sortAlphabetically = () => {
-    const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
+  const visibleGoods = [...goodsFromServer];
 
-    setGoods(isReversed ? sorted.reverse() : sorted);
-    setSortType('alphabet');
-  };
-
-  const sortByLength = () => {
-    const sorted = [...goodsFromServer].sort((a, b) => {
+  if (sortType === 'alphabet') {
+    visibleGoods.sort((a, b) => a.localeCompare(b));
+  } else if (sortType === 'length') {
+    visibleGoods.sort((a, b) => {
       if (a.length !== b.length) {
         return a.length - b.length;
       }
 
       return a.localeCompare(b);
     });
+  }
 
-    setGoods(isReversed ? sorted.reverse() : sorted);
+  if (isReversed) {
+    visibleGoods.reverse();
+  }
+
+  const sortAlphabetically = () => {
+    setSortType('alphabet');
+  };
+
+  const sortByLength = () => {
     setSortType('length');
   };
 
   const reverseGoods = () => {
-    setGoods([...goods].reverse());
     setIsReversed(!isReversed);
   };
 
   const reset = () => {
-    setGoods(goodsFromServer);
     setSortType('');
     setIsReversed(false);
   };
@@ -84,7 +87,7 @@ export const App = () => {
         )}
       </div>
       <ul>
-        {goods.map(good => (
+        {visibleGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
