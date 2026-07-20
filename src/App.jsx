@@ -15,48 +15,99 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const getVisibleGoods = ({ isAlphabeticalActive, isLengthActive, isReverseActive }) => {
+  const result = [...goodsFromServer];
+
+  if (isAlphabeticalActive) {
+    result.sort();
+  }
+
+  if (isLengthActive) {
+    result.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReverseActive) {
+    result.reverse();
+  }
+
+  return result;
+};
+
 export const App = () => {
-  const [goods, setGoods] = useState(goodsFromServer);
+  const [isAlphabeticalActive, setIsAlphabeticalActive] = useState(false);
+  const [isLengthActive, setIsLengthActive] = useState(false);
+  const [isReverseActive, setIsReverseActive] = useState(false);
+
+  const goods = getVisibleGoods({
+    isAlphabeticalActive,
+    isLengthActive,
+    isReverseActive,
+  });
+  const showResetButton = isAlphabeticalActive || isLengthActive || isReverseActive;
 
   const sortAlphabetically = () => {
-    setGoods([...goods].sort());
+    setIsAlphabeticalActive(true);
+    setIsLengthActive(false);
   };
 
   const sortByLength = () => {
-    setGoods([...goods].sort((a, b) => a.length - b.length));
+    setIsLengthActive(true);
+    setIsAlphabeticalActive(false);
   };
 
   const reverse = () => {
-    setGoods([...goods].reverse());
+    setIsReverseActive(current => !current);
   };
 
   const reset = () => {
-    setGoods(goodsFromServer);
+    setIsAlphabeticalActive(false);
+    setIsLengthActive(false);
+    setIsReverseActive(false);
   };
 
   return (
     <div className="section content">
       <div className="buttons">
-        <button type="button" className="button is-info is-light" onClick={sortAlphabetically}>
+        <button
+          type="button"
+          className={`button is-info ${isAlphabeticalActive ? '' : 'is-light'}`}
+          onClick={sortAlphabetically}
+        >
           Sort alphabetically
         </button>
 
-        <button type="button" className="button is-success is-light" onClick={sortByLength}>
+        <button
+          type="button"
+          className={`button is-success ${isLengthActive ? '' : 'is-light'}`}
+          onClick={sortByLength}
+        >
           Sort by length
         </button>
 
-        <button type="button" className="button is-warning is-light" onClick={reverse}>
+        <button
+          type="button"
+          className={`button is-warning ${isReverseActive ? '' : 'is-light'}`}
+          onClick={reverse}
+        >
           Reverse
         </button>
 
-        <button type="button" className="button is-danger is-light" onClick={reset}>
-          Reset
-        </button>
+        {showResetButton && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={reset}
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <ul>
-        {goods.map((good) => (
-          <li data-cy="Good">{good}</li>
+        {goods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
         ))}
       </ul>
     </div>
