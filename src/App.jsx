@@ -21,7 +21,7 @@ export const App = () => {
   const [isReversed, setIsReversed] = useState(false);
 
   const sortAlphabetically = () => {
-    const sorted = [...goods].sort((a, b) => a.localeCompare(b));
+    const sorted = [...goodsFromServer].sort((a, b) => a.localeCompare(b));
 
     if (isReversed) {
       sorted.reverse();
@@ -33,7 +33,7 @@ export const App = () => {
   };
 
   const sortByLength = () => {
-    const sorted = [...goods].sort((a, b) => a.length - b.length);
+    const sorted = [...goodsFromServer].sort((a, b) => a.length - b.length);
 
     if (isReversed) {
       sorted.reverse();
