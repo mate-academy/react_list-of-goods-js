@@ -67,6 +67,7 @@ export const App = () => {
             className={`button is-info ${sortField === 'reset' ? '' : 'is-light'}`}
             onClick={() => {
               setSortField('');
+              setReversed(false);
             }}
           >
             Reset
