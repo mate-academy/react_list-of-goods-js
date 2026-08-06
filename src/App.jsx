@@ -18,7 +18,6 @@ export const goodsFromServer = [
 
 const SORT_BY_ALPHABET = 'alphabet';
 const SORT_BY_LENGTH = 'length';
-const REVERSE_LIST = 'reverse';
 
 function sortGoodsBy(goods, sortingType) {
   const sameGoods = [...goods];
@@ -34,9 +33,6 @@ function sortGoodsBy(goods, sortingType) {
         return good1.length - good2.length;
       });
 
-    case REVERSE_LIST:
-      return sameGoods.reverse();
-
     default:
       return goods;
   }
@@ -44,9 +40,13 @@ function sortGoodsBy(goods, sortingType) {
 
 // eslint-disable-next-line no-fallthrough
 export const App = () => {
-  const [goodsList, setGoodsList] = useState(goodsFromServer);
   const [currentSorting, setCurrentSorting] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+  let goodsList = sortGoodsBy(goodsFromServer, currentSorting);
+
+  if (isReversed) {
+    goodsList = [...goodsList].reverse();
+  }
 
   return (
     <div className="section content">
@@ -57,9 +57,7 @@ export const App = () => {
             'is-light': currentSorting !== SORT_BY_ALPHABET,
           })}
           onClick={() => {
-            setGoodsList(sortGoodsBy(goodsList, SORT_BY_ALPHABET));
             setCurrentSorting(SORT_BY_ALPHABET);
-            setIsReversed(false);
           }}
         >
           Sort alphabetically
@@ -71,9 +69,7 @@ export const App = () => {
             'is-light': currentSorting !== SORT_BY_LENGTH,
           })}
           onClick={() => {
-            setGoodsList(sortGoodsBy(goodsList, SORT_BY_LENGTH));
             setCurrentSorting(SORT_BY_LENGTH);
-            setIsReversed(false);
           }}
         >
           Sort by length
@@ -82,25 +78,20 @@ export const App = () => {
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': currentSorting !== REVERSE_LIST,
+            'is-light': !isReversed,
           })}
           onClick={() => {
-            setGoodsList(sortGoodsBy(goodsList, REVERSE_LIST));
-
             setIsReversed(!isReversed);
-
-            setCurrentSorting(isReversed ? '' : REVERSE_LIST);
           }}
         >
           Reverse
         </button>
 
-        {JSON.stringify(goodsList) !== JSON.stringify(goodsFromServer) && (
+        {(currentSorting || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setGoodsList(goodsFromServer);
               setCurrentSorting('');
               setIsReversed(false);
             }}
