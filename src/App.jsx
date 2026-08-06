@@ -22,10 +22,6 @@ export const App = () => {
 
   let sGoods = [...goodsFromServer];
 
-  if (reversed) {
-    sGoods = [...sGoods].reverse();
-  }
-
   if (sortField === 'alphabetically') {
     sGoods = [...sGoods].sort((good1, good2) => good1.localeCompare(good2));
   }
@@ -34,9 +30,8 @@ export const App = () => {
     sGoods = [...sGoods].sort((good1, good2) => good1.length - good2.length);
   }
 
-  if (sortField === 'reset') {
-    setSortField('');
-    setReversed(false);
+  if (reversed) {
+    sGoods = [...sGoods].reverse();
   }
 
   return (
@@ -70,7 +65,9 @@ export const App = () => {
           <button
             type="button"
             className={`button is-info ${sortField === 'reset' ? '' : 'is-light'}`}
-            onClick={() => setSortField('reset')}
+            onClick={() => {
+              setSortField('');
+            }}
           >
             Reset
           </button>
@@ -79,7 +76,9 @@ export const App = () => {
 
       <ul>
         {sGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
