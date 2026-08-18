@@ -24,7 +24,7 @@ function sortGoods(goods, sortField) {
       goods.sort((a, b) => a.length - b.length);
       break;
     default:
-      return [...goodsFromServer];
+      return [...goods];
   }
 
   return goods;
@@ -67,7 +67,6 @@ export const App = () => {
           className={`button is-warning ${!reversed ? 'is-light' : ''}`}
           onClick={() => {
             setReversed(!reversed);
-            setSortField(sortField);
           }}
         >
           Reverse
