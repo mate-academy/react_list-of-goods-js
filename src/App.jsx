@@ -1,5 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import classNames from 'classnames';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +16,78 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortType, setSortType] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
+  const showGoods = [...goodsFromServer];
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  if (sortType !== '') {
+    showGoods.sort((a, b) => {
+      switch (sortType) {
+        case 'Sort alphabetically':
+          return a.localeCompare(b);
+        case 'Sort by length':
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
+  }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  if (isReversed) {
+    showGoods.reverse();
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const handleSortChange = field => {
+    if (field === 'Reverse') {
+      setIsReversed(prev => !prev);
+
+      return;
+    }
+
+    if (field === 'Reset') {
+      setIsReversed(false);
+      setSortType('');
+
+      return;
+    }
+
+    setSortType(field);
+  };
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        {['Sort alphabetically', 'Sort by length', 'Reverse', 'Reset'].map(
+          field => {
+            if (field === 'Reset' && sortType === '' && !isReversed) {
+              return null;
+            }
+
+            return (
+              <button
+                key={field}
+                type="button"
+                className={classNames('button is-info', {
+                  'is-light':
+                    field === 'Reverse' ? !isReversed : field !== sortType,
+                })}
+                onClick={() => handleSortChange(field)}
+              >
+                {field}
+              </button>
+            );
+          },
+        )}
+      </div>
+
+      <ul>
+        {showGoods.map(good => (
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
