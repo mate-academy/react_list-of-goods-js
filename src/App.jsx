@@ -15,7 +15,7 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-function PrintGoods(goods) {
+function renderGoods(goods) {
   return goods.map(good => (
     <li data-cy="Good" key={good}>
       {good}
@@ -24,7 +24,7 @@ function PrintGoods(goods) {
 }
 
 export const App = () => {
-  const [sortedBy, sortBy] = useState({
+  const [sortedBy, setSortedBy] = useState({
     alphabetically: false,
     length: false,
     revers: false,
@@ -51,7 +51,7 @@ export const App = () => {
           type="button"
           className={`button is-info ${!alphabetically ? 'is-light' : ''}`}
           onClick={() => {
-            sortBy({ alphabetically: true, length: false, revers });
+            setSortedBy({ alphabetically: true, length: false, revers });
           }}
         >
           Sort alphabetically
@@ -61,7 +61,7 @@ export const App = () => {
           type="button"
           className={`button is-success ${!sortedBy.length ? 'is-light' : ''}`}
           onClick={() => {
-            sortBy({ alphabetically: false, length: true, revers });
+            setSortedBy({ alphabetically: false, length: true, revers });
           }}
         >
           Sort by length
@@ -71,7 +71,7 @@ export const App = () => {
           type="button"
           className={`button is-warning ${!sortedBy.revers ? 'is-light' : ''}`}
           onClick={() => {
-            sortBy({ alphabetically, length, revers: !revers });
+            setSortedBy({ alphabetically, length, revers: !revers });
           }}
         >
           Reverse
@@ -79,9 +79,13 @@ export const App = () => {
         {(alphabetically || length || revers) && (
           <button
             type="button"
-            className="button is-danger is-light "
+            className="button is-danger is-light"
             onClick={() => {
-              sortBy({ alphabetically: false, length: false, revers: false });
+              setSortedBy({
+                alphabetically: false,
+                length: false,
+                revers: false,
+              });
             }}
           >
             Reset
@@ -89,7 +93,7 @@ export const App = () => {
         )}
       </div>
 
-      <ul>{PrintGoods(goods)}</ul>
+      <ul>{renderGoods(goods)}</ul>
     </div>
   );
 };
