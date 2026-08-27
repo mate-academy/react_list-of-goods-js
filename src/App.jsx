@@ -16,17 +16,20 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_ALPHABETICALLY = 'alphabetically';
+const SORT_BY_LENGTH = 'length';
+
 export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
   const goods = [...goodsFromServer];
 
-  if (sortType === 'alphabetically') {
+  if (sortType === SORT_ALPHABETICALLY) {
     goods.sort();
   }
 
-  if (sortType === 'length') {
+  if (sortType === SORT_BY_LENGTH) {
     goods.sort((a, b) => a.length - b.length);
   }
 
@@ -40,9 +43,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortType !== 'alphabetically',
+            'is-light': sortType !== SORT_ALPHABETICALLY,
           })}
-          onClick={() => setSortType('alphabetically')}
+          onClick={() => setSortType(SORT_ALPHABETICALLY)}
         >
           Sort alphabetically
         </button>
@@ -50,9 +53,9 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-success', {
-            'is-light': sortType !== 'length',
+            'is-light': sortType !== SORT_BY_LENGTH,
           })}
-          onClick={() => setSortType('length')}
+          onClick={() => setSortType(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
