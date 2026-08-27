@@ -31,7 +31,7 @@ function setSort(goods, sortBy, isReversed = false) {
         break;
       case SORT_BY_LENGTH:
         copyGoods.sort((goodOne, goodTwo) => {
-          return goodOne[sortBy] - goodTwo[sortBy];
+          return goodOne.length - goodTwo.length;
         });
         break;
       default:
