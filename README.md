@@ -4,6 +4,8 @@ Implement the ability to reorder the goods with the given buttons.
 
 > Here is [the working version](https://mate-academy.github.io/react_list-of-goods/)
 
+> [DEMO LINK](https://ArtMay777.github.io/react_list-of-goods-js/)
+
 1. `Sort alphabetically` button should sort the goods alphabetically.
     - remove `is-light` class from the button when this order is applied;
 1. `Sort by length` button should sort the goods by length.
@@ -16,7 +18,7 @@ Implement the ability to reorder the goods with the given buttons.
     - it should be visible only if goods are not already in the original order;
 
 ## Instructions
-- Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
+- Install the Prettier extension and use these [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
 - Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
 - Open one more terminal and run tests with `npm test` to ensure your solution is correct.
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_list-of-goods-js/) and add it to the PR description.
+- Add the [DEMO LINK](https://ArtMay777.github.io/react_list-of-goods-js/) to the PR description.
