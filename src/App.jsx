@@ -15,16 +15,19 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_FIELD_ALPHABET = 'alphabet';
+const SORT_FIELD_LENGTH = 'length';
+
 function getPreparedGoods(goods, { sortField, isReversed }) {
   const preparedGoods = [...goods];
 
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case 'alphabet':
+        case SORT_FIELD_ALPHABET:
           return good1.localeCompare(good2);
 
-        case 'length':
+        case SORT_FIELD_LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -55,11 +58,11 @@ export const App = () => {
         <button
           type="button"
           className={
-            sortField === 'alphabet'
+            sortField === SORT_FIELD_ALPHABET
               ? 'button is-info'
               : 'button is-info is-light'
           }
-          onClick={() => setSortField('alphabet')}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -67,11 +70,11 @@ export const App = () => {
         <button
           type="button"
           className={
-            sortField === 'length'
+            sortField === SORT_FIELD_LENGTH
               ? 'button is-success'
               : 'button is-success is-light'
           }
-          onClick={() => setSortField('length')}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
