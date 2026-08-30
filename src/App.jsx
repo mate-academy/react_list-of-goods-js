@@ -88,7 +88,7 @@ export const App = () => {
               setIsReverse(false);
             }}
             className={cn('button', 'is-danger', {
-              'is-light': !sortKey,
+              'is-light': !sortKey && !isReverse,
             })}
           >
             Reset
