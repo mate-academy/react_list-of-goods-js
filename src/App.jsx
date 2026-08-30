@@ -26,19 +26,23 @@ export const App = () => {
   function sortGoodsBy(param) {
     const preparedGoods = [...goodsFromServer];
 
-    if (param === 'length') {
-      preparedGoods.sort((a, b) => a.length - b.length);
-    } else if (param === 'reverse') {
-      preparedGoods.reverse();
-    } else if (param === 'alphabetically') {
-      preparedGoods.sort((a, b) => a.localeCompare(b));
-    }
+    switch (param) {
+      case 'length':
+        preparedGoods.sort((a, b) => a.length - b.length);
+        break;
 
-    if (param === 'reverse') {
-      setIsReversed(current => !current);
-      setSortedGoods(current => [...current].reverse());
+      case 'reverse':
+        setIsReversed(current => !current);
+        setSortedGoods(current => [...current].reverse());
 
-      return;
+        return;
+
+      case 'alphabetically':
+        preparedGoods.sort((a, b) => a.localeCompare(b));
+        break;
+
+      default:
+        break;
     }
 
     if (isReversed) {
@@ -90,7 +94,7 @@ export const App = () => {
 
         {isModified && (
           <button
-            onClick={() => handleReset()}
+            onClick={handleReset}
             type="button"
             className="button is-danger is-light"
           >
