@@ -46,7 +46,11 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className="button is-info is-light"
+          className={
+            sortField === 'alphabet'
+              ? 'button is-info'
+              : 'button is-info is-light'
+          }
           onClick={() => setSortField('alphabet')}
         >
           Sort alphabetically
@@ -54,7 +58,11 @@ export const App = () => {
 
         <button
           type="button"
-          className="button is-success is-light"
+          className={
+            sortField === 'length'
+              ? 'button is-success'
+              : 'button is-success is-light'
+          }
           onClick={() => setSortField('length')}
         >
           Sort by length
