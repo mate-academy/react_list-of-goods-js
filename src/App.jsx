@@ -26,7 +26,7 @@ export const App = () => {
   const goods = [...goodsFromServer];
 
   if (sortField === SORT_FIELD_ALPHABET) {
-    goods.sort();
+    goods.sort((a, b) => a.localeCompare(b));
   }
 
   if (sortField === SORT_FIELD_LENGTH) {
@@ -47,10 +47,7 @@ export const App = () => {
           className={cn('button is-info', {
             'is-light': sortField !== SORT_FIELD_ALPHABET,
           })}
-          onClick={() => {
-            setSortField(SORT_FIELD_ALPHABET);
-            setIsReversed(false);
-          }}
+          onClick={() => setSortField(SORT_FIELD_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -60,10 +57,7 @@ export const App = () => {
           className={cn('button is-success', {
             'is-light': sortField !== SORT_FIELD_LENGTH,
           })}
-          onClick={() => {
-            setSortField(SORT_FIELD_LENGTH);
-            setIsReversed(false);
-          }}
+          onClick={() => setSortField(SORT_FIELD_LENGTH)}
         >
           Sort by length
         </button>
@@ -80,12 +74,12 @@ export const App = () => {
 
         {isChanged && (
           <button
+            type="button"
+            className="button is-danger is-light"
             onClick={() => {
               setSortField('');
               setIsReversed(false);
             }}
-            type="button"
-            className="button is-danger is-light"
           >
             Reset
           </button>
