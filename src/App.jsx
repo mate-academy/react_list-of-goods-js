@@ -1,5 +1,9 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
+import cn from 'classnames';
+import { GoodList } from './GoodList/GoodList';
+import { sortByParam } from './utils';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +18,89 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  const [sortByAlphabet, setSortByAlphabet] = useState('inactive');
+  const [sortByLength, setSortByLength] = useState('inactive');
+  const [reverseArr, setReverseArr] = useState('inactive');
+  const isResetActive =
+    sortByAlphabet !== 'inactive' ||
+    sortByLength !== 'inactive' ||
+    reverseArr !== 'inactive';
+  const calculatedGoods = sortByParam(goodsFromServer, {
+    byAlphabet: sortByAlphabet,
+    byLength: sortByLength,
+    reverse: reverseArr,
+  });
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  function handleSortByAlphabet(value) {
+    setSortByAlphabet(value);
+    setSortByLength('inactive');
+  }
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  function handleSortByLength(value) {
+    setSortByLength(value);
+    setSortByAlphabet('inactive');
+  }
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  function handleReverse(value) {
+    setReverseArr(value);
+  }
+
+  function handleReset() {
+    setSortByAlphabet('inactive');
+    setSortByLength('inactive');
+    setReverseArr('inactive');
+  }
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={cn('button is-info', {
+            'is-light': sortByAlphabet !== 'active',
+          })}
+          onClick={() => handleSortByAlphabet('active')}
+        >
+          Sort alphabetically
+        </button>
+        <button
+          type="button"
+          className={cn('button is-success', {
+            'is-light': sortByLength !== 'active',
+          })}
+          onClick={() => handleSortByLength('active')}
+        >
+          Sort by length
+        </button>
+        <button
+          type="button"
+          className={cn('button is-warning', {
+            'is-light': reverseArr !== 'active',
+          })}
+          onClick={() =>
+            handleReverse(reverseArr === 'active' ? 'inactive' : 'active')
+          }
+        >
+          Reverse
+        </button>
+        {(sortByAlphabet !== 'inactive' ||
+          sortByLength !== 'inactive' ||
+          reverseArr !== 'inactive') && (
+          <button
+            type="button"
+            className={cn('button is-danger', {
+              'is-light': !isResetActive,
+            })}
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+      <ul>
+        <GoodList goods={calculatedGoods} />
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
