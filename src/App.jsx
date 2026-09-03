@@ -1,6 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -13,45 +14,54 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
+
 export const App = () => {
   const [sortType, setSortType] = useState('');
   const [isReversed, setIsReversed] = useState(false);
+
   const visibleGoods = [...goodsFromServer];
+
   if (sortType === 'alphabetically') {
     visibleGoods.sort();
   }
+
   if (sortType === 'length') {
     visibleGoods.sort((a, b) => a.length - b.length);
   }
+
   if (isReversed) {
     visibleGoods.reverse();
   }
+
   const isResetVisible = sortType !== '' || isReversed;
+
   return (
     <div className="section content">
-      {' '}
       <div className="buttons">
-        {' '}
         <button
           type="button"
-          className={`button is-info ${sortType === 'alphabetically' ? '' : 'is-light'}`}
+          className={`button is-info ${
+            sortType === 'alphabetically' ? '' : 'is-light'
+          }`}
           onClick={() => {
             setSortType('alphabetically');
           }}
         >
-          {' '}
-          Sort alphabetically{' '}
-        </button>{' '}
+          Sort alphabetically
+        </button>
+
         <button
           type="button"
-          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+          className={`button is-success ${
+            sortType === 'length' ? '' : 'is-light'
+          }`}
           onClick={() => {
             setSortType('length');
           }}
         >
-          {' '}
-          Sort by length{' '}
-        </button>{' '}
+          Sort by length
+        </button>
+
         <button
           type="button"
           className={`button is-warning ${isReversed ? '' : 'is-light'}`}
@@ -59,9 +69,9 @@ export const App = () => {
             setIsReversed(current => !current);
           }}
         >
-          {' '}
-          Reverse{' '}
-        </button>{' '}
+          Reverse
+        </button>
+
         {isResetVisible && (
           <button
             type="button"
@@ -71,20 +81,18 @@ export const App = () => {
               setIsReversed(false);
             }}
           >
-            {' '}
-            Reset{' '}
+            Reset
           </button>
-        )}{' '}
-      </div>{' '}
+        )}
+      </div>
+
       <ul>
-        {' '}
         {visibleGoods.map(good => (
           <li data-cy="Good" key={good}>
-            {' '}
-            {good}{' '}
+            {good}
           </li>
-        ))}{' '}
-      </ul>{' '}
+        ))}
+      </ul>
     </div>
   );
 };
