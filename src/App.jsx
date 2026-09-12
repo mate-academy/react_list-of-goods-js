@@ -17,46 +17,36 @@ export const goodsFromServer = [
 ];
 
 export const App = () => {
-  const [sortedGoods, setSortedGoods] = useState(goodsFromServer);
   const [sortParam, setSortParam] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const isModified = sortedGoods.join(',') !== goodsFromServer.join(',');
+  const sortedGoods = [...goodsFromServer];
+
+  if (sortParam === 'length') {
+    sortedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (sortParam === 'alphabetically') {
+    sortedGoods.sort((a, b) => a.localeCompare(b));
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  const isModified = sortParam !== '' || isReversed;
 
   function sortGoodsBy(param) {
-    const preparedGoods = [...goodsFromServer];
-
-    switch (param) {
-      case 'length':
-        preparedGoods.sort((a, b) => a.length - b.length);
-        break;
-
-      case 'reverse':
-        setIsReversed(current => !current);
-        setSortedGoods(current => [...current].reverse());
-
-        return;
-
-      case 'alphabetically':
-        preparedGoods.sort((a, b) => a.localeCompare(b));
-        break;
-
-      default:
-        break;
-    }
-
-    if (isReversed) {
-      preparedGoods.reverse();
-    }
-
     setSortParam(param);
-    setSortedGoods(preparedGoods);
+  }
+
+  function reverseGoods() {
+    setIsReversed(current => !current);
   }
 
   function handleReset() {
     setSortParam('');
     setIsReversed(false);
-    setSortedGoods(goodsFromServer);
   }
 
   return (
@@ -83,7 +73,7 @@ export const App = () => {
         </button>
 
         <button
-          onClick={() => sortGoodsBy('reverse')}
+          onClick={reverseGoods}
           type="button"
           className={cn('button is-warning', {
             'is-light': !isReversed,
