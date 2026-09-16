@@ -1,5 +1,6 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
+import { useState } from 'react';
 
 export const goodsFromServer = [
   'Dumplings',
@@ -14,33 +15,90 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-export const App = () => (
-  <div className="section content">
-    <div className="buttons">
-      <button type="button" className="button is-info is-light">
-        Sort alphabetically
-      </button>
+export const App = () => {
+  // Зберігаємо лише тип сортування (null, 'alphabetical', 'length') та прапорець реверсу
+  const [sortType, setSortType] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
 
-      <button type="button" className="button is-success is-light">
-        Sort by length
-      </button>
+  // Функції-обробники кліків змінюють ТІЛЬКИ правила сортування
+  const handleAlphabeticalSort = () => {
+    setSortType('alphabetical');
+  };
 
-      <button type="button" className="button is-warning is-light">
-        Reverse
-      </button>
+  const handleLengthSort = () => {
+    setSortType('length');
+  };
 
-      <button type="button" className="button is-danger is-light">
-        Reset
-      </button>
+  const handleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleReset = () => {
+    setSortType(null);
+    setIsReversed(false);
+  };
+
+  // ДИНАМІЧНО формуємо підсумковий масив товарів на основі активних станів
+  const sortedGoods = [...goodsFromServer];
+
+  if (sortType === 'alphabetical') {
+    sortedGoods.sort((a, b) => a.localeCompare(b));
+  } else if (sortType === 'length') {
+    sortedGoods.sort((a, b) => a.length - b.length);
+  }
+
+  if (isReversed) {
+    sortedGoods.reverse();
+  }
+
+  // Кнопка Reset видима лише тоді, коли порядок відрізняється від початкового
+  const isInitialOrder = sortType === null && !isReversed;
+
+  return (
+    <div className="section content">
+      <div className="buttons">
+        <button
+          type="button"
+          className={`button is-info ${sortType === 'alphabetical' ? '' : 'is-light'}`}
+          onClick={handleAlphabeticalSort}
+        >
+          Sort alphabetically
+        </button>
+
+        <button
+          type="button"
+          className={`button is-success ${sortType === 'length' ? '' : 'is-light'}`}
+          onClick={handleLengthSort}
+        >
+          Sort by length
+        </button>
+
+        <button
+          type="button"
+          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          onClick={handleReverse}
+        >
+          Reverse
+        </button>
+
+        {!isInitialOrder && (
+          <button
+            type="button"
+            className="button is-danger is-light"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <ul>
+        {sortedGoods.map(good => (
+          <li data-cy="Good" key={good}>
+            {good}
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <ul>
-      <li data-cy="Good">Dumplings</li>
-      <li data-cy="Good">Carrot</li>
-      <li data-cy="Good">Eggs</li>
-      <li data-cy="Good">Ice cream</li>
-      <li data-cy="Good">Apple</li>
-      <li data-cy="Good">...</li>
-    </ul>
-  </div>
-);
+  );
+};
