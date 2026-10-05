@@ -28,9 +28,10 @@ export const App = () => {
     setIsByLength(false);
   };
 
+  const compareByLength = (good1, good2) => good1.length - good2.length;
+
   const sortByLength = () => {
-    setGoods(currentGoods =>
-      [...currentGoods].sort((good1, good2) => good1.length - good2.length),);
+    setGoods(currentGoods => [...currentGoods].sort(compareByLength));
 
     setIsByLength(true);
     setIsAlphabetical(false);
