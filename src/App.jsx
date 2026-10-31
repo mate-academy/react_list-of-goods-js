@@ -18,7 +18,7 @@ export const goodsFromServer = [
 const SORT_ALPHABETICALY = 'sort_alphabetically';
 const SORT_LENGTH = 'sort_length';
 
-function getPrepearedGoods(goods, sortParam, revers) {
+function getPreparedGoods(goods, sortParam, revers) {
   const prepearedGoods = [...goods];
 
   if (!sortParam) {
@@ -53,11 +53,7 @@ function getPrepearedGoods(goods, sortParam, revers) {
 export const App = () => {
   const [sortParam, setSortParam] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const visibleGoods = getPrepearedGoods(
-    goodsFromServer,
-    sortParam,
-    isReversed,
-  );
+  const visibleGoods = getPreparedGoods(goodsFromServer, sortParam, isReversed);
 
   return (
     <div className="section content">
@@ -108,7 +104,9 @@ export const App = () => {
 
       <ul>
         {visibleGoods.map(good => (
-          <li data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
