@@ -49,12 +49,22 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`${sortField === SORT_BY_ALPHABET && !reversed ? 'button is-success' : 'button is-success is-light'
+          className={`${
+            sortField === SORT_BY_ALPHABET && !reversed
+              ? 'button is-success'
+              : 'button is-success is-light'
           }`}
           onClick={() => {
             setSortField(SORT_BY_ALPHABET);
-            setList(sort(list, SORT_BY_ALPHABET));
-            setReversed(false);
+
+            if (reversed) {
+              setList(sort(list, SORT_BY_ALPHABET).reverse());
+              setReversed(true);
+            }
+            else {
+              setList(sort(list, SORT_BY_ALPHABET));
+              setReversed(false);
+            }
           }}
         >
           Sort alphabetically
@@ -62,12 +72,22 @@ export const App = () => {
 
         <button
           type="button"
-          className={`${sortField === SORT_BY_LENGTH && !reversed ? 'button is-success' : 'button is-success is-light'
+          className={`${
+            sortField === SORT_BY_LENGTH && !reversed
+              ? 'button is-success'
+              : 'button is-success is-light'
           }`}
           onClick={() => {
             setSortField(SORT_BY_LENGTH);
-            setList(sort(list, SORT_BY_LENGTH));
-            setReversed(false);
+
+            if (reversed) {
+              setList(sort(list, SORT_BY_LENGTH).reverse());
+              setReversed(true);
+            }
+            else {
+              setList(sort(list, SORT_BY_LENGTH));
+              setReversed(false);
+            }
           }}
         >
           Sort by length
