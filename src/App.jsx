@@ -30,37 +30,40 @@ function Button({ children, type, onClick, active }) {
 export const App = () => {
   const [goods, setGoods] = useState(goodsFromServer);
   const [sortOption, setSortOption] = useState('');
+  const [isReversed, setIsReversed] = useState(false);
 
   const handleClick = event => {
     const newSortOption = event.currentTarget.textContent;
 
-    setSortOption(newSortOption);
-
     if (newSortOption === 'Reset') {
       setSortOption('');
+      setIsReversed(false);
       setGoods(goodsFromServer);
 
       return;
     }
 
     if (newSortOption === 'Reverse') {
+      setIsReversed(current => !current);
       setGoods(currentGoods => [...currentGoods].reverse());
 
       return;
     }
 
-    setGoods(
-      [...goods].sort((a, b) => {
-        switch (newSortOption) {
-          case 'Sort alphabetically':
-            return a.localeCompare(b);
-          case 'Sort by length':
-            return a.length - b.length;
-          default:
-            return 0;
-        }
-      }),
-    );
+    setSortOption(newSortOption);
+
+    const sortedGoods = [...goodsFromServer].sort((a, b) => {
+      switch (newSortOption) {
+        case 'Sort alphabetically':
+          return a.localeCompare(b);
+        case 'Sort by length':
+          return a.length - b.length;
+        default:
+          return 0;
+      }
+    });
+
+    setGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
   };
 
   const isOriginalOrder =
@@ -77,11 +80,7 @@ export const App = () => {
         >
           Sort alphabetically
         </Button>
-        <Button
-          type="is-success"
-          onClick={handleClick}
-          active={sortOption === 'Sort by length'}
-        >
+        <Button type="is-success" onClick={handleClick} active={isReversed}>
           Sort by length
         </Button>
         <Button
