@@ -34,7 +34,7 @@ const sort = (list, sortMethod, reverse) => {
 
   if (reverse) {
     return preparedList.reverse();
-  }
+  } 
 
   return preparedList;
 }
@@ -52,7 +52,7 @@ export const App = () => {
           type="button"
           className={
             sortField === ALPHABET 
-              ? 'button is-success'
+              ? 'button is-info'
               : 'button is-success is-light'
           }
           onClick={() => {
@@ -106,7 +106,7 @@ export const App = () => {
 
       <ul>
        {preparedList.map(good => {
-          return <li key={good}>{good}</li>
+          return <li data-cy="Good" key={good}>{good}</li>
        })}
       </ul>
     </div>
