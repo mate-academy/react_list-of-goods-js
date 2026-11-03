@@ -15,56 +15,48 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-// let copy = [...goodsFromServer];
+const ALPHABET = 'alphabet';
+const LENGTH = 'length';
 
-const SORT_BY_ALPHABET = 'alphabet';
-const SORT_BY_LENGTH = 'length';
-
-const reverse = list => {
-  return [...list].reverse();
-};
-
-const sort = (list, sortField) => {
-  return [...list].sort((good1, good2) => {
-    switch (sortField) {
-      case SORT_BY_ALPHABET:
+const sort = (list, sortMethod, reverse) => {
+  const preparedList = [...list].sort((good1, good2) => {
+    switch(sortMethod) {
+      case ALPHABET:
         return good1.localeCompare(good2);
 
-      case SORT_BY_LENGTH:
+      case LENGTH:
         return good1.length - good2.length;
 
       default:
         return 0;
     }
   });
-};
+
+  if (reverse) {
+    return preparedList.reverse();
+  }
+
+  return preparedList;
+}
 
 export const App = () => {
-  const [list, setList] = useState([...goodsFromServer]);
   const [sortField, setSortField] = useState('');
-  const [reversed, setReversed] = useState(false);
+  const [reverse, setReverse] = useState(false);
+
+  const preparedList = sort(goodsFromServer, sortField, reverse);
 
   return (
     <div className="section content">
       <div className="buttons">
         <button
           type="button"
-          className={`${
-            sortField === SORT_BY_ALPHABET && !reversed
+          className={
+            sortField === ALPHABET 
               ? 'button is-success'
               : 'button is-success is-light'
-          }`}
+          }
           onClick={() => {
-            setSortField(SORT_BY_ALPHABET);
-
-            if (reversed) {
-              setList(sort(list, SORT_BY_ALPHABET).reverse());
-              setReversed(true);
-            }
-            else {
-              setList(sort(list, SORT_BY_ALPHABET));
-              setReversed(false);
-            }
+            setSortField(ALPHABET);
           }}
         >
           Sort alphabetically
@@ -72,22 +64,13 @@ export const App = () => {
 
         <button
           type="button"
-          className={`${
-            sortField === SORT_BY_LENGTH && !reversed
+          className={
+            sortField === LENGTH
               ? 'button is-success'
               : 'button is-success is-light'
-          }`}
+          }
           onClick={() => {
-            setSortField(SORT_BY_LENGTH);
-
-            if (reversed) {
-              setList(sort(list, SORT_BY_LENGTH).reverse());
-              setReversed(true);
-            }
-            else {
-              setList(sort(list, SORT_BY_LENGTH));
-              setReversed(false);
-            }
+            setSortField(LENGTH);
           }}
         >
           Sort by length
@@ -95,38 +78,36 @@ export const App = () => {
 
         <button
           type="button"
-          className={`button is-warning ${reversed ? '' : 'is-light'}`}
+          className={
+            reverse === true
+              ? 'button is-warning'
+              : 'button is-warning is-light'
+          } 
           onClick={() => {
-            setList(reverse(list));
-            setReversed(!reversed);
+            setReverse(!reverse);
           }}
         >
           Reverse
         </button>
 
-        {list.some((item, i) => item !== goodsFromServer[i]) && (
-          <button
+        {preparedList.some((good, i) => good !== goodsFromServer[i]) &&
+          (<button
             type="button"
             className="button is-danger"
             onClick={() => {
-              setList([...goodsFromServer]);
-              setReversed(false);
               setSortField('');
+              setReverse(false);
             }}
           >
             Reset
-          </button>
-        )}
+          </button>)
+        }
       </div>
 
       <ul>
-        {list.map(good => {
-          return (
-            <li key={good} data-cy="Good">
-              {good}
-            </li>
-          );
-        })}
+       {preparedList.map(good => {
+          return <li key={good}>{good}</li>
+       })}
       </ul>
     </div>
   );
