@@ -102,13 +102,17 @@ export const App = () => {
             'is-light': reversed === false,
           })}
           onClick={() => {
-            if (reversed === true) {
-              setVisibleItems(organize(visibleItems, { order: SORT_REVERSE }));
-              setReversed(false);
-            } else {
-              setVisibleItems(organize(visibleItems, { order: SORT_REVERSE }));
-              setReversed(true);
-            }
+            const organizedItems = organize(goodsFromServer, {
+              order: sortField,
+            });
+
+            setVisibleItems(
+              reversed
+                ? organizedItems
+                : organize(organizedItems, { order: SORT_REVERSE }),
+            );
+
+            setReversed(!reversed);
           }}
         >
           Reverse
